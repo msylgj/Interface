@@ -1,0 +1,9 @@
+## Interface: 50200
+## Author: Monolit
+## Title: mono|cffffffffNameplates|r
+## Version: 4.0
+## Notes: simple nameplate addon
+## Credits: Dawn, Caellian, shUI
+
+cfg.lua
+Nameplates.lua

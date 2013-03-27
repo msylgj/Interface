@@ -1,0 +1,10 @@
+## Interface: 50200
+## Title: ncCooldownFlash
+## Author: Nightcracker
+## Version: 1.1
+## Notes: Flashes an icon when the cooldown finished
+## Credits: Ray, Blue
+
+libs\LibStub.lua
+libs\LibCooldown.lua
+cooldownflash.lua

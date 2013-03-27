@@ -1,0 +1,27 @@
+## Interface: 50200
+## Author: Loshine
+## Credits-to:Tukz, Katae
+## Title: |cff777777dim|rinfo
+## Notes: Info Text
+## Version: v1.3
+## SavedVariables: diminfo
+
+cfg.lua
+init.lua
+
+locale\english.lua
+locale\chinese.lua
+locale\taiwan.lua
+
+modules\Bags.lua
+modules\Coords.lua
+modules\Durability.lua
+modules\Friends.lua
+modules\Gold.lua
+modules\Guild.lua
+modules\Memory.lua
+modules\Positions.lua
+modules\Spec.lua
+modules\System.lua
+modules\Time.lua
+modules\Mail.lua

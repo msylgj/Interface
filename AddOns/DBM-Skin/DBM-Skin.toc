@@ -1,0 +1,6 @@
+## Interface: 50200
+## Title: |cffffd200Deadly Boss Mods|r |cff69ccf0Skin|r
+## Notes: DBM-Skin
+## OptionalDeps: DBM-Core
+
+DBM-Skin.lua

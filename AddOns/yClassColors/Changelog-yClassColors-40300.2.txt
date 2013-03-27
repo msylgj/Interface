@@ -1,0 +1,13 @@
+tag 40300.2
+af0797542197a50a8a93f05ec54da40520fe364b
+yaroot <yaroot@gmail.com>
+2011-12-06 14:07:53 +0800
+
+tagging as 40300.2
+
+
+--------------------
+
+yaroot:
+	- update version to 40300.2
+	- and.. the hook is back

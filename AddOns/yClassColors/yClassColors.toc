@@ -1,0 +1,20 @@
+## Interface: 50200
+## X-Curse-Packaged-Version: 40300.2
+## X-Curse-Project-Name: yClassColors
+## X-Curse-Project-ID: yclasscolors
+## X-Curse-Repository-ID: wow/yclasscolors/mainline
+
+## Title: |cffff8800y|rClassColors
+## Note: Colorize name by class!
+## Author: yleaf
+## Version: 40300.2
+## OptionalDeps: !ClassColors
+
+core.lua
+
+battlefield.lua
+friends.lua
+guild.lua
+lfr.lua
+who.lua
+

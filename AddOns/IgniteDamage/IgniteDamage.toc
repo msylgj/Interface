@@ -1,0 +1,11 @@
+## Interface: 50200
+## Title: |cFF71D5FF[Mage]|r IgniteDamage
+## Title-zhCN: |cFF71D5FF[法师]|r 点燃伤害
+## Title-zhTW: |cFF71D5FF[法師]|r 點燃傷害
+## Notes: Show the damage of the current Ignite on screen.
+## Notes-zhCN: 在屏幕上显示当前点燃伤害.
+## Notes-zhTW: 在屏幕上顯示當前點燃傷害.
+## Author: icrow
+## DefaultState: disabled
+
+core.lua

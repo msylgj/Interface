@@ -1,0 +1,16 @@
+## Interface: 50200
+## Title: CoolLine
+## Notes: Shows cooldowns on a single bar.
+## Author: TotalPackage
+## Version: 5.0.001
+
+## SavedVariables: CoolLineDB
+## SavedVariablesPerCharacter: CoolLineCharDB
+
+## OptionalDeps: LibSharedMedia-3.0
+
+## LoadManagers: AddonLoader
+## X-LoadOn-Always: delayed
+
+embeds.xml
+core.lua

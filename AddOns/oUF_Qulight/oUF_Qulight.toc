@@ -1,0 +1,19 @@
+## Interface: 50200
+## Author: Qulight	
+## Title: oUF_Qulight
+## RequiredDeps: oUF
+## X-Category: UnitFrame
+
+cfg.lua
+template.xml
+tags.lua
+lib.lua
+core.lua
+Plugins\Smooth.lua
+Plugins\Experience.lua
+Plugins\TotemBar.lua
+Plugins\Reputation.lua
+Plugins\WarlockSpecBars.lua
+Plugins\HarmonyBar.lua
+Plugins\ThreatBar.lua
+Raid\load.xml

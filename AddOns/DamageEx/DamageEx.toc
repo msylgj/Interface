@@ -1,0 +1,22 @@
+## Interface: 50200
+## Title: DamageEx
+## Notes: Shows the damage,target heal and the spell name.(Thanks:MagicDragoon and frankcg)
+## Title-zhCN: |CFFFF8000战斗|R 增强伤害显示器(Dex)
+## Notes-zhCN: 显示你对敌人的伤害，对目标的治疗量，并可显示技能名字|n命令/dex
+## Title-zhTW: |CFFFF8000戰鬥|R 增強傷害顯示器(Dex)
+## Notes-zhTW: 顯示你對敵人的傷害，對目標的治療量，並可顯示技能名字|n命令/dex
+## X-Repple: 战斗
+## Version: 3.01
+## Author: Dennie
+## Localization-zhTW: Ghostar 星魂 (CWDG)
+## SavedVariablesPerCharacter: DEX_SAVE
+## OptionalDeps: myAddOns
+## Dependencies:
+
+localization.lua
+localization_zhCN.lua
+localization_zhTW.lua
+
+DEX_ui_path.lua
+DamageEx.xml
+DEXoptions.xml

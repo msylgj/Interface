@@ -1,0 +1,6 @@
+## Interface: 50200
+## Title: aMini
+## Notes: Mini Addons compilation
+## Version: 2.0
+
+aMini.xml
