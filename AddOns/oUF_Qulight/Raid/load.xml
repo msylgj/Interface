@@ -3,7 +3,6 @@
     <Script file="aura_list.lua" />
     <Script file="raid.lua" />
     <Script file="tags.lua" /> 
-	<Script file="elements\RaidDebuffs.lua" />
     <Script file="elements\afk.lua" />
     <Script file="elements\auras.lua" /> 
     <Script file="elements\indicators.lua" />

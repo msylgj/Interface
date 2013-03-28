@@ -19,6 +19,8 @@ WHISPERPOP_LOCALE = {
 	["time tooltip"] = "If checked, a time stamp will be displayed in front of every message text.",
 	["delete messages"] = "Delete all messages",
 	["delete messages tooltip"] = "Click to delete all existing messages.",
+	["keep messages"] = "Keep all messages",
+	["keep messages tooltip"] = "Keep all existing messages.",
 	["toggle frame"] = "Toggle WhisperPop frame",
 }
 
@@ -37,6 +39,8 @@ if GetLocale() == "zhCN" then
 		["time tooltip"] = "如果选中，时间标签将被添加到每一行消息文字前面。",
 		["delete messages"] = "删除所有消息",
 		["delete messages tooltip"] = "点击删除所有现有的消息。",
+		["keep messages"] = "保留历史记录",
+		["keep messages tooltip"] = "保留一天以内的消息，而且同帐号的各个角色均可查看。\n \n|cffff3333严重警告：因密语记录可以打开魔兽存档随意查看，因此请不要在网吧等公共环境开启此选项，以免信息泄漏。|r",
 		["toggle frame"] = "打开/关闭WhisperPop框体",
 	}
 
@@ -55,6 +59,8 @@ elseif GetLocale() == "zhTW" then
 		["time tooltip"] = "如果选中，時間標簽將被添加到每一行消息文字前面。",
 		["delete messages"] = "刪除所有消息",
 		["delete messages tooltip"] = "點擊刪除所有現有的消息。",
+		["delete messages"] = "保留歷史記錄",
+		["delete messages tooltip"] = "保留一天內消息 \n|cffff3333嚴重警告：因密語記錄可打開魔獸存檔隨意查看，因此請不要在網吧等公共環境開啟此項，以免信息洩露。|r",
 		["toggle frame"] = "打開/關閉WhisperPop框體",
 	}
 end

@@ -111,6 +111,7 @@ local recOnlyButton = CreateOptionButton("ReceiveOnly", "Interface\\Icons\\INV_S
 local soundButton = CreateOptionButton("Sound", "Interface\\Icons\\INV_Misc_Bell_01", "sound", L["sound notifying"], L["sound notifying tooltip"])
 local timeButton = CreateOptionButton("Time", "Interface\\Icons\\INV_Misc_PocketWatch_02", "time", L["time"], L["time tooltip"])
 local clearButton = CreateOptionButton("Clear", "Interface\\Icons\\Spell_Shadow_SacrificialShield", nil, L["delete messages"], L["delete messages tooltip"])
+local keepButton = CreateOptionButton("Keep", "Interface\\ChatFrame\\UI-ChatIcon-BlinkHilight", "keep", L["keep messages"], L["keep messages tooltip"])
 
 function clearButton:OnClick()
 	WhisperPop.list:Clear()
@@ -118,17 +119,42 @@ function clearButton:OnClick()
 end
 
 frame:RegisterEvent("VARIABLES_LOADED")
+frame:RegisterEvent("PLAYER_LOGOUT")
 frame:SetScript("OnEvent", function(self, event)
-	if event == "VARIABLES_LOADED" then
+    if event == "PLAYER_LOGOUT" then
+        if WhisperPop.db.keep then
+            WhisperPop.db.keepDatas = WhisperPopFrameList.listData
+        else
+            WhisperPop.db.keepDatas = nil
+        end
+    elseif event == "VARIABLES_LOADED" then
 		if type(WhisperPopDB) ~= "table" then
 			WhisperPopDB = WhisperPop.db
 		else
 			WhisperPop.db = WhisperPopDB
-		end
+        end
+
+        if WhisperPop.db.keep then
+            WhisperPopFrameList.listData = WhisperPop.db.keepDatas or WhisperPopFrameList.listData;
+            local keepTime = time() - 60*60*24;
+            for i = #WhisperPopFrameList.listData, 1, -1 do
+                local messages = WhisperPopFrameList.listData[i].messages
+                while messages and messages[1] and (not messages[1].timeraw or messages[1].timeraw < keepTime) do
+                    table.remove(messages, 1)
+                end
+                if not messages or #messages == 0 then
+                    table.remove(WhisperPopFrameList.listData, i)
+                end
+            end
+            WhisperPop.db.keepDatas = nil
+            WhisperPopFrameList.needRefresh = 1
+            DEFAULT_CHAT_FRAME:AddMessage("提示：密语记录插件正在记录并保存私聊信息，如果您正在网吧等公共环境，建议关闭此功能。", 1, .5, .5);
+        end
 
 		recOnlyButton:SetChecked(WhisperPop.db.receiveonly)
 		soundButton:SetChecked(WhisperPop.db.sound)
-		timeButton:SetChecked(WhisperPop.db.time)
+        timeButton:SetChecked(WhisperPop.db.time)
+        keepButton:SetChecked(WhisperPop.db.keep)
 	end
 end)
 

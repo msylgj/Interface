@@ -227,6 +227,4 @@ ns.auras = {
 			[GetSpellInfo(106444)] = 9,  -- Impale
 		},
 	},
-	ReverseTimer = {
-	},
 }
