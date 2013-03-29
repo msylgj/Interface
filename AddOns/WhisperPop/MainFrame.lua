@@ -242,7 +242,7 @@ list:SetScript("OnEvent", function (self, event, text, name, _, _, _, status, _,
 		list:InsertData(data, 1)
 	end
 
-	tinsert(data.messages, { text = text, time = timeStamp, inform = inform })
+	tinsert(data.messages, { text = text, time = timeStamp, timeraw = time(), inform = inform })
 	if inform then
 		-- Replying a person removes the "new" mark from him
 		data.new = nil

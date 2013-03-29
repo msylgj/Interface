@@ -1,4 +1,4 @@
-------------------------------------------------------------
+ï»¿------------------------------------------------------------
 -- OptionFrame.lua
 --
 -- Abin
@@ -110,6 +110,7 @@ end
 local recOnlyButton = CreateOptionButton("ReceiveOnly", "Interface\\Icons\\INV_Scroll_10", "receiveonly", L["receive only"], L["receive only tooltip"])
 local soundButton = CreateOptionButton("Sound", "Interface\\Icons\\INV_Misc_Bell_01", "sound", L["sound notifying"], L["sound notifying tooltip"])
 local timeButton = CreateOptionButton("Time", "Interface\\Icons\\INV_Misc_PocketWatch_02", "time", L["time"], L["time tooltip"])
+
 local clearButton = CreateOptionButton("Clear", "Interface\\Icons\\Spell_Shadow_SacrificialShield", nil, L["delete messages"], L["delete messages tooltip"])
 local keepButton = CreateOptionButton("Keep", "Interface\\ChatFrame\\UI-ChatIcon-BlinkHilight", "keep", L["keep messages"], L["keep messages tooltip"])
 
@@ -148,7 +149,8 @@ frame:SetScript("OnEvent", function(self, event)
             end
             WhisperPop.db.keepDatas = nil
             WhisperPopFrameList.needRefresh = 1
-            DEFAULT_CHAT_FRAME:AddMessage("ÌáÊ¾£ºÃÜÓï¼ÇÂ¼²å¼şÕıÔÚ¼ÇÂ¼²¢±£´æË½ÁÄĞÅÏ¢£¬Èç¹ûÄúÕıÔÚÍø°ÉµÈ¹«¹²»·¾³£¬½¨Òé¹Ø±Õ´Ë¹¦ÄÜ¡£", 1, .5, .5);
+            DEFAULT_CHAT_FRAME:AddMessage("æç¤ºï¼šå¯†è¯­è®°å½•æ’ä»¶æ­£åœ¨è®°å½•å¹¶ä¿å­˜ç§èŠä¿¡æ¯ï¼Œå¦‚æœæ‚¨æ­£åœ¨ç½‘å§ç­‰å…¬å…±ç¯å¢ƒï¼Œå»ºè®®å…³é—­æ­¤åŠŸèƒ½ã€‚", 1, .5, .5);
+
         end
 
 		recOnlyButton:SetChecked(WhisperPop.db.receiveonly)
