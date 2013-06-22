@@ -3,7 +3,7 @@
 --
 -- thanks DiabloHu
 
-local EyeOfTheStorm	= DBM:NewMod("EyeoftheStorm", "DBM-PvP", 2)
+local EyeOfTheStorm	= DBM:NewMod("z566", "DBM-PvP", 2)
 local L				= EyeOfTheStorm:GetLocalizedStrings()
 
 EyeOfTheStorm:RemoveOption("HealthFrame")
@@ -11,11 +11,7 @@ EyeOfTheStorm:RemoveOption("SpeedKillTimer")
 EyeOfTheStorm:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 EyeOfTheStorm:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"UPDATE_WORLD_STATES"
+	"ZONE_CHANGED_NEW_AREA"
 )
 
 local bgzone = false
@@ -106,8 +102,14 @@ end
 
 do
 	local function initialize()
-		if select(2, IsInInstance()) == "pvp" and GetRealZoneText() == L.ZoneName then
+		if DBM:GetCurrentArea() == 482 then
 			bgzone = true
+			EyeOfTheStorm:RegisterShortTermEvents(
+				"CHAT_MSG_BG_SYSTEM_HORDE",
+				"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+				"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+				"UPDATE_WORLD_STATES"
+			)
 			updateGametime()
 			for i=1, GetNumMapLandmarks(), 1 do
 				local name, _, textureIndex = GetMapLandmarkInfo(i)
@@ -123,13 +125,16 @@ do
 
 		elseif bgzone then
 			bgzone = false
+			EyeOfTheStorm:UnregisterShortTermEvents()
 			if EyeOfTheStorm.Options.ShowPointFrame then
 				EyeOfTheStorm:HideEstimatedPoints()
 			end
 		end
 	end
 	EyeOfTheStorm.OnInitialize = initialize
-	EyeOfTheStorm.ZONE_CHANGED_NEW_AREA = initialize
+	function EyeOfTheStorm:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(1, initialize)
+	end
 end
 
 do
@@ -240,7 +245,7 @@ function EyeOfTheStorm:UPDATE_WORLD_STATES()
 	elseif AllyTime > HordeTime then -- Horde wins
 		winTimer:Update(getGametime(), getGametime()+HordeTime)
 		winTimer:DisableEnlarge()
-		winTimer:UpdateName(L.WinBarText:format(L.Horde))
+		winTimer:UpdateName(L.WinBarText:format(L.Horde or FACTION_HORDE))
 		winTimer:SetColor(hordeColor)
 
 		if self.ScoreFrame1Text and self.ScoreFrame2Text then
@@ -253,7 +258,7 @@ function EyeOfTheStorm:UPDATE_WORLD_STATES()
 	elseif HordeTime > AllyTime then -- Alliance wins
 		winTimer:Update(getGametime(), getGametime()+AllyTime)
 		winTimer:DisableEnlarge()
-		winTimer:UpdateName(L.WinBarText:format(L.Alliance))
+		winTimer:UpdateName(L.WinBarText:format(L.Alliance or FACTION_ALLIANCE))
 		winTimer:SetColor(allyColor)
 
 		if self.ScoreFrame1Text and self.ScoreFrame2Text then

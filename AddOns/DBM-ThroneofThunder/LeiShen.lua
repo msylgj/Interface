@@ -3,9 +3,10 @@ local L		= mod:GetLocalizedStrings()
 -- BH ADD
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8900 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9830 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
-mod:SetModelID(46770)
+mod:SetQuestID(32756)
+mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--All icons can be used, because if a pillar is level 3, it puts out 4 debuffs on 25 man (if both are level 3, then you will have 8)
 
 mod:RegisterCombat("combat")
@@ -16,12 +17,14 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",	
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
+	"SPELL_SUMMON",
+	"UNIT_DIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED"
+)
+
+mod:RegisterEvents(
+	"CHAT_MSG_SAY"
 )
 
 --Conduits (All phases)
@@ -33,91 +36,169 @@ local warnBouncingBolt					= mod:NewSpellAnnounce(136361, 3)
 local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, mod:IsTank() or mod:IsHealer())
 local warnThunderstruck					= mod:NewSpellAnnounce(135095, 3)--Target scanning seems to not work
 --Phase 2
+local warnPhase2						= mod:NewPhaseAnnounce(2)
 local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, mod:IsTank() or mod:IsHealer())
 local warnLightningWhip					= mod:NewSpellAnnounce(136850, 3)
 local warnSummonBallLightning			= mod:NewSpellAnnounce(136543, 3)--This seems to be VERY important to spread for. It spawns an orb for every person who takes damage. MUST range 6 this.
+local warnGorefiendsGrasp				= mod:NewSpellAnnounce(108199, 1)
 --Phase 3
-local warnViolentGaleWinds				= mod:NewSpellAnnounce(136869, 3)
-local warnElectricalShock				= mod:NewStackAnnounce(136914, 3, nil, mod:IsTank())
+local warnPhase3						= mod:NewPhaseAnnounce(3)
+local warnViolentGaleWinds				= mod:NewSpellAnnounce(136889, 3)
+--Heroic
+local warnHelmOfCommand					= mod:NewTargetAnnounce(139011, 3)
 
 --Conduits (All phases)
 local specWarnStaticShock				= mod:NewSpecialWarningYou(135695)
 local yellStaticShock					= mod:NewYell(135695)
 local specWarnStaticShockNear			= mod:NewSpecialWarningClose(135695)
+local specWarnDiffusionChainSoon		= mod:NewSpecialWarningPreWarn(135991, nil, 4)
 local specWarnOvercharged				= mod:NewSpecialWarningYou(136295)
 local yellOvercharged					= mod:NewYell(136295)
 local specWarnOverchargedNear			= mod:NewSpecialWarningClose(136295)
-local specWarnBouncingBolt				= mod:NewSpecialWarningSpell(136361, false)
+local specWarnBouncingBoltSoon			= mod:NewSpecialWarningPreWarn(136361, nil, 4)
+local specWarnBouncingBolt				= mod:NewSpecialWarningSpell(136361)
 --Phase 1
 local specWarnDecapitate				= mod:NewSpecialWarningRun(134912, mod:IsTank())
 local specWarnDecapitateOther			= mod:NewSpecialWarningTarget(134912, mod:IsTank())
 -- BH ADD
 local specWarnDiffusionChain			= mod:NewSpecialWarningTarget(135991)
 local specWarnThunderstruck				= mod:NewSpecialWarningSpell(135095, nil, nil, nil, 2)
+local specWarnThunderstruckSoon			= mod:NewSpecialWarningPreWarn(135095, nil, 5)
 local specWarnCrashingThunder			= mod:NewSpecialWarningMove(135150)
+local specWarnIntermissionSoon			= mod:NewSpecialWarning("specWarnIntermissionSoon")
 --Phase 2
 local specWarnFusionSlash				= mod:NewSpecialWarningSpell(136478, mod:IsTank(), nil, nil, 3)--Cast (394514 is debuff. We warn for cast though because it knocks you off platform if not careful)
 local specWarnLightningWhip				= mod:NewSpecialWarningSpell(136850, nil, nil, nil, 2)
 local specWarnSummonBallLightning		= mod:NewSpecialWarningSpell(136543, nil, nil, nil, 2)
+local specWarnOverloadedCircuits		= mod:NewSpecialWarningMove(137176)
+local specWarnGorefiendsGrasp			= mod:NewSpecialWarningSpell(108199, false)--For heroic, gorefiends+stun timing is paramount to success
 --Phase 3
-local specWarnElectricalShock			= mod:NewSpecialWarningStack(136914, mod:IsTank(), 12)--You get about 12 stacks in 8 seconds, which is about how often you'll swap
+local specWarnElectricalShock			= mod:NewSpecialWarningStack(136914, mod:IsTank(), 12)
 local specWarnElectricalShockOther		= mod:NewSpecialWarningTarget(136914, mod:IsTank())
+--Herioc
+local specWarnHelmOfCommand				= mod:NewSpecialWarningYou(139011, nil, nil, nil, 3)
 
 --Conduits (All phases)
+local timerStaticShock					= mod:NewBuffFadesTimer(8, 135695)
 local timerStaticShockCD				= mod:NewCDTimer(40, 135695)
 local timerDiffusionChainCD				= mod:NewCDTimer(40, 135991)
+local timerOvercharge					= mod:NewCastTimer(6, 136295)
 local timerOverchargeCD					= mod:NewCDTimer(40, 136295)
 local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912)--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, mod:IsTank())--Cooldown with some variation. 50-57ish or so.
+local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
 local timerThunderstruckCD				= mod:NewNextTimer(46, 135095)--Seems like an exact bar
+local timerCrashingThunder				= mod:NewNextTimer(30, 135150)
 --Phase 2
-local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478)
+local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, mod:IsTank())
+local timerLightningWhip				= mod:NewCastTimer(4, 136850)
 local timerLightningWhipCD				= mod:NewNextTimer(45.5, 136850)--Also an exact bar
 local timerSummonBallLightningCD		= mod:NewNextTimer(45.5, 136543)--Seems exact on live, versus the variable it was on PTR
 --Phase 3
-local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136869)
+local timerViolentGaleWinds				= mod:NewBuffActiveTimer(18, 136889)
+local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136889)
+--Heroic
+local timerHelmOfCommand				= mod:NewCDTimer(14, 139011)
+local timerCommandTarget				= mod:NewTargetTimer(8, 139011)
+
+local berserkTimer						= mod:NewBerserkTimer(900)--Confirmed in LFR, probably the same in all modes though?
+
+
 
 mod:AddBoolOption("RangeFrame")
+mod:AddBoolOption("RangeFrameLB", true, "sound")
 mod:AddBoolOption("OverchargeArrow")--On by default because the overcharge target is always pinned and unable to run away. You must always run to them, so everyone will want this arrow on
 mod:AddBoolOption("StaticShockArrow", false)--Off by default as most static shock stack points are pre defined and not based on running to player, but rathor running to a raid flare on ground
 mod:AddBoolOption("SetIconOnOvercharge", true)
 mod:AddBoolOption("SetIconOnStaticShock", true)
---BH ADD
+
 mod:AddBoolOption("HudMAP", true, "sound")
 mod:AddBoolOption("HudMAP2", true, "sound")
-local stormcount = 0
+mod:AddBoolOption("drpendp2", true, "sound")
+for i = 1, 5 do
+	mod:AddBoolOption("drpend"..i, false, "sound")
+end
+
+mod:AddBoolOption("drpendp3", true, "sound")
+
+for i = 1, 6 do
+	mod:AddBoolOption("drend"..i, false, "sound")
+end
+
+mod:AddBoolOption("drpendp3b", true, "sound")
+
+for i = 1, 6 do
+	mod:AddBoolOption("drendb"..i, false, "sound")
+end
+
+mod:AddDropdownOption("optDD", {"nodd", "DD1", "DD2"}, "nodd", "sound")
+
+mod:AddEditBoxOption("cancelhud", 150, "", "sound")
+
 local lightp2count = 0
-local lightp3count = 0
+local windcount = 0
+local thundercount = 0
+
+local chaincount = 0
+
+local firstchain = false
+local circletime = 0
+local twocirle = false
+
+local lbcount = 0
 local StaticShockMarkers = {}
 local OverchargedMarkers = {}
 local canceledshock = {}
 local checkmsg = ""
+
+local function MyJSP2()
+	if (mod.Options.drpend1 and lightp2count == 1) or (mod.Options.drpend2 and lightp2count == 2) or (mod.Options.drpend3 and lightp2count == 3) or (mod.Options.drpend4 and lightp2count == 4) or (mod.Options.drpend5 and lightp2count == 5) then
+		return true
+	end
+	return false
+end
+
+local function MyJSP3()
+	if (mod.Options.drend1 and windcount == 1) or (mod.Options.drend2 and windcount == 2) or (mod.Options.drend3 and windcount == 3) or (mod.Options.drend4 and windcount == 4) or (mod.Options.drend5 and windcount == 5) or (mod.Options.drend6 and windcount == 6) then
+		return true
+	end
+	return false
+end
+
+local function MyJSP3B()
+	if (mod.Options.drendb1 and thundercount == 1) or (mod.Options.drendb2 and thundercount == 2) or (mod.Options.drendb3 and thundercount == 3) or (mod.Options.drendb4 and thundercount == 4) or (mod.Options.drendb5 and thundercount == 5) or (mod.Options.drendb6 and thundercount == 6) then
+		return true
+	end
+	return false
+end
+
 local DBMHudMap = DBMHudMap
 local free = DBMHudMap.free
 local function register(e)	
 	DBMHudMap:RegisterEncounterMarker(e)
 	return e
 end
---BH ADD END
 
 local phase = 1
+local warnedCount = 0
 local intermissionActive = false--Not in use yet, but will be. This will be used (once we have CD bars for regular phases mapped out) to prevent those cd bars from starting during intermissions and messing up the custom intermission bars
 local northDestroyed = false
 local eastDestroyed = false
 local southDestroyed = false
 local westDestroyed = false
 local staticshockTargets = {}
+local staticIcon = 8--Start high and count down
 local overchargeTarget = {}
 local overchargeIcon = 1--Start low and count up
-local staticIcon = 8--Start high and count down
+local helmOfCommandTarget = {}
+local playerName = UnitName("player")
 
 local function warnStaticShockTargets()
 	warnStaticShock:Show(table.concat(staticshockTargets, "<, >"))
 	table.wipe(staticshockTargets)
 	staticIcon = 8
-	stormcount = stormcount + 1
 end
 
 local function warnOverchargeTargets()
@@ -126,18 +207,32 @@ local function warnOverchargeTargets()
 	overchargeIcon = 1
 end
 
+local function warnHelmOfCommandTargets()
+	warnHelmOfCommand:Show(table.concat(helmOfCommandTarget, "<, >"))
+	table.wipe(helmOfCommandTarget)
+end
+
+local function warnSpellReflection()
+	mod:SendSync("Refle")
+end
+
+
 function mod:OnCombatStart(delay)
 	table.wipe(staticshockTargets)
 	table.wipe(overchargeTarget)
 	--BH ADD
-	stormcount = 0
-	lightp3count = 0
+	windcount = 0
+	thundercount = 0
 	lightp2count = 0
+	lbcount = 0
+	chaincount = 0
+	checkmsg = mod.Options.cancelhud
 	table.wipe(StaticShockMarkers)
 	table.wipe(OverchargedMarkers)
 	table.wipe(canceledshock)
 	--BH ADD END
 	phase = 1
+	warnedCount = 0
 	staticIcon = 8
 	overchargeIcon = 1
 	intermissionActive = false
@@ -146,7 +241,16 @@ function mod:OnCombatStart(delay)
 	southDestroyed = false
 	westDestroyed = false
 	timerThunderstruckCD:Start(25-delay)
+	timerCrashingThunder:Start(7-delay)
 	timerDecapitateCD:Start(40-delay)--First seems to be 45, rest 50. it's a CD though, not a "next"
+	berserkTimer:Start(-delay)
+	self:RegisterShortTermEvents(
+		"UNIT_HEALTH_FREQUENT boss1",
+		"SPELL_DAMAGE",
+		"SPELL_MISSED",
+		"SPELL_PERIODIC_DAMAGE",
+		"SPELL_PERIODIC_MISSED"
+	)-- Do not use on phase 3.
 end
 
 function mod:OnCombatEnd()
@@ -156,42 +260,55 @@ function mod:OnCombatEnd()
 	if self.Options.OverchargeArrow or self.Options.StaticShockArrow then
 		DBM.Arrow:Hide()
 	end
+	self:UnregisterShortTermEvents()
 	if self.Options.HudMAP or self.Options.HudMAP2 then
 		DBMHudMap:FreeEncounterMarkers()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(135095) then
+	if args.spellId == 135095 then
 		warnThunderstruck:Show()
 		specWarnThunderstruck:Show()
+		timerThunderstruck:Start()
+		DBM.Flash:Show(1, 0, 0)
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_yllj.mp3") --遠離雷擊
 		if phase < 3 then
 			timerThunderstruckCD:Start()
 		else
 			timerThunderstruckCD:Start(30)
-		end
-		DBM.Flash:Show(1, 0, 0)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_yllj.mp3") --遠離雷擊
+			specWarnThunderstruckSoon:Schedule(25)
+			sndWOP:Schedule(25, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmlj.mp3") --5秒後雷擊
+			thundercount = thundercount + 1
+			self:Schedule(1, function()
+				if MyJSP3B() then
+					sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+				else
+					DBM:PlayCountSound(thundercount)
+				end
+			end)
+		end	
 	--"<206.2 20:38:58> [UNIT_SPELLCAST_SUCCEEDED] Lei Shen [[boss1:Lightning Whip::0:136845]]", -- [13762] --This event comes about .5 seconds earlier than SPELL_CAST_START. Maybe worth using?
-	elseif args:IsSpellID(136850) then
+	elseif args.spellId == 136850 then
 		warnLightningWhip:Show()
 		specWarnLightningWhip:Show()
+		timerLightningWhip:Start()
 		if phase < 3 then
 			timerLightningWhipCD:Start()
 		else
 			timerLightningWhipCD:Start(30)
 		end
 		DBM.Flash:Show(1, 0, 0)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_sdb.mp3") --閃電鞭
-	elseif args:IsSpellID(136478) then
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdb.mp3") --閃電鞭
+	elseif args.spellId == 136478 then
 		warnFusionSlash:Show()
 		specWarnFusionSlash:Show()
 		timerFussionSlashCD:Start()
 		if UnitName("boss1target") == UnitName("player") then
 			DBM.Flash:Show(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_xxjf.mp3") --小心擊飛
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_xxjf.mp3") --小心擊飛
 		elseif mod:IsTank() or mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_jlz.mp3") --巨雷斬
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_jlz.mp3") --巨雷斬
 		end
 	end
 end
@@ -203,34 +320,41 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnDecapitate:Show()
 			DBM.Flash:Show(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_zs.mp3")--斬首快跑
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_zs.mp3")--斬首快跑
 		else
 			specWarnDecapitateOther:Show(args.destName)
 			if mod:IsTank() or mod:IsHealer() then
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\changemt.mp3") --換坦嘲諷
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
 			end
 		end
 	--Conduit activations
-	elseif args:IsSpellID(135695) then
+	elseif args.spellId == 135695 then
 		staticshockTargets[#staticshockTargets + 1] = args.destName
 		if self.Options.SetIconOnStaticShock then
 			self:SetIcon(args.destName, staticIcon)
 			staticIcon = staticIcon - 1
 		end
 		if not intermissionActive then
-			timerStaticShockCD:Start()
+			if phase == 3 then--Perm abilities he retains in heroic final phase get a 5 second bump on CD
+				timerStaticShockCD:Start(45)
+			else
+				timerStaticShockCD:Start()
+			end
 		end
+		self:Unschedule(warnStaticShockTargets)
+		self:Schedule(0.3, warnStaticShockTargets)
 		if args:IsPlayer() then
 			specWarnStaticShock:Show()
 			yellStaticShock:Yell()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetyou.mp3") --目標是你
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countseven.mp3")
-			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countsix.mp3")
-			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-			sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-			sndWOP:Schedule(6.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-			sndWOP:Schedule(7.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+			timerStaticShock:Start()
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetyou.mp3") --目標是你
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countseven.mp3")
+			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countsix.mp3")
+			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+			sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndWOP:Schedule(6.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndWOP:Schedule(7.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		else
 			if not intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -247,15 +371,15 @@ function mod:SPELL_AURA_APPLIED(args)
 					if self.Options.StaticShockArrow then
 						DBM.Arrow:ShowRunTo(args.destName, 3, 3, 8)
 					end
-					if self:AntiSpam(3, 5) then
-						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_jhfd.mp3") --集合分擔
-						sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countseven.mp3")
-						sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countsix.mp3")
-						sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-						sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-						sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-						sndWOP:Schedule(6.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-						sndWOP:Schedule(7.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+					if self:AntiSpam(3, 11) then
+						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_jhfd.mp3") --集合分擔
+						sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countseven.mp3")
+						sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countsix.mp3")
+						sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+						sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+						sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+						sndWOP:Schedule(6.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+						sndWOP:Schedule(7.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 					end
 					if self.Options.HudMAP then
 						StaticShockMarkers[args.destName] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("timer", args.destName, 8, 8, 1, 1, 1, 0.8):Appear():RegisterForAlerts():Rotate(360, 8.5):SetAlertColor(0, 0, 1, 0.5))
@@ -264,27 +388,38 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 				--BH MODIFY END
 			end
+		end		
+		if phase == 2 and self:AntiSpam(3, 12) then
+			lightp2count = lightp2count + 1
+			if MyJSP2() then
+				sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			end
 		end
-		self:Unschedule(warnStaticShockTargets)
-		self:Schedule(0.3, warnStaticShockTargets)
-	elseif args:IsSpellID(136295) then
+	elseif args.spellId == 136295 then
 		overchargeTarget[#overchargeTarget + 1] = args.destName
+		timerOvercharge:Start()
 		if self.Options.SetIconOnOvercharge then
 			self:SetIcon(args.destName, overchargeIcon)
 			overchargeIcon = overchargeIcon + 1
 		end
 		if not intermissionActive then
-			timerOverchargeCD:Start()
+			if phase == 3 then--Perm abilities he retains in heroic final phase get a 5 second bump on CD
+				timerOverchargeCD:Start(45)
+			else
+				timerOverchargeCD:Start()
+			end
 		end
+		self:Unschedule(warnOverchargeTargets)
+		self:Schedule(0.3, warnOverchargeTargets)
 		if args:IsPlayer() then
 			specWarnOvercharged:Show()
 			yellOvercharged:Yell()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetyou.mp3") --目標是你
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-			sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetyou.mp3") --目標是你
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		else
 			if not intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -299,11 +434,17 @@ function mod:SPELL_AURA_APPLIED(args)
 				if inRange and inRange < 50 then
 					specWarnOverchargedNear:Show(args.destName)
 					if self:AntiSpam(3, 6) then
-						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_czjh.mp3") --超載集合
-						sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-						sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-						sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-						sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+						if intermissionActive and firstchain then
+							sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_hmzb.mp3") --昏迷圈準備
+							twocirle = true
+							circletime = GetTime()
+						else
+							sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_czjh.mp3") --超載集合
+							sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+							sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+							sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+							sndWOP:Schedule(4.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+						end						
 					end
 					if self.Options.HudMAP2 then
 						OverchargedMarkers[args.destName] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("timer", args.destName, 5, 6, 1, 1, 1, 0.8):Appear():RegisterForAlerts():Rotate(360, 6.5):SetAlertColor(0, 0, 1, 0.5))
@@ -316,83 +457,119 @@ function mod:SPELL_AURA_APPLIED(args)
 				--BH MODIFY END
 			end
 		end
-		self:Unschedule(warnOverchargeTargets)
-		self:Schedule(0.3, warnOverchargeTargets)
-	elseif args:IsSpellID(135680) and args:GetDestCreatureID() == 68397 then--North (Static Shock)
+	elseif args.spellId == 135680 and args:GetDestCreatureID() == 68397 then--North (Static Shock)
 		--start timers here when we have em
-	elseif args:IsSpellID(135681) and args:GetDestCreatureID() == 68397 then--East (Diffusion Chain)
+	elseif args.spellId == 135681 and args:GetDestCreatureID() == 68397 then--East (Diffusion Chain)
 		if self.Options.RangeFrame and self:IsRanged() then--Shouldn't target melee during a normal pillar, only during intermission when all melee are with ranged and out of melee range of boss
 			DBM.RangeCheck:Show(8)--Assume 8 since spell tooltip has no info
 		end
 		-- BH ADD
-		if self:IsRanged() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\scattersoon.mp3")--注意分散
+		if phase > 1 then
+			if self:AntiSpam(10, 20) then
+				specWarnDiffusionChainSoon:Show()
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdls.mp3")--閃電鏈準備
+				self:Schedule(1, warnSpellReflection)
+			end
 		end
-		-- BH ADD END
-	elseif args:IsSpellID(135682) and args:GetDestCreatureID() == 68397 then--South (Overcharge)
-	
-	elseif args:IsSpellID(135683) and args:GetDestCreatureID() == 68397 then--West (Bouncing Bolt)
-
-	elseif args:IsSpellID(136914) and (args.amount or 1) % 3 == 0 then
-		warnElectricalShock:Show(args.destName, args.amount or 1)
-		if (args.amount or 1) >= 12 then
+	elseif args.spellId == 137176 and self:AntiSpam(3, 5) and args:IsPlayer() then
+		specWarnOverloadedCircuits:Show()
+	elseif args.spellId == 139011 then
+		helmOfCommandTarget[#helmOfCommandTarget + 1] = args.destName
+		timerCommandTarget:Start(args.destName)
+		if args:IsPlayer() then
+			specWarnHelmOfCommand:Show()
+			DBM.Flash:Show(1, 0, 0)
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_jtzy.mp3") --注意擊退
+		end
+		self:Unschedule(warnHelmOfCommandTargets)
+		self:Schedule(0.3, warnHelmOfCommandTargets)
+	elseif args.spellId == 136914 then
+		local amount = args.amount or 1
+		if amount >= 12 and self:AntiSpam(2.5, 16) then
 			if args:IsPlayer() then
 				specWarnElectricalShock:Show(args.amount)
 			else
-				if not UnitDebuff("player", GetSpellInfo(136914)) and not UnitIsDeadOrGhost("player") then
-					specWarnElectricalShockOther:Show(args.destName)
-					if mod:IsTank() then
-						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\changemt.mp3") --換坦嘲諷
-					end
-				end
+				specWarnElectricalShockOther:Show(args.destName)
 			end
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(135991) then
+	if args.spellId == 135991 then
 		warnDiffusionChain:Show(args.destName)
 		specWarnDiffusionChain:Show(args.destName)
 		if not intermissionActive then
 			timerDiffusionChainCD:Start()
+			specWarnDiffusionChainSoon:Schedule(36)
+			sndWOP:Schedule(36, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdls.mp3")
+			if phase > 1 then
+				self:Schedule(37, warnSpellReflection)
+			end
 		end
-	elseif args:IsSpellID(136543) and self:AntiSpam(2, 1) then
+		if intermissionActive and self:IsDifficulty("heroic10", "heroic25") then
+			if not firstchain then
+				self:Schedule(5, function() firstchain = true end)
+			elseif twocirle then
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\gather.mp3")--快集合
+				circletime = GetTime() - circletime
+				sndWOP:Schedule(1.5-circletime, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+				sndWOP:Schedule(2.5-circletime, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+				sndWOP:Schedule(3.5-circletime, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+				sndWOP:Schedule(4.5-circletime, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+			end
+		end
+	elseif args.spellId == 136543 and self:AntiSpam(2, 1) then
 		warnSummonBallLightning:Show()
 		specWarnSummonBallLightning:Show()
 		if phase < 3 then
-			lightp2count = lightp2count + 1
 			timerSummonBallLightningCD:Start()
-			sndWOP:Schedule(40, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_wmdq.mp3") --5秒後電球
+			sndWOP:Schedule(40, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmdq.mp3") --5秒後電球
 		else
-			lightp3count = lightp3count + 1
 			timerSummonBallLightningCD:Start(30)
-			sndWOP:Schedule(25, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_wmdq.mp3") --5秒後電球
+			sndWOP:Schedule(25, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmdq.mp3")
 		end
+		if self:IsDifficulty("heroic10", "heroic25") and self.Options.RangeFrameLB then
+			DBM.RangeCheck:Show(3)
+		end
+	elseif args.spellId == 108199 and self:IsInCombat() then
+		warnGorefiendsGrasp:Show()
+		specWarnGorefiendsGrasp:Show()
 	end
 end
 
-
 function mod:SPELL_AURA_REMOVED(args)
 	--Conduit deactivations
-	if args:IsSpellID(135680) and args:GetDestCreatureID() == 68397 then--North (Static Shock)
+	if args.spellId == 135680 and args:GetDestCreatureID() == 68397 and not intermissionActive then--North (Static Shock)
 		timerStaticShockCD:Cancel()
-	elseif args:IsSpellID(135681) and args:GetDestCreatureID() == 68397 then--East (Diffusion Chain)
-		timerDiffusionChainCD:Cancel()
-		if self.Options.RangeFrame and self:IsRanged() then--Shouldn't target melee during a normal pillar, only during intermission when all melee are with ranged and out of melee range of boss
-			if phase == 1 then
-				DBM.RangeCheck:Hide()
-			else
-				DBM.RangeCheck:Show(6)--Switch back to Summon Lightning Orb spell range
-			end
+		if self.Options.RangeFrame and self:IsRanged() then
+			DBM.RangeCheck:Show(8)
 		end
-	elseif args:IsSpellID(135682) and args:GetDestCreatureID() == 68397 then--South (Overcharge)
+	elseif args.spellId == 135681 and args:GetDestCreatureID() == 68397 and not intermissionActive then--East (Diffusion Chain)
+		timerDiffusionChainCD:Cancel()
+		specWarnDiffusionChainSoon:Cancel()
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdls.mp3")
+		if phase > 1 then
+			self:Unschedule(warnSpellReflection)
+		end
+		if self.Options.RangeFrame and self:IsRanged() then
+			DBM.RangeCheck:Show(8)
+		end
+	elseif args.spellId == 135682 and args:GetDestCreatureID() == 68397 and not intermissionActive then--South (Overcharge)
 		timerOverchargeCD:Cancel()
-	elseif args:IsSpellID(135683) and args:GetDestCreatureID() == 68397 then--West (Bouncing Bolt)
+		if self.Options.RangeFrame and self:IsRanged() then
+			DBM.RangeCheck:Show(8)
+		end
+	elseif args.spellId == 135683 and args:GetDestCreatureID() == 68397 and not intermissionActive then--West (Bouncing Bolt)
 		timerBouncingBoltCD:Cancel()
+		specWarnBouncingBoltSoon:Cancel()
+		if self.Options.RangeFrame and self:IsRanged() then
+			DBM.RangeCheck:Show(8)
+		end
 	--Conduit deactivations
 	--BH MODIFY
-	elseif args:IsSpellID(135695) then
+	elseif args.spellId == 135695 then
 		if self.Options.SetIconOnStaticShock then
 			self:SetIcon(args.destName, 0)
 		end
@@ -400,7 +577,10 @@ function mod:SPELL_AURA_REMOVED(args)
 			StaticShockMarkers[args.destName] = free(StaticShockMarkers[args.destName])
 			StaticShockMarkers[args.destName.."Edge"] = free(StaticShockMarkers[args.destName.."Edge"])
 		end
-	elseif args:IsSpellID(136295) then
+		if canceledshock[args.destName] then
+			canceledshock[args.destName] = free(canceledshock[args.destName])
+		end
+	elseif args.spellId == 136295 then
 		if self.Options.SetIconOnOvercharge then
 			self:SetIcon(args.destName, 0)
 		end
@@ -413,9 +593,12 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 135150 and destGUID == UnitGUID("player") and self:AntiSpam(3, 4) then
-		specWarnCrashingThunder:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3") --快躲開
+	if spellId == 135150 and self:AntiSpam(10, 4) then
+		if destGUID == UnitGUID("player") then
+			specWarnCrashingThunder:Show()
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		end
+		timerCrashingThunder:Start()
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -423,7 +606,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 135153 and destGUID == UnitGUID("player") and self:AntiSpam(3, 4) then
 		specWarnCrashingThunder:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3") --快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -438,144 +621,262 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		--"<174.8 20:38:26> [CHAT_MSG_RAID_BOSS_EMOTE] CHAT_MSG_RAID_BOSS_EMOTE#|TInterface\\Icons\\spell_nature_unrelentingstorm.blp:20|t The |cFFFF0000|Hspell:135683|h[West Conduit]|h|r has burned out and caused |cFFFF0000|Hspell:137176|h[Overloaded Circuits]|h|r!#Bouncing Bolt Conduit
 		if msg:find("spell:135680") then--North (Static Shock)
 			northDestroyed = true
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_jdsh.mp3") --靜電震擊損毀
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_jdsh.mp3") --靜電震擊損毀
 		elseif msg:find("spell:135681") then--East (Diffusion Chain)
 			eastDestroyed = true
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_sssh.mp3") --散射電練損毀
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sssh.mp3") --散射電練損毀
 		elseif msg:find("spell:135682") then--South (Overcharge)
 			southDestroyed = true
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_czsh.mp3") --電能超載損毀
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_czsh.mp3") --電能超載損毀
 		elseif msg:find("spell:135683") then--West (Bouncing Bolt)
 			westDestroyed = true
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_ttsh.mp3") --彈跳閃電損毀
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_ttsh.mp3") --彈跳閃電損毀
 		end
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ptwo.mp3")
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\pthree.mp3")
+		if self:IsDifficulty("heroic10", "heroic25") then
+			--On heroic he gains ability perm when pillar dies.
+			--it will be cast 14 seconds later unless you get him to cast one of other ones first then it may be at 15-16 right after the other one
+			--not sure how it works after second intermission, probably up in air which one he casts first and other right after. thats why these are CD timers.
+			if northDestroyed then
+				timerStaticShockCD:Start(14)
+			end
+			if eastDestroyed then
+				timerDiffusionChainCD:Start(14)
+				specWarnDiffusionChainSoon:Schedule(10)
+				sndWOP:Schedule(10, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdls.mp3")--注意分散
+				self:Schedule(11, warnSpellReflection)
+			end
+			if southDestroyed then
+				timerOverchargeCD:Start(14)
+			end
+			if westDestroyed then
+				timerBouncingBoltCD:Start(14)
+			end
+		end
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\pthree.mp3")
 		if phase == 2 then--Start Phase 2 timers
+			warnPhase2:Show()
 			lightp2count = 0
 			timerSummonBallLightningCD:Start(15)
-			sndWOP:Schedule(10, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_wmdq.mp3") --5秒後電球
+			sndWOP:Schedule(10, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmdq.mp3") --5秒後電球
 			timerLightningWhipCD:Start(30)
 			timerFussionSlashCD:Start(44)
-			if self.Options.RangeFrame and self:IsRanged() then--Only ranged need it in phase 2 and 3
-				DBM.RangeCheck:Show(6)--Needed for phase 2 AND phase 3
+			if self.Options.RangeFrame and self:IsRanged() then
+				DBM.RangeCheck:Show(8)
 			end
 		elseif phase == 3 then--Start Phase 3 timers
-			lightp3count = 0
+			warnPhase3:Show()
+			windcount = 0
+			thundercount = 0
 			timerViolentGaleWindsCD:Start(20)
-			sndWOP:Schedule(17, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_qfzb.mp3") --強風準備
+			sndWOP:Schedule(17, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_qfzb.mp3") --強風準備
 			timerLightningWhipCD:Start(21.5)
 			timerThunderstruckCD:Start(36)
+			specWarnThunderstruckSoon:Schedule(31)
+			sndWOP:Schedule(31, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmlj.mp3") --5秒後雷擊
 			timerSummonBallLightningCD:Start(41.5)
-			sndWOP:Schedule(36, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_wmdq.mp3") --5秒後電球
+			sndWOP:Schedule(36, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmdq.mp3") --5秒後電球
+			if self.Options.RangeFrame then
+				if self:IsDifficulty("heroic10", "heroic25") then
+					if self:IsRanged() then
+						DBM.RangeCheck:Show(8)
+					else
+						DBM.RangeCheck:Show(6)
+					end
+				else
+					DBM.RangeCheck:Show(6)
+				end
+			end
 		end
 	end
 end
-
 
 local function LoopIntermission()
 	if not southDestroyed then
-		timerOverchargeCD:Start(6.5)
+		if mod:IsDifficulty("lfr25") then
+			timerOverchargeCD:Start(17.5)
+		else
+			timerOverchargeCD:Start(6.5)
+		end
 	end
 	if not eastDestroyed then
-		timerDiffusionChainCD:Start(8)
-		sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\scattersoon.mp3")--注意分散
-	end
-	if not northDestroyed then
-		timerStaticShockCD:Start(16)
+		if mod:IsDifficulty("lfr25") then
+			timerDiffusionChainCD:Start(17.5)
+			specWarnDiffusionChainSoon:Schedule(13.5)
+			sndWOP:Schedule(13.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
+		else
+			timerDiffusionChainCD:Start(8)
+			specWarnDiffusionChainSoon:Schedule(4)
+			sndWOP:Schedule(4, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
+		end
 	end
 	if not westDestroyed then
---BH DELETE	warnBouncingBolt:Schedule(19)
---BH DELETE	specWarnBouncingBolt:Schedule(19)
-		timerBouncingBoltCD:Start(19)
+		if mod:IsDifficulty("lfr25") then
+			warnBouncingBolt:Schedule(9)
+			specWarnBouncingBolt:Schedule(9)
+			timerBouncingBoltCD:Start(9)
+			sndWOP:Schedule(9, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_fscq.mp3")
+		else
+			warnBouncingBolt:Schedule(14)
+			specWarnBouncingBolt:Schedule(14)
+			timerBouncingBoltCD:Start(14)
+			sndWOP:Schedule(14, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_fscq.mp3")
+		end
+	end
+	if not mod:IsDifficulty("lfr25") and not northDestroyed then--Doesn't cast a 2nd one in LFR
+		timerStaticShockCD:Start(16)
+	end
+	if mod:IsDifficulty("heroic10", "heroic25") then
+		timerHelmOfCommand:Start(15)
 	end
 end
 
---[[Live Data (25N at least)
-"<171.7 00:17:37> [UNIT_SPELLCAST_SUCCEEDED] Static Shock Conduit boss2:Supercharge Conduits::0:137146", -- [37836]
-"<171.9 00:17:38> [CLEU] SPELL_CAST_START#false#0xF1310B2D000066BE#Lei Shen#2632#0##nil#-2147483648#-2147483648#137045#Supercharge Conduits#8", -- [37862]
-"<178.5 00:17:44> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x040000000479BEA6#Settesh#1300#0#135991#Diffusion Chain#8", -- [38360] +6.8
-"<178.6 00:17:44> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x040000000479C5C4#Prys#1300#0#136295#Overcharged#8#DEBUFF", -- [38366] +6.9
-"<190.6 00:17:56> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x0400000006055740#Rotund#1298#0#135695#Static Shock#1#DEBUFF", -- [39237] +18.9
-"<191.5 00:17:57> [CLEU] SPELL_DAMAGE#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x040000000479BDA2#Oxey#1300#0#136366#Bouncing Bolt#8#209665#-1#8#nil#nil#nil#nil#nil#nil#nil", -- [39291] +19.8 (damage, so cast is more like 17.8)
---Second Wave
-"<201.9 00:18:08> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x0400000004A6518D#Esoth#1300#0#136295#Overcharged#8#DEBUFF", -- [40207] +30.2 (7.2)
-"<203.6 00:18:09> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x04000000062A79A0#Gemchihiro#1300#0#135991#Diffusion Chain#8", -- [40298] +31.9 (8.9)
-"<210.8 00:18:16> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x04000000062A79F6#Daltin#1300#0#135695#Static Shock#1#DEBUFF", -- [41408] +39.1 (16.1)
-"<215.6 00:18:21> [CLEU] SPELL_MISSED#false#0xF1310B2D000066BE#Lei Shen#2632#0#0x0400000006145709#Lifesqt#1300#0#136366#Bouncing Bolt#8#IMMUNE#nil", -- [42324] +43.9 (20.9)
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function mod:UNIT_HEALTH_FREQUENT(uId)
+	if UnitName(uId) == L.name then
+		local hp = UnitHealth(uId) / UnitHealthMax(uId) * 100
+		if hp > 65 and hp < 66.5 and warnedCount == 0 then
+			warnedCount = 1
+			specWarnIntermissionSoon:Show()
+		elseif hp > 30 and hp < 31.5 and warnedCount == 1 then
+			warnedCount = 2
+			specWarnIntermissionSoon:Show()
+			self:UnregisterShortTermEvents()
+		end
+	end
+end
 
-"<160.0 01:00:36> [UNIT_SPELLCAST_SUCCEEDED] Static Shock Conduit boss2:Supercharge Conduits::0:137146", -- [34700]
-"<160.1 01:00:36> [CLEU] SPELL_CAST_START#false#0xF1310B2D00007501#Lei Shen#2632#0##nil#-2147483648#-2147483648#137045#Supercharge Conduits#8", -- [34724]
-"<165.7 01:00:42> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D00007501#Lei Shen#2632#0#0x0400000005487636#Eyliria#1300#0#135991#Diffusion Chain#8", -- [35136] +5.7
-"<165.9 01:00:42> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D00007501#Lei Shen#2632#0#0x040000000569CD33#Brandonian#1300#0#136295#Overcharged#8#DEBUFF", -- [35154] +5.9
-"<178.8 01:00:55> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D00007501#Lei Shen#2632#0##nil#-2147483648#-2147483648#135695#Static Shock#1", -- [35995] +18.8
-"<179.7 01:00:56> [CLEU] SPELL_DAMAGE#false#0xF1310B2D00007501#Lei Shen#2632#0#0x040000000479BEA6#Settesh#1300#0#136366#Bouncing Bolt#8#15097#-1#8#nil#nil#69375#nil#nil#nil#nil", -- [36067] +19.7
---Second Wave
-"<189.3 01:01:06> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D00007501#Lei Shen#2632#0#0x040000000479BEA6#Settesh#1300#0#136295#Overcharged#8#DEBUFF", -- [36842] +29.3 (6.9)
-"<190.9 01:01:07> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D00007501#Lei Shen#2632#0#0x0400000006145709#Lifesqt#1300#0#135991#Diffusion Chain#8", -- [37073] +30.9 (7.9)
-"<199.4 01:01:16> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D00007501#Lei Shen#2632#0#0x0400000005434EF9#Zaythan#1300#0#135695#Static Shock#1#DEBUFF", -- [37650] +39.4 (16.4)
-"<203.9 01:01:20> [CLEU] SPELL_DAMAGE#false#0xF1310B2D00007501#Lei Shen#2632#0#0x040000000479BDA2#Oxey#1300#0#136366#Bouncing Bolt#8#107881#-1#8#nil#nil#nil#nil#nil#nil#nil", -- [37866] +43.9 (20.9)
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-"<157.4 00:54:40> [UNIT_SPELLCAST_SUCCEEDED] Static Shock Conduit boss2:Supercharge Conduits::0:137146", -- [35636]
-"<157.7 00:54:41> [CLEU] SPELL_CAST_START#false#0xF1310B2D000072DF#Lei Shen#2632#0##nil#-2147483648#-2147483648#137045#Supercharge Conduits#8", -- [35654]
-"<163.2 00:54:46> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x04000000051261FC#Bellagraced#1300#0#135991#Diffusion Chain#8", -- [36058] +5.8
-"<163.5 00:54:47> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x0400000004DCB8F1#Anafielle#1300#0#136295#Overcharged#8#DEBUFF", -- [36074] +6.1
-"<176.2 00:54:59> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D000072DF#Lei Shen#2632#0##nil#-2147483648#-2147483648#135695#Static Shock#1", -- [36898] +18.8
-"<177.2 00:55:00> [CLEU] SPELL_DAMAGE#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x0400000004DCB8F1#Anafielle#1300#0#136366#Bouncing Bolt#8#37686#-1#8#nil#nil#35110#nil#nil#nil#nil", -- [36968] +19.8
---Second Wave
-"<186.8 00:55:10> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x040000000479C5C4#Prys#1300#0#136295#Overcharged#8#DEBUFF", -- [38051] +29.4 (6.4)
-"<188.4 00:55:11> [CLEU] SPELL_CAST_SUCCESS#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x040000000479BFAE#Moshne#1300#0#135991#Diffusion Chain#8", -- [38176] +31 (8)
-"<196.9 00:55:20> [CLEU] SPELL_AURA_APPLIED#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x04000000062A79F6#Daltin#1300#0#135695#Static Shock#1#DEBUFF", -- [39007] +39.5 (16.5)
-"<201.3 00:55:24> [CLEU] SPELL_DAMAGE#false#0xF1310B2D000072DF#Lei Shen#2632#0#0x04000000051261FC#Bellagraced#1300#0#136366#Bouncing Bolt#8#180443#-1#8#nil#nil#nil#nil#nil#nil#nil", -- [39422] +43.9 (20.9)
---]]
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 137146 and self:AntiSpam(2, 2) then--Supercharge Conduits (comes earlier than other events so we use this one)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_cjcn.mp3") --超級充能		
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_cjcn.mp3") --超級充能		
 		intermissionActive = true
-		stormcount = 0
+		firstchain = false
+		twocirle = false
+		chaincount = 0
+		specWarnDiffusionChainSoon:Cancel()
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdls.mp3")
+		if phase > 1 then
+			self:Unschedule(warnSpellReflection)
+		end
+		specWarnBouncingBoltSoon:Cancel()
 		timerThunderstruckCD:Cancel()
+		timerCrashingThunder:Cancel()
 		timerDecapitateCD:Cancel()
 		timerFussionSlashCD:Cancel()
 		timerLightningWhipCD:Cancel()
 		timerSummonBallLightningCD:Cancel()
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_wmdq.mp3")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmdq.mp3")
 		if phase == 1 then
-			sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\ptwo.mp3")--2階段準備
+			sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3")--2階段準備
 		elseif phase == 2 then
-			sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\pthree.mp3")--3階段準備
+			sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\pthree.mp3")--3階段準備
 		end
 		timerSuperChargedConduits:Start()
+		timerStaticShockCD:Cancel()
+		timerDiffusionChainCD:Cancel()
+		timerOverchargeCD:Cancel()
+		timerBouncingBoltCD:Cancel()
 		if not eastDestroyed then
-			timerDiffusionChainCD:Start(6)
-			sndWOP:Schedule(3, "Interface\\AddOns\\DBM-Core\\extrasounds\\scattersoon.mp3")--注意分散
-			if self.Options.RangeFrame then
-				DBM.RangeCheck:Show(8)
+			if self:IsDifficulty("lfr25") then
+				timerDiffusionChainCD:Start(10)
+				specWarnDiffusionChainSoon:Schedule(6)
+				sndWOP:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
+			else
+				timerDiffusionChainCD:Start(6)
+				specWarnDiffusionChainSoon:Schedule(2)
+				sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
 			end
 		end
-		if not southDestroyed then
-			timerOverchargeCD:Start(6)
+		if self.Options.RangeFrame then
+			DBM.RangeCheck:Show(8)
 		end
-		if not westDestroyed then
---BH DELETE		warnBouncingBolt:Schedule(18)
---BH DELETE		specWarnBouncingBolt:Schedule(18)
-			timerBouncingBoltCD:Start(18)
+		if not southDestroyed then
+			if self:IsDifficulty("lfr25") then
+				timerOverchargeCD:Start(10)
+			else
+				timerOverchargeCD:Start(6)
+			end
+		end
+		if not westDestroyed and not self:IsDifficulty("lfr25") then--Doesn't get cast in first wave in LFR, only second
+			warnBouncingBolt:Schedule(14)
+			specWarnBouncingBolt:Schedule(14)
+			sndWOP:Schedule(14, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_fscq.mp3")
+			timerBouncingBoltCD:Start(14)
 		end
 		if not northDestroyed then
-			timerStaticShockCD:Start(19)
+			if self:IsDifficulty("lfr25") then
+				timerStaticShockCD:Start(21)
+			else
+				timerStaticShockCD:Start(19)
+			end
 		end
 		self:Schedule(23, LoopIntermission)--Fire function to start second wave of specials timers
-	elseif spellId == 136395 and self:AntiSpam(2, 3) then--Bouncing Bolt (Does NOT work in intermission phases though :\)
+		if self:IsDifficulty("heroic10", "heroic25") then
+			timerHelmOfCommand:Start(14)
+		end
+	elseif spellId == 136395 and self:AntiSpam(2, 3) and not intermissionActive then--Bouncing Bolt (During intermission phases, it fires randomly, use scheduler and filter this :\)
 		warnBouncingBolt:Show()
 		specWarnBouncingBolt:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_fscq.mp3")
-		if not intermissionActive then
-			timerBouncingBoltCD:Start()
-		end
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_fscq.mp3")
+		timerBouncingBoltCD:Start()
+		specWarnBouncingBoltSoon:Schedule(36)
 	elseif spellId == 136869 and self:AntiSpam(2, 4) then--Violent Gale Winds
 		warnViolentGaleWinds:Show()
+		timerViolentGaleWinds:Start()
 		timerViolentGaleWindsCD:Start()
-		sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_tt_qfzb.mp3") --強風準備
+		sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_qfzb.mp3") --強風準備
+		self:Schedule(28, function()
+			DBM:PlayCountSound(windcount + 1)
+		end)
+		windcount = windcount + 1
+		if MyJSP3() then
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+		end
+	end
+end
+
+function mod:SPELL_SUMMON(args)
+	if args.spellId == 136543 then
+		lbcount = lbcount + 1
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 69232 then
+		lbcount = lbcount - 1
+--		print(GetSpellInfo(136543)..":"..lbcount)
+		if lbcount == 0 then
+			if self:IsDifficulty("heroic10", "heroic25") and self.Options.RangeFrameLB then
+				DBM.RangeCheck:Hide()
+				if self:IsRanged() then
+					DBM.RangeCheck:Show(8)
+				end
+			end
+		end
+	end
+end
+
+function mod:CHAT_MSG_SAY(msg, sender)
+	if checkmsg == "" then return end
+	if msg:find(checkmsg) then
+		if StaticShockMarkers[sender] and not canceledshock[sender] then
+			StaticShockMarkers[sender] = free(StaticShockMarkers[sender])
+			StaticShockMarkers[sender.."Edge"] = free(StaticShockMarkers[sender.."Edge"])
+			StaticShockMarkers[sender] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("highlight", sender, 8, 8, 1, 1, 1, 0.8):Appear():RegisterForAlerts())
+			if sender ~= UnitName("player") then
+				canceledshock[sender] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("cross2", sender, 8, 8, 1, 1, 1, 1))
+			end
+		end
+	end
+end
+
+function mod:OnSync(msg, guid)
+	if msg == "Refle" then
+		if self:AntiSpam(20, 15) then
+			chaincount = chaincount + 1
+			if ((mod.Options.optDD == "DD1") and (chaincount % 2 == 1)) or ((mod.Options.optDD == "DD2") and (chaincount % 2 == 0)) then
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_kkdf.mp3")
+			end
+		end
 	end
 end

@@ -3,9 +3,8 @@ local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 local sndDSA	= mod:NewSound(nil, "SoundDSA", true)
 
-mod:SetRevision(("$Revision: 8200 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
-mod:SetModelID(41813)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -18,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
 	"UNIT_POWER",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -157,7 +156,7 @@ local fixHdead = 0
 local function warnPinnedDownTargets()
 	warnPinnedDown:Show(table.concat(pinnedTargets, "<, >"))
 	specWarnPinningArrow:Show()
-	sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzjkd.mp3") --壓制箭快打
+	sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzjkd.mp3") --壓制箭快打
 	table.wipe(pinnedTargets)
 end
 
@@ -183,12 +182,12 @@ function mod:OnCombatStart(delay)
 	qiangActive = true
 	timerAnnihilateCD:Start(10.5)
 	timerFlankingOrdersCD:Start(25)
-	sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zwjh.mp3") --戰王激活
-	sndWOP:Schedule(21, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3")
+	sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zwjh.mp3") --戰王激活
+	sndWOP:Schedule(21, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3")
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerImperviousShieldCD:Start(40.7)
 		warnImperviousShieldSoon:Schedule(35.7)
-		sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zwhd.mp3") -- 戰王護盾準備
+		sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zwhd.mp3") -- 戰王護盾準備
 		self:Schedule(37.5, function()
 			if UnitName("target") == Qiang then
 				specWarnDSoon:Show()
@@ -218,19 +217,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnDelirious:Show(args.destName)
 		timerDeliriousCD:Start()
 		if mod:CanRemoveEnrage() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\trannow.mp3") --快寧神
-			sndWOP:Schedule(18, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kwjn.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\trannow.mp3") --快寧神
+			sndWOP:Schedule(18, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kwjn.mp3")
 		end
 	elseif args:IsSpellID(117756) then
 		warnCowardice:Show(args.destName)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_fsxt.mp3") --反傷形態
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_fsxt.mp3") --反傷形態
 		Warned = false
 		fanshang = true
 	elseif args:IsSpellID(117737) then
 		warnCrazed:Show(args.destName)
 		mengfirstime = mengfirstime + 1
 		if mengfirstime > 1 then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dkxt.mp3") --癲狂形態
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dkxt.mp3") --癲狂形態
 		end
 		Warned = false
 		fanshang = false
@@ -246,9 +245,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnFixate:Show()
 			yellFixate:Yell()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_aydn.mp3") --快跑 暗影點你
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shadowrun.mp3") --快跑 暗影點你
 		elseif self:AntiSpam(10, 5) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_hqcx.mp3") --黑球出現
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_hqcx.mp3") --黑球出現
 		end
 		if self.Options.HudMAP2 then
 			local spelltext = GetSpellInfo(118303).."-"..args.destName
@@ -284,14 +283,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args:IsSpellID(117910) then
 		warnFlankingOrders:Show()
 		specWarnFlankingOrders:Show()
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3")
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bckd.mp3") --包抄快躲
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3")
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bckd.mp3") --包抄快躲
 		if qiangActive then
 			timerFlankingOrdersCD:Start()
-			sndWOP:Schedule(37, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3") --包抄準備
+			sndWOP:Schedule(37, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3") --包抄準備
 		else
 			timerFlankingOrdersCD:Start(75)
-			sndWOP:Schedule(72, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3")
+			sndWOP:Schedule(72, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3")
 		end
 	end
 end
@@ -301,21 +300,21 @@ function mod:SPELL_CAST_START(args)
 		warnSleightOfHand:Show(args.sourceName)
 		if args.sourceGUID == UnitGUID("target") then
 			specWarnSleightOfHand:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\stopatk.mp3") --注意停手
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stopatk.mp3") --注意停手
 			DBM.Flash:Show(1, 0, 0)
 		end
 		timerSleightOfHand:Start()
 		timerSleightOfHandCD:Start()
-		sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dwhd.mp3") -- 盜王護盾準備
+		sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dwhd.mp3") -- 盜王護盾準備
 		self:Schedule(39, function()
 			if UnitName("target") == Subetai then
 				specWarnDSoon:Show()
 			end
 		end)
 		if mod.Options.optKZ == "KZ1" then
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kzc.mp3") --快製裁
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kzc.mp3") --快製裁
 		elseif mod.Options.optKZ == "KZ2" then
-			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kzc.mp3")
+			sndWOP:Schedule(5.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kzc.mp3")
 		end
 	elseif args:IsSpellID(117506) then
 		warnUndyingShadows:Show()
@@ -323,12 +322,12 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(117628) then
 		shadowdd = shadowdd + 1	
 		if ((mod.Options.optDD == "DD1") and (shadowdd % 4 == 1)) or ((mod.Options.optDD == "DD2") and (shadowdd % 4 == 2)) or ((mod.Options.optDD == "DD3") and (shadowdd % 4 == 3)) or ((mod.Options.optDD == "DD4") and (shadowdd % 4 == 0)) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\kickcast.mp3") --快打斷
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3") --快打斷
 			specWarnShadowBlast:Show(args.sourceName)
 		end	
 		if ((mod.Options.optDD == "DD1") and (shadowdd % 4 == 0)) or ((mod.Options.optDD == "DD2") and (shadowdd % 4 == 1)) or ((mod.Options.optDD == "DD3") and (shadowdd % 4 == 2)) or ((mod.Options.optDD == "DD4") and (shadowdd % 4 == 3)) then
 			specWarnDDL:Schedule(2)
-			sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_ddzb.mp3") --打斷準備
+			sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\interruptsoon.mp3") --打斷準備
 		end
 	elseif args:IsSpellID(117697) then
 		warnShieldOfDarkness:Show(args.sourceName)
@@ -338,53 +337,53 @@ function mod:SPELL_CAST_START(args)
 		warnShieldOfDarknessSoon:Schedule(40.5, 2)
 		warnShieldOfDarknessSoon:Schedule(41.5, 1)
 		timerShieldOfDarknessCD:Start()
-		sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wwhd.mp3") -- 巫王護盾準備
+		sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wwhd.mp3") -- 巫王護盾準備
 		self:Schedule(39, function()
 			if UnitName("target") == Zian then
 				specWarnDSoon:Show()
 			end
 		end)
 		if args.sourceGUID == UnitGUID("target") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\stopatk.mp3") --注意停手
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stopatk.mp3") --注意停手
 			specWarnShieldOfDarkness:Show(args.sourceName)
 			DBM.Flash:Show(1, 0, 0)
 		elseif isDispeller then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyhd.mp3") --注意护盾
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zyhd.mp3") --注意护盾
 			specWarnShieldOfDarkness:Show(args.sourceName)
 			DBM.Flash:Show(1, 0, 0)
 		end
 		if isDispeller then
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\dispelnow.mp3") --快驅散
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3") --快驅散
 		end
 	elseif args:IsSpellID(117833) then
 		ctdd = ctdd + 1
 		warnCrazyThought:Show()
 		if zianActive then return end
 		if (((mod.Options.optDD == "DD1") and (ctdd % 4 == 1)) or ((mod.Options.optDD == "DD2") and (ctdd % 4 == 2)) or ((mod.Options.optDD == "DD3") and (ctdd % 4 == 3)) or ((mod.Options.optDD == "DD4") and (ctdd % 4 == 0))) and (not Warned) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\kickcast.mp3") --快打斷
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3") --快打斷
 			specWarnCrazyThought:Show(args.sourceName)
 		end		
 		if (((mod.Options.optDD == "DD1") and (ctdd % 4 == 0)) or ((mod.Options.optDD == "DD2") and (ctdd % 4 == 1)) or ((mod.Options.optDD == "DD3") and (ctdd % 4 == 2)) or ((mod.Options.optDD == "DD4") and (ctdd % 4 == 3))) and (not Warned) then
 			specWarnDDL:Schedule(1)
-			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_ddzb.mp3") --打斷準備
+			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\interruptsoon.mp3") --打斷準備
 		end
 	elseif args:IsSpellID(117708) then
 		countxk = countxk + 1
 		warnMaddeningShout:Show()
 		specWarnMaddeningShout:Show()
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\findmc.mp3") --注意心控
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\findmc.mp3") --注意心控
 		if mengActive then
 			if countxk == 1 then
 				timerMaddeningShoutCD:Start()
-				sndWOP:Schedule(40, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+				sndWOP:Schedule(40, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 			else
 				timerMaddeningShoutCD:Start(50)
-				sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+				sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 			end
 		else
 			timerMaddeningShoutCD:Start(77)
-			sndWOP:Schedule(75, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+			sndWOP:Schedule(75, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 		end
 	elseif args:IsSpellID(117948) then
 		warnAnnihilate:Show()
@@ -394,7 +393,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerAnnihilateCD:Start()
 		end
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\shockwave.mp3") --震懾波
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3") --震懾波
 		timerJL:Start(8)
 		countzsb = countzsb + 1
 	elseif args:IsSpellID(117961) then
@@ -404,7 +403,7 @@ function mod:SPELL_CAST_START(args)
 			warnImperviousShieldSoon:Schedule(57)
 			timerImperviousShieldCD:Start(62)
 --			countdownImperviousShield:Start(62)
-			sndDSA:Schedule(59, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zwhd.mp3") -- 戰王護盾準備
+			sndDSA:Schedule(59, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zwhd.mp3") -- 戰王護盾準備
 			self:Schedule(59, function()
 				if UnitName("target") == Qiang then
 					specWarnDSoon:Show()
@@ -414,7 +413,7 @@ function mod:SPELL_CAST_START(args)
 			warnImperviousShieldSoon:Schedule(37)
 			timerImperviousShieldCD:Start()
 --			countdownImperviousShield:Start(42)
-			sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zwhd.mp3") -- 戰王護盾準備
+			sndDSA:Schedule(39, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zwhd.mp3") -- 戰王護盾準備
 			self:Schedule(39, function()
 				if UnitName("target") == Qiang then
 					specWarnDSoon:Show()
@@ -423,11 +422,11 @@ function mod:SPELL_CAST_START(args)
 		end
 		if isDispellerZ then
 			specWarnImperviousShield:Show(args.sourceName)
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\dispelnow.mp3")
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")
 			DBM.Flash:Show(1, 0, 0)
 		elseif args.sourceGUID == UnitGUID("target") then
 			specWarnImperviousShield:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\stopatk.mp3") --注意停手
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stopatk.mp3") --注意停手
 			DBM.Flash:Show(1, 0, 0)
 		end
 	end
@@ -436,7 +435,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 117558 and destGUID == UnitGUID("player") and self:AntiSpam(3, 4) then
 		specWarnCoalescingShadows:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	elseif spellId == 117921 and self:AntiSpam(2, 6) then--巨力攻擊
 		if (countzsb == 0 and timerAnnihilateCD:GetTime() < 6) or (countzsb >= 1 and timerAnnihilateCD:GetTime() < 27) then
 			timerJL:Start()
@@ -446,7 +445,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 					specWarnQBHT:Show()
 				else
 					specWarnQBH:Show()
-					sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jmzb.mp3") -- 殲滅準備
+					sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jmzb.mp3") -- 殲滅準備
 				end
 			end
 		end
@@ -461,7 +460,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnVolley:Show()
 		specWarnVolley:Show()
 		timerVolleyCD:Start()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyjy.mp3") --注意箭雨
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zyjy.mp3") --注意箭雨
 	elseif spellId == 118121 and self:AntiSpam(2, 2) then--Rain of Arrows
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerRainOfArrowsCD:Start(41)
@@ -475,7 +474,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			zianActive = false
 			timerChargingShadowsCD:Cancel()
 			timerShieldOfDarknessCD:Cancel()
-			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wwhd.mp3")
+			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wwhd.mp3")
 			warnShieldOfDarknessSoon:Cancel()
 			timerUndyingShadowsCD:Start(30)--This boss retains Undying Shadows
 			if self.Options.RangeFrame and not subetaiActive then--Close range frame, but only if zian is also not active, otherwise we still need it
@@ -484,27 +483,27 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		elseif UnitName(uId) == Meng then
 			mengActive = false
 			timerDeliriousCD:Cancel()
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kwjn.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kwjn.mp3")
 			timerMaddeningShoutCD:Start(30)--This boss retains Maddening Shout
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
-			sndWOP:Schedule(28, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
+			sndWOP:Schedule(28, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 		elseif UnitName(uId) == Qiang then
 			qiangActive = false
 			timerJL:Cancel()
 			timerAnnihilateCD:Cancel()
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jmzb.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jmzb.mp3")
 			timerImperviousShieldCD:Cancel()
-			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zwhd.mp3")
+			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zwhd.mp3")
 			warnImperviousShieldSoon:Cancel()
 			timerFlankingOrdersCD:Start(30)--This boss retains Flanking Orders
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3")
-			sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_bczb.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3")
+			sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_bczb.mp3")
 		elseif UnitName(uId) == Subetai then
 			subetaiActive = false
 			timerVolleyCD:Cancel()
 			timerRainOfArrowsCD:Cancel()
 			timerSleightOfHandCD:Cancel()
-			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dwhd.mp3")
+			sndDSA:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dwhd.mp3")
 			timerPillageCD:Start(30)--This boss retains Pillage
 			if self.Options.RangeFrame and not zianActive then--Close range frame, but only if subetai is also not active, otherwise we still need it
 				DBM.RangeCheck:Hide()
@@ -528,7 +527,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			end
 			if target == UnitName("player") then
 				specWarnPillage:Show()
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3") --快躲開
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
 				local uId = DBM:GetRaidUnitId(target)
 				if uId then
 					local x, y = GetPlayerMapPosition(uId)
@@ -539,7 +538,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 					local inRange = DBM.RangeCheck:GetDistance("player", x, y)
 					if inRange and inRange < 9 then
 						specWarnPillage:Show()
-						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3") --快躲開
+						sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
 					end
 				end
 			end
@@ -556,10 +555,10 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		zianActive = true
 		timerChargingShadowsCD:Start()
 		timerUndyingShadowsCD:Start(20)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wwjh.mp3") --巫王激活
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wwjh.mp3") --巫王激活
 		if mod.Options.optDD == "DD1" then
 			specWarnDDL:Schedule(1)
-			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_ddzb.mp3") --打斷準備
+			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\interruptsoon.mp3") --打斷準備
 		end
 		if self:IsDifficulty("heroic10", "heroic25") then
 			warnShieldOfDarknessSoon:Schedule(35, 5)--Start pre warning with regular warnings only as you don't move at this point yet.
@@ -568,7 +567,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 			warnShieldOfDarknessSoon:Schedule(38, 2)
 			warnShieldOfDarknessSoon:Schedule(39, 1)
 			timerShieldOfDarknessCD:Start(40)
-			sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wwhd.mp3") -- 巫王護盾準備
+			sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wwhd.mp3") -- 巫王護盾準備
 			self:Schedule(37.5, function()
 				if UnitName("target") == Zian then
 					specWarnDSoon:Show()
@@ -588,18 +587,18 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerDeliriousCD:Start()
 			if mod:CanRemoveEnrage() then
-				sndWOP:Schedule(18, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kwjn.mp3") -- 狂王激怒準備
+				sndWOP:Schedule(18, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kwjn.mp3") -- 狂王激怒準備
 			end
 			timerMaddeningShoutCD:Start(40)
-			sndWOP:Schedule(35, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+			sndWOP:Schedule(35, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 		else
 			timerMaddeningShoutCD:Start(20.5)
-			sndWOP:Schedule(15, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_jknh.mp3")
+			sndWOP:Schedule(15, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_jknh.mp3")
 		end
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_kwjh.mp3") --狂王激活
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_kwjh.mp3") --狂王激活
 		if mod.Options.optDD == "DD1" then
 			specWarnDDL:Schedule(1)
-			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_ddzb.mp3") --打斷準備
+			sndWOP:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\interruptsoon.mp3") --打斷準備
 		end
 	elseif boss == Qiang then
 		warnActivated:Show(boss)
@@ -608,11 +607,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		subetaiActive = true
 		timerVolleyCD:Start(5)
 		timerPillageCD:Start(25)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dwjh.mp3") --盜王激活
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dwjh.mp3") --盜王激活
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerSleightOfHandCD:Start(40.7)
 			timerRainOfArrowsCD:Start(40)
-			sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dwhd.mp3") -- 盜王護盾準備
+			sndDSA:Schedule(37.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dwhd.mp3") -- 盜王護盾準備
 			self:Schedule(37.5, function()
 				if UnitName("target") == Subetai then
 					specWarnDSoon:Show()
@@ -631,7 +630,7 @@ function mod:UNIT_POWER(uId)
 	if (self:GetUnitCreatureId(uId) == 60708) and UnitPower(uId) > 60 and not Warned then
 		Warned = true
 		if (not mod:IsDps()) or ((UnitGUID(uId) == UnitGUID("target")) and fanshang) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_nlgg.mp3") --能量過高
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\energyhigh.mp3") --能量過高
 		end
 	end
 end

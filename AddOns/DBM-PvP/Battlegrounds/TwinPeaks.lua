@@ -3,7 +3,7 @@
 -- Thanks to Samira (EU-Thrall)
 
 
-local TwinPeaks		= DBM:NewMod("TwinPeaks", "DBM-PvP", 2)
+local TwinPeaks		= DBM:NewMod("z726", "DBM-PvP", 2)
 local L			= TwinPeaks:GetLocalizedStrings()
 
 TwinPeaks:RemoveOption("HealthFrame")
@@ -11,13 +11,7 @@ TwinPeaks:RemoveOption("SpeedKillTimer")
 TwinPeaks:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 TwinPeaks:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA",
-	"PLAYER_REGEN_ENABLED",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UPDATE_BATTLEFIELD_SCORE"
+	"ZONE_CHANGED_NEW_AREA"
 )
 
 local bgzone = false
@@ -41,8 +35,16 @@ TwinPeaks:AddBoolOption("ShowFlagCarrierErrorNote", false)
 
 do
 	local function TwinPeaks_Initialize()
-		if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 626 then
+		if DBM:GetCurrentArea() == 626 then
 			bgzone = true
+			TwinPeaks:RegisterShortTermEvents(
+				"PLAYER_REGEN_ENABLED",
+				"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+				"CHAT_MSG_BG_SYSTEM_HORDE",
+				"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+				"CHAT_MSG_RAID_BOSS_EMOTE",
+				"UPDATE_BATTLEFIELD_SCORE"
+			)
 			if TwinPeaks.Options.ShowFlagCarrier then
 				TwinPeaks:ShowFlagCarrier()
 				TwinPeaks:CreateFlagCarrierButton()
@@ -55,13 +57,17 @@ do
 
 		elseif bgzone then
 			bgzone = false
+			TwinPeaks:UnregisterShortTermEvents()
 			if TwinPeaks.Options.ShowFlagCarrier then
 				TwinPeaks:HideFlagCarrier()
 			end
 		end
 	end
 	TwinPeaks.OnInitialize = TwinPeaks_Initialize
-	TwinPeaks.ZONE_CHANGED_NEW_AREA = TwinPeaks_Initialize
+
+	function TwinPeaks:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(1, TwinPeaks_Initialize)
+	end
 end
 
 function TwinPeaks:CHAT_MSG_BG_SYSTEM_NEUTRAL(msg)
@@ -217,7 +223,7 @@ do
 					nickLong = mNick
 				end
 
-				if mSide == L.Alliance then
+				if (mSide == L.Alliance) or (mSide == FACTION_ALLIANCE) then
 					FlagCarrier[2] = nickLong
 					self.FlagCarrierFrame2Text:SetText(mNick)
 					self.FlagCarrierFrame2:Show()
@@ -230,7 +236,7 @@ do
 						self.FlagCarrierFrame2Button:SetAttribute( "macrotext", "/targetexact " .. nickLong )
 					end					
 
-				elseif mSide == L.Horde then
+				elseif (mSide == L.Horde) or (mSide == FACTION_HORDE) then
 					FlagCarrier[1] = nickLong
 					self.FlagCarrierFrame1Text:SetText(mNick)
 					self.FlagCarrierFrame1:Show()
@@ -258,11 +264,11 @@ do
 					_, _, mSide =  string.find(arg1, L.ExprFlagReturn2)
 				end
 				
-				if mSide == L.Alliance then
+				if (mSide == L.Alliance) or (mSide == FACTION_ALLIANCE) then
 					self.FlagCarrierFrame2:Hide()
 					FlagCarrier[2] = nil
 
-				elseif mSide == L.Horde then
+				elseif (mSide == L.Horde) or (mSide == FACTION_HORDE) then
 					self.FlagCarrierFrame1:Hide()
 					FlagCarrier[1] = nil
 				end

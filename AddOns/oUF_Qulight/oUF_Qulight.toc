@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Author: Qulight	
 ## Title: oUF_Qulight
 ## RequiredDeps: oUF

@@ -2,8 +2,7 @@ local mod	= DBM:NewMod("BrawlRank7", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8387 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(46798)
 mod:SetZone()
 
@@ -34,22 +33,22 @@ local remainingMines = 8
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(133212) then
+	if args.spellId == 133212 then
 		warnRockets:Show()
 		timerRockets:Schedule(4)
-	elseif args:IsSpellID(125212) then
+	elseif args.spellId == 125212 then
 		warnShadowbolt:Show()
 		timerShadowboltCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnShadowbolt:Show()
 		end
-	elseif args:IsSpellID(133465) then
+	elseif args.spellId == 133465 then
 		warnGhost:Show()
 		timerGhostCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnGhost:Show()
 		end
-	elseif args:IsSpellID(133017) then
+	elseif args.spellId == 133017 then
 		remainingMines = remainingMines - 1
 		warnMines:Show(remainingMines)
 	end
@@ -57,13 +56,13 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end
-	if args:IsSpellID(133015) then
+	if args.spellId == 133015 then
 --		remainingMines = 8
 		warnMinesSpawning:Show()
 		if brawlersMod:PlayerFighting() then
 			specWarnMinesSpawning:Show()
 		end
-	elseif args:IsSpellID(133018) then
+	elseif args.spellId == 133018 then
 		remainingMines = 8
 	end
 end

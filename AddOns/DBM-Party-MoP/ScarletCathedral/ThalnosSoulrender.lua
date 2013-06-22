@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8602 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(59789)
-mod:SetModelID(27705)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -34,7 +33,7 @@ local timerSummonSpiritsCD		= mod:NewNextTimer(60, 115147)--Although correction 
 
 function mod:OnCombatStart(delay)
 	timerRaiseCrusadeCD:Start(6-delay)
-	sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3")--準備小怪
+	sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
 	timerEvictSoulCD:Start(15.5-delay)
 end
 
@@ -43,11 +42,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEvictSoul:Show(args.destName)
 		timerEvictSoul:Start(args.destName)
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\dispelnow.mp3")--快驅散
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")--快驅散
 		end
 	elseif args:IsSpellID(115297, 116648) and args:IsPlayer() and self:AntiSpam() then
 		specWarnWind:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 
@@ -58,15 +57,15 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(115297) then--Trigger CD off success, since we can resist it. do NOT add ID 115548, it's a similcast to 115297
+	if args.spellId == 115297 then--Trigger CD off success, since we can resist it. do NOT add ID 115548, it's a similcast to 115297
 		timerEvictSoulCD:Start()
-	elseif args:IsSpellID(115147) then--Summon Empowering Spirits
+	elseif args.spellId == 115147 then--Summon Empowering Spirits
 		warnSummonSpirits:Show()
 		specWarnEmpoweredSpirit:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\killspirit.mp3") --靈魂快打
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\killspirit.mp3") --靈魂快打
 		timerRaiseCrusadeCD:Start(20)--Raise crusaders always 20 seconds after spirits in all modes
-		sndWOP:Schedule(19, "Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3") --準備小怪
-	elseif args:IsSpellID(115139) then--Raise Fallen Crusade
+		sndWOP:Schedule(19, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3") --準備小怪
+	elseif args.spellId == 115139 then--Raise Fallen Crusade
 		warnRaiseCrusade:Show()
 		specWarnFallenCrusader:Show()
 		if self:IsDifficulty("challenge5") then
@@ -78,7 +77,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(115250) then--Empower Zombie (used by empowering Spirits on fallen Crusaders to make them hulking hard hitting zombies)
+	if args.spellId == 115250 then--Empower Zombie (used by empowering Spirits on fallen Crusaders to make them hulking hard hitting zombies)
 		warnEmpowerZombie:Show()
 	end
 end

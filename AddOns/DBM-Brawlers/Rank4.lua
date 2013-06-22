@@ -2,8 +2,7 @@ local mod	= DBM:NewMod("BrawlRank4", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8424 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(28115)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -12,7 +11,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"UNIT_TARGET",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
 local warnCharging				= mod:NewSpellAnnounce(133253, 3)
@@ -32,8 +31,8 @@ local DominikaGUID = 0
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(134743) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3")
+	if args.spellId == 134743 then
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")
 		warnEarthSeed:Show()
 		timerEarthSeedCD:Start()
 	end
@@ -41,19 +40,19 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(129888) and self:AntiSpam() then
+	if args.spellId == 129888 and self:AntiSpam() then
 		warnSolarBeam:Show()
 		timerSolarBeamCD:Start()
 		if mod:IsManaUser() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
 		end
-	elseif args:IsSpellID(133129) then
+	elseif args.spellId == 133129 then
 		DominikaGUID = args.destGUID
 	end
 end
 
 function mod:UNIT_TARGET()
-	if self.Options.SetIconOnDominika and UnitGUID("target") == DominikaGUID then
+	if self.Options.SetIconOnDominika and not DBM.Options.DontSetIcons and UnitGUID("target") == DominikaGUID then
 		SetRaidTarget("target", 8)
 	end
 end
@@ -63,7 +62,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
 	if spellId == 133253 and self:AntiSpam() then
 		warnCharging:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
 		timerChargingCD:Start()
 	end
 end

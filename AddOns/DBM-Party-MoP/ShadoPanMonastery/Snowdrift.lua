@@ -2,11 +2,11 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8080 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(56541)
-mod:SetModelID(39887)
 mod:SetZone()
 mod:SetMinSyncRevision(7888)
+mod:SetReCombatTime(60)
 
 -- pre-bosswave. Novice -> Black Sash (Fragrant Lotus, Flying Snow). this runs automaticially.
 -- maybe we need Black Sash wave warns.
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --Chi blast warns very spammy. and not useful.
@@ -44,7 +44,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(118961) then
+	if args.spellId == 118961 then
 		warnChaseDown:Show(args.destName)
 		timerChaseDown:Start(args.destName)
 --		timerChaseDownCD:Start()
@@ -55,38 +55,38 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(118961) then
+	if args.spellId == 118961 then
 		timerChaseDown:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(106853) then
+	if args.spellId == 106853 then
 		warnFistsOfFury:Show()
 		specWarnFists:Show()
 		timerFistsOfFuryCD:Start()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 		end
-	elseif args:IsSpellID(106434) then
+	elseif args.spellId == 106434 then
 		warnTornadoKick:Show()
 		timerTornadoKickCD:Start()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 110324 and self:AntiSpam(2) then
+	if spellId == 110324 then
 		phase = phase + 1
 		if phase == 2 then
 			warnPhase2:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\phasechange.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")
 		elseif phase == 3 then
 			warnPhase3:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\phasechange.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")
 		end
 		timerFistsOfFuryCD:Cancel()
 		timerTornadoKickCD:Cancel()
-	elseif spellId == 123096 and self:AntiSpam(2) then -- only first kill?
+	elseif spellId == 123096 then -- only first defeat?
 		DBM:EndCombat(self)
 	end
 end

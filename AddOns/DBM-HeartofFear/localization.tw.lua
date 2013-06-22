@@ -287,3 +287,18 @@ L:SetMiscLocalization({
 	PlayerDebuffs	= "被凝視",
 	YellPhase3		= "不要再找藉口了，女皇!消滅這些侏儒，否則我會親自殺了妳!"
 })
+
+
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("HoFTrash")
+
+L:SetGeneralLocalization({
+	name =	"恐懼之心雜兵"
+})
+
+L:SetOptionLocalization({
+	UnseenStrikeArrow	= "DBM箭頭：$spell:122949"
+})

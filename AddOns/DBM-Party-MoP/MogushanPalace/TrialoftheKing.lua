@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8602 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
-mod:SetModelID(42060)	-- 42059=Ming the Cunning | 42058=Kuai the Brute | 42060=Haiyan the Unstoppable
 mod:SetZone()
 
 --http://www.wowpedia.org/Clan_Leaders_of_the_Mogu
@@ -59,16 +58,16 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(119946) then
+	if args.spellId == 119946 then
 		warnRavage:Show(args.destName)
 		specWarnRavage:Show(args.destName)
 		timerRavage:Start(args.destName)
 		timerRavageCD:Start()
-	elseif args:IsSpellID(123655) then
+	elseif args.spellId == 123655 then
 		warnTraumaticBlow:Show(args.destName)
 		timerTraumaticBlow:Start(args.destName)
 		timerTraumaticBlowCD:Start()
-	elseif args:IsSpellID(120201) then
+	elseif args.spellId == 120201 then
 		warnConflag:Show(args.destName)
 		specWarnConflag:Show(args.destName)
 		timerConflag:Start(args.destName)
@@ -77,34 +76,35 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(119946) then
+	if args.spellId == 119946 then
 		timerRavage:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(119922) then
+	if args.spellId == 119922 then
 		warnShockwave:Show()
 		specWarnShockwave:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\shockwave.mp3")--震懾波
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3")--震懾波
 		timerShockwaveCD:Start(shockwaveCD)
-	elseif args:IsSpellID(119981) then
+	elseif args.spellId == 119981 then
 		warnWhirlingDervish:Show()
 		timerWhirlingDervishCD:Start()
-	elseif args:IsSpellID(123654) then
+	elseif args.spellId == 123654 then
 		specWarnLightningBolt:Show(args.sourceName)
 	end
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg == L.Meteor or msg:find(L.Meteor) then
+		local target = DBM:GetFullNameByShortName(target)
 		warnMeteor:Show(target)
 		specWarnMeteor:Show(target)
 		if target == UnitName("player") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runin.mp3")--快回人群
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runin.mp3")--快回人群
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		end
 		timerMeteorCD:Start()
 	end
@@ -168,7 +168,7 @@ Notes
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 120101 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnCC:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

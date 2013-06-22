@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Skada", "zhCN", false)
+local L = LibStub("AceLocale-3.0"):NewLocale("Skada", "zhCN", false)
 
 if not L then return end
 
@@ -119,8 +119,8 @@ L["Enable"] = "启用"
 L["Enables the title bar."] = "启用标题栏."
 L["Enemy damage done"] = "敌对伤害"
 L["Enemy damage taken"] = "敌对受到伤害"
-L["Enemy healing done"] = "敌对治疗?"
-L["Enemy healing taken"] = "敌对获得治疗"
+L["Enemy healing done"] = "敌方的治疗"
+L["Enemy healing taken"] = "敌方承受的治疗"
 L["Enter the name for the new window."] = "输入新窗口的名字."
 L["Enter the name for the window."] = "输入窗口的名字."
 L["Evade"] = "闪避"
@@ -316,10 +316,9 @@ L["When possible, bars will be colored according to player class."] = "计量条
 L["When possible, bar text will be colored according to player class."] = "计量条文本颜色按玩家颜色显示."
 L["When your threat reaches this level, relative to tank, warnings are shown."] = "当你的仇恨值相对于坦克到达这个阀值时显示警报."
 L["Whisper"] = "密语"
+L["Whisper Target"] = "密语目标"
 L["Window"] = "窗口"
 L["Window height"] = "窗体高度"
 L["Windows"] = "窗口"
 L["Wipe mode"] = "灭团切换模式"
 L["Yes"] = "是"
-L["Whisper Target"] = "密语目标"
-L["RealID"] = "实名好友"

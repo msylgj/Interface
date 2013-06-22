@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("ArenaAnnihilation", "DBM-Scenario-MoP")
+local mod	= DBM:NewMod("d511", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8643 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9306 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 899)
@@ -27,7 +27,7 @@ mod:RemoveOption("HealthFrame")
 --]]
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(123966) then
+	if args.spellId == 123966 then
 		warnFlameWall:Show()
 		specWarnFlameWall:Show()
 	end
@@ -35,7 +35,7 @@ end
 
 --[[
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(123966) then
+	if args.spellId == 123966 then
 
 	end
 end

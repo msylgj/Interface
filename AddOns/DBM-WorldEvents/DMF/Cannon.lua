@@ -1,17 +1,17 @@
 local mod	= DBM:NewMod("Cannon", "DBM-WorldEvents", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9628 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
-	"UNIT_AURA"
+	"UNIT_AURA player"
 )
 
 local timerMagicWings				= mod:NewBuffFadesTimer(8.5, 102116)
 
-local MagicWingsCountdown			= mod:NewCountdown(7.5, 102116)
+local MagicWingsCountdown			= mod:NewCountdownFades(7.5, 102116)
 
 local markWings = false
 
@@ -23,14 +23,13 @@ local function wingsRemoved()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(102120) and args:IsPlayer() then
+	if args.spellId == 102120 and args:IsPlayer() then
 		MagicWingsCountdown:Cancel()
 		timerMagicWings:Cancel()
 	end
 end
 
 function mod:UNIT_AURA(uId)
-	if uId ~= "player" then return end
 	if UnitBuff("player", GetSpellInfo(102116)) and not markWings then
 		MagicWingsCountdown:Start(7.5)--Might need to reduce it by 1 or use UnitDebuff duration arg.
 		timerMagicWings:Start()

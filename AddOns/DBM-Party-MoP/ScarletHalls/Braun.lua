@@ -2,15 +2,14 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8293 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(59303)
-mod:SetModelID(42264)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnPiercingThrow			= mod:NewSpellAnnounce(114021, 2)
@@ -57,7 +56,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(114021) then
+	if args.spellId == 114021 then
 --		throwCount = throwCount + 1
 		warnPiercingThrow:Show()
 --		if throwCount < 2 then
@@ -65,11 +64,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 --		else
 --			timerDeathBlossomCD:Start()
 --		end
-	elseif args:IsSpellID(114242) then
+	elseif args.spellId == 114242 then
 		warnDeathBlossom:Show()
 --		timerPiercingThrowCD:Start()
-	elseif args:IsSpellID(114259) then--Call Dog
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3")--準備小怪
+	elseif args.spellId == 114259 then--Call Dog
 		warnCallDog:Show()
 --[[
 		if timerPiercingThrowCD:IsStarted() then--When this is cast, it extend the current CD of throw/blossom from 6 to 12
@@ -80,7 +78,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerDeathBlossomCD:Update(12 - barProgress, 12)
 		end
 ]]
-	elseif args:IsSpellID(116140) then--Blood Rage(done calling dogs)
+	elseif args.spellId == 116140 then--Blood Rage(done calling dogs)
 --		throwCount = 0
 		warnBloodyRage:Show()
 		timerPiercingThrowCD:Start(13.5)
@@ -88,7 +86,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 114086 and self:AntiSpam(1) then
+	if spellId == 114086 then
 		warnPiercingThrow:Show()
 	end
 end

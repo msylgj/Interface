@@ -2,16 +2,19 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8854 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(62346)--Salyis not dies. Only Galleon attackable and dies.
-mod:SetModelID(42439)	--Galleon=42439, Salyis=42468 / main boss is Galleon
+mod:SetQuestID(32098)
 mod:SetZone(807)--Valley of the Four winds
 
 mod:RegisterCombat("combat")
-mod:SetWipeTime(180)
 
 mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE"
+)
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnCannonBarrage			= mod:NewSpellAnnounce(121600, 3)
@@ -27,13 +30,17 @@ local timerStompCD				= mod:NewNextTimer(60, 121787)
 local timerStomp				= mod:NewCastTimer(3, 121787)
 local timerWarmongerCD			= mod:NewNextTimer(10, "ej6200", nil, nil, nil, 121747)--Comes after Stomp. (Also every 60 sec.)
 
+local yellTriggered = false
+
 function mod:OnCombatStart(delay)
-	timerCannonBarrageCD:Start(24-delay)
-	if mod:IsTank() then
-		sndWOP:Schedule(22, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zbpj.mp3")
+	if yellTriggered then
+		timerCannonBarrageCD:Start(24-delay)
+		timerStompCD:Start(50-delay)
 	end
-	timerStompCD:Start(50-delay)
-	sndWOP:Schedule(48,"Interface\\AddOns\\DBM-Core\\extrasounds\\stompsoon.mp3") --準備踐踏
+end
+
+function mod:OnCombatEnd()
+	yellTriggered = false
 end
 
 function mod:RAID_BOSS_EMOTE(msg)
@@ -42,17 +49,26 @@ function mod:RAID_BOSS_EMOTE(msg)
 		specWarnCannonBarrage:Show()
 		timerCannonBarrageCD:Start()
 		if mod:IsTank() then
-			sndWOP:Schedule(58, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zbpj.mp3")
+			sndWOP:Schedule(58, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zbpj.mp3")
 		end
 	elseif msg:find("spell:121787") then
 		warnStomp:Show()
 		specWarnStomp:Show()
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stompsoon.mp3")
 		warnWarmonger:Schedule(10)
 		specWarnWarmonger:Schedule(10)
-		sndWOP:Schedule(10, "Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3") --準備小怪
+		sndWOP:Schedule(10, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3") --準備小怪
 		timerStomp:Start()
 		timerWarmongerCD:Start()
 		timerStompCD:Start()
-		sndWOP:Schedule(58,"Interface\\AddOns\\DBM-Core\\extrasounds\\stompsoon.mp3")
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.Pull and not self:IsInCombat() then
+		if self:GetCIDFromGUID(UnitGUID("target")) == 62346 or self:GetCIDFromGUID(UnitGUID("targettarget")) == 62346 then--Whole zone gets yell, so lets not engage combat off yell unless he is our target (or the target of our target for healers)
+			yellTriggered = true
+			DBM:StartCombat(self, 0)
+		end
 	end
 end

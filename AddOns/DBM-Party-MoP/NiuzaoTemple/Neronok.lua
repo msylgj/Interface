@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8294 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(62205)
-mod:SetModelID(43151)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -33,18 +32,18 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(121447) then
+	if args.spellId == 121447 then
 		warnResin:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnResin:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\keepjump.mp3")--保持跳動
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\keepjump.mp3")--保持跳動
 		end
-	elseif args:IsSpellID(121443) then
+	elseif args.spellId == 121443 then
 		if args:IsPlayer() then
 			specWarnCausticPitch:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 		end
-	elseif args:IsSpellID(121282) and not windsActive then
+	elseif args.spellId == 121282 and not windsActive then
 		windsActive = true
 		timerResinCD:Cancel()
 		warnGustingWinds:Show()
@@ -61,7 +60,7 @@ end
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.Fly or msg:find(L.Fly) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\justrun.mp3")--快跑
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\justrun.mp3")--快跑
 		specWarnFly:Show()
 	end
 end

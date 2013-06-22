@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8247 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
-mod:SetModelID(42368)
 mod:SetZone()
 mod:SetUsedIcons(2)
 
@@ -100,20 +99,20 @@ function mod:OnCombatStart(delay)
 	else
 		berserkTimer:Start(720-delay)
 	end
-	sndFS:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-	sndFS:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-	sndFS:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+	sndFS:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+	sndFS:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+	sndFS:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 	table.wipe(PheromonesMarkers)	
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerCrushCD:Start(30-delay, Crushcount + 1)
-		sndZN:Schedule(25.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-		sndZN:Schedule(26.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-		sndZN:Schedule(27.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndZN:Schedule(28.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndZN:Schedule(29.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+		sndZN:Schedule(25.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+		sndZN:Schedule(26.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+		sndZN:Schedule(27.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndZN:Schedule(28.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndZN:Schedule(29.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		if MyJS() then
 			specWarnJSA:Schedule(24)
-			sndWOP:Schedule(24, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyjs.mp3") --注意減傷
+			sndWOP:Schedule(24, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
 		end
 	end
 end
@@ -144,7 +143,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specwarnPheromonesYou:Show()
 			yellPheromones:Yell()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetyou.mp3") --目標是你
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetyou.mp3") --目標是你
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
@@ -184,7 +183,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if (args.amount or 1) == 3 then
 			if mod.Options.optFLM == args.destName then
 				specWarnFLM:Show(args.destName)
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_xxszb.mp3") --信息素準備
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_xxszb.mp3") --信息素準備
 				self:SendSync("MyPheromone", UnitName("player").."("..flmchoose..")")
 			end
 		end
@@ -201,7 +200,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 		if args:IsPlayer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetchange.mp3")--目標改變
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetchange.mp3")--目標改變
 		end
 		if PheromonesMarkers[args.destName] then
 			PheromonesMarkers[args.destName] = free(PheromonesMarkers[args.destName])
@@ -215,14 +214,14 @@ mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(122735) then
 		warnFuriousSwipe:Show()
-		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
-		sndFS:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_hj.mp3") --揮擊
+		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndFS:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndFS:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_hj.mp3") --揮擊
 		timerFuriousSwipeCD:Start()
-		sndFS:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndFS:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndFS:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+		sndFS:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndFS:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndFS:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 	end
 end
 
@@ -239,7 +238,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 123120 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
 		specwarnPheromoneTrail:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3") --快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -250,40 +249,38 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			Crushcount = Crushcount + 1
 			warnCrush:Show()
 			specwarnCrushH:Show(Crushcount)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_nyjd.mp3") --碾壓
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_nyjd.mp3") --碾壓
 		end
 		timerCrush:Start()
 		if msg:find(L.UnderHim) and target == UnitName("player") then
 			specwarnUnder:Show()--it's a bit of a too little too late warning, but hopefully it'll help people in LFR understand it's not place to be and less likely to repeat it, eventually thining out LFR failure rate to this.
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_lkzq.mp3") --離開紫圈
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_lkzq.mp3") --離開紫圈
 		end
 		if msg:find(L.Heroicrush) then
 			timerCrushCD:Cancel()
-			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 			timerCrushCD:Start(37.5, Crushcount + 1)
-			sndZN:Schedule(33, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-			sndZN:Schedule(34, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-			sndZN:Schedule(35, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-			sndZN:Schedule(36, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-			sndZN:Schedule(37, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+			sndZN:Schedule(33, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+			sndZN:Schedule(34, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+			sndZN:Schedule(35, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndZN:Schedule(36, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndZN:Schedule(37, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 			if MyJS() then
 				specWarnJSA:Schedule(32)
-				sndWOP:Schedule(32, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyjs.mp3") --注意減傷
+				sndWOP:Schedule(32, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
 			end
 		end
 	elseif msg:find(L.Ptwostart) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ptwo.mp3")
-		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
-	elseif msg:find("spell:128555") then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\dead.mp3")
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3")
+		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndZN:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 	end
 end
 

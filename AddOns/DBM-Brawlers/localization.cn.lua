@@ -14,12 +14,17 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	warnQueuePosition	= "你的队列号为 %d",
+	specWarnYourNext	= "你是下一个!",
 	specWarnYourTurn	= "该你上场了！"
 })
 
 L:SetOptionLocalization({
+	warnQueuePosition	= "警报：你当前的队列号",
+	specWarnYourNext	= "特殊警报：当你下一个登场时",
 	specWarnYourTurn	= "特殊警报：轮到玩家登场",
-	SpectatorMode		= "在观看比赛时显示警报与计时条\n（特殊警报不会同步给其他观众）"
+	SpectatorMode		= "在观看比赛时显示警报与计时条\n（特殊警报不会同步给其他观众）",
+	SpeakOutQueue		= "当你的队列号提升时报数"
 })
 
 L:SetMiscLocalization({
@@ -34,6 +39,8 @@ L:SetMiscLocalization({
 	Rank6			= "6级",
 	Rank7			= "7级",
 	Rank8			= "8级",
+	Rank9			= "9级",
+	Rank10			= "10级",
 	Proboskus		= "Oh dear... I'm sorry, but it looks like you're going to have to fight Proboskus.",--Alliance
 	Proboskus2		= "Ha ha ha! What bad luck you have! It's Proboskus! Ahhh ha ha ha! I've got twenty five gold that says you die in the fire!"--Horde
 })
@@ -142,4 +149,56 @@ L:SetGeneralLocalization({
 
 L:SetOptionLocalization({
 	SoundWOP			= "语音警告：重要技能"
+})
+
+------------
+-- Rank 9 --
+------------
+L= DBM:GetModLocalization("BrawlRank9")
+
+L:SetGeneralLocalization({
+	name = "搏击俱乐部：9级"
+})
+
+L:SetOptionLocalization({
+	SoundWOP			= "语音警告：重要技能"
+})
+
+-------------
+-- Rares 1 --
+-------------
+L= DBM:GetModLocalization("BrawlRare1")
+
+L:SetGeneralLocalization({
+	name = "搏击俱乐部: 挑战卡 1"
+})
+
+L:SetOptionLocalization({
+	ArrowOnBoxing			= "DBM箭头：$spell:140868 / $spell:140862 / $spell:140886",
+	SoundWOP			= "语音警告：重要技能"
+})
+
+-------------
+-- Rares 2 --
+-------------
+L= DBM:GetModLocalization("BrawlRare2")
+
+L:SetGeneralLocalization({
+	name = "搏击俱乐部:挑战卡 2"
+})
+
+L:SetWarningLocalization({
+	specWarnRPS			= "使用 %s!"
+})
+
+L:SetOptionLocalization({
+	specWarnRPS			= "特别警告： $spell:141206",
+	SpeakOutStrikes			= "语音警告： $spell:141190 的堆叠层数",
+	SoundWOP			= "语音警告：重要技能"
+})
+
+L:SetMiscLocalization({
+	rock			= "石头",
+	paper			= "布",
+	scissors		= "剪刀"
 })

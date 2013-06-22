@@ -2,8 +2,7 @@ local mod	= DBM:NewMod("BrawlRank6", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8431 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(39166)
 mod:SetZone()
 
@@ -39,11 +38,11 @@ local brawlersMod = DBM:GetModByName("Brawlers")
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(39945) then
+	if args.spellId == 39945 then
 		warnChainLightning:Show()
 		timerChainLightningCD:Start()
 		if brawlersMod:PlayerFighting() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\kickcast.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")
 			specWarnChainLightning:Show(args.sourceName)
 		end
 	end
@@ -51,22 +50,22 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(134650) then
+	if args.spellId == 134650 then
 		warnShieldWaller:Show()
 		timerShieldWaller:Start()
-	elseif args:IsSpellID(108043) then
+	elseif args.spellId == 108043 then
 		warnToughLuck:Show(args.destName, args.amount or 1)
-	elseif args:IsSpellID(134789) then
+	elseif args.spellId == 134789 then
 		warnFallenKin:Cancel()
 		warnFallenKin:Schedule(0.5, args.destName, args.amount or 1)
 		timerFallenKin:Start()
-	elseif args:IsSpellID(126209) then
+	elseif args.spellId == 126209 then
 		warnShadowStrikes:Show()
 		timerShadowStrikes:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnShadowStrikes:Show(args.destName)
 			if isDispeller then
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\dispelnow.mp3")
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")
 			end
 		end
 	end
@@ -75,9 +74,9 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(134650) then
+	if args.spellId == 134650 then
 		timerShieldWaller:Cancel()
-	elseif args:IsSpellID(126209) then
+	elseif args.spellId == 126209 then
 		timerShadowStrikes:Cancel()
 	end
 end

@@ -1,0 +1,14 @@
+tag 50300.8-Beta
+18733200cb68c940e5b416d9efade6ebf8a953ed
+Adrian L Lange <adrianlund@gmail.com>
+2013-05-24 22:53:14 +0200
+
+Tag 50300.8-Beta
+
+
+--------------------
+
+Adrian L Lange:
+	- Complete rewrite - Added config - Support for Loot Specialization
+	- Proper handling of GetLootSpecialization
+	- Update for 5.3

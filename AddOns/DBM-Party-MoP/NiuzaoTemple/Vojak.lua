@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8294 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(61634)
-mod:SetModelID(42169)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -35,8 +34,8 @@ local specWarnKnife		= mod:NewSpecialWarningMove(120760)
 local timerWaveCD				= mod:NewTimer(12, "TimerWave", 69076)--Not wave timers in traditional sense. They are non stop, this is for when he activates certain mob types.
 local timerBombard				= mod:NewBuffActiveTimer(15, 120200)
 local timerBombardCD			= mod:NewCDTimer(42, 120200)
-local timerDashingStrikeCD		= mod:NewCDTimer(13.5, 120789)
-local timerThousandBladesCD		= mod:NewCDTimer(8.5, 120759)
+local timerDashingStrikeCD		= mod:NewCDTimer(13.5, 120789)--14-16 second variation
+local timerThousandBladesCD		= mod:NewNextTimer(15, 120759)
 local timerThousandBlades		= mod:NewBuffActiveTimer(4, 120759)
 
 --local soundThousandBlades		= mod:NewSound(120759, nil, mod:IsMelee())
@@ -46,29 +45,29 @@ local Demolishers 	= EJ_GetSectionInfo(6282)
 local Warriors	 	= EJ_GetSectionInfo(6283)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(120759) then
+	if args.spellId == 120759 then
 		warnThousandBlades:Show()
 		specWarnThousandBlades:Show()
 		timerThousandBlades:Start()
 --		soundThousandBlades:Play()
 	elseif args:IsSpellID(120778) and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnBoom:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(120789) then
+	if args.spellId == 120789 then
 		warnDashingStrike:Show()
 		timerDashingStrikeCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(120402) then-- NPC only buff, player's buff is 123032
+	if args.spellId == 120402 then-- NPC only buff, player's buff is 123032
 		warnCausticTar:Show()
-	elseif args:IsSpellID(120759) then
+	elseif args.spellId == 120759 then
 		timerThousandBladesCD:Start()
 	end
 end
@@ -88,14 +87,14 @@ function mod:RAID_BOSS_EMOTE(msg)
 		timerBombard:Start()
 		timerBombardCD:Start()
 	elseif msg == L.Mob or msg:find(L.Mob) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3")--準備小怪
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
 	end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 120760 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnKnife:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

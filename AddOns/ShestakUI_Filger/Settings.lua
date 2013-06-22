@@ -23,7 +23,7 @@ local Media = "Interface\\AddOns\\ShestakUI_Filger\\Media\\"
 	Misc.barfg = Media.."barfg"		-- 计时条材质
 	Misc.modefg = "OWN"				-- 计时条颜色
 	Misc.modeback = "Black"			-- 图标背景或蒙板颜色（一像素和毛绒绒样式无效）
-	Misc.modeborder = "OWN"			-- 边框颜色
+	Misc.modeborder = "Black"			-- 边框颜色
 	Misc.numsize = 14					-- 层数, 计时条的计时数字大小
 	Misc.namesize = 14					-- 法术名称字体大小
 
@@ -36,7 +36,7 @@ local Media = "Interface\\AddOns\\ShestakUI_Filger\\Media\\"
 	Misc.CD = "OFF"				-- 开(ON)\关(OFF) COOLDOWN 冷却图标 - (主图标注号 8)
 	Misc.barw = 160				-- 计时条长度 - (主图标注号 7,9)
 	Misc.CDnum = 6				-- COOLDOWN 冷却图标每行显示几个 - (主图标注号 8)
-	Misc.IconSize = 37			-- 图标大小 - (主图标注号 1,2,3,4,5,6)
+	Misc.IconSize = 38			-- 图标大小 - (主图标注号 1,2,3,4,5,6)
 	Misc.CDIconSize = 30		-- COOLDOWN 冷却图标大小 - (主图标注号 8)
 	Misc.barIconSize = 25		-- 计时条上的图标大小 - (主图标注号 7,9)
 

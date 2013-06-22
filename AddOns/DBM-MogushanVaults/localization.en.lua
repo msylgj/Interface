@@ -6,7 +6,7 @@
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon		= "%s castable in 7s!",
+	SpecWarnOverloadSoon		= "%s soon!", -- prepare survival ablility or move boss. need more specific message.
 	specWarnMySD 				= "you pull the BOSS point of the group of petrochemical",
 	specWarnBreakJasperChains	= "Break Jasper Chains!"
 })

@@ -67,11 +67,12 @@
 -- ["Display items for both factions (Alliance/Horde)."] = "",
 -- ["Display class colors for characters."] = "",
 -- ["Display modified tooltips ONLY in the BagSync Search window."] = "",
+-- ["Enable BagSync Tooltips"] = "",
+-- ["Enable empty line seperator above BagSync tooltip display."] = "",
 		
 BAGSYNC_L = GetLocale() == "zhCN" and {
 	["Bags: %d"] = "背包: %d",
 	["Bank: %d"] = "银行: %d",
-	["Guild: %d"] = "公会: %d",
 	["Equipped: %d"] = "已装备: %d",
 
 } or GetLocale() == "ruRU" and {

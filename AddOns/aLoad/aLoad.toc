@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Title: a|cffee0000Load|r
 ## Notes: Lightweight ingame addon manager.
 ## Author: Fernir

@@ -45,6 +45,47 @@ C.modules["Blizzard_LookingForGuildUI"] = function()
 	LookingForGuildFrameTopBorder:Hide()
 	LookingForGuildFrameTopRightCorner:Hide()
 
+	for _, roleButton in pairs({LookingForGuildTankButton, LookingForGuildHealerButton, LookingForGuildDamagerButton}) do
+		roleButton.cover:SetTexture(C.media.roleIcons)
+		roleButton:SetNormalTexture(C.media.roleIcons)
+
+		roleButton.checkButton:SetFrameLevel(roleButton:GetFrameLevel() + 2)
+
+		local left = roleButton:CreateTexture()
+		left:SetDrawLayer("OVERLAY", 1)
+		left:SetWidth(1)
+		left:SetTexture(C.media.backdrop)
+		left:SetVertexColor(0, 0, 0)
+		left:SetPoint("TOPLEFT", 5, -4)
+		left:SetPoint("BOTTOMLEFT", 5, 6)
+
+		local right = roleButton:CreateTexture()
+		right:SetDrawLayer("OVERLAY", 1)
+		right:SetWidth(1)
+		right:SetTexture(C.media.backdrop)
+		right:SetVertexColor(0, 0, 0)
+		right:SetPoint("TOPRIGHT", -5, -4)
+		right:SetPoint("BOTTOMRIGHT", -5, 6)
+
+		local top = roleButton:CreateTexture()
+		top:SetDrawLayer("OVERLAY", 1)
+		top:SetHeight(1)
+		top:SetTexture(C.media.backdrop)
+		top:SetVertexColor(0, 0, 0)
+		top:SetPoint("TOPLEFT", 5, -4)
+		top:SetPoint("TOPRIGHT", -5, -4)
+
+		local bottom = roleButton:CreateTexture()
+		bottom:SetDrawLayer("OVERLAY", 1)
+		bottom:SetHeight(1)
+		bottom:SetTexture(C.media.backdrop)
+		bottom:SetVertexColor(0, 0, 0)
+		bottom:SetPoint("BOTTOMLEFT", 5, 6)
+		bottom:SetPoint("BOTTOMRIGHT", -5, 6)
+
+		F.ReskinCheck(roleButton.checkButton)
+	end
+
 	F.Reskin(LookingForGuildBrowseButton)
 	F.Reskin(LookingForGuildRequestButton)
 	F.Reskin(GuildFinderRequestMembershipFrameAcceptButton)
@@ -59,8 +100,5 @@ C.modules["Blizzard_LookingForGuildUI"] = function()
 	F.ReskinCheck(LookingForGuildRPButton)
 	F.ReskinCheck(LookingForGuildWeekdaysButton)
 	F.ReskinCheck(LookingForGuildWeekendsButton)
-	F.ReskinCheck(LookingForGuildTankButton:GetChildren())
-	F.ReskinCheck(LookingForGuildHealerButton:GetChildren())
-	F.ReskinCheck(LookingForGuildDamagerButton:GetChildren())
 	F.ReskinInput(GuildFinderRequestMembershipFrameInputFrame)
 end

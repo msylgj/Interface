@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Author: Monolit
 ## X-Credits: Funkydude (BasicChatMods), Rabbit, Ammo (SCM), Adys (LinkHover), Orukxu (SpamThrottle)
 ## Notes: A compilation of useful chat modification based on Funkydude's "Basic Chat Mods".

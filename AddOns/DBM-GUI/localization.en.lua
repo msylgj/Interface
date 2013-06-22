@@ -4,10 +4,17 @@ local L = DBM_GUI_Translations
 
 L.MainFrame = "Deadly Boss Mods"
 
-L.TranslationBy 			= "Translated by: Nitram, Tandanu & Tennberg"
+L.TranslationByPrefix		= "Translated by "
+L.TranslationBy 			= "Iceoven"
+L.Website					= "Visit our new discussion and support forums at |cFF73C2FBwww.deadlybossmods.com|r (hosted by Elitist Jerks!)"
+L.WebsiteButton				= "Forums"
+L.SoundMM					= "Voice Actor"
 
 L.OTabBosses	= "Bosses"
 L.OTabOptions	= "Options"
+
+L.Checkinstance				= "Check instance"
+L.Checkver					= "Check version"
 
 L.TabCategory_Options	 	= "General Options"
 L.TabCategory_MOP	 		= "Mists of Pandaria"
@@ -30,6 +37,7 @@ L.Button_OK 				= 'OK'
 L.Button_Cancel 			= 'Cancel'
 L.Button_LoadMod 			= 'Load AddOn'
 L.Mod_Enabled				= "Enable boss mod"
+L.Mod_Reset					= "Load default options"
 L.Reset 					= "Reset"
 
 L.Enable  					= "Enable"
@@ -39,27 +47,36 @@ L.NoSound					= "No sound"
 
 L.IconsInUse				= "Icons used by this mod"
 
+L.QuestComplete				= "Already completed weekly rep/LFR/legendary credit on this encounter."
+L.QuestIncomplete			= "Still eligable for weekly rep/LFR/legendary credit on this encounter. NOTE: Reloaded UI or relog too soon after pulling complete status will result in invalid return of not complete"
+
 -- Tab: Boss Statistics
 L.BossStatistics			= "Boss Statistics"
-L.Statistic_Kills			= "Kills:"
+L.Statistic_Kills			= "Victories:"
 L.Statistic_Wipes			= "Wipes:"
-L.Statistic_BestKill		= "Best Kill:"
-L.Statistic_Heroic			= "Heroic"
-L.Statistic_10Man			= "10man raid"
-L.Statistic_25Man			= "25man raid"
+L.Statistic_Incompletes		= "Incompletes:"--For scenarios, TODO, figure out a clean way to replace any Statistic_Wipes with Statistic_Incompletes for scenario mods
+L.Statistic_BestKill		= "Best Victory:"
 
--- Tab: General Options
-L.General 					= "General DBM Options"
+-- Tab: General Core Options
+L.General 					= "General DBM Core Options"
 L.EnableDBM 				= "Enable DBM"
 L.EnableMiniMapIcon			= "Show minimap button"
-L.UseMasterVolume			= "Use Master audio channel to play sound files."
+L.SetPlayerRole				= "Automatically set player role (Enabled recommended)"
+L.UseMasterVolume			= "Use Master audio channel to play sound files"
 L.DisableCinematics			= "Disable in-game cinematics in instances"
 L.DisableCinematicsOutside	= "Disable in-game cinematics outside instances"
 L.EnableReadyCheckSound			= "Always Play Ready Check Sound"
-L.SKT_Enabled				= "Always show speed kill timer (Overrides boss-specific option)"
 L.AutologBosses				= "Automatically record boss encounters using blizzard combat log"
 L.AdvancedAutologBosses		= "Automatically record boss encounters with Transcriptor"
+L.LogOnlyRaidBosses			= "Only record raid boss encounters (exclude Raid Finder/party/scenario)"
 L.Latency_Text				= "Set max latency sync threshold: %d"
+-- Tab: General Timer Options
+L.TimerGeneral 				= "General DBM Timer Options"
+L.SKT_Enabled				= "Always show speed kill timer (Overrides boss-specific option)"
+L.ChallengeTimerOptions		= "Set option for challenge mode best clear timer"
+L.ChallengeTimerPersonal	= "Personal"
+L.ChallengeTimerGuild		= "Guild"
+L.ChallengeTimerRealm		= "Realm"
 
 L.ModelOptions				= "3D Model Viewer Options"
 L.EnableModels				= "Enable 3D models in boss options"
@@ -95,13 +112,15 @@ L.ShowWarningsInChat 		= "Show warnings in chat frame"
 L.ShowFakedRaidWarnings 	= "Show warnings as faked raid warning messages"
 L.WarningIconLeft 			= "Show icon on left side"
 L.WarningIconRight 			= "Show icon on right side"
+L.WarningIconChat 			= "Show icons in chat frame"
+L.ShowCountdownText			= "Show countdown text"
 L.RaidWarnMessage 			= "Thanks for using Deadly Boss Mods"
 L.BarWhileMove 				= "Raid warning movable"
 L.RaidWarnSound				= "Play sound on raid warning"
-L.CountdownVoice			= "Set voice for countdown and countout sounds"
+L.CountdownVoice			= "Set voice"
 L.SpecialWarnSound			= "Set sound for special warnings affecting you or your specific role"
 L.SpecialWarnSound2			= "Set sound for special warnings affecting everyone"
-L.SpecialWarnSound3			= "Set sound for VERY important special warnings (devastating to you or raid)"
+L.SpecialWarnSound3			= "Set sound for VERY important special warnings"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages 		= "General Messages"
@@ -144,6 +163,8 @@ L.Panel_SpecWarnFrame		= "Special Warnings"
 L.Area_SpecWarn				= "Special Warning Options"
 L.SpecWarn_Enabled			= "Show special warnings for boss abilities"
 L.SpecWarn_LHFrame			= "Show screen flash for special warnings"
+L.SpecWarn_AdSound			= "Enable advanced sound options for special warnings (requires UI Reload)"
+L.SpecWarn_FlashFrame		= "Show screen vibration for the devastating"
 L.SpecWarn_Font				= "Font used for special warnings"
 L.SpecWarn_DemoButton		= "Show example"
 L.SpecWarn_MoveMe			= "Set position"
@@ -163,10 +184,11 @@ L.BarWidth					= "Bar width: %d"
 -- Tab: Spam Filter
 L.Panel_SpamFilter				= "Global and Spam Filters"
 L.Area_SpamFilter				= "Spam Filter Options"
-L.HideBossEmoteFrame			= "Hide raid boss emote frame"
+L.HideBossEmoteFrame			= "Hide raid boss emote frame during boss fights"
+L.HideWatchFrame				= "Hide watch (objectives) frame during boss fights"
 L.StripServerName				= "Strip realm name in warnings and timers"
 L.SpamBlockBossWhispers			= "Filter <DBM> warning whispers while fighting"
-L.BlockVersionUpdateNotice		= "Disable update notification popup"
+L.BlockVersionUpdateNotice		= "Disable update notification popup (Not recommended)"
 L.ShowBigBrotherOnCombatStart	= "Perform Big Brother buff check on combat start"
 L.BigBrotherAnnounceToRaid		= "Announce Big Brother results to raid"
 L.SpamBlockSayYell				= "Hide chat bubbles announces from the chat frame"
@@ -182,6 +204,12 @@ L.Area_PullTimer				= "Pull Timer Filter Options"
 L.DontShowPT					= "Do not show Pull Timer bar"
 L.DontShowPTCountdownText		= "Do not show Pull Timer countdown text"
 L.DontPlayPTCountdown			= "Do not play Pull Timer countdown audio"
+L.DontShowPTText				= "Do not show announce text for Pull Timer"
 
 -- Misc
 L.FontHeight	= 16
+
+L.sst = "Iceoven(EN)"
+L.yike = "Xia Yike(CN)"
+L.yun =  "Xiao Yun(TW)"
+L.other =  "Custom"

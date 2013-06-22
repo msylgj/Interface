@@ -1,8 +1,8 @@
-## Interface: 50200
+## Interface: 50300
 ## Title: CoolLine
 ## Notes: Shows cooldowns on a single bar.
 ## Author: TotalPackage
-## Version: 5.0.001
+## Version: 5.3.002
 
 ## SavedVariables: CoolLineDB
 ## SavedVariablesPerCharacter: CoolLineCharDB

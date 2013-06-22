@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8292 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(59223)
-mod:SetModelID(41154)
 
 mod:RegisterCombat("combat")
 
@@ -42,10 +41,10 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(113764) then
+	if args.spellId == 113764 then
 		--[[if args:IsPlayer() then
 			specWarnFlyingKick:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 			yellFlyingKick:Yell()
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -58,7 +57,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
 				if inRange and inRange < 8 then
 					specWarnFlyingKickNear:Show(args.destName)
-					sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+					sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 					if self.Options.KickArrow then
 						DBM.Arrow:ShowRunAway(x, y, 8, 5)
 					end
@@ -69,18 +68,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnFlyingKick:Show()
 		timerFirestormKick:Start()
 		timerFlyingKickCD:Start()
-	elseif args:IsSpellID(114807) then
+	elseif args.spellId == 114807 then
 		warnBlazingFists:Show()
 		specWarnBlazingFists:Show()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 		end
 		timerBlazingFistsCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(114460) then
+	if args.spellId == 114460 then
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE",
 			"SPELL_MISSED"
@@ -91,10 +90,10 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overkill)
 	if spellId == 114465 and destGUID == UnitGUID("player") and self:AntiSpam(3) then
 		specWarnScorchedEarth:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	elseif spellId == 113766 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnFirestormKick:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

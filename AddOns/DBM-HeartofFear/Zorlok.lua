@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8440 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9668 $"):sub(12, -3))
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
-mod:SetModelID(42807)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -17,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_DIED"
 )
 
@@ -134,7 +133,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specwarnExhale:Show(tqcount, args.destName)
 		timerExhale:Start(args.destName)
 		if args.destName == UnitName("player") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetyou.mp3") --目標是你
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetyou.mp3") --目標是你
 		end
 		if self.Options.HudMAP then
 			local spelltext = GetSpellInfo(122761).." - "..args.destName
@@ -153,7 +152,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			MindControlMarkers[args.destName] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("targeting", args.destName, 3, nil, 1, 0, 0, 1):SetLabel(spelltext2))
 		end
 		if self:AntiSpam(2, 2) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\findmc.mp3") --注意心控
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\findmc.mp3") --注意心控
 		end
 	end
 end
@@ -180,7 +179,7 @@ function mod:SPELL_CAST_START(args)
 		timerForce:Start()
 		specwarnForce:Show()
 		if mod:IsHealer() then
-			sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\healall.mp3") --注意群療
+			sndWOP:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\healall.mp3") --注意群療
 		end
 		if self.Options.optarrowRTI == "arrow1" then
 			ArrowRTI(1)
@@ -198,14 +197,14 @@ function mod:SPELL_CAST_START(args)
 			ArrowRTI(7)
 		end
 	elseif args:IsSpellID(122761) and self:AntiSpam(2, 1) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_tqzb.mp3") --吐氣準備
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_tqzb.mp3") --吐氣準備
 		specwarnExhaleB:Show(tqcount)
 	elseif args:IsSpellID(122474, 122496, 123721, 122513) then
 		if self.Options.ArrowOnAttenuation then
 			DBM.Arrow:ShowStatic(90, 12)
 		end
 		specwarnAttenuationL:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zzyb.mp3") --左轉音波
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_zzyb.mp3") --左轉音波
 		timerAttenuation:Start()
 		if platform < 4 then
 			timerAttenuationCD:Start()
@@ -223,7 +222,7 @@ function mod:SPELL_CAST_START(args)
 			DBM.Arrow:ShowStatic(270, 12)
 		end
 		specwarnAttenuationR:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzyb.mp3") --右轉音波
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzyb.mp3") --右轉音波
 		timerAttenuation:Start()
 		if platform < 4 then
 			timerAttenuationCD:Start()
@@ -241,7 +240,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(124018) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ptwo.mp3") --P2
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3") --P2
 		ptwo = true
 		qpcount = 0
 		platform = 4--He moved to middle, it's phase 2, although platform "4" is better then adding an extra variable.
@@ -255,7 +254,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 		if platform > 1 then
 			specwarnPlatform:Show()
 			if platform < 4 then
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\justrun.mp3") --快跑
+				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\justrun.mp3") --快跑
 			end
 		end
 		timerForceCD:Cancel()
@@ -272,11 +271,11 @@ end
 
 --"<55.0 21:38:55> [CLEU] UNIT_DIED#true#0x0000000000000000#nil#-2147483648#-2147483648#0xF130FE9600003072#Echo of Force and Verve#68168#0", -- [10971]
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 122933 and self:AntiSpam(2, 1) then--Clear Throat (4 seconds before force and verve)
+	if spellId == 122933 then--Clear Throat (4 seconds before force and verve)
 		if self:LatencyCheck() then
 			self:SendSync("ForceandVerve")
 		end
-	elseif (spellId == 130297 or spellId == 127541) and not EchoAlive then--Echo of Zor'lok
+	elseif (spellId == 127542 or spellId == 127541 or spellId == 130297) and not EchoAlive then--Echo of Zor'lok (127542 is platform 1 echo spawn, 127541 is platform 2 echo spawn, 130297 is phase 2 echos)
 		EchoAlive = true
 		if platform == 1 then--Boss flew off from first platform to 2nd, and this means the echo that spawned is an Echo of Force and Verve
 --			timerForceCD:Start()
@@ -305,11 +304,11 @@ end
 function mod:OnSync(msg)
 	if msg == "ForceandVerve" then
 		warnForceandVerve:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_dyq.mp3") --快進定音區
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_dyq.mp3") --快進定音區
 		timerForceCast:Start()
 		qpcount = qpcount + 1
 		if (((self.Options.optDR == "DR1" and qpcount == 1) or (self.Options.optDR == "DR2" and qpcount == 2) or (self.Options.optDR == "DR3" and qpcount == 3) or (self.Options.optDR == "DR4" and qpcount == 4) or (self.Options.optDR == "DR5" and qpcount == 5)) and not ptwo) or (((self.Options.optDRT == "DRT1" and qpcount == 1) or (self.Options.optDRT == "DRT2" and qpcount == 2) or (self.Options.optDRT == "DRT3" and qpcount == 3) or (self.Options.optDRT == "DRT4" and qpcount == 4) or (self.Options.optDRT == "DRT5" and qpcount == 5)) and ptwo) then
-			sndWOP:Schedule(3, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyjs.mp3") --注意減傷
+			sndWOP:Schedule(3, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
 			specwarnDR:Schedule(3)
 		end
 		if platform < 4 then

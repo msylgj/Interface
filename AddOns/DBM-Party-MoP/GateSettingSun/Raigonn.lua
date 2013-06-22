@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56877)
-mod:SetModelID(39519)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -41,44 +40,44 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(107146) then
+	if args.spellId == 107146 then
 		warnBrokenCarapace:Show()
 		specWarnBrokenCarapace:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\shieldover.mp3")--快打 護盾結束
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shieldover.mp3")--快打 護盾結束
 		timerHeadbuttCD:Cancel()
 		timerFixateCD:Start(5.5)--Timing for target pick, not cast start.
 		timerStompCD:Start(20.5, 1)
-	elseif args:IsSpellID(111723) then
+	elseif args.spellId == 111723 then
 		warnFixate:Show(args.destName)
 		timerFixate:Start(args.destName)
 		timerFixateCD:Start()
 		if args:IsPlayer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\justrun.mp3")--快跑
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\justrun.mp3")--快跑
 		end
-	elseif args:IsSpellID(111600) then
+	elseif args.spellId == 111600 then
 		warnScreechingSwarm:Show(args.destName)
 		specWarnScreechingSwarm:Show(args.destName)
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\dispelnow.mp3")--快驅散
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")--快驅散
 		end
 		timerScreechingSwarm:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(111723) and args:IsPlayer() then
+	if args.spellId == 111723 then
 		timerFixate:Cancel(args.destName)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetchange.mp3")--目標改變
-	elseif args:IsSpellID(111600) then
-		timerScreechingSwarm:Cancel(args.destname)
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetchange.mp3")--目標改變
+	elseif args.spellId == 111600 then
+		timerScreechingSwarm:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(111668) then
+	if args.spellId == 111668 then
 		warnHeadbutt:Show()
 		timerHeadbuttCD:Start()
-	elseif args:IsSpellID(111728) then
+	elseif args.spellId == 111728 then
 		stompCount = stompCount + 1
 		warnStomp:Show(stompCount)
 		timerStompCD:Start(20.5, stompCount+1)
@@ -88,13 +87,13 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 107279 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnWD:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.Kkxka or msg:find(L.Kkxka) or msg == L.Kkxkb or msg:find(L.Kkxkb) or msg == L.Kkxkc or msg:find(L.Kkxkc) then
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\mobsoon.mp3")--準備小怪
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
 	end
 end

@@ -1,9 +1,10 @@
-local mod	= DBM:NewMod("Ahune", "DBM-WorldEvents", 1)
+local mod	= DBM:NewMod("d286", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7125 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9464 $"):sub(12, -3))
 mod:SetCreatureID(25740)--25740 Ahune, 25755, 25756 the two types of adds
 mod:SetModelID(23447)--Frozen Core, ahunes looks pretty bad.
+mod:SetReCombatTime(10)
 mod:RegisterCombat("say", L.Pull)
 mod:SetMinCombatTime(15)
 
@@ -26,14 +27,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(45954) then				-- Ahunes Shield
+	if args.spellId == 45954 then				-- Ahunes Shield
 		warnEmerged:Show()
 		timerSubmerge:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(45954) then				-- Ahunes Shield
+	if args.spellId == 45954 then				-- Ahunes Shield
 		warnSubmerged:Show()
 		timerEmerge:Start()
 		specWarnAttack:Show()

@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8463 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9668 $"):sub(12, -3))
 mod:SetCreatureID(62543)
-mod:SetModelID(43141)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -16,13 +15,13 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnTempestSlash					= mod:NewSpellAnnounce(125692, 2)
 local warnOverwhelmingAssault			= mod:NewStackAnnounce(123474, 3, nil, mod:IsTank() or mod:IsHealer())
 local warnWindStep						= mod:NewTargetAnnounce(123175, 3)
-local warnUnseenStrike					= mod:NewTargetAnnounce(123017, 4)
+local warnUnseenStrike					= mod:NewTargetAnnounce(122949, 4, 123017)
 local warnIntensify						= mod:NewStackAnnounce(123471, 2)
 local warnBladeTempest					= mod:NewCastAnnounce(125310, 4)--Phase 1 heroic
 local warnStormUnleashed				= mod:NewSpellAnnounce(123815, 3)--Phase 2
@@ -83,11 +82,11 @@ local function checkUnseenEmote()
 		warnUnseenStrike:Show()
 		specWarnUnseenStrike:Show()
 		unseencount = unseencount + 1
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3")
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\gather.mp3") --快集合
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3")
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\gather.mp3") --快集合
 		timerUnseenStrike:Start(4.2)
 		timerUnseenStrikeCD:Start(61, unseencount + 1)
-		sndWOP:Schedule(56, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3") --無形打擊準備
+		sndWOP:Schedule(56, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3") --無形打擊準備
 		-- recover Unseen Strike Target Warning
 		warnUnseenStrike = mod:NewTargetAnnounce(123017, 4)
 		specWarnUnseenStrike = mod:NewSpecialWarningTarget(122949)
@@ -110,18 +109,18 @@ function mod:OnCombatStart(delay)
 	timerTempestSlashCD:Start(10-delay)
 	timerOverwhelmingAssaultCD:Start(15.5-delay)--Possibly wrong, the cd was shortened since beta, need better log with engage timestamp
 	if not mod:IsDps() then
-		sndWOP:Schedule(12, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3") --壓制準備
+		sndWOP:Schedule(12, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3") --壓制準備
 	end
 	timerWindStepCD:Start(20.5-delay)
 	timerUnseenStrikeCD:Start(30.5-delay, 1)
-	sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3") --無形打擊準備
+	sndWOP:Schedule(27, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3") --無形打擊準備
 	timerIntensifyCD:Start(intensifyCD-delay)
 	if not self:IsDifficulty("lfr25") then
 		berserkTimer:Start(-delay)
 	end
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerBladeTempestCD:Start(-delay)
-		sndWOP:Schedule(57, "Interface\\AddOns\\DBM-Core\\extrasounds\\wwsoon.mp3") --準備旋風
+		sndWOP:Schedule(57, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\wwsoon.mp3") --準備旋風
 	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
@@ -176,7 +175,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpellID(123474) then
 		timerOverwhelmingAssault:Cancel(args.destName)
 		if mod:IsTank() and (not ptwo) then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\changemt.mp3") --換坦嘲諷
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
 		end
 	end
 end
@@ -185,16 +184,16 @@ function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(125310) then
 		warnBladeTempest:Show()
 		specWarnBladeTempest:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\justrun.mp3") --快跑
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\justrun.mp3") --快跑
 --		soundBladeTempest:Play()
 		timerBladeTempest:Start()
-		sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfive.mp3")
-		sndWOP:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\countfour.mp3")
-		sndWOP:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndWOP:Schedule(8, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndWOP:Schedule(9, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
+		sndWOP:Schedule(5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+		sndWOP:Schedule(6, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
+		sndWOP:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndWOP:Schedule(8, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndWOP:Schedule(9, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		timerBladeTempestCD:Start()
-		sndWOP:Schedule(57, "Interface\\AddOns\\DBM-Core\\extrasounds\\wwsoon.mp3") --準備旋風
+		sndWOP:Schedule(57, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\wwsoon.mp3") --準備旋風
 	end
 end
 
@@ -203,15 +202,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerOverwhelmingAssaultCD:Start()--Start CD here, since this might miss.
 		if mod.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(GetSpellInfo(123474))
-			DBM.InfoFrame:Show(3, "playerdebuffstacks", 123474)
+			DBM.InfoFrame:Show(3, "playerdebuffstackstime", 123474)
 		end
 		if not mod:IsDps() then
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3")
 			self:Schedule(17, function()
 				warnedOA = true
 				castOA = false
 			end)
-			sndWOP:Schedule(17, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3")
+			sndWOP:Schedule(17, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3")
 		end
 		OAtime = GetTime()
 		warnedOA = false
@@ -232,27 +231,27 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		unseencount = unseencount + 1
 		if MyJS() then
 			specWarnJSA:Schedule(1.5)
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_zyjs.mp3") --注意減傷
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
 		end
 		warnUnseenStrike:Show(target)
 		specWarnUnseenStrike:Show(target)
 		timerUnseenStrike:Start()
 		timerUnseenStrikeCD:Start(61, unseencount + 1)
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3")
 		if target == UnitName("player") then
 			yellUnseenStrike:Yell()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetyou.mp3") --目標是你
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetyou.mp3") --目標是你
 		else
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\gather.mp3") --快集合
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\gather.mp3") --快集合
 			if self.Options.HudMAP then
 				UnseenStrikeMarkers[target] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("timer", target, 2, 5, 0, 1, 0, 1):Appear():RegisterForAlerts():Rotate(360, 5))
 				UnseenStrikeMarkers[target] = register(DBMHudMap:AddEdge(1, 1, 1, 1, 5, "player", target))
 			end
 		end
-		sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countthree.mp3")
-		sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\counttwo.mp3")
-		sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\countone.mp3")
-		sndWOP:Schedule(55, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3") --無形打擊準備
+		sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Schedule(55, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3") --無形打擊準備
 		if self.Options.UnseenStrikeArrow then
 			DBM.Arrow:ShowRunTo(target, 3, 3, 5)
 		end
@@ -260,14 +259,14 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			emoteFired = false
 		end)
 		if ((GetTime() - OAtime > 15) and not warnedOA) or (warnedOA and not castOA) then
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3")
-			sndWOP:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3")
+			sndWOP:Schedule(7, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3")
 		end
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 122839 and self:AntiSpam(2, 1) then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
+	if spellId == 122839 then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
 		warnTempestSlash:Show()
 		if self:IsDifficulty("lfr25") then
 			timerTempestSlashCD:Start(20)
@@ -284,17 +283,17 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerTempestSlashCD:Cancel()
 		timerOverwhelmingAssaultCD:Cancel()
 		if not mod:IsDps() then
-			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_yzgj.mp3")
+			sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_yzgj.mp3")
 		end
 		timerWindStepCD:Cancel()
 		timerUnseenStrikeCD:Cancel()
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\ex_mop_wxdjzb.mp3")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_mop_wxdjzb.mp3")
 		timerIntensifyCD:Cancel()
 		timerBladeTempestCD:Cancel()
-		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\wwsoon.mp3")
+		sndWOP:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\wwsoon.mp3")
 		warnStormUnleashed:Show()
 		specWarnStormUnleashed:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\ptwo.mp3") --P2
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3") --P2
 		ptwo = true
 		self:RegisterShortTermEvents(
 			"UNIT_HEALTH"
@@ -306,7 +305,7 @@ function mod:UNIT_HEALTH(uId)
 	if self:GetUnitCreatureId(uId) == 62543 then
 		local h = UnitHealth(uId) / UnitHealthMax(uId) * 100
 		if h > 10 and h < 13 and not prewarnedPhase2 then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\checkhp.mp3") --注意血量
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\checkhp.mp3") --注意血量
 			prewarnedPhase2 = true
 			self:SendSync("preptwo")
 		end
@@ -316,7 +315,7 @@ end
 function mod:OnSync(msg)
 	if msg == "preptwo" then
 		if not prewarnedPhase2 then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\checkhp.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\checkhp.mp3")
 			prewarnedPhase2 = true
 		end
 	end

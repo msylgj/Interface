@@ -1,15 +1,10 @@
-local Kotmogu	= DBM:NewMod("Kotmogu", "DBM-PvP", 2)
+local Kotmogu	= DBM:NewMod("z998", "DBM-PvP", 2)
 local L			= Kotmogu:GetLocalizedStrings()
 
 Kotmogu:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 Kotmogu:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UPDATE_WORLD_STATES"
+	"ZONE_CHANGED_NEW_AREA"
 )
 
 local winTimer 		= Kotmogu:NewTimer(30, "TimerWin", "Interface\\Icons\\INV_Misc_PocketWatch_01")
@@ -114,8 +109,15 @@ do
 end
 
 function Kotmogu:OnInitialize()
-	if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 856 then
+	if DBM:GetCurrentArea() == 856 then
 		bgzone = true
+		Kotmogu:RegisterShortTermEvents(
+			"CHAT_MSG_BG_SYSTEM_HORDE",
+			"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+			"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+			"CHAT_MSG_RAID_BOSS_EMOTE",
+			"UPDATE_WORLD_STATES"
+		)
 		table.wipe(orbs)
 		update_gametime()
 		if Kotmogu.Options.ShowKotmoguEstimatedPoints then
@@ -126,6 +128,7 @@ function Kotmogu:OnInitialize()
 		end
 	else
 		bgzone = false
+		Kotmogu:UnregisterShortTermEvents()
 		table.wipe(orbs)
 		winTimer:Stop()
 
@@ -137,7 +140,10 @@ function Kotmogu:OnInitialize()
 		end
 	end
 end
-Kotmogu.ZONE_CHANGED_NEW_AREA = Kotmogu.OnInitialize
+
+function Kotmogu:ZONE_CHANGED_NEW_AREA()
+	self:ScheduleMethod(1, "OnInitialize")
+end
 
 function Kotmogu:CHAT_MSG_BG_SYSTEM_ALLIANCE(msg)
 	if not bgzone then return end
@@ -228,7 +234,7 @@ do
 			winner_is = 2
 			winTimer:Update(get_gametime(), get_gametime()+HordeTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Horde))
+			winTimer:UpdateName(L.WinBarText:format(L.Horde or FACTION_HORDE))
 			winTimer:SetColor(hordeColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_01.blp")
 
@@ -242,7 +248,7 @@ do
 			winner_is = 1
 			winTimer:Update(get_gametime(), get_gametime()+AllyTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Alliance))
+			winTimer:UpdateName(L.WinBarText:format(L.Alliance or FACTION_ALLIANCE))
 			winTimer:SetColor(allyColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_02.blp")
 		end

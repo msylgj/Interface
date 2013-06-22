@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56589)
-mod:SetModelID(43275)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -36,7 +35,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(106933) then
+	if args.spellId == 106933 then
 		warnPreyTime:Show(args.destName)
 		timerPreyTime:Start(args.destName)
 		timerPreyTimeCD:Start()
@@ -44,13 +43,13 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(106933) then
+	if args.spellId == 106933 then
 		timerPreyTime:Start(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(107047) then
+	if args.spellId == 107047 then
 		warnImpalingStrike:Show(args.destName)
 		timerImpalingStrikeCD:Start()
 	end
@@ -59,10 +58,10 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 115458 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnAcidBomb:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	elseif spellId == 116297 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnStafingRunAoe:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -73,6 +72,6 @@ function mod:RAID_BOSS_EMOTE(msg)--Needs a better trigger if possible using tran
 		specWarnStafingRun:Show()
 		timerImpalingStrikeCD:Start(29)
 		timerPreyTimeCD:Start(32.5)
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\bombsoon.mp3")--準備炸彈
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\bombsoon.mp3")--準備炸彈
 	end
 end

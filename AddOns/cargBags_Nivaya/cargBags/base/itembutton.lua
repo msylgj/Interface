@@ -20,6 +20,12 @@
 local addon, ns = ...
 local cargBags = ns.cargBags
 
+local _G = _G
+
+local function retrieveFont()
+	return ns.options.fonts.itemCount
+end
+
 --[[!
 	@class ItemButton
 		This class serves as the basis for all itemSlots in a container
@@ -53,8 +59,9 @@ function ItemButton:New(bagID, slotID)
 	button.bagID = bagID
 	button.slotID = slotID
 	button:SetID(slotID)
+	
 	button:Show()
-
+	
 	return button
 end
 
@@ -64,7 +71,9 @@ end
 	@return button <ItemButton>
 	@callback button:OnCreate(tpl)
 ]]
+local bFS
 function ItemButton:Create(tpl)
+	local font = retrieveFont()
 	local impl = self.implementation
 	impl.numSlots = (impl.numSlots or 0) + 1
 	local name = ("%sSlot%d"):format(impl.name, impl.numSlots)
@@ -73,6 +82,14 @@ function ItemButton:Create(tpl)
 
 	if(button.Scaffold) then button:Scaffold(tpl) end
 	if(button.OnCreate) then button:OnCreate(tpl) end
+	local btnNT = _G[button:GetName().."NormalTexture"]
+	if btnNT then btnNT:SetTexture(nil) end
+	
+	button:SetSize(ns.options.itemSlotSize, ns.options.itemSlotSize)
+	bFS = _G[button:GetName().."Count"]
+	bFS:ClearAllPoints()
+	bFS:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1.5, 1.5);
+	bFS:SetFont(unpack(font))
 
 	return button
 end

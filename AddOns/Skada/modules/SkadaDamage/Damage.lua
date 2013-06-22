@@ -216,7 +216,7 @@ function mod:Update(win, set)
 
 			d.valuetext = Skada:FormatValueText(
 											Skada:FormatNumber(player.damage), self.metadata.columns.Damage,
-											string.format("%02.1f", dps), self.metadata.columns.DPS,
+											Skada:FormatNumber(dps), self.metadata.columns.DPS,
 											string.format("%02.1f%%", player.damage / set.damage * 100), self.metadata.columns.Percent
 										)
 
@@ -456,7 +456,7 @@ function dpsmod:Update(win, set)
 			d.id = player.id
 			d.value = dps
 			d.class = player.class
-			d.valuetext = ("%02.1f"):format(dps)
+			d.valuetext = Skada:FormatNumber(dps)
 			if dps > max then
 				max = dps
 			end
@@ -493,13 +493,13 @@ function mod:OnEnable()
 								if Skada.current then
 									local player = Skada:find_player(Skada.current, UnitGUID("player"))
 									if player then
-										return ("%02.1f"):format(getDPS(Skada.current, player)).." "..L["DPS"]
+										return Skada:FormatNumber(getDPS(Skada.current, player)).." "..L["DPS"]
 									end
 								end
 							end)
 	Skada:AddFeed(L["Damage: Raid DPS"], function()
 								if Skada.current then
-									return ("%02.1f"):format(getRaidDPS(Skada.current)).." "..L["RDPS"]
+									return Skada:FormatNumber(getRaidDPS(Skada.current)).." "..L["RDPS"]
 								end
 							end)
 	Skada:AddMode(self)
@@ -521,13 +521,13 @@ function dpsmod:OnDisable()
 end
 
 function mod:AddToTooltip(set, tooltip)
- 	GameTooltip:AddDoubleLine(L["DPS"], ("%02.1f"):format(getRaidDPS(set)), 1,1,1)
+ 	GameTooltip:AddDoubleLine(L["DPS"], Skada:FormatNumber(getRaidDPS(set)), 1,1,1)
 end
 
 function mod:GetSetSummary(set)
 	return Skada:FormatValueText(
 						Skada:FormatNumber(set.damage), self.metadata.columns.Damage,
-						("%02.1f"):format(getRaidDPS(set)), self.metadata.columns.DPS
+						Skada:FormatNumber(getRaidDPS(set)), self.metadata.columns.DPS
 					)
 end
 

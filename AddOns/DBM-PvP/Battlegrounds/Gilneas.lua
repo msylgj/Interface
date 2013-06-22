@@ -1,15 +1,10 @@
-local Gilneas	= DBM:NewMod("Gilneas", "DBM-PvP", 2)
+local Gilneas	= DBM:NewMod("z761", "DBM-PvP", 2)
 local L			= Gilneas:GetLocalizedStrings()
 
 Gilneas:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 Gilneas:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UPDATE_WORLD_STATES"
+	"ZONE_CHANGED_NEW_AREA"
 )
 
 local winTimer 		= Gilneas:NewTimer(30, "TimerWin", "Interface\\Icons\\INV_Misc_PocketWatch_01")
@@ -120,8 +115,15 @@ do
 end
 
 local function Gilneas_Initialize()
-	if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 736 then
+	if DBM:GetCurrentArea() == 736 then
 		bgzone = true
+		Gilneas:RegisterShortTermEvents(
+			"CHAT_MSG_BG_SYSTEM_HORDE",
+			"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+			"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+			"CHAT_MSG_RAID_BOSS_EMOTE",
+			"UPDATE_WORLD_STATES"
+		)
 		update_gametime()
 		for i=1, GetNumMapLandmarks(), 1 do
 			local name, _, textureIndex = GetMapLandmarkInfo(i)
@@ -140,6 +142,7 @@ local function Gilneas_Initialize()
 		end
 	elseif bgzone then
 		bgzone = false
+		Gilneas:UnregisterShortTermEvents()
 		if Gilneas.Options.ShowGilneasEstimatedPoints then
 			Gilneas:HideEstimatedPoints()
 		end
@@ -148,8 +151,12 @@ local function Gilneas_Initialize()
 		end
 	end
 end
+
 Gilneas.OnInitialize = Gilneas_Initialize
-Gilneas.ZONE_CHANGED_NEW_AREA = Gilneas_Initialize
+
+function Gilneas:ZONE_CHANGED_NEW_AREA()
+	self:Schedule(1, Gilneas_Initialize)
+end
 
 do
 	local function check_for_updates()
@@ -250,7 +257,7 @@ do
 			winner_is = 2
 			winTimer:Update(get_gametime(), get_gametime()+HordeTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Horde))
+			winTimer:UpdateName(L.WinBarText:format(L.Horde or FACTION_HORDE))
 			winTimer:SetColor(hordeColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_01.blp")
 
@@ -264,7 +271,7 @@ do
 			winner_is = 1
 			winTimer:Update(get_gametime(), get_gametime()+AllyTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Alliance))
+			winTimer:UpdateName(L.WinBarText:format(L.Alliance or FACTION_ALLIANCE))
 			winTimer:SetColor(allyColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_02.blp")
 		end

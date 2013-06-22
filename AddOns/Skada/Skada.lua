@@ -849,7 +849,8 @@ local function check_for_join_and_leave()
 		end
 
 		-- Show window if we have enabled the "Hide when solo" option.
-		if Skada.db.profile.hidesolo then
+		-- But only when NOT in pvp and it's set to hide in pvp.
+        if Skada.db.profile.hidesolo and (Skada.db.profile.hidepvp and not is_in_pvp()) then
 			Skada:SetActive(true)
 		end
 	end

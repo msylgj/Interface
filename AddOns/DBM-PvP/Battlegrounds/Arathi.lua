@@ -1,15 +1,10 @@
-local Arathi	= DBM:NewMod("ArathiBasin", "DBM-PvP", 2)
+local Arathi	= DBM:NewMod("z529", "DBM-PvP", 2)
 local L			= Arathi:GetLocalizedStrings()
 
 Arathi:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 Arathi:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UPDATE_WORLD_STATES"
+	"ZONE_CHANGED_NEW_AREA"
 )
 
 local winTimer 		= Arathi:NewTimer(30, "TimerWin", "Interface\\Icons\\INV_Misc_PocketWatch_01")
@@ -130,8 +125,15 @@ end
 
 do
 	local function AB_Initialize()
-		if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 461 then
+		if DBM:GetCurrentArea() == 461 then
 			bgzone = true
+			Arathi:RegisterShortTermEvents(
+				"CHAT_MSG_BG_SYSTEM_HORDE",
+				"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+				"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+				"CHAT_MSG_RAID_BOSS_EMOTE",
+				"UPDATE_WORLD_STATES"
+			)
 			update_gametime()
 			for i=1, GetNumMapLandmarks(), 1 do
 				local name, _, textureIndex = GetMapLandmarkInfo(i)
@@ -152,6 +154,7 @@ do
 
 		elseif bgzone then
 			bgzone = false
+			Arathi:UnregisterShortTermEvents()
 
 			if Arathi.Options.ShowAbEstimatedPoints then
 				Arathi:HideEstimatedPoints()
@@ -162,7 +165,9 @@ do
 		end
 	end
 	Arathi.OnInitialize = AB_Initialize
-	Arathi.ZONE_CHANGED_NEW_AREA = AB_Initialize
+	function Arathi:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(1, AB_Initialize)
+	end
 end
 
 do
@@ -264,7 +269,7 @@ do
 			winner_is = 2
 			winTimer:Update(get_gametime(), get_gametime()+HordeTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Horde))
+			winTimer:UpdateName(L.WinBarText:format(L.Horde or FACTION_HORDE))
 			winTimer:SetColor(hordeColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_01.blp")
 
@@ -278,7 +283,7 @@ do
 			winner_is = 1
 			winTimer:Update(get_gametime(), get_gametime()+AllyTime)
 			winTimer:DisableEnlarge()
-			winTimer:UpdateName(L.WinBarText:format(L.Alliance))
+			winTimer:UpdateName(L.WinBarText:format(L.Alliance or FACTION_ALLIANCE))
 			winTimer:SetColor(allyColor)
 			winTimer:UpdateIcon("Interface\\Icons\\INV_BannerPVP_02.blp")
 		end

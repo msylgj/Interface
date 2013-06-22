@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56636)
-mod:SetModelID(43286)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -32,10 +31,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(107122) and args:IsPlayer() and self:AntiSpam(3, 1) then
+	if args.spellId == 107122 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnViscousFluid:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
-	elseif args:IsSpellID(107120) then
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+	elseif args.spellId == 107120 then
 		timerFrenziedAssault:Start()
 		timerFrenziedAssaultCD:Start()
 	end
@@ -43,11 +42,11 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(107120) then
+	if args.spellId == 107120 then
 		warnFrenziedAssault:Show()
 		specWarnFrenziedAssault:Show()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 		end
 	end
 end
@@ -55,7 +54,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 107121 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnAssaultMove:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

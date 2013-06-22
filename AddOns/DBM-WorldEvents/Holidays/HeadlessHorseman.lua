@@ -1,14 +1,15 @@
-local mod	= DBM:NewMod("HeadlessHorseman", "DBM-WorldEvents", 1)
+local mod	= DBM:NewMod("d285", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7445 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9667 $"):sub(12, -3))
 mod:SetCreatureID(23682, 23775)
 --mod:SetModelID(22351)--Model doesn't work/render for some reason.
+mod:SetReCombatTime(10)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED target focus",
 	"CHAT_MSG_MONSTER_SAY",
 	"CHAT_MSG_SAY"
 )
@@ -28,27 +29,27 @@ local timerConflag				= mod:NewTargetTimer(4, 42380)
 local timerSquashSoul			= mod:NewTargetTimer(15, 42514)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(42380) then					-- Conflagration
+	if args.spellId == 42380 then					-- Conflagration
 		warnConflag:Show(args.destName)
 		timerConflag:Start(args.destName)
-	elseif args:IsSpellID(42514) then				-- Squash Soul
+	elseif args.spellId == 42514 then				-- Squash Soul
 		warnSquashSoul:Show(args.destName)
 		timerSquashSoul:Start(args.destName)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 --	"<48.6> Headless Horseman:Possible Target<Omegal>:target:Headless Horseman Climax - Command, Head Repositions::0:42410", -- [35]
-	if spellName == GetSpellInfo(42410) then
+	if spellId == 42410 then
 		self:SendSync("HeadRepositions")
 --	"<23.0> Headless Horseman:Possible Target<nil>:target:Headless Horseman Climax, Body Stage 1::0:42547", -- [1]
-	elseif spellName == GetSpellInfo(42547) then
+	elseif spellId == 42547 then
 		self:SendSync("BodyStage1")
 --	"<49.0> Headless Horseman:Possible Target<Omegal>:target:Headless Horseman Climax, Body Stage 2::0:42548", -- [7]
-	elseif spellName == GetSpellInfo(42548) then
+	elseif spellId == 42548 then
 		self:SendSync("BodyStage2")
 --	"<70.6> Headless Horseman:Possible Target<Omegal>:target:Headless Horseman Climax, Body Stage 3::0:42549", -- [13]
-	elseif spellName == GetSpellInfo(42549) then
+	elseif spellId == 42549 then
 		self:SendSync("BodyStage3")
 	end
 end

@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
-mod:SetModelID(39506)	-- according to Journal :p
 mod:SetZone()
 
 mod:RegisterCombat("combat")--Might work? if not might have to change to a yell. Without transcriptor cannot see combat regen or engage unit events
@@ -34,20 +33,20 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(113315) then
+	if args.spellId == 113315 then
 		warnIntensity:Show(args.destName, args.amount or 1)
-	elseif args:IsSpellID(113309) then
+	elseif args.spellId == 113309 then
 		warnUltimatePower:Show(args.destName)
 		specWarnUltimatePower:Show(args.destName)
 		timerUltimatePower:Start(args.destName)
 		if args.sourceGUID == UnitGUID("target") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\changetarget.mp3")--目標轉換
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\changetarget.mp3")--目標轉換
 		end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(113315) then
+	if args.spellId == 113315 then
 		if args.amount % 2 == 0 then--only warn every 2
 			warnIntensity:Show(args.destName, args.amount)
 			if args.amount >= 6 then--Start point of special warnings subject to adjustment based on live tuning.

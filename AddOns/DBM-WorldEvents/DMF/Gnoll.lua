@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("Gnoll", "DBM-WorldEvents", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7446 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED player",
 	"QUEST_WATCH_UPDATE"
 )
 
@@ -21,7 +21,7 @@ local specWarnHogger			= mod:NewSpecialWarning("specWarnHogger")
 
 local timerGame					= mod:NewBuffActiveTimer(60, 101612)
 
-local countdownGame				= mod:NewCountdown(60, 101612)
+local countdownGame				= mod:NewCountdownFades(60, 101612)
 
 local gameEarnedPoints = 0
 local gameMaxPoints = 0
@@ -30,7 +30,7 @@ mod:RemoveOption("HealthFrame")
 mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(101612) and args:IsPlayer() then
+	if args.spellId == 101612 and args:IsPlayer() then
 		gameEarnedPoints = 0
 		gameMaxPoints = 0
 		timerGame:Start()
@@ -39,7 +39,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(101612) and args:IsPlayer() then
+	if args.spellId == 101612 and args:IsPlayer() then
 		timerGame:Cancel()
 		countdownGame:Cancel()
 		if self.Options.warnGameOver then
@@ -52,8 +52,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellID)
-	if uId ~= "player" then return end
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellID)
 	if spellID == 102044 then--Hogger
 		if gameEarnedPoints < 30 then--You earned 30 points in first game, stop counting points you didn't earn so you get more accurate depiction of hwo many you missed, not how many you ignored when you finished.
 			gameMaxPoints = gameMaxPoints + 3

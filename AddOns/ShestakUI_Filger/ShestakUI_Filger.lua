@@ -21,7 +21,7 @@ local colorTable = {
 	["ZS"]		= {r = .78, g = .61, b = .43},
 	["Black"]	= {r = 0, g = 0, b = 0},
 	["Gray"]	= {r = .37, g = .3, b = .3},
-	["OWN"]		= RAID_CLASS_COLORS[class],
+	["OWN"]		= ClassColor,
 }
 
 local function SetTemplate(Parent, Size)
@@ -224,7 +224,7 @@ function Filger:DisplayActives()
 					bar.spellname = _G[bar.spellname:GetName()]
 				else
 					bar.spellname = bar.statusbar:CreateFontString("$parentSpellName", "OVERLAY")
-					bar.spellname:SetFont(GameTooltipText:GetFont(), Misc.namesize, "OUTLINE")
+					bar.spellname:SetFont(GameFontNormal:GetFont(), Misc.namesize, "OUTLINE")
 					bar.spellname:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
 					bar.spellname:SetPoint("LEFT", bar.statusbar, 2, 10)
 					bar.spellname:SetPoint("RIGHT", bar.time, "LEFT")

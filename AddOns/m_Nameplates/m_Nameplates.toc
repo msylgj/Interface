@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Author: Monolit
 ## Title: mono|cffffffffNameplates|r
 ## Version: 4.0

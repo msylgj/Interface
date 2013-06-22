@@ -211,6 +211,15 @@ local function getHPSByValue(set, player, healing)
 	return healing / math.max(1,totaltime)
 end
 
+local function getRaidHPS(set)
+	if set.time > 0 then
+		return set.healing / math.max(1, set.time)
+	else
+		local endtime = set.endtime or time()
+		return set.healing / math.max(1, endtime - set.starttime)
+	end
+end
+
 function healingtaken:Update(win, set)
 	local nr = 1
 	local max = 0
@@ -429,7 +438,10 @@ function mod:AddToTooltip(set, tooltip)
 end
 
 function mod:GetSetSummary(set)
-	return Skada:FormatNumber(set.healing)
+	return Skada:FormatValueText(
+		Skada:FormatNumber(set.healing), self.metadata.columns.Healing,
+		("%02.1f"):format(getRaidHPS(set)), self.metadata.columns.HPS
+	)
 end
 
 -- Called by Skada when a new player is added to a set.

@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(58722)--58722 is Body, 58791 is soul. Body is engaged first
-mod:SetModelID(40256)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -47,22 +46,22 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(111585) and args:IsPlayer() and self:AntiSpam(3, 1) then
+	if args.spellId == 111585 and args:IsPlayer() and self:AntiSpam() then
 		specWarnDarkBlaze:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\keepmove.mp3")--保持移動
-	elseif args:IsSpellID(111649) then--Soul released and body becomes inactive, phase 2.
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\keepmove.mp3")--保持移動
+	elseif args.spellId == 111649 then--Soul released and body becomes inactive, phase 2.
 		timerShadowShivCD:Cancel()
 		timerDeathsGraspCD:Cancel()
 		warnUnleashedAnguish:Show()
 		timerFixateAngerCD:Start()
-	elseif args:IsSpellID(115350) then
+	elseif args.spellId == 115350 then
 		warnFixateAnger:Show(args.destName)
 		timerFixateAnger:Start(args.destName)
 		timerFixateAngerCD:Start()
 		if args:IsPlayer() then
 			specWarnFixateAnger:Show()
 --			soundFixateAnger:Play()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\justrun.mp3")--快跑
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\justrun.mp3")--快跑
 		end
 	end
 end
@@ -70,13 +69,13 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpellID(115350) then
 		if args:IsPlayer() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\targetchange.mp3")--目標改變
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\targetchange.mp3")--目標改變
 		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(111570) then
+	if args.spellId == 111570 then
 		warnDeathsGrasp:Show()
 		specWarnDeathsGrasp:Show()
 		timerDeathsGraspCD:Start()
@@ -84,7 +83,7 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(111775, 115362) then
 		warnShadowShiv:Show()
 		timerShadowShivCD:Start()
-	elseif args:IsSpellID(114262) then--Phase 3, body rezzed and you have soul and body up together.
+	elseif args.spellId == 114262 then--Phase 3, body rezzed and you have soul and body up together.
 		warnReanimateCorpse:Show()
 		timerDeathsGraspCD:Start(9)
 		timerShadowShivCD:Start(20.5)
@@ -92,16 +91,16 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(111585) then
+	if args.spellId == 111585 then
 		timerDarkBlaze:Start()
 	end
 end
 
 -- he dies before health 1, so can't use overkill hack.
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overkill)
-	if (spellId == 111628 or spellId == 115361) and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
+	if (spellId == 111628 or spellId == 115361) and destGUID == UnitGUID("player") and self:AntiSpam(2) then
 		specWarnDarkBlaze:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

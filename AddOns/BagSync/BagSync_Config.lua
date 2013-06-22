@@ -13,8 +13,13 @@ bgsOpt:SetScript("OnShow", function()
 		BagSyncConfig_GuildNames:SetChecked(BagSyncOpt["showGuildNames"])
 		BagSyncConfig_BothFactions:SetChecked(BagSyncOpt["enableFaction"])
 		BagSyncConfig_ClassColors:SetChecked(BagSyncOpt["enableUnitClass"])
+		BagSyncConfig_Minimap:SetChecked(BagSyncOpt["enableMinimap"])
 		BagSyncConfig_GuildInfo:SetChecked(BagSyncOpt["enableGuild"])
 		BagSyncConfig_MailboxInfo:SetChecked(BagSyncOpt["enableMailbox"])
+		BagSyncConfig_AuctionInfo:SetChecked(BagSyncOpt["enableAuction"])
+		BagSyncConfig_TooltipSearchOnly:SetChecked(BagSyncOpt["tooltipOnlySearch"])
+		BagSyncConfig_EnableBagSyncTooltips:SetChecked(BagSyncOpt["enableTooltips"])
+		BagSyncConfig_EnableBagSyncTooltipsSeperator:SetChecked(BagSyncOpt["enableTooltipSeperator"])
 	end
 end)
 
@@ -103,6 +108,26 @@ local bgs_ClassColors_OptText = bgs_ClassColors_Opt:CreateFontString(nil, "ARTWO
 bgs_ClassColors_OptText:SetPoint("LEFT", bgs_ClassColors_Opt, "RIGHT", 0, 1)
 bgs_ClassColors_OptText:SetText(L["Display class colors for characters."])
 
+--[[ Minimap ]]--
+local bgs_Minimap_Opt = CreateFrame("CheckButton", "BagSyncConfig_Minimap", bgsOpt, "OptionsBaseCheckButtonTemplate")
+bgs_Minimap_Opt:SetPoint("TOPLEFT", 16, -157)
+bgs_Minimap_Opt:SetScript("OnClick", function(frame)
+	if BagSyncOpt then
+		if frame:GetChecked() then
+			PlaySound("igMainMenuOptionCheckBoxOn")
+			BagSyncOpt["enableMinimap"] = true
+			if BagSync_MinimapButton and not BagSync_MinimapButton:IsVisible() then BagSync_MinimapButton:Show() end
+		else
+			PlaySound("igMainMenuOptionCheckBoxOff")
+			BagSyncOpt["enableMinimap"] = false
+			if BagSync_MinimapButton and BagSync_MinimapButton:IsVisible() then BagSync_MinimapButton:Hide() end
+		end
+	end			
+end)
+local bgs_Minimap_OptText = bgs_Minimap_Opt:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+bgs_Minimap_OptText:SetPoint("LEFT", bgs_Minimap_Opt, "RIGHT", 0, 1)
+bgs_Minimap_OptText:SetText(L["Display BagSync minimap button."])
+
 --[[ Enable Guild Info ]]--
 local bgs_GuildInfo_Opt = CreateFrame("CheckButton", "BagSyncConfig_GuildInfo", bgsOpt, "OptionsBaseCheckButtonTemplate")
 bgs_GuildInfo_Opt:SetPoint("TOPLEFT", 16, -185)
@@ -182,3 +207,43 @@ end)
 local bgs_TooltipSearchOnly_OptText = bgs_TooltipSearchOnly_Opt:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 bgs_TooltipSearchOnly_OptText:SetPoint("LEFT", bgs_TooltipSearchOnly_Opt, "RIGHT", 0, 1)
 bgs_TooltipSearchOnly_OptText:SetText(L["Display modified tooltips ONLY in the BagSync Search window."])
+
+--[[ Toggle for BagSync tooltips]]--
+local bgs_EnableBagSyncTooltips_Opt = CreateFrame("CheckButton", "BagSyncConfig_EnableBagSyncTooltips", bgsOpt, "OptionsBaseCheckButtonTemplate")
+bgs_EnableBagSyncTooltips_Opt:SetPoint("TOPLEFT", 16, -297)
+bgs_EnableBagSyncTooltips_Opt:SetScript("OnClick", function(frame)
+	if BagSyncOpt then
+		if frame:GetChecked() then
+			PlaySound("igMainMenuOptionCheckBoxOn")
+			BagSyncOpt["enableTooltips"] = true
+			if BagSync then BagSync:resetTooltip() end
+		else
+			PlaySound("igMainMenuOptionCheckBoxOff")
+			BagSyncOpt["enableTooltips"] = false
+			if BagSync then BagSync:resetTooltip() end
+		end
+	end
+end)
+local bgs_EnableBagSyncTooltips_OptText = bgs_EnableBagSyncTooltips_Opt:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+bgs_EnableBagSyncTooltips_OptText:SetPoint("LEFT", bgs_EnableBagSyncTooltips_Opt, "RIGHT", 0, 1)
+bgs_EnableBagSyncTooltips_OptText:SetText(L["Enable BagSync Tooltips"])
+
+--[[ Toggle for BagSync Tooltip Seperator]]--
+local bgs_EnableBagSyncTooltipsSeperator_Opt = CreateFrame("CheckButton", "BagSyncConfig_EnableBagSyncTooltipsSeperator", bgsOpt, "OptionsBaseCheckButtonTemplate")
+bgs_EnableBagSyncTooltipsSeperator_Opt:SetPoint("TOPLEFT", 16, -325)
+bgs_EnableBagSyncTooltipsSeperator_Opt:SetScript("OnClick", function(frame)
+	if BagSyncOpt then
+		if frame:GetChecked() then
+			PlaySound("igMainMenuOptionCheckBoxOn")
+			BagSyncOpt["enableTooltipSeperator"] = true
+			if BagSync then BagSync:resetTooltip() end
+		else
+			PlaySound("igMainMenuOptionCheckBoxOff")
+			BagSyncOpt["enableTooltipSeperator"] = false
+			if BagSync then BagSync:resetTooltip() end
+		end
+	end
+end)
+local bgs_EnableBagSyncTooltipsSeperator_OptText = bgs_EnableBagSyncTooltipsSeperator_Opt:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+bgs_EnableBagSyncTooltipsSeperator_OptText:SetPoint("LEFT", bgs_EnableBagSyncTooltipsSeperator_Opt, "RIGHT", 0, 1)
+bgs_EnableBagSyncTooltipsSeperator_OptText:SetText(L["Enable empty line seperator above BagSync tooltip display."])

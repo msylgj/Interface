@@ -1,6 +1,6 @@
 --[[
 Name: LibBossIDs-1.0
-Revision: $Revision: 83 $
+Revision: $Revision: 85 $
 Author: Elsia
 Website: http://www.wowace.com/addons/libbossids-1-0/
 Documentation:
@@ -10,7 +10,7 @@ Dependencies: LibStub
 License: Public Domain, Absolutely no Warranty.
 ]]
 
-local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 83 $"
+local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 85 $"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then return end
@@ -349,11 +349,11 @@ local BossIDs = {
    -------------------------------------------------------------------------------
    -- End Time 4.3
    -------------------------------------------------------------------------------
-    [54431]	= true,	-- Echo of Baine
-	[54445] = true, -- Echo of Jaina
-    [54123] = true, -- Echo of Sylvanas
-	[54544] = true, -- Echo of Tyrande
-	[54432] = true, -- Murozond
+   [54431]	= true,	-- Echo of Baine
+   [54445] = true, -- Echo of Jaina
+   [54123] = true, -- Echo of Sylvanas
+   [54544] = true, -- Echo of Tyrande
+   [54432] = true, -- Murozond
 
    -------------------------------------------------------------------------------
    -- Firelands 4.2 PTR
@@ -375,10 +375,10 @@ local BossIDs = {
    -------------------------------------------------------------------------------
    -- Gate of the Setting Sun (MoP-Dungeon 5.0.1)
    -------------------------------------------------------------------------------
-	[54432]	= true,	--  Gadok
-	[56636]	= true,	--  Rimok
-	[56877]	= true,	--  Raigon
-	[56906]	= true,	--  Kiptilak
+   [54432]	= true,	--  Gadok
+   [56636]	= true,	--  Rimok
+   [56877]	= true,	--  Raigon
+   [56906]	= true,	--  Kiptilak
 
    -------------------------------------------------------------------------------
    -- Gnomeregan
@@ -536,10 +536,14 @@ local BossIDs = {
    [36661]	= true,	-- Rimefang <Drake of Tyrannus>
 
    -------------------------------------------------------------------------------
+   -- Isle of Giants
+   -------------------------------------------------------------------------------
+   [69161]	= true,	-- Oondasta
+
+   -------------------------------------------------------------------------------
    -- Isle of Thunder
    -------------------------------------------------------------------------------
    [69099]	= true,	-- Nalak <The Storm Lord>
-   [69161]	= true,	-- Oondasta
 
    -------------------------------------------------------------------------------
    -- Karazhan
@@ -1246,7 +1250,7 @@ local BossIDs = {
    [68905]	= true,	-- Lu'lin <Mistress of Solitude>, Twin Consorts
    [68904]	= true,	-- Suen <Mistress of Anger>, Twin Consorts
    [68397]	= true,	-- Lei Shen <The Thunder King>
-   --[]	= true,	-- Ra-den <Fallen Keeper of Storms>
+   [69473]	= true,	-- Ra-den <Fallen Keeper of Storms>
 
    -------------------------------------------------------------------------------
    -- Trial of the Champion
@@ -1452,7 +1456,7 @@ local BossIDs = {
    -------------------------------------------------------------------------------
 
    [55085]	= true,	-- Peroth'arn
-   [54853]	= true,	-- Königin Azshara
+   [54853]	= true,	-- Queen Azshara
    [54969]	= true,	-- Mannoroth
    [55419]	= true,	-- Varo'then
 

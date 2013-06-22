@@ -24,7 +24,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SoundWOP 		= "voice warning: important skills",
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS["stack"]:format(6, 113315)
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -145,6 +145,7 @@ L:SetOptionLocalization({
 -----------------------
 -- <<<The Gate of the Setting Sun>>> --
 -----------------------
+
 ---------------------
 -- Kiptilak --
 ---------------------

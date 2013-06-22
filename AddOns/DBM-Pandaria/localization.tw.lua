@@ -13,6 +13,10 @@ L:SetOptionLocalization({
 	SetIconOnMC			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(119622)
 })
 
+L:SetMiscLocalization({
+	Pull				= "沒錯...沒錯!釋放你的怒火!試著擊敗我!"
+})
+
 -----------------------
 -- Salyis --
 -----------------------
@@ -20,6 +24,10 @@ L= DBM:GetModLocalization(725)
 
 L:SetOptionLocalization({
 	SoundWOP			= "語音警告：重要技能"
+})
+
+L:SetMiscLocalization({
+	Pull				= "把他們的屍體帶給我!"
 })
 
 --------------
@@ -33,7 +41,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "How dare you interrupt our preparations! The Zandalari will not be stopped, not this time!"
+	Pull				= "你們竟敢打擾我們的準備工作!贊達拉這次不會再被阻止了!"
 })
 
 ---------------------------

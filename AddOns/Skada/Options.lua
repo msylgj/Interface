@@ -7,9 +7,6 @@ Skada.windowdefaults = {
 	name = "Skada",
 	barspacing=0,
 	bartexture="Minimalist",
-
-
-
 	barfont="д╛хо",
 	barfontflags="",
 	barfontsize=9,
@@ -40,8 +37,6 @@ Skada.windowdefaults = {
 
 	set = "total",
 	mode = "ик╨╕",
-	
-
 
 	display = "bar",
 	snapto = true,

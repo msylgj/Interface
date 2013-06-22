@@ -2,15 +2,14 @@ local mod	= DBM:NewMod("BrawlRank1", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8371 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(46327)--Last Boss of Rank 1
 mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
-	"UNIT_SPELLCAST_CHANNEL_START"
+	"UNIT_SPELLCAST_CHANNEL_START target focus"
 )
 
 local warnChomp					= mod:NewSpellAnnounce(135342, 4)
@@ -38,35 +37,35 @@ local brawlersMod = DBM:GetModByName("Brawlers")
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(135342) then
+	if args.spellId == 135342 then
 		warnChomp:Show()--Give reg warnings for spectators
 		timerChompCD:Start()--And timers (first one is after 6 seconds)
 		if brawlersMod:PlayerFighting() then--Only give special warnings if you're in arena though.
 			specWarnChomp:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
 		end
-	elseif args:IsSpellID(133286) then
+	elseif args.spellId == 133286 then
 		warnHeatedPokers:Show()
 		timerHeatedPokersCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnHeatedPokers:Show()
 		end
-	elseif args:IsSpellID(134740) then
+	elseif args.spellId == 134740 then
 		warnVolatileFlames:Show()
 		timerVolatileFlamesCD:Start()
-	elseif args:IsSpellID(133607) then
+	elseif args.spellId == 133607 then
 		warnFireLine:Show()
 		timerFireLineCD:Start()--First one is 9-10 seconds after combat start
 		if brawlersMod:PlayerFighting() then
 			specWarnFireLine:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
 		end
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end
-	if args:IsSpellID(133286) then
+	if args.spellId == 133286 then
 		timerHeatedPokers:Start()
 	end
 end
@@ -80,7 +79,7 @@ function mod:UNIT_SPELLCAST_CHANNEL_START(uId, _, _, _, spellId)
 		timerLumberingChargeCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnLumberingCharge:Show()
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
 		end
 	end
 end

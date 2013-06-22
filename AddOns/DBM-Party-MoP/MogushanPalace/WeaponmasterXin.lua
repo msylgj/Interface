@@ -2,9 +2,8 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(61398)
-mod:SetModelID(41987)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -14,7 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED",
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 
@@ -40,34 +39,34 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(119684) then
+	if args.spellId == 119684 then
 		warnGroundSmash:Show()
 		specWarnSmash:Show()
 		timerSmashCD:Start()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 		else
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\shockwave.mp3")--震懾波
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3")--震懾波
 		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(122959) then
+	if args.spellId == 122959 then
 		warnRoar:Show()
 --		timerRoarCD:Start()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 120109 and self:AntiSpam(2, 1) then
+	if spellId == 120109 then
 		warnStaff:Show()
 		timerStaffCD:Start()
-	elseif spellId == 120083 and self:AntiSpam(2, 2) then
+	elseif spellId == 120083 then
 		warnWhirlwindingAxe:Show()
-	elseif spellId == 120094 and self:AntiSpam(2, 3) then
+	elseif spellId == 120094 then
 		warnStreamBlades:Show()
-	elseif spellId == 120139 and self:AntiSpam(2, 4) then
+	elseif spellId == 120139 then
 		warnCrossbowTrap:Show()
 	end
 end
@@ -84,7 +83,7 @@ Notes
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 119311 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
 		specWarnBlades:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

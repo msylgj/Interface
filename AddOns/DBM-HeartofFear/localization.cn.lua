@@ -96,7 +96,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(713)
 
 L:SetWarningLocalization({
-	specwarnUnder	= "离开紫圈!",
+	specwarnUnder	= "远离紫圈!",
 	specWarnPungencyOtherFix = "%s 敏感 (%d)",
 	specwarnCrushH	= "重碾 (%d)",
 	SpecWarnJSA		= "5秒后重碾 >>注意减伤<<",
@@ -289,4 +289,18 @@ L:SetMiscLocalization({
 	PlayerDebuffs		= "凝视",
 	YellPhase3			= "别找借口了，女皇！消灭这些傻瓜，否则我会亲手杀了你！"
 
+})
+
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("HoFTrash")
+
+L:SetGeneralLocalization({
+	name =	"恐惧之心杂兵"
+})
+
+L:SetOptionLocalization({
+	UnseenStrikeArrow	= "DBM箭头：$spell:122949"
 })

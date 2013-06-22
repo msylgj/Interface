@@ -2,8 +2,7 @@ local mod	= DBM:NewMod("BrawlRank2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 8364 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(46712)
 mod:SetZone()
 
@@ -32,28 +31,28 @@ local brawlersMod = DBM:GetModByName("Brawlers")
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(133308) then
+	if args.spellId == 133308 then
 		warnThrowNet:Show()
 		timerThrowNetCD:Start()
-	elseif args:IsSpellID(135234) then
+	elseif args.spellId == 135234 then
 		warnStormCloud:Show()
 		--CD seems to be 32 seconds usually but sometimes only 16? no timer for now
 		if brawlersMod:PlayerFighting() then
 			specWarnStormCloud:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\kickcast.mp3")
+			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")
 		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end
-	if args:IsSpellID(133227) then
+	if args.spellId == 133227 then
 		warnGoblinDevice:Show()
 		timerGoblinDeviceCD:Start()--6 seconds after combat start, if i do that kind of detection later
 		if brawlersMod:PlayerFighting() then--Only give special warnings if you're in arena though.
 			specWarnGoblinDevice:Show()
 		end
-	elseif args:IsSpellID(132670) then
+	elseif args.spellId == 132670 then
 		warnSummonTwister:Show()
 		timerSummonTwisterCD:Start()--22 seconds after combat start?
 	end
