@@ -10,7 +10,7 @@ local cbNivaya = cargBags:GetImplementation("Nivaya")
 
 do	--Replacement for UIDropDownMenu
 
-	local font = [[Interface\AddOns\cargBags_Nivaya\media\pixel.ttf]]	--ns.options.fonts.standard
+	local font = [[Fonts\ARKai_T.ttf]]	--ns.options.fonts.standard
 	local fontsize = 10
 	local fontanim = nil	--"OUTLINE"
 	local frameHeight = 14

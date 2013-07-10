@@ -1130,7 +1130,7 @@ function BagSync:PLAYER_LOGIN()
 
 	end
 	
-	DEFAULT_CHAT_FRAME:AddMessage("|cFF99CC33BagSync|r [v|cFFDF2B2B"..ver.."|r]   /bgs, /bagsync")
+	--DEFAULT_CHAT_FRAME:AddMessage("|cFF99CC33BagSync|r [v|cFFDF2B2B"..ver.."|r]   /bgs, /bagsync")
 	
 	--we deleted someone with the Profile Window, display name of user deleted
 	if BagSyncOpt.delName then

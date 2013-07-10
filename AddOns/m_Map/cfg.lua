@@ -4,13 +4,14 @@
   -----------------------------
   -- CONFIG
   -----------------------------
-	cfg.lock_map_position = false					-- lock your map in set position
-	cfg.decimal_coords = false						-- displays decimal expansion @ coordinates' values
-	cfg.mpos = {"CENTER",UIParent,"CENTER",0,65}	-- set position for locked map
-	cfg.map_scale = 0.9								-- Mini World Map scale
-	cfg.isize = 20									-- raid icon (dot) size
-	cfg.remove_fog = true							-- remove fog from the map
-	
+  cfg.map = {
+	lock_map_position = true,						-- lock your map in set position
+	decimal_coords = false,							-- displays decimal expansion @ coordinates' values
+	position = {"CENTER",UIParent,"CENTER",0,65},	-- set position for locked map
+	scale = 0.9,									-- Mini World Map scale
+	raid_icon_size = 20,							-- raid icon (dot) size
+	remove_fog = true								-- remove fog from the map
+  }
   
   -- HANDOVER
   ns.cfg = cfg

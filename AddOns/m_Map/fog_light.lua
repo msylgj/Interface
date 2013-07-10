@@ -1,11 +1,11 @@
-﻿local addon, ns = ...
+local addon, ns = ...
 local cfg = ns.cfg
-if not cfg.remove_fog then return end
+if not cfg.map.remove_fog then return end
 ----------------------------------------------------------------------------------------
 --	Fog of war on World Map(module from LeatrixPlus by Leatrix)
 ----------------------------------------------------------------------------------------
 local config = {
-	FogOfWar = cfg.remove_fog
+	FogOfWar = cfg.map.remove_fog
 }
 
 local zones = {
@@ -112,9 +112,7 @@ local zones = {
 }
 
 -- Remove tooltips from Blizzard map controls
-WorldMapQuestShowObjectives:SetScript("OnEnter", nil)
 WorldMapTrackQuest:SetScript("OnEnter", nil)
-WorldMapShowDigSites:SetScript("OnEnter", nil)
 WorldMapZoneMinimapDropDown:SetScript("OnEnter", nil)
 
 -- Initialise counters
@@ -130,11 +128,11 @@ frame:SetPoint("BOTTOM", WorldMapTrackQuest, "BOTTOM", 190, 0)
 frame:SetHitRectInsets(0, -46, 0, 0)
 frame:SetSize(24, 24)
 frame:SetFrameStrata("TOOLTIP")
-frame:SetScale(cfg.map_scale)
+frame:SetScale(cfg.map.scale)
 
 frame.f = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 frame.f:SetPoint("LEFT", frame, "RIGHT", 0, 1)
-frame.f:SetText("显示未探索区域")
+frame.f:SetText("Remove fog")
 frame.f:Show()
 
 -- Handle clicks

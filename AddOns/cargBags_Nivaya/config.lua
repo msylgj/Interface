@@ -23,22 +23,22 @@ fonts = {
 	-- Font to use for bag captions and other strings
 	standard = {
 		[[Fonts\ARKai_T.ttf]], 	-- Font path
-		8, 						-- Font Size
-		"OUTLINEMONOCHROME",	-- Flags
+		14, 						-- Font Size
+		"OUTLINE",	-- Flags
 	},
 
 	-- Font to use for durability and item level
 	itemInfo = {
 		[[Fonts\ARKai_T.ttf]], 	-- Font path
-		8, 						-- Font Size
-		"OUTLINEMONOCHROME",	-- Flags
+		14, 						-- Font Size
+		"OUTLINE",	-- Flags
 	},
 
 	-- Font to use for number of items in a stack
 	itemCount = {
 		[[Fonts\ARKai_T.ttf]], 	-- Font path
-		8, 						-- Font Size
-		"OUTLINEMONOCHROME",	-- Flags
+		14, 						-- Font Size
+		"OUTLINE",	-- Flags
 	},
 
 },
