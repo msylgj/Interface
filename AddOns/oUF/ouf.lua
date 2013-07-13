@@ -227,7 +227,7 @@ local initObject = function(unit, style, styleFunc, header, ...)
 		if(not header) then
 			-- No header means it's a frame created through :Spawn().
 			object:SetAttribute("*type1", "target")
-			object:SetAttribute('*type2', 'togglemenu')
+			object:SetAttribute('*type2', 'menu')
 
 			-- No need to enable this for *target frames.
 			if(not (unit:match'target' or suffix == 'target')) then
@@ -473,7 +473,7 @@ do
 				end
 
 				frame:SetAttribute('*type1', 'target')
-				frame:SetAttribute('*type2', 'togglemenu')
+				frame:SetAttribute('*type2', 'menu')
 				frame:SetAttribute('toggleForVehicle', true)
 				frame:SetAttribute('oUF-guessUnit', unit)
 			end
@@ -500,7 +500,7 @@ do
 
 		local isPetHeader = template:match'PetHeader'
 		local name = overrideName or generateName(nil, ...)
-		local header = CreateFrame('Frame', name, oUF_PetBattleFrameHider, template)
+		local header = CreateFrame('Frame', name, UIParent, template)
 
 		header:SetAttribute("template", "oUF_ClickCastUnitTemplate")
 		for i=1, select("#", ...), 2 do
@@ -545,7 +545,7 @@ function oUF:Spawn(unit, overrideName)
 	unit = unit:lower()
 
 	local name = overrideName or generateName(unit)
-	local object = CreateFrame("Button", name, oUF_PetBattleFrameHider, "SecureUnitButtonTemplate")
+	local object = CreateFrame("Button", name, UIParent, "SecureUnitButtonTemplate")
 	Private.UpdateUnits(object, unit)
 
 	self:DisableBlizzard(unit)
