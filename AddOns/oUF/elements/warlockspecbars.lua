@@ -9,17 +9,14 @@ local SPELL_POWER_DEMONIC_FURY = SPELL_POWER_DEMONIC_FURY
 local SPELL_POWER_BURNING_EMBERS = SPELL_POWER_BURNING_EMBERS
 local SPELL_POWER_SOUL_SHARDS = SPELL_POWER_SOUL_SHARDS
 local SPEC_WARLOCK_DESTRUCTION = SPEC_WARLOCK_DESTRUCTION
-local SPEC_WARLOCK_DESTRUCTION_GLYPH_EMBERS = 63304
 local SPEC_WARLOCK_AFFLICTION = SPEC_WARLOCK_AFFLICTION
-local SPEC_WARLOCK_AFFLICTION_GLYPH_SHARDS = 63302
 local SPEC_WARLOCK_DEMONOLOGY = SPEC_WARLOCK_DEMONOLOGY
 local LATEST_SPEC = 0
 
 local Colors = { 
-	[1] = {150/255, 130/255, 188/255, 1},
-	[2] = {160/255, 150/255, 190/255, 1},
-	[3] = {170/255, 160/255, 195/255, 1},
-	[4] = {200/255, 160/255, 195/255, 1},
+	[1] = {148/255, 130/255, 201/255, 1},
+	[2] = {95/255, 222/255,  95/255, 1},
+	[3] = {222/255, 95/255,  95/255, 1},
 }
 
 local Update = function(self, event, unit, powerType)
@@ -41,10 +38,10 @@ local Update = function(self, event, unit, powerType)
 				wsb[i]:SetMinMaxValues((MAX_POWER_PER_EMBER * i) - MAX_POWER_PER_EMBER, MAX_POWER_PER_EMBER * i)
 				wsb[i]:SetValue(power)
 
-				if power < MAX_POWER_PER_EMBER * i - 9 then
-					wsb[i]:Hide()
+				if power < MAX_POWER_PER_EMBER * i then
+					wsb[i]:SetAlpha(0.5)
 				else
-					wsb[i]:Show()
+					wsb[i]:SetAlpha(1)
 				end
 			end
 		elseif ( spec == SPEC_WARLOCK_AFFLICTION ) then
@@ -55,13 +52,12 @@ local Update = function(self, event, unit, powerType)
 				if i <= numShards then
 					wsb[i]:SetAlpha(1)
 				else
-					wsb[i]:SetAlpha(0)
+					wsb[i]:SetAlpha(0.2)
 				end
 			end
 		elseif spec == SPEC_WARLOCK_DEMONOLOGY then
 			local power = UnitPower("player", SPELL_POWER_DEMONIC_FURY)
 			local maxPower = UnitPowerMax("player", SPELL_POWER_DEMONIC_FURY)
-						
 			wsb[1]:SetMinMaxValues(0, maxPower)
 			wsb[1]:SetValue(power)
 		end
@@ -92,16 +88,14 @@ local function Visibility(self, event, unit)
 				else
 					wsb[i]:SetValue(0)
 				end
-			end	
+				wsb[i]:Show()
+				if wsb[1].bg then wsb[1].bg:SetAlpha(0) end
+				if wsb[1].text then wsb[1].text:Hide() end
+			end
 		end
 		
 		if spec == SPEC_WARLOCK_DESTRUCTION then
-			local maxembers = 3
-						
-			for i = 1, GetNumGlyphSockets() do
-				local glyphID = select(4, GetGlyphSocketInfo(i))
-				if glyphID == SPEC_WARLOCK_DESTRUCTION_GLYPH_EMBERS then maxembers = 4 end
-			end			
+			local maxembers = 4	
 
 			for i = 1, maxembers do
 				if i ~= maxembers then
@@ -110,49 +104,36 @@ local function Visibility(self, event, unit)
 				else
 					wsb[i]:SetWidth(w - s)
 				end
+				wsb[i]:SetStatusBarColor(unpack(Colors[SPEC_WARLOCK_DESTRUCTION]))
 			end
-			
-			local maxPower = UnitPowerMax("player", SPELL_POWER_BURNING_EMBERS, true)
-			local power = UnitPower("player", SPELL_POWER_BURNING_EMBERS, true)
-			local numEmbers = power / MAX_POWER_PER_EMBER
-			local numBars = floor(maxPower / MAX_POWER_PER_EMBER)
-			
-			for i = 1, numBars do
-				wsb[i]:SetMinMaxValues((MAX_POWER_PER_EMBER * i) - MAX_POWER_PER_EMBER, MAX_POWER_PER_EMBER * i)
-				wsb[i]:SetValue(power)
-				if power < MAX_POWER_PER_EMBER * i - 9 then
-					wsb[i]:Hide()
-				else
-					wsb[i]:Show()
-				end
-			end
-			
-			if maxembers == 3 then wsb[4]:Hide() else wsb[4]:Show() end
+			if wsb[1].bg then wsb[1].bg:SetAlpha(0) end
+			if wsb[1].text then wsb[1].text:Hide() end
 		elseif spec == SPEC_WARLOCK_AFFLICTION then
-			local maxshards = 3
-			
-			for i = 1, GetNumGlyphSockets() do
-				local glyphID = select(4, GetGlyphSocketInfo(i))
-				if glyphID == SPEC_WARLOCK_AFFLICTION_GLYPH_SHARDS then maxshards = 4 end
-			end			
+			local maxshards = 4
 
 			for i = 1, maxshards do
 				if i ~= maxshards then
-					wsb[i]:Show()
 					wsb[i]:SetWidth(w / maxshards - spacing)
 					s = s + (w / maxshards)
 				else
 					wsb[i]:SetWidth(w - s)
 				end
+				wsb[i]:SetStatusBarColor(unpack(Colors[SPEC_WARLOCK_AFFLICTION]))
 			end
-			
-			if maxshards == 3 then wsb[4]:Hide() else wsb[4]:Show() end
+			if wsb[1].bg then wsb[1].bg:SetAlpha(0) end
+			if wsb[1].text then wsb[1].text:Hide() end
 		elseif spec == SPEC_WARLOCK_DEMONOLOGY then
 			wsb[2]:Hide()
 			wsb[3]:Hide()
 			wsb[4]:Hide()
 			wsb[1]:SetWidth(wsb:GetWidth())	
+			wsb[1]:SetStatusBarColor(unpack(Colors[SPEC_WARLOCK_DEMONOLOGY]))
+			if wsb[1].bg then wsb[1].bg:SetAlpha(0.2) wsb[1].bg:SetTexture(unpack(Colors[SPEC_WARLOCK_DEMONOLOGY])) end
+			if wsb[1].text then wsb[1].text:Show() end
 		end
+		
+		-- force an update each time we respec
+		Update(self, nil, "player")
 	else
 		if wsb:IsShown() then 
 			wsb:Hide()
@@ -178,25 +159,25 @@ local function Enable(self)
 
 		self:RegisterEvent("UNIT_POWER", Path)
 		self:RegisterEvent("UNIT_DISPLAYPOWER", Path)
-		
+		self:RegisterEvent("PLAYER_ENTERING_WORLD", Visibility)
 
-		-- why the fuck does PLAYER_TALENT_UPDATE doesnt trigger on initial login if we register to: self or self.PluginName
 		wsb.Visibility = CreateFrame("Frame", nil, wsb)
 		wsb.Visibility:RegisterEvent("PLAYER_TALENT_UPDATE")
-		wsb.Visibility:RegisterEvent("PLAYER_ENTERING_WORLD")
 		wsb.Visibility:SetScript("OnEvent", function(frame, event, unit) Visibility(self, event, unit) end)
-		
+
 		for i = 1, 4 do
 			local Point = wsb[i]
 			if not Point:GetStatusBarTexture() then
 				Point:SetStatusBarTexture([=[Interface\TargetingFrame\UI-StatusBar]=])
 			end
 			
-			Point:SetStatusBarColor(unpack(Colors[i]))
 			Point:SetFrameLevel(wsb:GetFrameLevel() + 1)
 			Point:GetStatusBarTexture():SetHorizTile(false)
+			if Point.bg then
+				Point.bg:SetAllPoints()
+			end
 		end
-		
+
 		wsb:Hide()
 
 		return true
@@ -208,6 +189,7 @@ local function Disable(self)
 	if(wsb) then
 		self:UnregisterEvent("UNIT_POWER", Path)
 		self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD", Visibility)
 		wsb.Visibility:UnregisterEvent("PLAYER_TALENT_UPDATE")
 	end
 end

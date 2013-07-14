@@ -11,9 +11,6 @@ lib.lua
 core.lua
 Plugins\Smooth.lua
 Plugins\Experience.lua
-Plugins\TotemBar.lua
 Plugins\Reputation.lua
-Plugins\WarlockSpecBars.lua
-Plugins\HarmonyBar.lua
 Plugins\ThreatBar.lua
 Raid\load.xml

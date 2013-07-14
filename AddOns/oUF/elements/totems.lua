@@ -1,173 +1,138 @@
---[[ Element: Totem Indicator
+--[[
+	Documentation:
 
- Handles updating and visibility of Shaman totems, Druid mushrooms and Death
- Knight ghouls.
+		Element handled:
+			.TotemBar (must be a table with statusbar inside)
 
- Widget
+		.TotemBar only:
+			.delay : The interval for updates (Default: 0.1)
+			.colors : The colors for the statusbar, depending on the totem
+			.Name : The totem name
+			.Destroy (boolean): Enables/Disable the totem destruction on right click
 
- Totems - A table to hold sub-widgets.
+			NOT YET IMPLEMENTED
+			.Icon (boolean): If true an icon will be added to the left or right of the bar
+			.IconSize : If the Icon is enabled then changed the IconSize (default: 8)
+			.IconJustify : any anchor like "TOPLEFT", "BOTTOMRIGHT", "TOP", etc
 
- Sub-Widgets
+		.TotemBar.bg only:
+			.multiplier : Sets the multiplier for the text or the background (can be two differents multipliers)
 
- Totem     - Any UI widget.
- .Icon     - A Texture representing the totem icon.
- .Cooldown - A Cooldown representing the duration of the totem.
-
- Notes
-
- OnEnter and OnLeave will be set to display the default Tooltip, if the
- `Totem` widget is mouse enabled.
-
- Options
-
- :UpdateTooltip - The function that should populate the tooltip, when the
-                  `Totem` widget is hovered. A default function, which calls
-                  `:SetTotem(id)`, will be used if none is defined.
-
- Examples
-
-   local Totems = {}
-   for index = 1, MAX_TOTEMS do
-      -- Position and size of the totem indicator
-      local Totem = CreateFrame('Button', nil, self)
-      Totem:SetSize(40, 40)
-      Totem:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', index * Totem:GetWidth(), 0)
-      
-      local Icon = Totem:CreateTexture(nil, "OVERLAY")
-      Icon:SetAllPoints()
-      
-      local Cooldown = CreateFrame("Cooldown", nil, Totem)
-      Cooldown:SetAllPoints()
-      
-      Totem.Icon = Icon
-      Totem.Cooldown = Cooldown
-      
-      Totems[index] = Totem
-   end
-   
-   -- Register with oUF
-   self.Totems = Totems
-
- Hooks
-
- Override(self) - Used to completely override the internal update function.
-                  Removing the table key entry will make the element fall-back
-                  to its internal function again.
-]]
+--]]
 
 local parent, ns = ...
 local oUF = ns.oUF
 
--- Order the list based upon the default UIs priorities.
-local priorities = STANDARD_TOTEM_PRIORITIES
-if(select(2, UnitClass'player') == 'SHAMAN') then
-	priorities = SHAMAN_TOTEM_PRIORITIES
+local _, pClass = UnitClass("player")
+local total = 0
+local delay = 0.01
+
+-- In the order, fire, earth, water, air
+local colors = {
+	[1] = {0.752,0.172,0.02},
+	[2] = {0.741,0.580,0.04},
+	[3] = {0,0.443,0.631},
+	[4] = {0.6,1,0.945},
+}
+
+local GetTotemInfo, SetValue, GetTime = GetTotemInfo, SetValue, GetTime
+
+local Abbrev = function(name)
+	return (string.len(name) > 10) and string.gsub(name, "%s*(.)%S*%s*", "%1. ") or name
 end
 
-local UpdateTooltip = function(self)
-	GameTooltip:SetTotem(self:GetID())
-end
+local function UpdateSlot(self, slot)
+	local totem = self.TotemBar
 
-local OnEnter = function(self)
-	if(not self:IsVisible()) then return end
 
-	GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-	self:UpdateTooltip()
-end
+	haveTotem, name, startTime, duration, totemIcon = GetTotemInfo(slot)
 
-local OnLeave = function()
-	GameTooltip:Hide()
-end
+	totem[slot]:SetStatusBarColor(unpack(totem.colors[slot]))
+	totem[slot]:SetMinMaxValues(0, 1)
+	totem[slot]:SetValue(0)
 
-local UpdateTotem = function(self, event, slot)
-	if(slot > MAX_TOTEMS) then return end
-	local totems = self.Totems
+	-- Multipliers
+	if (totem[slot].bg.multiplier) then
+		local mu = totem[slot].bg.multiplier
+		local r, g, b = totem[slot]:GetStatusBarColor()
+		r, g, b = r*mu, g*mu, b*mu
+		totem[slot].bg:SetVertexColor(r, g, b)
+	end
 
-	if(totems.PreUpdate) then totems:PreUpdate(priorities[slot]) end
+	totem[slot].ID = slot
 
-	local totem = totems[priorities[slot]]
-	local haveTotem, name, start, duration, icon = GetTotemInfo(slot)
-	if(duration > 0) then
-		if(totem.Icon) then
-			totem.Icon:SetTexture(icon)
+	-- If we have a totem then set his value
+	if(haveTotem) then
+
+		if totem[slot].Name then
+			totem[slot].Name:SetText(Abbrev(name))
 		end
-
-		if(totem.Cooldown) then
-			totem.Cooldown:SetCooldown(start, duration)
+		if(duration >= 0) then
+			totem[slot]:SetValue(1 - ((GetTime() - startTime) / duration))
+			-- Status bar update
+			totem[slot]:SetScript("OnUpdate",function(self,elapsed)
+					total = total + elapsed
+					if total >= delay then
+						total = 0
+						haveTotem, name, startTime, duration, totemIcon = GetTotemInfo(self.ID)
+							if ((GetTime() - startTime) == 0) then
+								self:SetValue(0)
+							else
+								self:SetValue(1 - ((GetTime() - startTime) / duration))
+							end
+					end
+				end)
+		else
+			-- There's no need to update because it doesn't have any duration
+			totem[slot]:SetScript("OnUpdate",nil)
+			totem[slot]:SetValue(0)
 		end
-
-		totem:Show()
 	else
-		totem:Hide()
-	end
-
-	if(totems.PostUpdate) then
-		return totems:PostUpdate(priorities[slot], haveTotem, name, start, duration, icon)
-	end
-end
-
-local Path = function(self, ...)
-	return (self.Totems.Override or UpdateTotem) (self, ...)
-end
-
-local Update = function(self, event)
-	for i = 1, MAX_TOTEMS do
-		Path(self, event, i)
-	end
-end
-
-local ForceUpdate = function(element)
-	return Update(element.__owner, 'ForceUpdate')
-end
-
-local Enable = function(self)
-	local totems = self.Totems
-
-	if(totems) then
-		totems.__owner = self
-		totems.ForceUpdate = ForceUpdate
-
-		for i = 1, MAX_TOTEMS do
-			local totem = totems[i]
-
-			totem:SetID(priorities[i])
-
-			if(totem:IsMouseEnabled()) then
-				totem:SetScript('OnEnter', OnEnter)
-				totem:SetScript('OnLeave', OnLeave)
-
-				if(not totem.UpdateTooltip) then
-					totem.UpdateTooltip = UpdateTooltip
-				end
-			end
+		-- No totem = no time
+		if totem[slot].Name then
+			totem[slot].Name:SetText(" ")
 		end
+		totem[slot]:SetValue(0)
+	end
 
-		self:RegisterEvent('PLAYER_TOTEM_UPDATE', Path, true)
+end
 
-		TotemFrame.Show = TotemFrame.Hide
-		TotemFrame:Hide()
+local function Update(self, unit)
+	local totem = self.TotemBar
+	if(totem.PreUpdate) then totem:PreUpdate(unit) end
 
-		TotemFrame:UnregisterEvent"PLAYER_TOTEM_UPDATE"
-		TotemFrame:UnregisterEvent"PLAYER_ENTERING_WORLD"
-		TotemFrame:UnregisterEvent"UPDATE_SHAPESHIFT_FORM"
-		TotemFrame:UnregisterEvent"PLAYER_TALENT_UPDATE"
+	-- Update every slot on login, still have issues with it
+	for i = 1, 4 do
+		UpdateSlot(self, i)
+	end
 
+	if(totem.PostUpdate) then totem:PostUpdate(unit) end
+end
+
+local function Event(self,event,...)
+	if event == "PLAYER_TOTEM_UPDATE" then
+		UpdateSlot(self, ...)
+	end
+end
+
+local function Enable(self, unit)
+	local totem = self.TotemBar
+	if(totem) then
+		self:RegisterEvent("PLAYER_TOTEM_UPDATE", Event, true)
+		totem.colors = setmetatable(totem.colors or {}, {__index = colors})
+		delay = totem.delay or delay
+		TotemFrame:UnregisterAllEvents()
 		return true
 	end
 end
 
-local Disable = function(self)
-	if(self.Totems) then
-		TotemFrame.Show = nil
+local function Disable(self,unit)
+	local totem = self.TotemBar
+	if(totem) then
+		self:UnregisterEvent("PLAYER_TOTEM_UPDATE", Event)
+
 		TotemFrame:Show()
-
-		TotemFrame:RegisterEvent"PLAYER_TOTEM_UPDATE"
-		TotemFrame:RegisterEvent"PLAYER_ENTERING_WORLD"
-		TotemFrame:RegisterEvent"UPDATE_SHAPESHIFT_FORM"
-		TotemFrame:RegisterEvent"PLAYER_TALENT_UPDATE"
-
-		self:UnregisterEvent('PLAYER_TOTEM_UPDATE', Path)
 	end
 end
 
-oUF:AddElement("Totems", Update, Enable, Disable)
+oUF:AddElement("TotemBar",Update,Enable,Disable)

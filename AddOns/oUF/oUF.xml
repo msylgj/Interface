@@ -40,7 +40,7 @@
 	<Script file='elements\harmonyorbs.lua' />
 	<Script file='elements\holypower.lua' />
 	<Script file='elements\shadoworbs.lua' />
-	<Script file='elements\soulshards.lua' />
+	<Script file='elements\warlockspecbars.lua' />
 	
 	<!-- Clique support -->
 	<Button name="oUF_ClickCastUnitTemplate" virtual="true" inherits="SecureUnitButtonTemplate,SecureHandlerEnterLeaveTemplate">

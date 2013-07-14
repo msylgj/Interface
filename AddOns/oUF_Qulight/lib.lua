@@ -1118,7 +1118,7 @@ lib.genHarmony = function(self)
 	for i = 1, 5 do
 		hb[i] = CreateFrame("StatusBar", nil, hb)
 		hb[i]:SetHeight(6)
-		hb[i]:SetWidth((wb:GetHeight() - 8)/5)
+		hb[i]:SetWidth((hb:GetHeight() - 8)/5)
 		hb[i]:SetStatusBarTexture(statusbar_texture)
 		hb[i]:GetStatusBarTexture():SetHorizTile(false)
 		if i == 1 then
@@ -1265,7 +1265,6 @@ lib.TotemBars = function(self)
 	totems:SetWidth(self:GetWidth()-100)
 	totems:SetHeight(6)
 	totems:SetFrameLevel(6)
-	totems.Destroy = true
 	totems.colors = {{233/255, 46/255, 16/255};{173/255, 217/255, 25/255};{35/255, 127/255, 255/255};{178/255, 53/255, 240/255};}
 			
 	for i = 1, 4 do

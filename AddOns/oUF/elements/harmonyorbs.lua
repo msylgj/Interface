@@ -1,101 +1,105 @@
---[[ Element: Harmony Orbs
- Toggles visibility of the players Chi.
+local _, ns = ...
+local oUF = ns.oUF or oUF
+assert(oUF, 'oUF_HarmonyBar was unable to locate oUF install')
 
- Widget
+if select(2, UnitClass('player')) ~= "MONK" then return end
 
- Harmomy - An array consisting of four UI widgets.
+local SPELL_POWER_CHI = SPELL_POWER_CHI
 
- Notes
+local Colors = { 
+	[1] = {.69, .31, .31, 1},
+	[2] = {.65, .42, .31, 1},
+	[3] = {.65, .63, .35, 1},
+	[4] = {.46, .63, .35, 1},
+	[5] = {.33, .63, .33, 1},
+}
 
- The default harmony orb texture will be applied to textures within the Harmony
- array that don't have a texture or color defined.
-
- Examples
-
-   local Harmony = {}
-   for index = 1, UnitPowerMax('player', SPELL_POWER_LIGHT_FORCE) do
-      local Chi = self:CreateTexture(nil, 'BACKGROUND')
-   
-      -- Position and size of the chi orbs.
-      Chi:SetSize(14, 14)
-      Chi:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', index * Chi:GetWidth(), 0)
-   
-      Harmony[index] = Chi
-   end
-   
-   -- Register with oUF
-   self.Harmony = Harmony
-
- Hooks
-
- Override(self) - Used to completely override the internal update function.
-                  Removing the table key entry will make the element fall-back
-                  to its internal function again.
-]]
-
-local parent, ns = ...
-local oUF = ns.oUF
-
-local SPELL_POWER_LIGHT_FORCE = SPELL_POWER_LIGHT_FORCE
-
-local Update = function(self, event, unit)
-	if(unit ~= 'player') then return end
-
-	local element = self.Harmony
-	if(element.PreUpdate) then
-		element:PreUpdate()
+local function Update(self, event, unit, powerType)
+	if(self.unit ~= unit and (powerType and (powerType ~= 'CHI' and powerType ~= 'DARK_FORCE'))) then return end
+	
+	local hb = self.HarmonyBar
+	
+	if(hb.PreUpdate) then
+		hb:PreUpdate(unit)
+	end
+	
+	local spacing = select(4, hb[4]:GetPoint())
+	local w = hb:GetWidth()
+	local s = 0
+	local light = UnitPower("player", SPELL_POWER_CHI)
+	local maxChi = UnitPowerMax("player", SPELL_POWER_CHI)
+	
+	if hb.maxChi ~= maxChi then
+		if maxChi == 4 then
+			hb[5]:Hide()			
+		else
+			hb[5]:Show()
+		end
+		
+		for i = 1, maxChi do
+			if i ~= maxChi then
+				hb[i]:SetWidth(w / maxChi - spacing)
+				s = s + (w / maxChi)
+			else
+				hb[i]:SetWidth(w - s)
+			end
+		end
+		
+		hb.maxChi = maxChi
 	end
 
-	local chi = UnitPower(unit, SPELL_POWER_LIGHT_FORCE)
-
-	for index = 1, UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE) do
-		if(index <= chi) then
-			element[index]:Show()
+	for i = 1, maxChi do
+		if i <= light then
+			hb[i]:SetAlpha(1)
 		else
-			element[index]:Hide()
+			hb[i]:SetAlpha(.2)
 		end
 	end
-
-	if(element.PostUpdate) then
-		return element:PostUpdate(chi)
+	
+	if(hb.PostUpdate) then
+		return hb:PostUpdate(light)
 	end
 end
 
 local Path = function(self, ...)
-	return (self.Harmony.Override or Update) (self, ...)
+	return (self.HarmonyBar.Override or Update) (self, ...)
 end
 
 local ForceUpdate = function(element)
-	return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+	return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'CHI')
 end
 
-local Enable = function(self, unit)
-	local element = self.Harmony
-	if(element and unit == 'player') then
-		element.__owner = self
-		element.ForceUpdate = ForceUpdate
-
-		self:RegisterEvent('UNIT_POWER', Path, true)
-		self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
-
-		for index = 1, UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE) do
-			local chi = element[index]
-			if(chi:IsObjectType'Texture' and not chi:GetTexture()) then
-				chi:SetTexture[[Interface\PlayerFrame\MonkUI]]
-				chi:SetTexCoord(0.00390625, 0.08593750, 0.71093750, 0.87500000)
+local function Enable(self, unit)
+	local hb = self.HarmonyBar
+	if hb and unit == "player" then
+		hb.__owner = self
+		hb.ForceUpdate = ForceUpdate
+		
+		self:RegisterEvent("UNIT_POWER", Path)
+		self:RegisterEvent("UNIT_DISPLAYPOWER", Path)
+		
+		for i = 1, 5 do
+			local Point = hb[i]
+			if not Point:GetStatusBarTexture() then
+				Point:SetStatusBarTexture([=[Interface\TargetingFrame\UI-StatusBar]=])
 			end
+			
+			Point:SetStatusBarColor(unpack(Colors[i]))
+			Point:SetFrameLevel(hb:GetFrameLevel() + 1)
+			Point:GetStatusBarTexture():SetHorizTile(false)
 		end
-
+		
+		hb.maxChi = 5
+		
 		return true
 	end
 end
 
-local Disable = function(self)
-	local element = self.Harmony
-	if(element) then
-		self:UnregisterEvent('UNIT_POWER', Path)
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
+local function Disable(self)
+	if self.HarmonyBar then
+		self:UnregisterEvent("UNIT_POWER", Path)
+		self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
 	end
 end
 
-oUF:AddElement('Harmony', Path, Enable, Disable)
+oUF:AddElement('HarmonyBar', Update, Enable, Disable)
