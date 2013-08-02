@@ -1,21 +1,12 @@
 local _, ns = ...
 local oUF = ns.oUF or oUF
 assert(oUF, 'oUF_HarmonyBar was unable to locate oUF install')
-
 if select(2, UnitClass('player')) ~= "MONK" then return end
 
 local SPELL_POWER_CHI = SPELL_POWER_CHI
 
-local Colors = { 
-	[1] = {.69, .31, .31, 1},
-	[2] = {.65, .42, .31, 1},
-	[3] = {.65, .63, .35, 1},
-	[4] = {.46, .63, .35, 1},
-	[5] = {.33, .63, .33, 1},
-}
-
 local function Update(self, event, unit, powerType)
-	if(self.unit ~= unit and (powerType and (powerType ~= 'CHI' and powerType ~= 'DARK_FORCE'))) then return end
+	if(self.unit ~= unit or (powerType and powerType ~= 'CHI')) then return end
 	
 	local hb = self.HarmonyBar
 	
@@ -23,32 +14,26 @@ local function Update(self, event, unit, powerType)
 		hb:PreUpdate(unit)
 	end
 	
-	local spacing = select(4, hb[4]:GetPoint())
-	local w = hb:GetWidth()
-	local s = 0
 	local light = UnitPower("player", SPELL_POWER_CHI)
-	local maxChi = UnitPowerMax("player", SPELL_POWER_CHI)
-	
-	if hb.maxChi ~= maxChi then
-		if maxChi == 4 then
-			hb[5]:Hide()			
+	local numPoints = UnitPowerMax("player", SPELL_POWER_CHI)
+
+	if hb.numPoints ~= numPoints then
+		if numPoints == 4 then
+			hb[5]:Hide()
+			for i = 1, 4 do
+				hb[i]:SetWidth((hb:GetWidth()-3)/4)
+			end
 		else
 			hb[5]:Show()
-		end
-		
-		for i = 1, maxChi do
-			if i ~= maxChi then
-				hb[i]:SetWidth(w / maxChi - spacing)
-				s = s + (w / maxChi)
-			else
-				hb[i]:SetWidth(w - s)
+			for i = 1, 5 do
+				hb[i]:SetWidth((hb:GetWidth()-4)/5)
 			end
 		end
 		
-		hb.maxChi = maxChi
+		hb.numPoints = numPoints
 	end
 
-	for i = 1, maxChi do
+	for i = 1, numPoints do
 		if i <= light then
 			hb[i]:SetAlpha(1)
 		else
@@ -84,12 +69,12 @@ local function Enable(self, unit)
 				Point:SetStatusBarTexture([=[Interface\TargetingFrame\UI-StatusBar]=])
 			end
 			
-			Point:SetStatusBarColor(unpack(Colors[i]))
 			Point:SetFrameLevel(hb:GetFrameLevel() + 1)
 			Point:GetStatusBarTexture():SetHorizTile(false)
+			Point.W = Point:GetWidth()
 		end
 		
-		hb.maxChi = 5
+		hb.numPoints = 5
 		
 		return true
 	end

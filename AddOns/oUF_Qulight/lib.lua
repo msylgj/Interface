@@ -882,37 +882,48 @@ local setTimer = function (self, elapsed)
 	end
 end
 local postCreateIcon = function(element, button)
-	local diffPos = 0
 	local self = element:GetParent()
-	if self.mystyle == "target" then diffPos = 1 end
-	
+
 	element.disableCooldown = true
 	button.cd.noOCC = true
 	button.cd.noCooldownCount = true
-	
+
 	local h = CreateFrame("Frame", nil, button)
 	h:SetFrameLevel(0)
 	h:SetPoint("TOPLEFT",-5,5)
 	h:SetPoint("BOTTOMRIGHT",5,-5)
 	CreateShadow0(h)
-	
-	local time = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "THINOUTLINE")
-	time:SetPoint("CENTER", button, "CENTER", 1, 0)
-	time:SetJustifyH("CENTER")
-	time:SetVertexColor(1,1,1)
-	button.time = time
-	
-	local count = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "THINOUTLINE")
-	count:SetPoint("CENTER", button, "BOTTOMRIGHT", 0, 3)
+
+	if self.mystyle == "player" then
+		local time = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+		time:SetPoint("BOTTOM", button, "BOTTOM", 2, -4)
+		time:SetJustifyH("CENTER")
+		time:SetVertexColor(1,1,1)
+		button.time = time
+	else
+		local time = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+		time:SetPoint("BOTTOM", button, "BOTTOM", 2, -4)
+		time:SetJustifyH("CENTER")
+		time:SetVertexColor(1,1,1)
+		button.time = time
+	end
+
+	local count = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+	count:SetPoint("CENTER", button, "TOPRIGHT", 0, 0)
 	count:SetJustifyH("RIGHT")
 	button.count = count
-	
-	button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-	button.icon:SetDrawLayer("ARTWORK")
+
+    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    button.icon:SetDrawLayer("BACKGROUND")
+    button.overlay:SetTexture(Qulight["media"].auratex)
+    button.overlay:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
+    button.overlay:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+    button.overlay:SetTexCoord(0.04, 0.96, 0.04, 0.96)
+    button.overlay.Hide = function(self) self:SetVertexColor(0, 0, 0) end
 end
 local postUpdateIcon = function(element, unit, button, index)
 	local _, _, _, _, _, duration, expirationTime, unitCaster, _ = UnitAura(unit, index, button.filter)
-	
+
 	if duration and duration > 0 then
 		button.time:Show()
 		button.timeLeft = expirationTime	
@@ -923,22 +934,17 @@ local postUpdateIcon = function(element, unit, button, index)
 		button:SetScript("OnUpdate", nil)
 	end
 	
-	-- Desaturate non-Player Debuffs
-	if(button.debuff) then
-		if(unit == "target" or unit == "focus") then	
-			if (unitCaster == "player" or unitCaster == "vehicle") then
-				button.icon:SetDesaturated(false)                 
-			elseif(not UnitPlayerControlled(unit)) then -- If Unit is Player Controlled don"t desaturate debuffs
-				button:SetBackdropColor(0, 0, 0)
-				button.overlay:SetVertexColor(0.3, 0.3, 0.3)      
-				button.icon:SetDesaturated(true)  
-			end
-		end
+	if (unitCaster == "player" or unitCaster == "vehicle") then
+		button.icon:SetDesaturated(false)                 
+	elseif(not UnitPlayerControlled(unit)) then   
+		button.icon:SetDesaturated(true)
 	end
+
 	button:SetScript('OnMouseUp', function(self, mouseButton)
 		if mouseButton == 'RightButton' then
 			CancelUnitBuff('player', index)
-	end end)
+		end
+	end)
 	button.first = true
 end
 lib.createAuras = function(f)
