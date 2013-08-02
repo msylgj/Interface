@@ -1127,6 +1127,7 @@ lib.genHarmony = function(self)
 		hb[i]:SetWidth((hb:GetHeight() - 8)/5)
 		hb[i]:SetStatusBarTexture(statusbar_texture)
 		hb[i]:GetStatusBarTexture():SetHorizTile(false)
+		hb[i]:SetStatusBarColor(0/255,255/255,150/255)
 		if i == 1 then
 			hb[i]:SetPoint("LEFT", hb)
 		else
