@@ -720,9 +720,9 @@ end
 
 -----NeonChat 聊天输入框染色
 
-local chateditbox = CreateFrame("Button", nil, ChatFrame1EditBox)
+local chateditbox = CreateFrame("Frame")
 chateditbox:SetBackdrop({bgFile = 'Interface\\Buttons\\WHITE8x8', edgeFile = 'Interface\\Buttons\\WHITE8x8', edgeSize = 1})
-chateditbox:SetBackdropColor(0,0,0,.7)
+chateditbox:SetBackdropColor(0,0,0,0)
 hooksecurefunc("ChatEdit_UpdateHeader", function(editbox)
 	if ACTIVE_CHAT_EDIT_BOX then
 		local type = editbox:GetAttribute("chatType")
@@ -730,23 +730,24 @@ hooksecurefunc("ChatEdit_UpdateHeader", function(editbox)
 
 		if ( type == "CHANNEL" ) then
 			local id = GetChannelName(editbox:GetAttribute("channelTarget"))
-			if id == 0 then	
-				chateditbox:SetBackdropBorderColor(0.5,0.5,0.5,.5)
+			if id == 0 then
+				chateditbox:SetBackdropBorderColor(0.5,0.5,0.5,0.5)
 			else 
 				chateditbox:SetBackdropBorderColor(ChatTypeInfo[type..id].r,ChatTypeInfo[type..id].g,ChatTypeInfo[type..id].b,.5)
 			end
 		else
-			chateditbox:SetBackdropBorderColor(ChatTypeInfo[type].r,ChatTypeInfo[type].g,ChatTypeInfo[type].b,.5)
+			if ChatTypeInfo[type].r == nil or ChatTypeInfo[type].g == nil or ChatTypeInfo[type].b == nil then return else
+				chateditbox:SetBackdropBorderColor(ChatTypeInfo[type].r,ChatTypeInfo[type].g,ChatTypeInfo[type].b,.5)
+			end
 		end
-		
-
+		chateditbox:SetBackdropColor(0,0,0,0.7)
 		chateditbox:SetParent(ACTIVE_CHAT_EDIT_BOX)
 		chateditbox:ClearAllPoints()
 		chateditbox:SetPoint("TOPLEFT",ACTIVE_CHAT_EDIT_BOX:GetName().."FocusLeft","TOPLEFT",4,-3)
 		chateditbox:SetPoint("BOTTOMRIGHT",ACTIVE_CHAT_EDIT_BOX:GetName().."FocusRight","BOTTOMRIGHT",-4,3)
 		chateditbox:SetFrameLevel(_G[frame.."EditBox"]:GetFrameLevel()-1)
-
 	else
+		chateditbox:SetBackdropColor(0,0,0,0)
 		chateditbox:SetBackdropBorderColor(0,0,0,0)
 	end
 	

@@ -79,7 +79,14 @@ function ItemButton:Create(tpl)
 	local name = ("%sSlot%d"):format(impl.name, impl.numSlots)
 
 	local button = setmetatable(CreateFrame("Button", name, nil, tpl), self.__index)
-
+	
+	--Fix 5.4 NewItemTexture
+	local ni = _G[button:GetName().."NewItemTexture"]
+	if ni then
+		ni:SetAlpha(0)
+		ni:Hide()
+	end
+	
 	if(button.Scaffold) then button:Scaffold(tpl) end
 	if(button.OnCreate) then button:OnCreate(tpl) end
 	local btnNT = _G[button:GetName().."NormalTexture"]

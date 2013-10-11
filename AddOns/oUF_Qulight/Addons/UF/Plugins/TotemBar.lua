@@ -58,10 +58,12 @@ local function InitDestroy(self)
 	local totem = self.TotemBar
 	for i = 1 , 4 do
 		local Destroy = CreateFrame("Button",nil, totem[i])
+		local macrotext = "/click TotemFrameTotem"..i.." RightButton"
 		Destroy:SetAllPoints(totem[i])
 		Destroy:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 		Destroy.ID = i
-		Destroy:SetScript("OnClick", TotemOnClick)
+		Destroy:SetAttribute('type', 'macro')
+		Destroy:SetAttribute('macrotext', macrotext)
 	end
 end
 	

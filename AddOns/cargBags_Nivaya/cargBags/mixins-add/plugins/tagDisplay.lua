@@ -141,9 +141,15 @@ tagPool["money"] = function(self)
 
 	local g,s,c = floor(money/1e4), floor(money/100) % 100, money % 100
 
-	if(g > 0) then str = (str and str.." " or "") .. g .. createIcon("Interface\\MoneyFrame\\UI-GoldIcon", self.iconValues) end
-	if(s > 0) then str = (str and str.." " or "") .. s .. createIcon("Interface\\MoneyFrame\\UI-SilverIcon", self.iconValues) end
-	if(c > 0) then str = (str and str.." " or "") .. c .. createIcon("Interface\\MoneyFrame\\UI-CopperIcon", self.iconValues) end
+	if ns.options.currencyIcons then
+		if(g > 0) then str = (str and str.." " or "") .. g .. createIcon("Interface\\MoneyFrame\\UI-GoldIcon", self.iconValues) end
+		if(s > 0) then str = (str and str.." " or "") .. s .. createIcon("Interface\\MoneyFrame\\UI-SilverIcon", self.iconValues) end
+		if(c > 0) then str = (str and str.." " or "") .. c .. createIcon("Interface\\MoneyFrame\\UI-CopperIcon", self.iconValues) end
+	else
+		if(g > 0) then str = (str and str.." " or "") .. g .. "|cffffd700"..GOLD_AMOUNT_SYMBOL.."|r" end
+		if(s > 0) then str = (str and str.." " or "") .. s .. "|cffc7c7cf"..SILVER_AMOUNT_SYMBOL.."|r" end
+		if(c > 0) then str = (str and str.." " or "") .. c .. "|cffeda55f"..COPPER_AMOUNT_SYMBOL.."|r" end
+	end
 	return str
 end
 tagEvents["money"] = { "PLAYER_MONEY" }

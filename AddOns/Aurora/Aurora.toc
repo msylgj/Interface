@@ -4,7 +4,6 @@
 ## Author: Haleth/Freethinker
 ## Version: 5.0.1
 ## SavedVariables: AuroraConfig
-## OptionalDeps:oUF_Qulight_Config
 
 aurora.lua
 gui.lua

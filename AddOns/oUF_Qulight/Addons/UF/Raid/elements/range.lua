@@ -1,176 +1,221 @@
-local parent, ns = ...
+
+
+
+--[[****************************************************************************
+  * oUF_SpellRange by Saiket                                                   *
+  * oUF_SpellRange.lua - Improved range element for oUF.                       *
+  *                                                                            *
+  * Elements handled: .SpellRange                                              *
+  * Settings: (Either Update method or both alpha properties are required)     *
+  *   - .SpellRange.Update( Frame, InRange ) - Callback fired when a unit      *
+  *       either enters or leaves range. Overrides default alpha changing.     *
+  *   OR                                                                       *
+  *   - .SpellRange.insideAlpha - Frame alpha value for units in range.        *
+  *   - .SpellRange.outsideAlpha - Frame alpha for units out of range.         *
+  * Note that SpellRange will automatically disable Range elements of frames.  *
+  ****************************************************************************]]
+local _, ns = ...
 local oUF = ns.oUF or oUF
+local UpdateRate = 0.1;
 
--- oUF range element with code sniplets from TomTom
+local UpdateFrame;
+local Objects = {};
+local ObjectRanges = {};
 
-local _FRAMES = {}
-local OnRangeFrame
-local update = .20
+-- Class-specific spell info
+local HelpIDs, HelpName; -- Array of possible spell IDs in order of priority, and the name of the highest known priority spell
+local HarmIDs, HarmName;
 
-local UnitInRange, UnitIsConnected = UnitInRange, UnitIsConnected
-local SetMapToCurrentZone, WorldMapFrame = SetMapToCurrentZone, WorldMapFrame
-local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
 
-local select, next = select, next
-local pi = math.pi
-local twopi = pi * 2
-local atan2 = math.atan2
-local modf = math.modf
-local abs = math.abs
-local floor = floor
 
-local function ColorGradient(perc, ...)
-    local num = select("#", ...)
-    local hexes = type(select(1, ...)) == "string"
 
-    if perc == 1 then
-        return select(num-2, ...), select(num-1, ...), select(num, ...)
-    end
+local IsInRange;
+do
+	local UnitIsConnected = UnitIsConnected;
+	local UnitCanAssist = UnitCanAssist;
+	local UnitCanAttack = UnitCanAttack;
+	local UnitIsUnit = UnitIsUnit;
+	local UnitPlayerOrPetInRaid = UnitPlayerOrPetInRaid;
+	local UnitIsDead = UnitIsDead;
+	local UnitOnTaxi = UnitOnTaxi;
+	local UnitInRange = UnitInRange;
+	local IsInGroup = IsInGroup;
+	local IsSpellInRange = IsSpellInRange;
+	local CheckInteractDistance = CheckInteractDistance;
+	--- Uses an appropriate range check for the given unit.
+	-- Actual range depends on reaction, known spells, and status of the unit.
+	-- @param UnitID  Unit to check range for.
+	-- @return True if in casting range.
+	function IsInRange ( UnitID )
+		if ( UnitIsConnected( UnitID ) ) then
+			if ( UnitCanAssist( "player", UnitID ) ) then
+				if ( HelpName and not UnitIsDead( UnitID ) ) then
+					return IsSpellInRange( HelpName, UnitID ) == 1;
+				elseif ( not UnitOnTaxi( "player" ) ) then -- UnitInRange always returns nil while on flightpaths
+					-- Use UnitInRange if available (38 yd range)
+					if ( IsInGroup() ) then -- UnitInRange only works while in a group
+						if ( UnitIsUnit( UnitID, "player" ) or UnitIsUnit( UnitID, "pet" ) ) then
+							return UnitInRange( UnitID );
+						end
+					elseif ( UnitPlayerOrPetInParty( UnitID ) or UnitPlayerOrPetInRaid( UnitID ) ) then
 
-    num = num / 3
 
-    local segment, relperc = modf(perc*(num-1))
-    local r1, g1, b1, r2, g2, b2
-    r1, g1, b1 = select((segment*3)+1, ...), select((segment*3)+2, ...), select((segment*3)+3, ...)
-    r2, g2, b2 = select((segment*3)+4, ...), select((segment*3)+5, ...), select((segment*3)+6, ...)
+						return UnitInRange( UnitID );
+					end
+				end
+			elseif ( HarmName and not UnitIsDead( UnitID ) and UnitCanAttack( "player", UnitID ) ) then
+				return IsSpellInRange( HarmName, UnitID ) == 1;
+			end
 
-    if not r2 or not g2 or not b2 then
-        return r1, g1, b1
-    else
-        return r1 + (r2-r1)*relperc,
-        g1 + (g2-g1)*relperc,
-        b1 + (b2-b1)*relperc
-    end
+			-- Fallback when spell not found or class uses none
+			return CheckInteractDistance( UnitID, 4 ); -- Follow distance (28 yd range)
+		end
+	end
+end
+--- Rechecks range for a unit frame, and fires callbacks when the unit passes in or out of range.
+local function UpdateRange ( self )
+	local InRange = not not IsInRange( self.unit ); -- Cast to boolean
+	if ( ObjectRanges[ self ] ~= InRange ) then -- Range state changed
+		ObjectRanges[ self ] = InRange;
+
+		local SpellRange = self.SpellRange;
+		if ( SpellRange.Update ) then
+			SpellRange.Update( self, InRange );
+		else
+			self:SetAlpha( SpellRange[ InRange and "insideAlpha" or "outsideAlpha" ] );
+		end
+	end
 end
 
-local function ColorTexture(texture, angle)
-    local perc = abs((pi - abs(angle)) / pi)
 
-    local gr,gg,gb = 0, 1, 0
-    local mr,mg,mb = 1, 1, 0
-    local br,bg,bb = 1, 0, 0
-    local r,g,b = ColorGradient(perc, br, bg, bb, mr, mg, mb, gr, gg, gb)
+local OnUpdate;
+do
+	local NextUpdate = 0;
+	--- Updates the range display for all visible oUF unit frames on an interval.
+	function OnUpdate ( self, Elapsed )
+		NextUpdate = NextUpdate - Elapsed;
+		if ( NextUpdate <= 0 ) then
+			NextUpdate = UpdateRate;
 
-    texture:SetVertexColor(r,g,b)
+			for Object in pairs( Objects ) do
+				if ( Object:IsVisible() ) then
+					UpdateRange( Object );
+				end
+			end
+		end
+	end
+end
+local OnSpellsChanged;
+do
+	local IsSpellKnown = IsSpellKnown;
+	local GetSpellInfo = GetSpellInfo;
+	--- @return Highest priority spell name available, or nil if none.
+	local function GetSpellName ( IDs )
+		if ( IDs ) then
+			for _, ID in ipairs( IDs ) do
+				if ( IsSpellKnown( ID ) ) then
+					return GetSpellInfo( ID );
+				end
+			end
+		end
+	end
+	--- Checks known spells for the highest priority spell name to use.
+	function OnSpellsChanged ()
+		HelpName, HarmName = GetSpellName( HelpIDs ), GetSpellName( HarmIDs );
+	end
 end
 
-local function RotateTexture(frame, angle)
-    if not frame:IsShown() then
-        frame:Show()
-    end
-    angle = angle - GetPlayerFacing()
 
-    local cell = floor(angle / twopi * 108 + 0.5) % 108
-    if cell == frame.cell then return end
-    frame.cell = cell
+--- Called by oUF when the unit frame's unit changes or otherwise needs a complete update.
+-- @param Event  Reason for the update.  Can be a real event, nil, or a string defined by oUF.
+local function Update ( self, Event, UnitID )
+	if ( Event ~= "OnTargetUpdate" ) then -- OnTargetUpdate is fired on a timer for *target units that don't have real events
+		ObjectRanges[ self ] = nil; -- Force update to fire
+		UpdateRange( self ); -- Update range immediately
+	end
+end
+--- Forces range to be recalculated for this element's frame immediately.
+local function ForceUpdate ( self )
+	return Update( self.__owner, "ForceUpdate", self.__owner.unit );
+end
+--- Called by oUF for new unit frames to setup range checking.
+-- @return True if the range element was actually enabled.
+local function Enable ( self, UnitID )
+	local SpellRange = self.SpellRange;
+	if ( SpellRange ) then
+		assert( type( SpellRange ) == "table", "oUF layout addon using invalid SpellRange element." );
+		assert( type( SpellRange.Update ) == "function"
+			or ( tonumber( SpellRange.insideAlpha ) and tonumber( SpellRange.outsideAlpha ) ),
+			"oUF layout addon omitted required SpellRange properties." );
+		if ( self.Range ) then -- Disable default range checking
+			self:DisableElement( "Range" );
+			self.Range = nil; -- Prevent range element from enabling, since enable order isn't stable
+		end
 
-    local column = cell % 9
-    local row = floor(cell / 9)
-
-    ColorTexture(frame.arrow, angle)
-    local xstart = (column * 56) / 512
-    local ystart = (row * 42) / 512
-    local xend = ((column + 1) * 56) / 512
-    local yend = ((row + 1) * 42) / 512
-    frame.arrow:SetTexCoord(xstart,xend,ystart,yend)
+		SpellRange.__owner = self;
+		SpellRange.ForceUpdate = ForceUpdate;
+		if ( not UpdateFrame ) then
+			UpdateFrame = CreateFrame( "Frame" );
+			UpdateFrame:SetScript( "OnUpdate", OnUpdate );
+			UpdateFrame:SetScript( "OnEvent", OnSpellsChanged );
+		end
+		if ( not next( Objects ) ) then -- First object
+			UpdateFrame:Show();
+			UpdateFrame:RegisterEvent( "SPELLS_CHANGED" );
+			OnSpellsChanged(); -- Recheck spells immediately
+		end
+		Objects[ self ] = true;
+		return true;
+	end
+end
+--- Called by oUF to disable range checking on a unit frame.
+local function Disable ( self )
+	Objects[ self ] = nil;
+	ObjectRanges[ self ] = nil;
+	if ( not next( Objects ) ) then -- Last object
+		UpdateFrame:Hide();
+		UpdateFrame:UnregisterEvent( "SPELLS_CHANGED" );
+	end
 end
 
-local px, py, tx, ty
-local function GetBearing(unit)
-    if unit == 'player' then return end
 
-    px, py = GetPlayerMapPosition("player")
-    if((px or 0)+(py or 0) <= 0) then
-        if WorldMapFrame:IsVisible() then return end
-        SetMapToCurrentZone()
-        px, py = GetPlayerMapPosition("player")
-        if((px or 0)+(py or 0) <= 0) then return end
-    end
 
-    tx, ty = GetPlayerMapPosition(unit)
-    if((tx or 0)+(ty or 0) <= 0) then return end
 
-    return pi - atan2(px-tx,ty-py)
-end
+local _, Class = UnitClass( "player" );
+--- Optional lists of low level baseline skills with greater than 28 yard range.
+-- First known spell in the appropriate class list gets used.
+-- Note: Spells probably shouldn't have minimum ranges!
+HelpIDs = ( {
+	DEATHKNIGHT = { 47541 }; -- Death Coil (40yd) - Starter
+	DRUID = { 5185 }; -- Healing Touch (40yd) - Lvl 3
+	-- HUNTER = {};
+	MAGE = { 475 }; -- Remove Curse (40yd) - Lvl 30
+	PALADIN = { 85673 }; -- Word of Glory (40yd) - Lvl 9
+	PRIEST = { 2061 }; -- Flash Heal (40yd) - Lvl 3
+	-- ROGUE = {};
+	SHAMAN = { 331 }; -- Healing Wave (40yd) - Lvl 7
+	WARLOCK = { 5697 }; -- Unending Breath (30yd) - Lvl 16
+	-- WARRIOR = {};
+} )[ Class ];
 
-function ns:arrow(object, unit)
-    if(not object.OoR and not Qulight["raidframes"].arrowmouseoveralways) or not UnitIsConnected(unit) then return end
-    local bearing = GetBearing(unit)
+HarmIDs = ( {
+	DEATHKNIGHT = { 47541 }; -- Death Coil (30yd) - Starter
+	DRUID = { 5176 }; -- Wrath (40yd) - Starter
+	HUNTER = { 75 }; -- Auto Shot (5-40yd) - Starter
+	MAGE = { 
+		133,-- Fireball (40yd) - Starter
+		116,
+		30451,
+	}; 
+	PALADIN = {
+		62124, -- Hand of Reckoning (30yd) - Lvl 14
+		879, -- Exorcism (30yd) - Lvl 18
+	};
+	PRIEST = { 589 }; -- Shadow Word: Pain (40yd) - Lvl 4
+	-- ROGUE = {};
+	SHAMAN = { 403 }; -- Lightning Bolt (30yd) - Starter
+	WARLOCK = { 686 }; -- Shadow Bolt (40yd) - Starter
+	WARRIOR = { 355 }; -- Taunt (30yd) - Lvl 12
+} )[ Class ];
 
-    if bearing then
-        RotateTexture(object.freebarrow, bearing)
-    end
-end
-
-local timer = 0
-local OnRangeUpdate = function(self, elapsed)
-    timer = timer + elapsed
-
-    if(timer >= update) then
-        for _, object in next, _FRAMES do
-            if(object:IsShown()) then
-                local range = object.freebRange
-                if(UnitIsConnected(object.unit) and not UnitInRange(object.unit)) then
-                    if(object:GetAlpha() == range.insideAlpha) then
-                        object:SetAlpha(range.outsideAlpha)
-                    end
-
-                    object.OoR = true
-                    
-                elseif(object:GetAlpha() ~= range.insideAlpha) then
-                    object:SetAlpha(range.insideAlpha)
-         
-                else
-                    object.OoR = false
-                end
-            else
-           
-            end
-        end
-
-        timer = 0
-    end
-end
-
-local Enable = function(self)
-    local range = self.freebRange
-    if(range and range.insideAlpha and range.outsideAlpha) then
-        table.insert(_FRAMES, self)
-
-        if(not OnRangeFrame) then
-            OnRangeFrame = CreateFrame"Frame"
-            OnRangeFrame:SetScript("OnUpdate", OnRangeUpdate)
-        end
-        OnRangeFrame:Show()
-
-        local frame = CreateFrame("Frame", nil, UIParent)
-        frame:SetAllPoints(self)
-        frame:SetFrameStrata("HIGH")
-
-        frame.arrow = frame:CreateTexture(nil, "OVERLAY")
-        frame.arrow:SetTexture"Interface\\Addons\\oUF_Freebgrid\\Media\\Arrow"
-        frame.arrow:SetPoint("TOPRIGHT", frame, "TOPRIGHT")
-        frame.arrow:SetSize(24, 24)
-
-        self.freebarrow = frame
-        self.freebarrow:Hide()
-    end
-end
-
-local Disable = function(self)
-    local range = self.freebRange
-    if(range) then
-        for k, frame in next, _FRAMES do
-            if(frame == self) then
-                table.remove(_FRAMES, k)
-                break
-            end
-        end
-
-        if(#_FRAMES == 0) then
-            OnRangeFrame:Hide()
-        end
-    end
-end
-
-oUF:AddElement('freebRange', nil, Enable, Disable)
+oUF:AddElement( "SpellRange", Update, Enable, Disable );

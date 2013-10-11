@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 40000
 ## Title: cargBags
 ## Author: Cargor
 ## Version: 2.1.2

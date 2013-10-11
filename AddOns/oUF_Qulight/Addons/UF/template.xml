@@ -17,5 +17,22 @@
 				</Attributes>
 			</Button>
 		</Frames>
+	</Button>
+	<Button name="oUF_PartyTtemplate" inherits="SecureUnitButtonTemplate" hidden="true" virtual="true" movable="true">
+		<Frames>
+			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent">
+					<Offset><AbsDimension x="10" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="unitsuffix" type="string" value="target"/>
+					<Attribute name="useparent-unit" type="boolean" value="true"/>
+					<Attribute name="type1" type="string" value="target"/>
+					<Attribute name="initial-unitWatch" type="boolean" value="true"/>
+				</Attributes>
+			</Button>
+		</Frames>
 	</Button>	
 </Ui>

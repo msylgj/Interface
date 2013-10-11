@@ -10,5 +10,6 @@ lib.lua
 Plugins\Smooth.lua
 Plugins\Experience.lua
 Plugins\TotemBar.lua
+Plugins\ThreatBar.lua
 Plugins\Reputation.lua
 Plugins\WarlockSpecBars.lua
