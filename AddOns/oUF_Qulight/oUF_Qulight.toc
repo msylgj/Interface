@@ -1,16 +1,12 @@
-## Interface: 50300
-## Author: Qulight	
-## Title: oUF_Qulight
-## RequiredDeps: oUF
-## X-Category: UnitFrame
+## Interface: 50400
+## Title: |cff1784d1oUF_Qulight|r
+## Notes: oUF_Qulight
+## Credits to: Shestak, Haste, Roth, P3lim, Monolit, AlleyKat, Tukz.
+## Author: Qulight
+## X-oUF: oUF
+## SavedVariables: QulightData
+## SavedVariablesPerCharacter: QulightDataPerChar, UISavedPositions
+## OptionalDeps: Qulight_ConfigUI, oUF_Qulight_Config, DXE, Recount, Omen, Skada, KLE, DBM, TinyDPS
+## X-oUF: oUF_Qulight
 
-cfg.lua
-template.xml
-tags.lua
-lib.lua
-core.lua
-Plugins\Smooth.lua
-Plugins\Experience.lua
-Plugins\Reputation.lua
-Plugins\ThreatBar.lua
-Raid\load.xml
+oUF_Qulight.xml

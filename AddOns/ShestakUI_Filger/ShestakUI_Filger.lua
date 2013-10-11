@@ -8,17 +8,17 @@ local class = select(2, UnitClass("player"))
 local ClassColor = RAID_CLASS_COLORS[class]
 
 local colorTable = {
-	["DK"]		= {r = .77, g = .12, b = .23},
-	["DLY"]		= {r = 1, g = 0.49, b = .04},
-	["LR"]		= {r = .67, g = .83, b = .45},
-	["FS"]		= {r = .41, g = .8, b = .94},
-	["WS"]		= {r = 0, g = 1, b = .59},
-	["QS"]		= {r = .96, g = .55, b = .73},
-	["MS"]		= {r = 1, g = 1, b = 1},
-	["DZ"]		= {r = 1, g = .96, b = .41},
-	["SM"]		= {r = 0, g = .44, b = .87},
-	["SS"]		= {r = .58, g = .51, b = .79},
-	["ZS"]		= {r = .78, g = .61, b = .43},
+	["DK"]		= {r = .77, g = .12, b = .23},	-- DEATHKNIGHT
+	["DLY"]		= {r = 1, g = 0.49, b = .04},	-- DRUID
+	["LR"]		= {r = .58, g = .86, b = .49},	-- HUNTER
+	["FS"]		= {r = 0, g = .76, b = 1},		-- MAGE
+	["WS"]		= {r = 0, g = 1, b = .59},		-- MONK
+	["QS"]		= {r = 1, g = .22, b = .52},	-- PALADIN
+	["MS"]		= {r = .8, g = .87, b = .9},	-- PRIEST
+	["DZ"]		= {r = 1, g = .91, b = .2},		-- ROGUE
+	["SM"]		= {r = 0, g = .6, b = .6},		-- SHAMAN
+	["SS"]		= {r = .6, g = .47, b = .85},	-- WARLOCK
+	["ZS"]		= {r = .9, g = .65, b = .45},	-- WARRIOR
 	["Black"]	= {r = 0, g = 0, b = 0},
 	["Gray"]	= {r = .37, g = .3, b = .3},
 	["OWN"]		= ClassColor,
@@ -97,6 +97,7 @@ function Filger:UpdateCD()
 		end
 	end
 end
+
 
 function Filger:DisplayActives()
 	if not self.actives then return end
@@ -414,122 +415,129 @@ function Filger:OnEvent(event, unit)
 	end
 end
 
-if Filger_Spells and Filger_Spells["ALL"] then
-	if not Filger_Spells[class] then
-		Filger_Spells[class] = {}
-	end
 
-	for i = 1, #Filger_Spells["ALL"], 1 do
-		local merge = false
-		local spellListAll = Filger_Spells["ALL"][i]
-		local spellListClass = nil
-		for j = 1, #Filger_Spells[class], 1 do
-			spellListClass = Filger_Spells[class][j]
-			local mergeAll = spellListAll.Merge or false
-			local mergeClass = spellListClass.Merge or false
-			if spellListClass.Name == spellListAll.Name and (mergeAll or mergeClass) then
-				merge = true
-				break
-			end
-		end
-		if not merge or not spellListClass then
-			table.insert(Filger_Spells[class], Filger_Spells["ALL"][i])
-		else
-			for j = 1, #spellListAll, 1 do
-				table.insert(spellListClass, spellListAll[j])
-			end
-		end
-	end
-end
-
-if Filger_Spells and Filger_Spells[class] then
-	for index in pairs(Filger_Spells) do
-		if index ~= class then
-			Filger_Spells[index] = nil
-		end
-	end
-
-	local idx = {}
-	for i = 1, #Filger_Spells[class], 1 do
-		local jdx = {}
-		local data = Filger_Spells[class][i]
-
-		for j = 1, #data, 1 do
-			local spn
-			if data[j].spellID then
-				spn = GetSpellInfo(data[j].spellID)
-			else
-				local slotLink = GetInventoryItemLink("player", data[j].slotID)
-				if slotLink then
-					spn = GetItemInfo(slotLink)
-				end
-			end
-			if not spn and not data[j].slotID then
-				print("|cffff0000WARNING: spell/slot ID ["..(data[j].spellID or data[j].slotID or "UNKNOWN").."] no longer exists! Report this to Shestak.|r")
-				table.insert(jdx, j)
-			end
+local FreeAnchor = CreateFrame("Frame")
+FreeAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
+FreeAnchor:SetScript("OnEvent", function(self, event)
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	
+	if Filger_Spells and Filger_Spells["ALL"] then
+		if not Filger_Spells[class] then
+			Filger_Spells[class] = {}
 		end
 
-		for _, v in ipairs(jdx) do
-			table.remove(data, v)
-		end
-
-		if #data == 0 then
-			print("|cffff0000WARNING: section ["..data.Name.."] is empty! Report this to Shestak.|r")
-			table.insert(idx, i)
-		end
-	end
-
-	for _, v in ipairs(idx) do
-		table.remove(Filger_Spells[class], v)
-	end
-
-	for i = 1, #Filger_Spells[class], 1 do
-		local data = Filger_Spells[class][i]
-		local frame = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name, UIParent)
-		frame.Id = i
-		frame.Name = data.Name
-		frame.Direction = data.Direction or "DOWN"
-		frame.IconSide = data.IconSide or "LEFT"
-		frame.NumPerLine = data.NumPerLine		-- ×¢²á»»ÐÐ
-		frame.enable = data.enable or "ON"
-		frame.Mode = data.Mode or "ICON"
-		frame.Interval = data.Interval or 3
-		frame:SetAlpha(data.Alpha or 1)
-		frame.IconSize = data.IconSize or 37
-		frame.BarWidth = data.BarWidth or 186
-		frame.Position = data.Position or "CENTER"
-		frame:SetPoint(unpack(data.Position))
-
-		if Filger_Settings.config_mode then
-			frame.actives = {}
-			for j = 1, math.min(Filger_Settings.max_test_icon, #Filger_Spells[class][i]), 1 do
-				local data = Filger_Spells[class][i][j]
-				local name, icon
-				if data.spellID then
-					name, _, icon = GetSpellInfo(data.spellID)
-				elseif data.slotID then
-					local slotLink = GetInventoryItemLink("player", data.slotID)
-					if slotLink then
-						name, _, _, _, _, _, _, _, _, icon = GetItemInfo(slotLink)
-					end
-				end
-				frame.actives[j] = {data = data, name = name, icon = icon, count = 9, start = 0, duration = 0, spid = data.spellID or data.slotID}
-			end
-			Filger.DisplayActives(frame)
-		else
-			for j = 1, #Filger_Spells[class][i], 1 do
-				local data = Filger_Spells[class][i][j]
-				if data.filter == "CD" then
-					frame:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+		for i = 1, #Filger_Spells["ALL"], 1 do
+			local merge = false
+			local spellListAll = Filger_Spells["ALL"][i]
+			local spellListClass = nil
+			for j = 1, #Filger_Spells[class], 1 do
+				spellListClass = Filger_Spells[class][j]
+				local mergeAll = spellListAll.Merge or false
+				local mergeClass = spellListClass.Merge or false
+				if spellListClass.Name == spellListAll.Name and (mergeAll or mergeClass) then
+					merge = true
 					break
 				end
 			end
-			frame:RegisterEvent("UNIT_AURA")
-			frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
-			frame:RegisterEvent("PLAYER_TARGET_CHANGED")
-			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-			frame:SetScript("OnEvent", Filger.OnEvent)
+			if not merge or not spellListClass then
+				table.insert(Filger_Spells[class], Filger_Spells["ALL"][i])
+			else
+				for j = 1, #spellListAll, 1 do
+					table.insert(spellListClass, spellListAll[j])
+				end
+			end
 		end
 	end
-end
+
+	if Filger_Spells and Filger_Spells[class] then
+		for index in pairs(Filger_Spells) do
+			if index ~= class then
+				Filger_Spells[index] = nil
+			end
+		end
+
+		local idx = {}
+		for i = 1, #Filger_Spells[class], 1 do
+			local jdx = {}
+			local data = Filger_Spells[class][i]
+
+			for j = 1, #data, 1 do
+				local spn
+				if data[j].spellID then
+					spn = GetSpellInfo(data[j].spellID)
+				else
+					local slotLink = GetInventoryItemLink("player", data[j].slotID)
+					if slotLink then
+						spn = GetItemInfo(slotLink)
+					end
+				end
+				if not spn and not data[j].slotID then
+					print("|cffff0000WARNING: spell/slot ID ["..(data[j].spellID or data[j].slotID or "UNKNOWN").."] no longer exists! Report this to Shestak.|r")
+					table.insert(jdx, j)
+				end
+			end
+
+			for _, v in ipairs(jdx) do
+				table.remove(data, v)
+			end
+
+			if #data == 0 then
+				print("|cffff0000WARNING: section ["..data.Name.."] is empty! Report this to Shestak.|r")
+				table.insert(idx, i)
+			end
+		end
+
+		for _, v in ipairs(idx) do
+			table.remove(Filger_Spells[class], v)
+		end
+
+		for i = 1, #Filger_Spells[class], 1 do
+			local data = Filger_Spells[class][i]
+			local frame = CreateFrame("Frame", "FilgerFrame"..i.."_"..data.Name, UIParent)
+			frame.Id = i
+			frame.Name = data.Name
+			frame.Direction = data.Direction or "DOWN"
+			frame.IconSide = data.IconSide or "LEFT"
+			frame.NumPerLine = data.NumPerLine		-- ×¢²á»»ÐÐ
+			frame.enable = data.enable or "ON"
+			frame.Mode = data.Mode or "ICON"
+			frame.Interval = data.Interval or 3
+			frame:SetAlpha(data.Alpha or 1)
+			frame.IconSize = data.IconSize or 37
+			frame.BarWidth = data.BarWidth or 186
+			frame.Position = data.Position or "CENTER"
+			frame:SetPoint(unpack(data.Position))
+
+			if Filger_Settings.config_mode then
+				frame.actives = {}
+				for j = 1, math.min(Filger_Settings.max_test_icon, #Filger_Spells[class][i]), 1 do
+					local data = Filger_Spells[class][i][j]
+					local name, icon
+					if data.spellID then
+						name, _, icon = GetSpellInfo(data.spellID)
+					elseif data.slotID then
+						local slotLink = GetInventoryItemLink("player", data.slotID)
+						if slotLink then
+							name, _, _, _, _, _, _, _, _, icon = GetItemInfo(slotLink)
+						end
+					end
+					frame.actives[j] = {data = data, name = name, icon = icon, count = 9, start = 0, duration = 0, spid = data.spellID or data.slotID}
+				end
+				Filger.DisplayActives(frame)
+			else
+				for j = 1, #Filger_Spells[class][i], 1 do
+					local data = Filger_Spells[class][i][j]
+					if data.filter == "CD" then
+						frame:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+						break
+					end
+				end
+				frame:RegisterEvent("UNIT_AURA")
+				frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
+				frame:RegisterEvent("PLAYER_TARGET_CHANGED")
+				frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+				frame:SetScript("OnEvent", Filger.OnEvent)
+			end
+		end
+	end
+end)

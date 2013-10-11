@@ -1,16 +1,15 @@
-## Interface: 50300
+﻿## Interface: 50400
 ## Title: ShestakUI Filger
 ## Notes: Class timers
+## Notes-zhCN: |cffC495DD法术计时器|r
+## Notes-zhTW: |cffC495DD法術計時器|r
 ## Author: Nils Ruesch
-## Version: 4.35
+## Version: 4.42
 ## Credits: Affli, Ildyria, SinaC
 ## Thanks: Erratic, Wetxius
-## X-Curse-Packaged-Version: 4.35
-## X-Curse-Project-Name: ShestakUI
-## X-Curse-Project-ID: shestakui
 ## Website: http://shestak.org
 
 Settings.lua
-config.lua
+Spells.lua
 ShestakUI_Filger.lua
 Cooldowns.lua

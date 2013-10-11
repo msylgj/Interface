@@ -1,0 +1,13 @@
+## Interface: 50400
+## Title: |cff1784d1oUF_Qulight_Config|r
+## Notes: Someday there is only pantesaur left.
+## Author: Tohveli
+## Editor: Qulight
+## SavedVariables: QulightConfigAll, QulightConfigSettings
+## SavedVariablesPerCharacter: QulightConfig
+## RequiredDeps: oUF_Qulight
+
+local\english.lua
+local\russian.lua
+
+core.lua

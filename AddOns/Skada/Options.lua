@@ -5,9 +5,11 @@ Skada.resetoptions = {[1] = L["No"], [2] = L["Yes"], [3] = L["Ask"]}
 
 Skada.windowdefaults = {
 	name = "Skada",
+
 	barspacing=0,
 	bartexture="Minimalist",
-	barfont="Ä¬ÈÏ",
+
+	barfont="é»˜è®¤",
 	barfontflags="",
 	barfontsize=9,
 	barheight=15,
@@ -28,7 +30,7 @@ Skada.windowdefaults = {
 	background = {margin=0, height=163, texture="Solid", bordertexture="None", borderthickness=0, color = {r=0,g=0,b=0.5,a=0}},
 
 	reversegrowth=false,
-	modeincombat="ÉËº¦",
+	modeincombat="ä¼¤å®³",
 	returnaftercombat=true,
 	wipemode="",
 
@@ -36,7 +38,7 @@ Skada.windowdefaults = {
 	enabletitle = true, 
 
 	set = "total",
-	mode = "ÉËº¦",
+	mode = "ä¼¤å®³",
 
 	display = "bar",
 	snapto = true,
@@ -76,8 +78,8 @@ Skada.defaults = {
 			["ccannounce"] = true,
 		},
 		columns = {
-			["ÉËº¦_Percent"] = false,
-			["ËÀÍö¼ÍÂ¼_Health"] = true,
+			["ä¼¤å®³_Percent"] = false,
+			["æ­»äº¡çºªå½•_Health"] = true,
 		},
 		report = {mode = "Damage", set = "current", channel = "Say", chantype = "preset", number = 10},
 

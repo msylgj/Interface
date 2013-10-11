@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="tags.lua"/>
+	<Script file="lib.lua"/>
+	<Script file="core.lua"/>
+	<Script file="Plugins\Smooth.lua"/>
+	<Script file="Plugins\Experience.lua"/>
+	<Script file="Plugins\TotemBar.lua"/>
+	<Script file="Plugins\Reputation.lua"/>
+	<Script file="Plugins\WarlockSpecBars.lua"/>
+	<Script file="Plugins\HarmonyBar.lua"/>
+	<Script file="Plugins\AuraWatch.lua"/>
+	<Script file="Plugins\ShadowOrbsBar.lua"/>
+	<Script file="Plugins\ArcaneCharge.lua"/>
+	<Script file="Plugins\RuneOfPower.lua"/>
+</Ui>

@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="elements\RaidDebuffs.lua" />
+	<Script file="elements\indicators.lua" />
+    <Script file="elements\heals.lua" />
+    <Script file="elements\range.lua" />
+    <Script file="elements\autorez.lua" />	
+	<Script file="elements\afk.lua" />
+	<Script file="aura_list.lua" />
+    <Script file="raid.lua" />
+    <Script file="movable.lua" />
+    <Script file="tags.lua" />  
+</Ui>

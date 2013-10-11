@@ -1,0 +1,17 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="Config\variables.lua"/>
+	<Script file="Config\config.lua"/>
+	<Script file="Config\configui.lua"/>
+	
+
+	<Script file="Root\Move.lua"/>
+	<Include file="Root\Libs\oUF\oUF.xml"/>
+	<Include file="Addons\UF\uf.xml"/>
+	<Include file="Addons\UF\template.xml"/>
+	<Include file="Addons\UF\Raid\load.xml"/>
+	
+	<Script file="Root\Func.lua"/>
+	
+	<Script file="Addons\Buffs.lua"/>
+	<Script file="Addons\ClassTimer.lua"/>
+</Ui>

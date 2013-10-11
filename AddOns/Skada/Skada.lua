@@ -871,6 +871,24 @@ function Skada:UNIT_PET()
 	self:CheckPets()
 end
 
+function Skada:PET_BATTLE_OPENING_START()
+	-- Hide during pet battles
+	for i, win in ipairs(windows) do
+		if win:IsShown() then
+			win:Hide()
+		end
+	end
+end
+
+function Skada:PET_BATTLE_CLOSE()
+	-- Restore after pet battles
+	for i, win in ipairs(windows) do
+		if not win.db.hidden and not win:IsShown() then
+			win:Show()
+		end
+	end
+end
+
 -- Toggles all windows.
 function Skada:ToggleWindow()
 	for i, win in ipairs(windows) do
@@ -950,6 +968,8 @@ function Skada:ReloadSettings()
 	end
 
 	self.total = self.char.total
+
+	Skada:ClearAllIndexes()
 
 	-- Minimap button.
 	if icon and not icon:IsRegistered("Skada") then
@@ -1266,6 +1286,21 @@ function Skada:find_set(s)
 	end
 end
 
+function Skada:ClearIndexes(set)
+  if set then
+     set._playeridx = nil
+  end
+end
+function Skada:ClearAllIndexes()
+  -- clear indexes used for accelerating set lookups
+  -- this is done on login/logout to prevent the in-memory aliasing from becoming redundant tables on reload
+  Skada:ClearIndexes(self.current)
+  Skada:ClearIndexes(self.char.total)
+  for _,set in pairs(self.char.sets) do
+    Skada:ClearIndexes(set)
+  end
+end
+
 -- Returns a player from the current. Safe to use to simply view a player without creating an entry.
 function Skada:find_player(set, playerid)
 	if set then
@@ -1466,7 +1501,7 @@ local function COMBAT_LOG_EVENT_UNFILTERED(event, timestamp, eventtype, hideCast
 	-- Note: relies on src_is_interesting having been checked.
 	if Skada.current and src_is_interesting and not Skada.current.gotboss then
 		-- Store mob name for set name. For now, just save first unfriendly name available, or first boss available.
-		if bit.band(dstFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) ~=0 then
+		if bit.band(dstFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0 then
 			if not Skada.current.gotboss and boss.BossIDs[tonumber(dstGUID:sub(6, 10), 16)] then
 				Skada.current.mobname = dstName
 				Skada.current.gotboss = true
@@ -2054,6 +2089,7 @@ function Skada:OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadSettings")
 	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadSettings")
 	self.db.RegisterCallback(self, "OnProfileReset", "ReloadSettings")
+	self.db.RegisterCallback(self, "OnDatabaseShutdown", "ClearAllIndexes")
 
 	-- Migrate old settings.
 	if self.db.profile.barmax then
@@ -2078,6 +2114,9 @@ function Skada:OnEnable()
 	self:RegisterEvent("UNIT_PET")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", COMBAT_LOG_EVENT_UNFILTERED)
+
+	self:RegisterEvent("PET_BATTLE_OPENING_START")
+	self:RegisterEvent("PET_BATTLE_CLOSE")
 
 	if type(CUSTOM_CLASS_COLORS) == "table" then
 		Skada.classcolors = CUSTOM_CLASS_COLORS

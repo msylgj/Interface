@@ -1,0 +1,14 @@
+## Interface: 50400
+## Notes: My Layout for oUF
+## RequiredDeps: oUF_Qulight
+## X-Category: UnitFrame
+
+template.xml
+tags.lua
+lib.lua
+
+Plugins\Smooth.lua
+Plugins\Experience.lua
+Plugins\TotemBar.lua
+Plugins\Reputation.lua
+Plugins\WarlockSpecBars.lua

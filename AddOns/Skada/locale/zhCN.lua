@@ -316,7 +316,6 @@ L["When possible, bars will be colored according to player class."] = "计量条
 L["When possible, bar text will be colored according to player class."] = "计量条文本颜色按玩家颜色显示."
 L["When your threat reaches this level, relative to tank, warnings are shown."] = "当你的仇恨值相对于坦克到达这个阀值时显示警报."
 L["Whisper"] = "密语"
-L["Whisper Target"] = "密语目标"
 L["Window"] = "窗口"
 L["Window height"] = "窗体高度"
 L["Windows"] = "窗口"
