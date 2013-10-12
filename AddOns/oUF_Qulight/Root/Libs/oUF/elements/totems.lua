@@ -15,10 +15,7 @@
 
  Notes
 
- A OnClick handler, which calls DestroyTotem() when clicked, will be applied to
- the `Totem` widget, if it supports OnClick.
-
- It will also set OnEnter and OnLeave, to display the default Tooltip, if the
+ OnEnter and OnLeave will be set to display the default Tooltip, if the
  `Totem` widget is mouse enabled.
 
  Options
@@ -67,10 +64,6 @@ if(select(2, UnitClass'player') == 'SHAMAN') then
 	priorities = SHAMAN_TOTEM_PRIORITIES
 end
 
-local OnClick = function(self)
-	DestroyTotem(self:GetID())
-end
-
 local UpdateTooltip = function(self)
 	GameTooltip:SetTotem(self:GetID())
 end
@@ -87,6 +80,7 @@ local OnLeave = function()
 end
 
 local UpdateTotem = function(self, event, slot)
+	if(slot > MAX_TOTEMS) then return end
 	local totems = self.Totems
 
 	if(totems.PreUpdate) then totems:PreUpdate(priorities[slot]) end
@@ -137,10 +131,6 @@ local Enable = function(self)
 			local totem = totems[i]
 
 			totem:SetID(priorities[i])
-
-			if(totem:HasScript'OnClick') then
-				totem:SetScript('OnClick', OnClick)
-			end
 
 			if(totem:IsMouseEnabled()) then
 				totem:SetScript('OnEnter', OnEnter)

@@ -682,7 +682,7 @@ lib.gen_castbar = function(f)
         z:SetPoint("BOTTOMRIGHT")
 	    s:SetFrameLevel(10)
         s.SafeZone = z
-        local l = gen_fontstring(s, Qulight["media"].font, 10, "OUTLINE")
+        local l = lib.gen_fontstring(s, Qulight["media"].font, 10, "OUTLINE")
         l:SetPoint("CENTER", -2, 17)
         l:SetJustifyH("RIGHT")
 	    l:Hide()
@@ -845,20 +845,20 @@ local postCreateIcon = function(element, button)
 	CreateShadow0(h)
 	
 	if self.mystyle == "player" then
-		local time = gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+		local time = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
 		time:SetPoint("BOTTOM", button, "BOTTOM", 2, -4)
 		time:SetJustifyH("CENTER")
 		time:SetVertexColor(1,1,1)
 		button.time = time
 	else
-		local time = gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+		local time = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
 		time:SetPoint("BOTTOM", button, "BOTTOM", 2, -4)
 		time:SetJustifyH("CENTER")
 		time:SetVertexColor(1,1,1)
 		button.time = time
 	end
 		
-	local count = gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
+	local count = lib.gen_fontstring(button, Qulight["media"].pxfont, 10, "OUTLINE")
 	count:SetPoint("CENTER", button, "TOPRIGHT", 0, 0)
 	count:SetJustifyH("RIGHT")
 	button.count = count
