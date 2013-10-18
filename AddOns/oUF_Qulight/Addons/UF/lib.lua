@@ -21,7 +21,7 @@ end
 local retVal = function(f, val1, val2, val3, val4)
 	if f.mystyle == "player" or f.mystyle == "target" then
 		return val1
-	elseif f.mystyle == "focus" or f.mystyle == "party" then
+	elseif f.mystyle == "party" or f.mystyle == "focus" then
 		return val3
 	elseif f.mystyle == "oUF_MT" then
 		return val4
@@ -35,7 +35,7 @@ lib.menu = function(self)
     if unit == "party" then
 	    if Qulight["raidframes"].hidemenu and InCombatLockdown() then return end
 		ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
-	elseif Qulight["unitframes"].party and unit == "raid" then
+	elseif Qulight["raidframes"].party and unit == "raid" then
 		if Qulight["raidframes"].hidemenu and InCombatLockdown() then return end
 		if UnitIsUnit(self.unit, "player") then
 			ToggleDropDownMenu(1, nil, _G["PlayerFrameDropDown"], "cursor", 0, 0)
@@ -309,7 +309,7 @@ lib.gen_hpbar = function(f)
     h:SetPoint("TOPLEFT",-5,5)
 	if f.mystyle == "target" or f.mystyle == "player" then
 		h:SetPoint("BOTTOMRIGHT",5,-5)
-	elseif f.mystyle == "raid" then
+	elseif f.mystyle == "party" or f.mystyle == "focus" then
 		h:SetPoint("BOTTOMRIGHT",5,-5)
 	else
 		h:SetPoint("BOTTOMRIGHT",5,-5)
@@ -335,7 +335,7 @@ lib.gen_hpstrings = function(f)
 	elseif f.mystyle == "target" then
 		f:Tag(name, "[level] [color][namelong][afk]")
 	elseif f.mystyle == "party" then
-		f:Tag(name, "[level] [color][name][afk]")
+		f:Tag(name, "[level] [color][namelong][afk]")
 	elseif f.mystyle == "focus" then	
 		f:Tag(name, "[level] [color][name][afk]")
 	else
@@ -348,7 +348,7 @@ lib.gen_hpstrings = function(f)
 	end
 	
 	local per = f.Health:CreateFontString(nil, "OVERLAY")
-	per:SetPoint("RIGHT", -4, -3)
+	per:SetPoint("RIGHT", -2, -3)
 	per:SetFont(Qulight["media"].font, (Qulight["media"].fontsize - 1), "OUTLINE")
 	f:Tag(per, retVal(f,'[color][power] | [perpp]%'))
 end
@@ -382,9 +382,9 @@ lib.gen_ppbar = function(f)
 	end
 	if f.mystyle == "party" then
 		local h = CreateFrame("Frame", nil, s)
-		s:SetPoint("BOTTOM",f,"BOTTOM",0,6)
+		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
 		h:SetFrameLevel(3)
-		s:SetWidth(f:GetWidth() - 8)
+		s:SetWidth(172)
 		h:SetPoint("TOPLEFT",-5,5)
 		h:SetPoint("BOTTOMRIGHT",5,-5)	
 		CreateShadow00(h)
@@ -439,15 +439,6 @@ lib.gen_ppbar = function(f)
 		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
 		h:SetFrameLevel(3)
 		s:SetWidth(92)
-		h:SetPoint("TOPLEFT",-5,5)
-		h:SetPoint("BOTTOMRIGHT",5,-5)
-		CreateShadow00(h)
-	end
-	if f.mystyle == "partytarget" then
-		local h = CreateFrame("Frame", nil, s)
-		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
-		h:SetFrameLevel(3)
-		s:SetWidth(f:GetWidth() - 8)
 		h:SetPoint("TOPLEFT",-5,5)
 		h:SetPoint("BOTTOMRIGHT",5,-5)
 		CreateShadow00(h)
@@ -1090,7 +1081,7 @@ lib.genHolyPower = function(self)
 		bars[i].bg:SetAlpha(.15)
 	end
 				
-	CreateShadowclassbar4(bars)
+	CreateShadowclassbar(bars)
 	bars.Override = UpdateHoly
 	self.HolyPower = bars	
 end
@@ -1122,7 +1113,6 @@ lib.genRunes = function(self)
 	runes.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	runes.backdrop:SetPoint("TOPLEFT", -2, 2)
 	runes.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
-	runes.backdrop:SetFrameLevel(runes:GetFrameLevel() - 1)
 
 	self.Runes = runes
 end
@@ -1162,13 +1152,12 @@ if Qulight["unitframes"].TotemBars then
 	totems.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	totems.backdrop:SetPoint("TOPLEFT", -2, 2)
 	totems.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
-	totems.backdrop:SetFrameLevel(5)
 	self.TotemBar = totems			
 	end
 end
 
 lib.Magebars = function(self)
-	if myclass == "MAGE" then
+	if playerClass == "MAGE" then
 				
 				local mb = CreateFrame("Frame", "ArcaneBar", self)
 				mb:SetPoint("TOPLEFT", self, "TOPLEFT",2,-2)
@@ -1177,7 +1166,7 @@ lib.Magebars = function(self)
 				mb:SetBackdrop(backdrop)
 				mb:SetBackdropColor(0, 0, 0)
 				mb:SetBackdropBorderColor(0, 0, 0)				
-				CreateShadowclassbar2(mb)
+				CreateShadowclassbar(mb)
 				mb:SetFrameLevel(6)
 				
 				for i = 1, 4 do
@@ -1205,7 +1194,7 @@ lib.Magebars = function(self)
 				rp:SetBackdrop(backdrop)
 				rp:SetBackdropColor(0, 0, 0)
 				rp:SetBackdropBorderColor(0, 0, 0)	
-				CreateShadowclassbar2(rp)
+				CreateShadowclassbar(rp)
 				rp:SetFrameLevel(6)
 				for i = 1, 2 do
 					rp[i] = CreateFrame("StatusBar", "RunePower"..i, rp)
@@ -1266,7 +1255,6 @@ lib.genCPoints = function(self)
 	bars.FrameBackdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	bars.FrameBackdrop:SetPoint("TOPLEFT", bars, "TOPLEFT", -2, 2)
 	bars.FrameBackdrop:SetPoint("BOTTOMRIGHT", bars, "BOTTOMRIGHT", 2, -2)
-	bars.FrameBackdrop:SetFrameLevel(6)
 end
 lib.ThreatBar = function(self)
 	if Qulight["unitframes"].ThreatBar then
@@ -1297,13 +1285,13 @@ lib.ThreatBar = function(self)
 	end	
 end
 lib.genHarmony = function(self)
-	if myclass == "MONK" then
+	if playerClass == "MONK" then
 				
 		local hb = CreateFrame("Frame", "Harmony", health)
 		hb:SetPoint("TOPLEFT", self, "TOPLEFT",2,-2)
 		hb:SetWidth(100)
 		hb:SetHeight(6)
-		CreateShadowclassbar2(hb)
+		CreateShadowclassbar(hb)
 		hb:SetBackdropBorderColor(0,0,0,0)
 		hb:SetFrameLevel(6)
 			for i = 1, 5 do
@@ -1323,7 +1311,7 @@ lib.genHarmony = function(self)
 	end
 end
 lib.genShards = function(self)
-	if myclass == "WARLOCK" then
+	if playerClass == "WARLOCK" then
 		local wb = CreateFrame("Frame", "WarlockSpecBars", self)
 		wb:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
 		wb:SetWidth(123)
@@ -1332,7 +1320,7 @@ lib.genShards = function(self)
 					
 		wb:SetBackdropColor(0, 0, 0)
 		wb:SetBackdropBorderColor(0, 0, 0)	
-		CreateShadowclassbar2(wb)
+		CreateShadowclassbar(wb)
 		wb:SetFrameLevel(6)
 			for i = 1, 4 do
 				wb[i] = CreateFrame("StatusBar", "WarlockSpecBars"..i, wb)
@@ -1360,31 +1348,33 @@ lib.genShards = function(self)
 	end
 end
 lib.genShadowOrbsBar = function(self)
-	if myclass == "PRIEST" then
-				
-		self.ShadowOrbsBar = CreateFrame("Frame", self:GetName().."_ShadowOrbsBar", self)
-		CreateShadowclassbar2(self.ShadowOrbsBar)
-		self.ShadowOrbsBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
-		self.ShadowOrbsBar:SetSize(122, 6)
-		self.ShadowOrbsBar:SetFrameLevel(6)
+	local spec = GetSpecialization()
+	if playerClass ~= "PRIEST" or spec ~= 3 then return end		
+		SoBar = CreateFrame("Frame", nil, self)
+		SoBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
+		SoBar:SetWidth(self:GetWidth()-100)
+		SoBar:SetHeight(6)
+		SoBar:SetFrameLevel(6)
 			
-			for i = 1, 3 do
-				self.ShadowOrbsBar[i] = CreateFrame("StatusBar", nil, self.ShadowOrbsBar)
-				self.ShadowOrbsBar[i]:SetSize(120 / 3, 6)
-				if i == 1 then
-					self.ShadowOrbsBar[i]:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
-				else
-					self.ShadowOrbsBar[i]:SetPoint("TOPLEFT", self.ShadowOrbsBar[i-1], "TOPRIGHT", 1, 0)
-				end
-				self.ShadowOrbsBar[i]:SetStatusBarTexture(statusbar_texture)
-				self.ShadowOrbsBar[i]:SetStatusBarColor(0.70, 0.32, 0.75)
-
-				self.ShadowOrbsBar[i].bg = self.ShadowOrbsBar[i]:CreateTexture(nil, "BORDER")
-				self.ShadowOrbsBar[i].bg:SetAllPoints()
-				self.ShadowOrbsBar[i].bg:SetTexture(statusbar_texture)
-				self.ShadowOrbsBar[i].bg:SetVertexColor(0.70, 0.32, 0.75, 0.25)
+		for i = 1, 3 do
+			SoBar[i] = CreateFrame("StatusBar", nil, SoBar)
+			SoBar[i]:SetWidth((SoBar:GetWidth() - 5)/3)
+			SoBar[i]:SetHeight(SoBar:GetHeight())	
+			SoBar[i]:SetStatusBarTexture(statusbar_texture)
+			SoBar[i]:SetStatusBarColor(0.70, 0.32, 0.75)
+			SoBar[i]:GetStatusBarTexture():SetHorizTile(false)
+			if i == 1 then
+				SoBar[i]:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
+			else
+				SoBar[i]:SetPoint("TOPLEFT", SoBar[i-1], "TOPRIGHT", 2, 0)
 			end
-	end
+		end
+		SoBar.backdrop = CreateFrame("Frame", nil, SoBar)	
+		CreateShadowclassbar(SoBar.backdrop)
+		SoBar.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
+		SoBar.backdrop:SetPoint("TOPLEFT", -2, 2)
+		SoBar.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
+		self.ShadowOrbsBar = SoBar
 end
 lib.AltPowerBar = function(self)
 	local AltPowerBar = CreateFrame("StatusBar", nil, self.Health)
@@ -1398,7 +1388,7 @@ lib.AltPowerBar = function(self)
 
 	AltPowerBar:SetPoint("BOTTOM", self, "BOTTOM", 0, -10)
 	AltPowerBar:SetWidth(self:GetWidth())
-	CreateShadowclassbar222(AltPowerBar)
+	CreateShadowclassbar(AltPowerBar)
 		
 	AltPowerBar:SetBackdrop({
 			bgFile = "Interface\\AddOns\\oUF_Qulight\\Root\\Media\\statusbar4", 
@@ -1518,7 +1508,6 @@ local function CreatePlayerStyle(self, unit, isSingle)
 	lib.createDebuffs(self)
 	CreateThreatBorder(self)
 	if Qulight["unitframes"].showPlayerAuras then
-		BuffFrame:Hide()
 		lib.createBuffs(self)
 	end
 	self.Health.frequentUpdates = true
@@ -1908,7 +1897,7 @@ PlayerPowerBarAlt.ignoreFramePositionManager = true
 	
 do
 	local PET_DISMISS = "PET_DISMISS"
-	if myclass == "HUNTER" then
+	if playerClass == "HUNTER" then
 		PET_DISMISS = nil
 	end
 

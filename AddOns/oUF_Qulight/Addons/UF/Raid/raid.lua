@@ -26,35 +26,6 @@ local fs = function(parent, layer, font, fontsiz, outline, r, g, b, justify)
     end
     return string
 end
-local function updateHealbar(object)
-    object.myHealPredictionBar:ClearAllPoints()
-    object.otherHealPredictionBar:ClearAllPoints()
-
-    if Qulight["raidframes"].orientation == "VERTICAL" then
-        object.myHealPredictionBar:SetPoint("BOTTOMLEFT", object.Health:GetStatusBarTexture(), "TOPLEFT", 0, 0)
-        object.myHealPredictionBar:SetPoint("BOTTOMRIGHT", object.Health:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
-        object.myHealPredictionBar:SetSize(0, Qulight["raidframes"].height)
-        object.myHealPredictionBar:SetOrientation"VERTICAL"
-
-        object.otherHealPredictionBar:SetPoint("BOTTOMLEFT", object.myHealPredictionBar:GetStatusBarTexture(), "TOPLEFT", 0, 0)
-        object.otherHealPredictionBar:SetPoint("BOTTOMRIGHT", object.myHealPredictionBar:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
-        object.otherHealPredictionBar:SetSize(0, Qulight["raidframes"].height)
-        object.otherHealPredictionBar:SetOrientation"VERTICAL"
-    else
-        object.myHealPredictionBar:SetPoint("TOPLEFT", object.Health:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
-        object.myHealPredictionBar:SetPoint("BOTTOMLEFT", object.Health:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
-        object.myHealPredictionBar:SetSize(Qulight["raidframes"].width, 0)
-        object.myHealPredictionBar:SetOrientation"HORIZONTAL"
-
-        object.otherHealPredictionBar:SetPoint("TOPLEFT", object.myHealPredictionBar:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
-        object.otherHealPredictionBar:SetPoint("BOTTOMLEFT", object.myHealPredictionBar:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
-        object.otherHealPredictionBar:SetSize(Qulight["raidframes"].width, 0)
-        object.otherHealPredictionBar:SetOrientation"HORIZONTAL"
-    end
-
-    object.myHealPredictionBar:GetStatusBarTexture():SetTexture(unpack(Qulight["raidframes"].myhealcolor))
-    object.otherHealPredictionBar:GetStatusBarTexture():SetTexture(unpack(Qulight["raidframes"].otherhealcolor))
-end
 
 -- Unit Menu
 local dropdown = CreateFrame('Frame', ADDON_NAME .. 'DropDown', UIParent, 'UIDropDownMenuTemplate')
@@ -253,16 +224,8 @@ function ns:UpdateHealth(hp)
     }
 
     if not Qulight["raidframes"].powerbar then
-		if Qulight["raidframes"].party and self.mystyle == "party" then
-			hp:SetHeight(Qulight["raidframes"].partysize[1])
-			hp:SetWidth(Qulight["raidframes"].partysize[2])
-		elseif self.mystyle == "partytarget" then
-			hp:SetHeight(Qulight["raidframes"].partytargetsize[1])
-			hp:SetWidth(Qulight["raidframes"].partytargetsize[2])
-		else
-			hp:SetHeight(Qulight["raidframes"].height)
-			hp:SetWidth(Qulight["raidframes"].width)
-		end
+		hp:SetHeight(Qulight["raidframes"].height)
+		hp:SetWidth(Qulight["raidframes"].width)
     end
 
     hp:ClearAllPoints()
@@ -287,21 +250,11 @@ local function PostPower(power, unit)
     if ptype == 'MANA' or (Qulight["raidframes"].party and self.mystyle == "party") then
         power:Show()
         if(Qulight["raidframes"].porientation == "VERTICAL")then
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				power:SetWidth(Qulight["raidframes"].partysize[1]*Qulight["raidframes"].powerbarsize)
-				self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[1])
-			else
-				power:SetWidth(Qulight["raidframes"].width*Qulight["raidframes"].powerbarsize)
-				self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].width)
-			end
+			power:SetWidth(Qulight["raidframes"].width*Qulight["raidframes"].powerbarsize)
+			self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].width)
         else
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				power:SetHeight(Qulight["raidframes"].partysize[2]*Qulight["raidframes"].powerbarsize)
-				self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[2])
-			else
-				power:SetHeight(Qulight["raidframes"].height*Qulight["raidframes"].powerbarsize)
-				self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].height)
-			end
+			power:SetHeight(Qulight["raidframes"].height*Qulight["raidframes"].powerbarsize)
+			self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].height)
         end
     else
         power:Hide()
@@ -413,7 +366,7 @@ local styleRaid = function(self)
     self.BG:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
     self.BG:SetFrameLevel(3)
     self.BG:SetBackdrop(backdrop)
-    self.BG:SetBackdropColor(0, 0, 0)
+    self.BG:SetBackdropColor(.3,.3,.3,.9)
 
     self.border = CreateFrame("Frame", nil, self)
     self.border:SetPoint("TOPLEFT", self, "TOPLEFT")
@@ -500,7 +453,7 @@ local styleRaid = function(self)
 			
     -- Raid Icons
     local ricon = self.Health:CreateTexture(nil, 'OVERLAY')
-    ricon:SetPoint("TOP", self, 0, 5)
+    ricon:SetPoint("TOP", self, 0, 10)
 	ricon:SetTexture("Interface\\AddOns\\oUF_Qulight\\Root\\Media\\raidicons")	
     ricon:SetSize(Qulight["raidframes"].leadersize+2, Qulight["raidframes"].leadersize+2)
     self.RaidIcon = ricon
@@ -533,7 +486,7 @@ local styleRaid = function(self)
     self.freebHeals = true
 
     self.ResurrectIcon = self.Health:CreateTexture(nil, 'OVERLAY')
-    self.ResurrectIcon:SetPoint("TOP", self, 0, -2)
+    self.ResurrectIcon:SetPoint("LEFT", self, 0, 0)
     self.ResurrectIcon:SetSize(16, 16)
 
     -- SpellRange
@@ -607,20 +560,10 @@ local stylePartyTarget = function(self)
 	lib.gen_hpstrings(self)
 	lib.gen_highlight(self)
 	lib.gen_RaidMark(self)
-	lib.createAuras(self)
-	lib.gen_ppbar(self)
-	self.Power.colorReaction = true
-	self.Power.colorHealth = true
-	self.Power.bg.multiplier = 0.1
-	if Qulight["unitframes"].Powercolor then
-		self.Power.colorClass = true
-	else
-		self.Power.colorPower = true
-	end
 	self.Health.frequentUpdates = false
 	if Qulight["unitframes"].HealthcolorClass then
-	self.Health.colorClass = true
-	self.Health.colorReaction = true
+		self.Health.colorClass = true
+		self.Health.colorReaction = true
 	end
 	if Qulight["unitframes"].showPortrait then lib.gen_portrait(self) end
 end
@@ -630,39 +573,33 @@ local styleParty = function(self)
       	return stylePartyTarget(self)
     end
 	
-    self.menu = menu
 	self.mystyle = "party"
-    -- Backdrop
-    self.BG = CreateFrame("Frame", nil, self)
-    self.BG:SetPoint("TOPLEFT", self, "TOPLEFT")
-    self.BG:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
-    self.BG:SetFrameLevel(3)
-    self.BG:SetBackdrop(backdrop)
-    self.BG:SetBackdropColor(0, 0, 0)
+	lib.init(self)
+	self.menu = menu
+	self:SetSize(unpack(Qulight["raidframes"].partysize))
+	lib.gen_hpbar(self)
+	lib.gen_hpstrings(self)
+	lib.gen_highlight(self)
+	lib.gen_ppbar(self)
+   	self.Health.frequentUpdates = true
+	if Qulight["unitframes"].HealthcolorClass then
+		self.Health.colorClass = true
+	end
+	if Qulight["unitframes"].Powercolor then
+		self.Power.colorClass = true
+	else
+		self.Power.colorPower = true
+	end
+	self.Power.frequentUpdates = true
+	self.Power.bg.multiplier = 0.1
 
     self.border = CreateFrame("Frame", nil, self)
     self.border:SetPoint("TOPLEFT", self, "TOPLEFT")
     self.border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
     self.border:SetFrameLevel(2)
     self.border:SetBackdrop(border2)
-    self.border:SetBackdropColor(0, 0, 0)
-
-    -- Mouseover script
-    self:SetScript("OnEnter", OnEnter)
-    self:SetScript("OnLeave", OnLeave)
-    self:RegisterForClicks"AnyUp"
-
-    -- Health
-    self.Health = CreateFrame"StatusBar"
-    self.Health:SetParent(self)
-    self.Health.frequentUpdates = true
-
-    self.Health.bg = self.Health:CreateTexture(nil, "BORDER")
-    self.Health.bg:SetAllPoints(self.Health)
-
-    self.Health.PostUpdate = PostHealth
-    ns:UpdateHealth(self.Health)
-
+    self.border:SetBackdropColor(0, 0, 0, 0)
+	
     -- Threat
     local threat = CreateFrame("Frame", nil, self)
     threat:SetPoint("TOPLEFT", self, "TOPLEFT", -5, 5)
@@ -673,35 +610,6 @@ local styleParty = function(self)
     threat:SetBackdropBorderColor(0, 0, 0, 1)
     threat.Override = updateThreat
     self.Threat = threat
-
-    -- Name
-    local name = lib.gen_fontstring(self.Health, Qulight["media"].font, Qulight["media"].fontsize, 12, "OUTLINE")
-    name:SetPoint("LEFT", self.Health, "LEFT", 3, 0)
-    name:SetJustifyH("LEFT")
-    self.Name = name
-    self:Tag(self.Name, "[level] [color][name][afk]")
-	
-	local hpval = lib.gen_fontstring(self.Health, Qulight["media"].font, (Qulight["media"].fontsize - 1), 10, "OUTLINE")
-    hpval:SetPoint("RIGHT", self.Health, "TOPRIGHT", -1, -15)
-    hpval.frequentUpdates = 0.1
-	self.HpVal = hpval
-	self:Tag(self.HpVal, "[hp][color]")
-
-    -- Power
-    self.Power = CreateFrame"StatusBar"
-    self.Power:SetParent(self)
-    self.Power.bg = self.Power:CreateTexture(nil, "BORDER")
-    self.Power.bg:SetAllPoints(self.Power)
-    ns:UpdatePower(self.Power)
-
-    -- Highlight tex
-    local hl = self.Health:CreateTexture(nil, "OVERLAY")
-    hl:SetAllPoints(self)
-    hl:SetTexture([=[Interface\AddOns\oUF_Qulight\Root\Media\raidbg.tga]=])
-    hl:SetVertexColor(.5,.5,.5,.1)
-    hl:SetBlendMode("ADD")
-    hl:Hide()
-    self.Highlight = hl
 
     -- Target tex
     local tBorder = CreateFrame("Frame", nil, self)
@@ -721,12 +629,20 @@ local styleParty = function(self)
     fBorder:SetBackdropColor(.6, .8, 0, 1)
     fBorder:SetFrameLevel(1)
     fBorder:Hide()
-    self.FocusHighlight = fBorder
-			
-    -- Raid Icons
+    self.FocusHighlight = fBorder 
+
+    self.freebIndicators = true
+    self.freebAfk = true
+    self.freebHeals = true
+
+    self.ResurrectIcon = self.Health:CreateTexture(nil, 'OVERLAY')
+    self.ResurrectIcon:SetPoint("LEFT", self, 0, 0)
+    self.ResurrectIcon:SetSize(16, 16)
+
+	-- Raid Icons
     local ricon = self.Health:CreateTexture(nil, 'OVERLAY')
-    ricon:SetPoint("TOP", self, 0, 5)
-	ricon:SetTexture("Interface\\AddOns\\oUF_Qulight\\Media\\raidicons")	
+    ricon:SetPoint("TOP", self, 0, 10)
+	ricon:SetTexture("Interface\\AddOns\\oUF_Qulight\\Root\\Media\\raidicons")	
     ricon:SetSize(Qulight["raidframes"].leadersize+2, Qulight["raidframes"].leadersize+2)
     self.RaidIcon = ricon
 
@@ -748,47 +664,39 @@ local styleParty = function(self)
     -- Role Icon
     if Qulight["raidframes"].roleicon then
         local lfd = fs(self.Health, "OVERLAY", fontsymbol, 10, OUTLINE, 1, 1, 1)
-		lfd:SetPoint("LEFT", self.Health, -6, 0)
+		lfd:SetPoint("LEFT", self.Health, 0, 6)
 		lfd:SetJustifyH"LEFT"
 	    self:Tag(lfd, '[LFD]')
     end
-
-    self.freebIndicators = true
-    self.freebAfk = true
-    self.freebHeals = true
-	self.freebAutoRez = true
-
-    self.ResurrectIcon = self.Health:CreateTexture(nil, 'OVERLAY')
-    self.ResurrectIcon:SetPoint("TOP", self, 0, -2)
-    self.ResurrectIcon:SetSize(16, 16)
-
+	
     -- SpellRange
     self.SpellRange = {
 		insideAlpha = 1,
-		outsideAlpha = Qulight["raidframes"].outsideRange,
-	}
+		outsideAlpha = Qulight["raidframes"].outsideRange,	}
 		
-    -- ReadyCheck
-    self.ReadyCheck = self.Health:CreateTexture(nil, "OVERLAY")
-    self.ReadyCheck:SetPoint("RIGHT", self)
-    self.ReadyCheck:SetSize(Qulight["raidframes"].leadersize, Qulight["raidframes"].leadersize)
-
     -- Auras
     local auras = CreateFrame("Frame", nil, self)
     auras:SetSize(Qulight["raidframes"].aurasize, Qulight["raidframes"].aurasize)
     auras:SetPoint("CENTER", self.Health)
     auras.size = Qulight["raidframes"].aurasize
     self.freebAuras = auras
-
+	
 	-- Raid Debuffs (big middle icon)
-	local RaidDebuffs = CreateFrame("Frame", nil, self)	
+	local RaidDebuffs = CreateFrame("Frame", nil, self)
+	RaidDebuffs:SetHeight(Qulight["raidframes"].aurasize)
+	RaidDebuffs:SetWidth(Qulight["raidframes"].aurasize)
+	RaidDebuffs:SetPoint("CENTER", self.Health, 0, 0)
+	RaidDebuffs:SetFrameStrata(self.Health:GetFrameStrata())
+	RaidDebuffs:SetFrameLevel(self.Health:GetFrameLevel() + 2)
+			
+	CreateShadowclassbar(RaidDebuffs)
+			
 	RaidDebuffs.icon = RaidDebuffs:CreateTexture(nil, "OVERLAY")
 	RaidDebuffs.icon:SetTexCoord(.1,.9,.1,.9)
 	RaidDebuffs.icon:SetPoint("TOPLEFT", 2, -2)
 	RaidDebuffs.icon:SetPoint("BOTTOMRIGHT", -2, 2)
 		
 	RaidDebuffs.cd = CreateFrame("Cooldown", nil, RaidDebuffs)
-
 	RaidDebuffs.cd:SetPoint("TOPLEFT", 2, -2)
 	RaidDebuffs.cd:SetPoint("BOTTOMRIGHT", -2, 2)
 	RaidDebuffs.cd.noOCC = true -- remove this line if you want cooldown number on it
@@ -804,6 +712,7 @@ local styleParty = function(self)
 	RaidDebuffs.time:SetTextColor(1, .9, 0)
 						
 	self.RaidDebuffs = RaidDebuffs
+		
     -- Add events
     self:RegisterEvent('PLAYER_FOCUS_CHANGED', FocusTarget)
     self:RegisterEvent('RAID_ROSTER_UPDATE', FocusTarget)

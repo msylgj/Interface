@@ -19,7 +19,7 @@ Qulight["raidframes"] = {
     ["fontsize"] = 10,  --字体大小
     ["fontsizeEdge"] = 9,  --状态字体大小
     ["outline"] = "OUTLINE",  --字体描边方式
-	["solo"] = false,      		  	--单人时显示团队框体
+	["solo"] = true,      		  	--单人时显示团队框体
     ["player"] = true,  			--小队中显示玩家
     ["party"] = true,  			--独立小队框体
     ["numCol"] = 5,  --显示队伍数目
@@ -118,15 +118,6 @@ Qulight["unitframes"] = {
 	["Anchortank"] = {"BOTTOMLEFT", 310, 470},  --坦克框体位置
 	["Anchorboss"] = {"BOTTOMRIGHT", -200, 550},  --BOSS框体位置
 	["Anchorarena"] = {"TOP", UIParent, "BOTTOM", 500, 550} --竞技场框体位置
-}
-Qulight["buffdebuff"] = {
-	["enable"] = true,  
-	["iconsize"] = 35, 																	-- buffs size
-	["timefontsize"] = 14, 																-- time font size
-	["countfontsize"] = 14,  															-- count font size
-	["spacing"] = 3, 																	-- spacing between icons(buffs)
-	["timeYoffset"] = -2, 																-- verticall offset value for time text field
-	["BUFFS_PER_ROW"] = 15,
 }
 
 Qulight["misk"] = {																-- enable disable filger

@@ -101,7 +101,7 @@ local function ApplyChatStyle(self)
 	self:SetFading(false)
 
 	--set font, outline and shadow for chat text
---	self:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
+	self:SetFont(font, fontsize, "THINOUTLINE")
 
 	-- Hide chat textures
 		for j = 1, #CHAT_FRAME_TEXTURES do
