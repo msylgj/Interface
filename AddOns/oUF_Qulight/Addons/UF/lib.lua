@@ -1081,9 +1081,9 @@ lib.genHolyPower = function(self)
 		bars[i].bg:SetAlpha(.15)
 	end
 				
-	CreateShadowclassbar(bars)
+	CreateShadowclassbar4(bars)
 	bars.Override = UpdateHoly
-	self.HolyPower = bars	
+	self.HolyPower = bars
 end
 lib.genRunes = function(self)
 	if playerClass ~= "DEATHKNIGHT" then return end
@@ -1113,6 +1113,7 @@ lib.genRunes = function(self)
 	runes.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	runes.backdrop:SetPoint("TOPLEFT", -2, 2)
 	runes.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
+	runes.backdrop:SetFrameLevel(runes:GetFrameLevel() - 1)
 
 	self.Runes = runes
 end
@@ -1152,68 +1153,68 @@ if Qulight["unitframes"].TotemBars then
 	totems.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	totems.backdrop:SetPoint("TOPLEFT", -2, 2)
 	totems.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
+	totems.backdrop:SetFrameLevel(5)
 	self.TotemBar = totems			
 	end
 end
 
 lib.Magebars = function(self)
 	if playerClass == "MAGE" then
+		local mb = CreateFrame("Frame", "ArcaneBar", self)
+		mb:SetPoint("TOPLEFT", self, "TOPLEFT",2,-2)
+		mb:SetWidth(103)
+		mb:SetHeight(6)
+		mb:SetBackdrop(backdrop)
+		mb:SetBackdropColor(0, 0, 0)
+		mb:SetBackdropBorderColor(0, 0, 0)				
+		CreateShadowclassbar2(mb)
+		mb:SetFrameLevel(6)
 				
-				local mb = CreateFrame("Frame", "ArcaneBar", self)
-				mb:SetPoint("TOPLEFT", self, "TOPLEFT",2,-2)
-				mb:SetWidth(103)
-				mb:SetHeight(6)
-				mb:SetBackdrop(backdrop)
-				mb:SetBackdropColor(0, 0, 0)
-				mb:SetBackdropBorderColor(0, 0, 0)				
-				CreateShadowclassbar(mb)
-				mb:SetFrameLevel(6)
-				
-				for i = 1, 4 do
-				mb[i] = CreateFrame("StatusBar", "ArcaneBar"..i, mb)
-				mb[i]:SetHeight(6)
-				mb[i]:SetStatusBarTexture(statusbar_texture)
+		for i = 1, 4 do
+			mb[i] = CreateFrame("StatusBar", "ArcaneBar"..i, mb)
+			mb[i]:SetHeight(6)
+			mb[i]:SetStatusBarTexture(statusbar_texture)
 						
-					if i == 1 then
-						mb[i]:SetWidth(100 / 4)
-						mb[i]:SetPoint("LEFT", mb, "LEFT", 0, 0)
-					else
-						mb[i]:SetWidth(100 / 4)
-						mb[i]:SetPoint("LEFT", mb[i-1], "RIGHT", 1, 0)
-					end
-						mb[i].bg = mb[i]:CreateTexture(nil, 'ARTWORK')
-				end
+			if i == 1 then
+				mb[i]:SetWidth(100 / 4)
+				mb[i]:SetPoint("LEFT", mb, "LEFT", 0, 0)
+			else
+				mb[i]:SetWidth(100 / 4)
+				mb[i]:SetPoint("LEFT", mb[i-1], "RIGHT", 1, 0)
+			end
+			mb[i].bg = mb[i]:CreateTexture(nil, 'ARTWORK')
+		end
 				
-				self.ArcaneChargeBar = mb
+		self.ArcaneChargeBar = mb
 				
-				local rp = CreateFrame("Frame", "RunePower", self)
-				rp:SetPoint("TOPLEFT", self, "TOPLEFT", 108,-2)
-				rp:SetWidth(41)
-				rp:SetHeight(6)
+		local rp = CreateFrame("Frame", "RunePower", self)
+		rp:SetPoint("TOPLEFT", self, "TOPLEFT", 108,-2)
+		rp:SetWidth(41)
+		rp:SetHeight(6)
 				
-				rp:SetBackdrop(backdrop)
-				rp:SetBackdropColor(0, 0, 0)
-				rp:SetBackdropBorderColor(0, 0, 0)	
-				CreateShadowclassbar(rp)
-				rp:SetFrameLevel(6)
-				for i = 1, 2 do
-					rp[i] = CreateFrame("StatusBar", "RunePower"..i, rp)
-					rp[i]:SetHeight(6)
-					rp[i]:SetStatusBarTexture(statusbar_texture)
+		rp:SetBackdrop(backdrop)
+		rp:SetBackdropColor(0, 0, 0)
+		rp:SetBackdropBorderColor(0, 0, 0)	
+		CreateShadowclassbar2(rp)
+		rp:SetFrameLevel(6)
+		for i = 1, 2 do
+			rp[i] = CreateFrame("StatusBar", "RunePower"..i, rp)
+			rp[i]:SetHeight(6)
+			rp[i]:SetStatusBarTexture(statusbar_texture)
 					
-					if i == 1 then
-						rp[i]:SetWidth(40 / 2)
-						rp[i]:SetPoint("LEFT", rp, "LEFT", 0, 0)
-					else
-						rp[i]:SetWidth(40 / 2)
-						rp[i]:SetPoint("LEFT", rp[i-1], "RIGHT", 1, 0)
-					end
-						rp[i].bg = rp[i]:CreateTexture(nil, 'ARTWORK')
+			if i == 1 then
+				rp[i]:SetWidth(40 / 2)
+				rp[i]:SetPoint("LEFT", rp, "LEFT", 0, 0)
+			else
+				rp[i]:SetWidth(40 / 2)
+				rp[i]:SetPoint("LEFT", rp[i-1], "RIGHT", 1, 0)
+			end
+			rp[i].bg = rp[i]:CreateTexture(nil, 'ARTWORK')
 						
-				end
+		end
 				
-				self.RunePower = rp
-	end			
+		self.RunePower = rp
+	end
 end
 
 lib.genCPoints = function(self)
@@ -1255,6 +1256,7 @@ lib.genCPoints = function(self)
 	bars.FrameBackdrop:SetBackdropBorderColor(.2,.2,.2,1)
 	bars.FrameBackdrop:SetPoint("TOPLEFT", bars, "TOPLEFT", -2, 2)
 	bars.FrameBackdrop:SetPoint("BOTTOMRIGHT", bars, "BOTTOMRIGHT", 2, -2)
+	bars.FrameBackdrop:SetFrameLevel(6)
 end
 lib.ThreatBar = function(self)
 	if Qulight["unitframes"].ThreatBar then
@@ -1291,7 +1293,7 @@ lib.genHarmony = function(self)
 		hb:SetPoint("TOPLEFT", self, "TOPLEFT",2,-2)
 		hb:SetWidth(100)
 		hb:SetHeight(6)
-		CreateShadowclassbar(hb)
+		CreateShadowclassbar2(hb)
 		hb:SetBackdropBorderColor(0,0,0,0)
 		hb:SetFrameLevel(6)
 			for i = 1, 5 do
@@ -1320,7 +1322,7 @@ lib.genShards = function(self)
 					
 		wb:SetBackdropColor(0, 0, 0)
 		wb:SetBackdropBorderColor(0, 0, 0)	
-		CreateShadowclassbar(wb)
+		CreateShadowclassbar2(wb)
 		wb:SetFrameLevel(6)
 			for i = 1, 4 do
 				wb[i] = CreateFrame("StatusBar", "WarlockSpecBars"..i, wb)
@@ -1350,31 +1352,31 @@ end
 lib.genShadowOrbsBar = function(self)
 	local spec = GetSpecialization()
 	if playerClass ~= "PRIEST" or spec ~= 3 then return end		
-		SoBar = CreateFrame("Frame", nil, self)
-		SoBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
-		SoBar:SetWidth(self:GetWidth()-100)
-		SoBar:SetHeight(6)
-		SoBar:SetFrameLevel(6)
-			
-		for i = 1, 3 do
-			SoBar[i] = CreateFrame("StatusBar", nil, SoBar)
-			SoBar[i]:SetWidth((SoBar:GetWidth() - 5)/3)
-			SoBar[i]:SetHeight(SoBar:GetHeight())	
-			SoBar[i]:SetStatusBarTexture(statusbar_texture)
-			SoBar[i]:SetStatusBarColor(0.70, 0.32, 0.75)
-			SoBar[i]:GetStatusBarTexture():SetHorizTile(false)
-			if i == 1 then
-				SoBar[i]:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
-			else
-				SoBar[i]:SetPoint("TOPLEFT", SoBar[i-1], "TOPRIGHT", 2, 0)
-			end
+	SoBar = CreateFrame("Frame", nil, self)
+	SoBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
+	SoBar:SetWidth(self:GetWidth()-100)
+	SoBar:SetHeight(6)
+	SoBar:SetFrameLevel(6)
+		
+	for i = 1, 3 do
+		SoBar[i] = CreateFrame("StatusBar", nil, SoBar)
+		SoBar[i]:SetWidth((SoBar:GetWidth() - 5)/3)
+		SoBar[i]:SetHeight(SoBar:GetHeight())	
+		SoBar[i]:SetStatusBarTexture(statusbar_texture)
+		SoBar[i]:SetStatusBarColor(0.70, 0.32, 0.75)
+		SoBar[i]:GetStatusBarTexture():SetHorizTile(false)
+		if i == 1 then
+			SoBar[i]:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, -9)
+		else
+			SoBar[i]:SetPoint("TOPLEFT", SoBar[i-1], "TOPRIGHT", 2, 0)
 		end
-		SoBar.backdrop = CreateFrame("Frame", nil, SoBar)	
-		CreateShadowclassbar(SoBar.backdrop)
-		SoBar.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
-		SoBar.backdrop:SetPoint("TOPLEFT", -2, 2)
-		SoBar.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
-		self.ShadowOrbsBar = SoBar
+	end
+	SoBar.backdrop = CreateFrame("Frame", nil, SoBar)	
+	CreateShadowclassbar(SoBar.backdrop)
+	SoBar.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
+	SoBar.backdrop:SetPoint("TOPLEFT", -2, 2)
+	SoBar.backdrop:SetPoint("BOTTOMRIGHT", 2, -2)
+	self.ShadowOrbsBar = SoBar
 end
 lib.AltPowerBar = function(self)
 	local AltPowerBar = CreateFrame("StatusBar", nil, self.Health)
@@ -1388,7 +1390,7 @@ lib.AltPowerBar = function(self)
 
 	AltPowerBar:SetPoint("BOTTOM", self, "BOTTOM", 0, -10)
 	AltPowerBar:SetWidth(self:GetWidth())
-	CreateShadowclassbar(AltPowerBar)
+	CreateShadowclassbar222(AltPowerBar)
 		
 	AltPowerBar:SetBackdrop({
 			bgFile = "Interface\\AddOns\\oUF_Qulight\\Root\\Media\\statusbar4", 

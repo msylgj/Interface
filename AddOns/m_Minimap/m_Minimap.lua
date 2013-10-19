@@ -156,6 +156,8 @@ local menuList = {
     func = function() ToggleRaidBrowser() end},
     {text = "帮助",
     func = function() ToggleHelpFrame() end},
+    {text = "商城",
+    func = function() StoreMicroButton:Click() end},
     {text = "日历",
     func = function()
     if(not CalendarFrame) then LoadAddOn("Blizzard_Calendar") end

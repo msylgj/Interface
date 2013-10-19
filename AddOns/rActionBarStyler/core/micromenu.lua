@@ -30,6 +30,7 @@
     EJMicroButton,
     MainMenuMicroButton,
     HelpMicroButton,
+	StoreMicroButton,
   }
 
   local NUM_MICROBUTTONS = # buttonList

@@ -68,6 +68,58 @@ function CreateShadowclassbar(f) --
 	f.shadow = shadow
 	return shadow
 end
+function CreateShadowclassbar2(f) --
+	if f.shadow then return end
+	local shadow = CreateFrame("Frame", nil, f)
+	shadow:SetFrameLevel(1)
+	shadow:SetFrameStrata(f:GetFrameStrata())
+	shadow:SetPoint("TOPLEFT", -4, 4)
+	shadow:SetPoint("BOTTOMRIGHT", 4, -4)
+	shadow:SetBackdrop(shadows)
+	shadow:SetBackdropColor(.05,.05,.05, .9)
+	shadow:SetBackdropBorderColor(0, 0, 0, 0.6)
+	f.shadow = shadow
+	return shadow
+end
+function CreateShadowclassbar222(f) --
+	if f.shadow then return end
+	local shadow = CreateFrame("Frame", nil, f)
+	shadow:SetFrameLevel(1)
+	shadow:SetFrameStrata(f:GetFrameStrata())
+	shadow:SetPoint("TOPLEFT", -4, 4)
+	shadow:SetPoint("BOTTOMRIGHT", 4, -4)
+	shadow:SetBackdrop(shadows)
+	shadow:SetBackdropColor(.08,.08,.08,.9)
+	shadow:SetBackdropBorderColor(0, 0, 0, 1)
+	f.shadow = shadow
+	return shadow
+end
+function CreateShadowclassbar3(f) --
+	if f.shadow then return end
+	local shadow = CreateFrame("Frame", nil, f)
+	shadow:SetFrameLevel(0)
+	shadow:SetFrameStrata(f:GetFrameStrata())
+	shadow:SetPoint("TOPLEFT", -4, 4)
+	shadow:SetPoint("BOTTOMRIGHT", 4, -4)
+	shadow:SetBackdrop(shadows)
+	shadow:SetBackdropColor(.05,.05,.05, .9)
+	shadow:SetBackdropBorderColor(0, 0, 0, 0.6)
+	f.shadow = shadow
+	return shadow
+end
+function CreateShadowclassbar4(f) --
+	if f.shadow then return end
+	local shadow = CreateFrame("Frame", nil, f)
+	shadow:SetFrameLevel(5)
+	shadow:SetFrameStrata(f:GetFrameStrata())
+	shadow:SetPoint("TOPLEFT", -4, 4)
+	shadow:SetPoint("BOTTOMRIGHT", 4, -4)
+	shadow:SetBackdrop(shadows)
+	shadow:SetBackdropColor(.05,.05,.05, .9)
+	shadow:SetBackdropBorderColor(0, 0, 0, 0.6)
+	f.shadow = shadow
+	return shadow
+end
 function CreateShadowconfig(f)--
 	if f.shadow then return end
 	local shadow = CreateFrame("Frame", nil, f)

@@ -3,7 +3,6 @@
 ## RequiredDeps: oUF_Qulight
 ## X-Category: UnitFrame
 
-template.xml
 tags.lua
 lib.lua
 
