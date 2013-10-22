@@ -147,7 +147,21 @@ local menuList = {
     {text = "公会",
     func = function() ToggleGuildFrame(1) end},
     {text = "PvP",
-    func = function() TogglePVPUI() end},
+    func = function() 
+      --ToggleFrame(PVPUIFrame) 
+      if PVPUIFrame then
+         if UnitLevel("player") >= 10 then
+            if PVPUIFrame:IsShown() then
+               HideUIPanel(PVPUIFrame)
+            else
+               ShowUIPanel(PVPUIFrame)
+            end
+         end
+      else
+         LoadAddOn("Blizzard_PVPUI")
+         ShowUIPanel(PVPUIFrame)
+      end
+	end},
     {text = "地城导览手册",
     func = function() ToggleEncounterJournal() end},
     {text = "地下城查找器",
@@ -157,7 +171,7 @@ local menuList = {
     {text = "帮助",
     func = function() ToggleHelpFrame() end},
     {text = "商城",
-    func = function() StoreMicroButton:Click() end},
+    func = function() ToggleStoreUI() end},
     {text = "日历",
     func = function()
     if(not CalendarFrame) then LoadAddOn("Blizzard_Calendar") end

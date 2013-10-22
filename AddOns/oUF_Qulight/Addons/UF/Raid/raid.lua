@@ -514,6 +514,23 @@ local styleRaid = function(self)
     self.ResurrectIcon:SetPoint("LEFT", self, 0, 0)
     self.ResurrectIcon:SetSize(16, 16)
 
+	--设置复活提示图标
+	local ResurrectIconUpdate = function(self, event)
+		local incomingResurrect = UnitHasIncomingResurrection(self.unit)
+		local resurrect = self.ResurrectIcon
+		if UnitIsDeadOrGhost (self.unit) and incomingResurrect then
+			resurrect:Show()
+		else
+			resurrect:Hide()
+		end
+	end
+	
+	local ResurrectIcon = self.Health:CreateTexture(nil, 'OVERLAY')
+	ResurrectIcon:SetPoint("CENTER", self)
+	ResurrectIcon:SetSize(16, 16)
+	ResurrectIcon.Override = ResurrectIconUpdate
+	self.ResurrectIcon = ResurrectIcon
+	
     -- SpellRange
     self.SpellRange = {
 		insideAlpha = 1,
@@ -734,6 +751,23 @@ local styleParty = function(self)
     self.ResurrectIcon:SetPoint("LEFT", self, 0, 0)
     self.ResurrectIcon:SetSize(16, 16)
 
+	--设置复活提示图标
+	local ResurrectIconUpdate = function(self, event)
+		local incomingResurrect = UnitHasIncomingResurrection(self.unit)
+		local resurrect = self.ResurrectIcon
+		if UnitIsDeadOrGhost (self.unit) and incomingResurrect then
+			resurrect:Show()
+		else
+			resurrect:Hide()
+		end
+	end
+	
+	local ResurrectIcon = self.Health:CreateTexture(nil, 'OVERLAY')
+	ResurrectIcon:SetPoint("CENTER", self)
+	ResurrectIcon:SetSize(16, 16)
+	ResurrectIcon.Override = ResurrectIconUpdate
+	self.ResurrectIcon = ResurrectIcon
+	
     -- SpellRange
     self.SpellRange = {
 		insideAlpha = 1,

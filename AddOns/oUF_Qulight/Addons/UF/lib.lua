@@ -226,23 +226,23 @@ do
 					self.HolyPower[i]:SetWidth(barWidth - lastBar)
 				end
 			end
+		end
 	else
-			self.HolyPower[4]:Show()
-			self.HolyPower[5]:Show()
-			for i = 1, 5 do
-				self.HolyPower[i]:SetWidth((self.HolyPower:GetWidth() -4 )/5)
-			end
+		self.HolyPower[4]:Show()
+		self.HolyPower[5]:Show()
+		for i = 1, 5 do
+			self.HolyPower[i]:SetWidth((self.HolyPower:GetWidth() -4 )/5)
 		end
 		self.HolyPower.maxPower = numMax
 	end
 
-		for i = 1, 5 do
-			if i <= num then
-				self.HolyPower[i]:SetAlpha(1)
-			else
-				self.HolyPower[i]:SetAlpha(0.2)
-			end
+	for i = 1, 5 do
+		if i <= num then
+			self.HolyPower[i]:SetAlpha(1)
+		else
+			self.HolyPower[i]:SetAlpha(0.2)
 		end
+	end
 	end
 			
 	ComboDisplay = function(self, event, unit)
