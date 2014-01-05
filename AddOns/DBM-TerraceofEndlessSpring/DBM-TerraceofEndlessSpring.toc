@@ -1,8 +1,8 @@
-## Interface: 50400
+﻿## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Terrace of Endless Spring|r
-## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0豐泉台  (ToES)|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0永春台|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0豐泉台  (ToES)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -16,10 +16,9 @@
 ## X-DBM-Mod-Name-zhCN: 永春台
 ## X-DBM-Mod-Sort: 3
 ## X-DBM-Mod-MapID: 996
-## X-DBM-Mod-LoadZoneID: 886
 localization.en.lua
-localization.cn.lua
 localization.tw.lua
+localization.cn.lua
 ProtectorsofEndless.lua
 Tsulong.lua
 LeiShi.lua

@@ -1,104 +1,89 @@
-﻿----------------------------
---  Initialize variables  --
-----------------------------
-
--- globals
+﻿-- globals
 DBM.Flash = {}
-
 -- locals
-local flasher = nil
-local shaker = nil
-local shaking = nil
-local SHAKE_DURATION = 0.8
-local SHAKE_X = 10
-local SHAKE_Y = 10
-local colors = nil
-local warnfailed = false
+local flashFrame = DBM.Flash
+local t
+local duration
+local elapsed = 0
 
-----------------------
---  Public Methods  --
-----------------------
+--------------------
+--  Create flasher  --
+--------------------
+local flasher = CreateFrame("Frame", "DBMFlash", UIParent)
+flasher:Hide()
+flasher:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",})
+flasher:SetAllPoints(UIParent)
+flasher:SetFrameStrata("BACKGROUND")
 
-local originalPoints = nil
-local function startShake()
-	if not shaking then
-		-- store old worldframe positions, we need them all, people have frame modifiers for it etc.
-		if not originalPoints then
-			originalPoints = {}
-			for i = 1, WorldFrame:GetNumPoints() do
-				originalPoints[i] = {WorldFrame:GetPoint(i)}
-			end
-		end
-		shaking = SHAKE_DURATION -- don't think we want to make this a setting.
-		shaker:Show()
-	end
-end
+local shaker = CreateFrame("Frame", "DBMShake", UIParent)
+shaker:Hide()
+shaker:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",})
+shaker:SetAllPoints(UIParent)
+shaker:SetFrameStrata("BACKGROUND")
 
-local function shakeOnUpdate(frame, elapsed)
-	shaking = shaking - elapsed
-	local x, y = 0, 0 -- Resets to original position if we're supposed to stop.
-	if shaking <= 0 then -- stop shaking
-		shaking = nil
-		shaker:Hide()
-	else
-		x = math.random(-SHAKE_X,SHAKE_X)
-		y = math.random(-SHAKE_Y,SHAKE_Y)
-	end
-	WorldFrame:ClearAllPoints()
-	for i, v in next, originalPoints do
-		WorldFrame:SetPoint(v[1], v[2], v[3], v[4] + x, v[5] + y)
-	end
-end
-
--------------------------------------------------------------------------------
--- Event Handlers
---
-
-function FlashShake(event, ar, ag, ab)
-	local r, g, b = ar, ag, ab
-	if not flasher then --frame creation
-		flasher = CreateFrame("Frame", "BWFlash", UIParent)
-		flasher:SetFrameStrata("BACKGROUND")
-		flasher:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",})
-		flasher:SetAllPoints(UIParent)
-		flasher:SetScript("OnShow", function(self)
-			self.elapsed = 0
+------------------------
+--  OnUpdate Handler  --
+------------------------
+do
+	flasher:SetScript("OnUpdate", function(self, e)
+		elapsed = elapsed + e
+		if elapsed >= t then
+			self:Hide()
 			self:SetAlpha(0)
-		end)
-		flasher:SetScript("OnUpdate", function(self, elapsed)
-			elapsed = self.elapsed + elapsed
-			if elapsed >= 0.8 then
-				self:Hide()
-				self:SetAlpha(0)
-				return
-			end
-			local alpha = elapsed % 0.4
-			if elapsed > 0.2 then
-				alpha = 0.4 - alpha
-			end
-			self:SetAlpha(alpha * 5)
-			self.elapsed = elapsed
-		end)
-		flasher:Hide()
-	end
-	flasher:SetBackdropColor(r, g, b, 0.55)
-	flasher:Show()
-	if not WorldFrame:IsProtected() then
-		if not shaker then
-			shaker = CreateFrame("Frame", "BWShaker", UIParent)
-			shaker:Hide()
-			shaker:SetScript("OnUpdate", shakeOnUpdate)
+			return
 		end
-		startShake()
-	else
-		if not warnfailed then
-			warnfailed = true
-		end
-	end
+		-- quadratic fade in/out
+		self:SetAlpha(-(elapsed / (duration / 2) - 1)^2 + 1)
+	end)
+	flasher:Hide()
 end
 
-function DBM.Flash:Show(...)
-	if DBM.Options.ShowFlashFrame then
-		return FlashShake(event, ...)
-	end
+do
+	shaker:SetScript("OnShow", function(self)
+		self.elapsed = 0
+		self:SetAlpha(0)
+	end)
+	shaker:SetScript("OnUpdate", function(self, elapsed)
+		elapsed = self.elapsed + elapsed
+		if elapsed >= 0.8 then
+			self:Hide()
+			self:SetAlpha(0)
+			return
+		end
+		local alpha = elapsed % 0.4
+		if elapsed > 0.2 then
+			alpha = 0.4 - alpha
+		end
+		self:SetAlpha(alpha * 5)
+		self.elapsed = elapsed
+	end)
+	shaker:Hide()
+end
+
+function flashFrame:Show(red, green, blue, dur, alpha)
+	if not DBM.Options.ShowFlashFrame then return end
+	local r, g, b, a = red or 1, green or 0, blue or 0, alpha or 0.3
+	t = dur or 0.4
+	duration = dur
+	elapsed = 0
+	flasher:SetAlpha(0)
+	flasher:SetBackdropColor(r, g, b, a)
+	flasher:Show()
+end
+
+function flashFrame:IsShown()
+	return flasher and flasher:IsShown()
+end
+
+function flashFrame:Shake(red, green, blue, alpha)
+	if not DBM.Options.ShowShakeFrame then return end	
+	local r, g, b, a = red or 1, green or 0, blue or 0, alpha or 0.5	
+	shaker:SetBackdropColor(r, g, b, a)
+	if flashFrame:IsShown() then flasher:Hide() end	
+	shaker:Show()
+end
+
+function flashFrame:Hide()
+	flasher:Hide()
+	shaker:Hide()
 end

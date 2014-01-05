@@ -1,10 +1,12 @@
-local mod	= DBM:NewMod(814, "DBM-Pandaria", nil, 322)
+local mod	= DBM:NewMod(814, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9541 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10466 $"):sub(12, -3))
 mod:SetCreatureID(69099)
+mod:SetReCombatTime(20)
 mod:SetQuestID(32518)
-mod:SetZone(928)--Isle of Thunder
+mod:SetZone()
+mod:SetMinSyncRevision(10466)
 
 mod:RegisterCombat("combat")
 
@@ -13,6 +15,11 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
 
 local warnStormcloud				= mod:NewTargetAnnounce(136340, 3)
 local warnLightningTether			= mod:NewTargetAnnounce(136339, 3)
@@ -33,6 +40,7 @@ mod:AddBoolOption("RangeFrame")--For Stormcloud, might tweek to not show all the
 
 local stormcloudTargets = {}
 local tetherTargets = {}
+local yellTriggered = false
 
 local function warnStormcloudTargets()
 	warnStormcloud:Show(table.concat(stormcloudTargets, "<, >"))
@@ -47,9 +55,11 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(stormcloudTargets)
 	table.wipe(tetherTargets)
-	timerStormcloudCD:Start(15-delay)--15-17 variation noted
-	timerLightningTetherCD:Start(28-delay)
-	timerArcNovaCD:Start(39-delay)--Not a large sample size
+	if yellTriggered then
+		timerStormcloudCD:Start(15-delay)--15-17 variation noted
+		timerLightningTetherCD:Start(28-delay)
+		timerArcNovaCD:Start(39-delay)--Not a large sample size
+	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)
 	end
@@ -61,6 +71,7 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	yellTriggered = false
 end
 
 function mod:SPELL_CAST_START(args)
@@ -92,5 +103,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnTetherTargets)
 		self:Schedule(0.3, warnTetherTargets)
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.Pull or msg:find(L.Pull)) and not self:IsInCombat() then
+		if self:GetCIDFromGUID(UnitGUID("target")) == 69099 or self:GetCIDFromGUID(UnitGUID("targettarget")) == 69099 then--Whole zone gets yell, so lets not engage combat off yell unless he is our target (or the target of our target for healers)
+			yellTriggered = true
+			DBM:StartCombat(self, 0)
+		end
 	end
 end

@@ -373,7 +373,8 @@ L:SetOptionLocalization({
 	MobC				= "第三波小怪",
 	SpecWarnJSA			= "特殊警告：注意減傷",
 	RangeFrame			= "顯示距離框架(8碼)",
-	warnMatterSwapped	= "警告：被$spell:138618交換的目標"
+	warnMatterSwapped	= "警告：被$spell:138618交換的目標",
+	SetIconOnFont           = DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -493,11 +494,13 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
-	specWarnIntermissionSoon	= "充能階段 即將到來"
+	specWarnIntermissionSoon	= "充能階段 即將到來",
+	warnDiffusionChainSpread	= "%s擴散在>%s<"
 })
 	
 L:SetOptionLocalization({
 	SoundWOP		= "語音警告：重要技能",
+	warnDiffusionChainSpread	= "警告：$spell:135991擴散的目標",
 	specWarnIntermissionSoon	= "特別警告：充能階段即將到來",
 	HudMAP			= "高級定位監視(HUD)：$spell:135695",
 	HudMAP2			= "高級定位監視(HUD)：$spell:136295",
@@ -567,13 +570,17 @@ L:SetOptionLocalization({
 	SetIconOnUnstableAnima	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138288)
 })
 
+L:SetMiscLocalization({
+	Defeat			= "慢著!我不是你們的敵人。"
+})
+
 -------------
 --  Trash  --
 -------------
 L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
-	name =	"雜兵"
+	name =	"雷霆王座雜兵"
 })
 
 L:SetOptionLocalization({

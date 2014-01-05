@@ -34,24 +34,20 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("d286")
 
 L:SetWarningLocalization({
-	Submerged		= "Ahune has submerged",
-	Emerged			= "Ahune has emerged",
+	Emerged			= "Emerged",
 	specWarnAttack	= "Ahune is vulnerable - Attack now!"
 })
 
 L:SetTimerLocalization{
 	SubmergTimer	= "Submerge",
-	EmergeTimer		= "Emerge",
-	TimerCombat		= "Combat starts"
+	EmergeTimer		= "Emerge"
 }
 
 L:SetOptionLocalization({
-	Submerged		= "Show warning when Ahune submerges",
 	Emerged			= "Show warning when Ahune emerges",
 	specWarnAttack	= "Show special warning when Ahune becomes vulnerable",
 	SubmergTimer	= "Show timer for submerge",
-	EmergeTimer		= "Show timer for emerge",
-	TimerCombat		= "Show timer for start of combat",
+	EmergeTimer		= "Show timer for emerge"
 })
 
 L:SetMiscLocalization({
@@ -89,13 +85,8 @@ L:SetWarningLocalization({
 	warnHorsemanHead		= "Head of the Horseman Active"
 })
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "Combat starts"
-}
-
 L:SetOptionLocalization({
 	WarnPhase				= "Show a warning for each phase change",
-	TimerCombatStart		= "Show timer for start of combat",
 	warnHorsemanSoldiers	= "Show warning for Pulsing Pumpkin spawn",
 	warnHorsemanHead		= "Show warning for Head of the Horseman spawning"
 })
@@ -157,7 +148,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	SetBubbles			= "Automatically disable chat bubbles during $spell:101871\n(restores them when game ends)"
+	SetBubbles			= "Automatically disable chat bubbles during $spell:101871<br/>(restores them when game ends)"
 })
 
 ----------------------
@@ -176,6 +167,25 @@ L = DBM:GetModLocalization("Rabbit")
 
 L:SetGeneralLocalization({
 	name = "Darkmoon Rabbit"
+})
+
+-------------------------
+--  Darkmoon Moonfang  --
+-------------------------
+L = DBM:GetModLocalization("Moonfang")
+
+L:SetGeneralLocalization({
+	name = "Moonfang"
+})
+
+L:SetWarningLocalization({
+	specWarnCallPack		= "Call the Pack - Run > 40 yards from Moonfang!",
+	specWarnMoonfangCurse	= "Moonfang's Curse - Run > 10 yards from Moonfang!"
+})
+
+L:SetOptionLocalization({
+	specWarnCallPack		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(144602),
+	specWarnMoonfangCurse	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(144590)
 })
 
 --------------------------

@@ -1,6 +1,8 @@
-local _G = _G
+local _G = getfenv(0)
 local GetCursorPosition = GetCursorPosition
 local function nada() end
+local Model_OnMouseDown = _G.Model_OnMouseDown
+local Model_OnMouseUp = _G.Model_OnMouseUp
 
 -- someone wanted the feature to hide the dressing rooms' backgrounds
 local function ToggleBG(notog)
@@ -32,7 +34,11 @@ local function OnUpdate(this)
 	this.prevx, this.prevy = currentx, currenty
 end
 local function OnMouseDown(this, a1)
-	this.pMouseDown(a1)
+	if Model_OnMouseDown then
+		Model_OnMouseDown(this, a1)
+	else
+		this.pMouseDown(a1)
+	end
 	this:SetScript("OnUpdate", OnUpdate)
 	if a1 == "LeftButton" then
 		if IsControlKeyDown() then
@@ -46,7 +52,12 @@ local function OnMouseDown(this, a1)
 	this.prevx, this.prevy = GetCursorPosition()
 end
 local function OnMouseUp(this, a1)
-	this.pMouseUp(a1)
+	if Model_OnMouseUp then
+		Model_OnMouseUp(this, a1)
+	else
+		this.pMouseUp(a1)
+	end
+	
 	this:SetScript("OnUpdate", nil)
 	if a1 == "LeftButton" then
 		this.isrotating = nil
@@ -202,6 +213,7 @@ Apply("TabardModel", nil, nil, nil, nil, "TabardCharacterModel")
 Apply("PetModelFrame")
 Apply("PetStableModel")
 Apply("SpellBookCompanionModelFrame")
+Apply("TransmogrifyModelFrame")
 Apply("QuestNPCModel", nil, nil, nil, nil, nil, true)
 Apply("TutorialNPCModel", nil, nil, nil, nil, nil, true)
 PetPaperDollPetInfo:SetFrameStrata("HIGH")

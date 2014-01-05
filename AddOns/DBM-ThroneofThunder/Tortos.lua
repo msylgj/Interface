@@ -4,7 +4,7 @@ local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 local sndXG		= mod:NewSound(nil, "SoundXG", true)
 local sndAE		= mod:NewSound(nil, "SoundAE", true)
 
-mod:SetRevision(("$Revision: 9795 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9923 $"):sub(12, -3))
 mod:SetCreatureID(67977)
 mod:SetQuestID(32747)
 mod:SetZone()
@@ -78,9 +78,9 @@ function mod:checkmydebuff()
 		self:ScheduleMethod(7, "checkmydebuff")
 		if not UnitIsDeadOrGhost("player") then
 			if GetTime() - stomptime > 10 then
-				DBM.Flash:Show(1, 1, 0)
 				specWarnCrystalShell:Show(shelldName)
-				sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
+				DBM.Flash:Shake(1, 1, 0)
+				sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
 			end
 		end
 	end
@@ -126,15 +126,15 @@ function mod:OnCombatStart(delay)
 	timerRockfallCD:Start(15-delay)
 	timerCallTortosCD:Start(21-delay)
 	timerStompCD:Start(29-delay, 1)
-	sndWOP:Schedule(24, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stompsoon.mp3")--準備踐踏
+	sndWOP:Schedule(24, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stompsoon.mp3")--準備踐踏
 	timerBreathCD:Start(-delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		if mod.Options.warnsj then
 			mod:checkmydebuff()
 		else
-			DBM.Flash:Show(1, 1, 0)
 			specWarnCrystalShell:Show(shelldName)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
+			DBM.Flash:Shake(1, 1, 0)
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
 		end
 	end
 	if self:IsDifficulty("heroic10", "heroic25") then
@@ -164,24 +164,24 @@ function mod:SPELL_CAST_START(args)
 			specWarnStoneBreath:Show(args.sourceName)
 		end
 		timerBreathCD:Start()
-		DBM.Flash:Show(1, 0, 0)
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")	
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndAE:Cancel("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
-		sndAE:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--快打斷
+		DBM.Flash:Shake(1, 0, 0)
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")	
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+		sndAE:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndAE:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--快打斷
 	elseif args.spellId == 136294 then
 		warnCallofTortos:Show()
 		specWarnCallofTortos:Show()
 		if self:AntiSpam(59, 3) then -- On below 10%, he casts Call of Tortos always. This cast ignores cooldown, so filter below 10% cast.
 			timerCallTortosCD:Start()
 		end
-		sndXG:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_xwg.mp3")--小烏龜出現
+		sndXG:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_xwg.mp3")--小烏龜出現
 	elseif args.spellId == 135251 then
 		if UnitName("boss1target") == UnitName("player") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_xxsy.mp3")--小心撕咬
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_xxsy.mp3")--小心撕咬
 		end
 		warnBite:Show()
 		timerBiteCD:Start()
@@ -193,11 +193,11 @@ function mod:SPELL_CAST_START(args)
 		timerStompActive:Start()
 		timerRockfallCD:Start(7.4)--When the spam of rockfalls start
 		timerStompCD:Start(nil, stompCount+1)
-		sndWOP:Schedule(45, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stompsoon.mp3")--準備踐踏
+		sndWOP:Schedule(45, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stompsoon.mp3")--準備踐踏
 		if MyJS() then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
 		else
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\stompstart.mp3")--踐踏開始
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stompstart.mp3")--踐踏開始
 		end
 		stomptime = GetTime()
 	end
@@ -283,9 +283,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		if mod.Options.warnsj then
 			mod:checkmydebuff()
 		else
-			DBM.Flash:Show(1, 1, 0)
 			specWarnCrystalShell:Show(shelldName)
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
+			DBM.Flash:Shake(1, 1, 0)
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_sjsl.mp3")--水晶碎裂
 		end
 	end
 end
@@ -335,7 +335,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnSummonBats:Show()
 		specWarnSummonBats:Show()
 		timerSummonBatsCD:Start()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\ex_tt_bfcx.mp3")--蝙蝠出現
+		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_bfcx.mp3")--蝙蝠出現
 	end
 end
 
@@ -374,11 +374,11 @@ function mod:OnSync(msg, guid, ver)
 		end
 	elseif msg == "aesoon" then
 		if mod:AntiSpam(15, 10) then
-			sndAE:Schedule(0.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --準備AE
-			sndAE:Schedule(1, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")	
-			sndAE:Schedule(2, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-			sndAE:Schedule(3, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-			sndAE:Schedule(4, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+			sndAE:Schedule(0.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --準備AE
+			sndAE:Schedule(1, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")	
+			sndAE:Schedule(2, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndAE:Schedule(3, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndAE:Schedule(4, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		end
 	end
 end

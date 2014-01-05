@@ -12,4 +12,5 @@
 	<Script file="Plugins\shadoworbs.lua"/>
 	<Script file="Plugins\ArcaneCharge.lua"/>
 	<Script file="Plugins\RuneOfPower.lua"/>
+	<Script file="Plugins\holypower.lua"/>
 </Ui>

@@ -1,8 +1,8 @@
-## Interface: 50400
+﻿## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-MoP|r
-## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05队伍首领 (潘达利亚)|r
-## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05隊伍首領 (潘達利亞)|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0队伍首领 (熊猫人之谜)|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0隊伍首領 (潘達利亞)|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMPartyMoP_SavedVars, DBMPartyMoP_SavedStats
@@ -13,9 +13,9 @@
 ## X-DBM-Mod-SubCategoriesID: 960, 961, 959, 962, 994, 1011, 1007, 1001, 1004
 ## X-DBM-Mod-Name: Party (MoP)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (潘達利亞)
-## X-DBM-Mod-Name-zhCN: 队伍首领 (潘达利亚)
+## X-DBM-Mod-Name-zhCN: 队伍首领 (熊猫人之谜)
 ## X-DBM-Mod-Sort: 25
-## X-DBM-Mod-LoadZoneID: 867, 876, 877, 875, 885, 887, 898, 871, 874
+## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
 localization.en.lua
 localization.tw.lua
 localization.cn.lua

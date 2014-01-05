@@ -17,6 +17,7 @@
 	<Script file="idQuestAutomation.lua"/>
 	<Script file="JewelTips.lua"/>
 	<Script file="m_Settings.lua"/>
+	<Script file="noTaint.lua"/>
 	<Script file="ncHoverBind.lua"/>
 	<Script file="ProfessionTabs.lua"/>
 	<Script file="SpellID.lua"/>

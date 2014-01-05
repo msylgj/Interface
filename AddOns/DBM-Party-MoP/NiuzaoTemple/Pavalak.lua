@@ -2,7 +2,7 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10185 $"):sub(12, -3))
 mod:SetCreatureID(61485)
 mod:SetZone()
 
@@ -72,19 +72,21 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 119476 then
-		local shieldname = GetSpellInfo(119476)
-		showShieldHealthBar(self, args.destGUID, shieldname, 1500000)
+		if DBM.BossHealth:IsShown() then
+			local shieldname = GetSpellInfo(119476)
+			showShieldHealthBar(self, args.destGUID, shieldname, 1500000)
+		end
 		phase = phase + 1
 		warnBulwark:Show()
 		specWarnBulwark:Show()
 		timerBladeRushCD:Cancel()
 		timerTempestCD:Cancel()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
+		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 119476 then--When bullwark breaks, he will instantly cast either tempest or blade rush, need more logs to determine if it's random or set.
+	if args.spellId == 119476 and DBM.BossHealth:IsShown() then--When bullwark breaks, he will instantly cast either tempest or blade rush, need more logs to determine if it's random or set.
 		hideShieldHealthBar()
 	end
 end
@@ -96,7 +98,7 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 119875 then
 		warnTempest:Show()
 		specWarnTempest:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")--準備AE
+		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")--準備AE
 		timerBladeRushCD:Start(7)--always 7-7.5 seconds after tempest.
 		if phase == 2 then
 			timerTempestCD:Start(33)--seems to be cast more often between 66-33% health. (might be 100-33 but didn't get 2 casts before first bulwark)

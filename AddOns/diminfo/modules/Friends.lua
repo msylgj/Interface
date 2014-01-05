@@ -190,7 +190,7 @@ if cfg.Friends == true then
 		EasyMenu(menuList, menuFrame, "cursor", 0, 0, "MENU", 2)
 	end)
 		
-	Stat:SetScript("OnMouseDown", function(self, btn) if btn == "LeftButton" then ToggleFriendsFrame(1) end end)
+	Stat:SetScript("OnMouseDown", function(self, btn) if btn == "LeftButton" then ToggleFriendsFrame() end end)
 
 	Stat:SetScript("OnEnter", function(self)
 		

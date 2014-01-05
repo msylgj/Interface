@@ -2,7 +2,7 @@
 local L		= mod:GetLocalizedStrings()
 local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10660 $"):sub(12, -3))
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetZone()
 
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
+--	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
@@ -27,13 +27,13 @@ local warnShockwave			= mod:NewSpellAnnounce(119922, 4)--Kuai's Attack
 local warnWhirlingDervish	= mod:NewSpellAnnounce(119981, 3)--Ming's Attack
 local warnTraumaticBlow		= mod:NewTargetAnnounce(123655, 3)--Haiyan's Attack
 local warnConflag			= mod:NewTargetAnnounce(120201, 3)--Haiyan's Attack
-local warnMeteor			= mod:NewTargetAnnounce(120195, 4)--Haiyan's Attack
+--local warnMeteor			= mod:NewTargetAnnounce(120195, 4)--Haiyan's Attack
 
 local specWarnRavage		= mod:NewSpecialWarningTarget(119946, mod:IsHealer())
 local specWarnShockwave		= mod:NewSpecialWarningMove(119922, mod:IsTank())--Not sure if he always faced it toward tank, or did it blackhorn style, if it's blackhorn style this needs to be changed to a targetscan if possible
 local specWarnLightningBolt	= mod:NewSpecialWarningInterrupt(123654, false)
 local specWarnConflag		= mod:NewSpecialWarningTarget(120201, mod:IsHealer())
-local specWarnMeteor		= mod:NewSpecialWarningTarget(120195, nil, nil, nil, true)
+--local specWarnMeteor		= mod:NewSpecialWarningTarget(120195, nil, nil, nil, true)
 local specWarnCC			= mod:NewSpecialWarningMove(120099)
 
 local timerRavage			= mod:NewTargetTimer(11, 119946)
@@ -85,7 +85,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 119922 then
 		warnShockwave:Show()
 		specWarnShockwave:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3")--震懾波
+		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\shockwave.mp3")--震懾波
 		timerShockwaveCD:Start(shockwaveCD)
 	elseif args.spellId == 119981 then
 		warnWhirlingDervish:Show()
@@ -95,20 +95,21 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+--[[
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg == L.Meteor or msg:find(L.Meteor) then
-		local target = DBM:GetFullNameByShortName(target)
+		local target = DBM:GetUnitFullName(target)
 		warnMeteor:Show(target)
 		specWarnMeteor:Show(target)
 		if target == UnitName("player") then
-			sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runin.mp3")--快回人群
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-			sndWOP:Schedule(2.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-			sndWOP:Schedule(3.5, "Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runin.mp3")--快回人群
+			sndWOP:Schedule(1.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
+			sndWOP:Schedule(2.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
+			sndWOP:Schedule(3.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
 		end
 		timerMeteorCD:Start()
 	end
-end
+end--]]
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Kuai or msg:find(L.Kuai) then
@@ -168,7 +169,7 @@ Notes
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 120101 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnCC:Show()
-		sndWOP:Play("Interface\\AddOns\\DBM-Core\\extrasounds\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

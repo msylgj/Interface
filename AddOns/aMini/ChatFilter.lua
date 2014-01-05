@@ -1,48 +1,46 @@
-﻿-----------------------------------------------------------------------
+﻿local _, cf = ...
+-----------------------------------------------------------------------
 -- Config
 -----------------------------------------------------------------------
-local Config = {
+cf.Config = {
 	["Enabled"] = true, --Enable the ChatFilter. // 是否开启本插件
-	["ScanOurself"] = nil, --Scan ourself. // 是否扫描自己的聊天信息
-	["ScanFriend"] = true, --Scan friends. // 是否扫描好友的聊天信息
-	["ScanTeam"] = true, --Scan raid/party members. // 是否扫描队友的聊天信息
-	["ScanGuild"] = true, --Scan guildies. // 是否扫描公会成员的聊天信息
-	
+
 	["noprofanityFilter"] = true, --Disable the profanityFilter. // 关闭语言过滤器
-	["nowhisperSticky"] = nil, --Disable the sticky of Whisper. // 取消持续密语
+	["nowhisperSticky"] = true, --Disable the sticky of Whisper. // 取消持续密语
 	["noaltArrowkey"] = true, --Disable the AltArrowKeyMode. // 取消按住ALT才能移动光标
 	["nojoinleaveChannel"] = true, --Disable the alert joinleaveChannel. // 关闭进出频道提示
-	
-	["BlockCombat"] = nil, --Block the Channels in Combat. // 战斗中屏蔽世界频道信息
-	["BlockInstance"] = nil, --Block the Channels in Instance. // 副本中屏蔽世界频道信息
-	["BlockBossCombat"] = nil, --Block the Channels in Boss Combat. // 首领战中屏蔽世界频道信息
-	
+
 	["MergeTalentSpec"] = true, --Merge the messages:"You have learned/unlearned..." // 当切换天赋后合并显示“你学会了/忘却了法术…”
 	["FilterPetTalentSpec"] = true, --Filter the messages:"Your pet has learned/unlearned..." // 不显示“你的宠物学会了/忘却了…”
-	
+
 	["MergeAchievement"] = true, --Merge the messages:"...has earned the achievement..." // 合并显示获得成就
 	["MergeManufacturing"] = true, --Merge the messages:"You has created..." // 合并显示“你制造了…”
-	
+
 	["FilterRaidAlert"] = true, --Filter the bullshit messages from RaidAlert. // 过滤煞笔RaidAlert的脑残信息
 	["FilterQuestReport"] = true, --Filter the bullshit messages from QuestReport. // 过滤掉烦人的任务通报信息
-	
+
 	["FilterDuelMSG"] = true, --Filter the messages:"... has defeated/fled from ... in a duel." // 过滤“...在决斗中战胜了...”
 	["FilterDrunkMSG"] = true, --Filter the drunk messages:"... has drunked ..."// 过滤“...喝醉了.”
 	["FilterAuctionMSG"] = true, --Filter the messages:"Auction created/cancelled."// 过滤“已开始拍卖/拍卖取消.”
-	
+
 	["FilterAdvertising"] = true, --Filter the advertising messages. // 过滤广告信息
 	["AllowMatchs"] = 2, --How many words can be allowd to use. // 允许的关键字配对个数
-	
-	["ShieldAdvPlayer"] = true, --Shield the player who`s advertising. // 屏蔽发广告的玩家
-	["ShieldTimes"] = 30, --How many times shall we shield. // 屏蔽多长时间后解封(分钟)
-	
+	["IgnoreAdTimes"] = 30, --How many times shall we shield the advertising. // 屏蔽发广告的玩家多长时间(分钟)
+	["IgnoreMore"] = true, --When the ignorelist is full, you can still ignore players. // 当屏蔽列表满了后仍然可以屏蔽玩家
+
 	["FilterMultiLine"] = true, --Filter the multiple messages. // 过滤多行信息
 	["AllowLines"] = 3, --How many lines can be allowd. // 允许的最大行数
-	
+
 	["FilterRepeat"] = true, --Filter the repeat messages. // 过滤重复聊天信息
 	["RepeatAlike"] = 85, --Set the similarity between the messages. // 设定重复信息相似度
 	["RepeatInterval"] = 30, --Set the interval between the messages. // 设定重复信息间隔时间(秒)
-	
+
+	["FilterByLevel"] = true, --Filter the messages by level. // 屏蔽小号发言
+	["OnlyOnWhisper"] = nil, --Only filter the whisper messages. // 只过滤密语
+	["AllowLevel"] = 10, --Filter the messages by level. // 屏蔽多少级以下的发言
+
+	["Debug"] = nil,
+
 	["SafeWords"] = {
 		"recruit",
 		"dkp",
@@ -56,42 +54,97 @@ local Config = {
 		"dps",
 	},
 	["DangerWords"] = {
-		"平[台臺]",
+		"平台",
+		"平臺",
 		"工作室",
-		"点[卡心]",
-		"[烧大小]饼",
-		"[担擔]保",
+		"专卖店",
+		"大卡",
+		"小卡",
+		"点卡",
+		"点心",
+		"點卡",
+		"點心",
+		"烧饼",
+		"大饼",
+		"小饼",
+		"烧圆形",
+		"大圆形",
+		"小圆形",
+		"烧rt2",
+		"大rt2",
+		"小rt2",
+		"rt2rt2",
+		"担保",
+		"擔保",
 		"承接",
-		"手[工打]",
-		"代[打练刷做]",
-		"带[打练刷做]",
-		"dai[打练刷做]",
-		"[带代]评级",
-		"[打卖售]金",
-		"[打卖售]g",
-		"[代售].*s1",
-		"[刷扰]屏[勿见]",
-		"详[情谈询]",
-		"信[誉赖]",
+		"手工",
+		"手打",
+		"代打",
+		"代练",
+		"代刷",
+		"带打",
+		"带练",
+		"带刷",
+		"dai打",
+		"dai练",
+		"dai刷",
+		"带评级",
+		"代评级",
+		"打金",
+		"卖金",
+		"售金",
+		"出金",
+		"萬金",
+		"万金",
+		"w金",
+		"打g",
+		"卖g",
+		"售g",
+		"萬g",
+		"万g",
+		"wg",
+		"详情",
+		"详谈",
+		"详询",
+		"信誉",
+		"信赖",
+		"充值",
+		"储值",
 		"服务",
-		"价.*优惠",
+		"套餐",
+		"刷屏[勿见]",
+		"扰屏[勿见]",
 		"绑定.*上马",
 		"上马.*绑定",
 		"价格公道",
 		"货到付款",
 		"非诚勿扰",
-		"先.*后[款钱]",
+		"先.*后钱",
+		"先.*后款",
+		"价.*优惠",
+		"代.*s1",
+		"售.*s1",
 		"游戏币",
 		"最低价",
 		"无黑金",
 		"不封号",
 		"无风险",
-		"[金g元]=",
-		"支付[宝寶]",
-		"淘[宝寶]",
-		"[皇冲]冠",
-		"[热促]销",
-		"[加q]q",
+		"好再付",
+		"年老店",
+		"金=",
+		"g=",
+		"元=",
+		"5173",
+		"支付宝",
+		"支付寶",
+		"淘宝",
+		"淘寶",
+		"皇冠",
+		"冲冠",
+		"热销",
+		"促销",
+		"qq",
+		"加q",
 		"企业q",
 		"咨询",
 		"联系",
@@ -101,77 +154,103 @@ local Config = {
 		"扣扣",
 		"叩叩",
 		"歪歪",
+		"丫丫",
 		"yy",
-		"[萬万w]g",
-		"[萬万w]金",
+		"大神带你打",
+		"高手帮忙打",
+		"竞技场大师",
+		"血腥舞钢fm",
+		"满及",
 		"taobao",
-		"180",
-		"185",
-		"190",
-		"8085",
-		"8090",
-		"8590",
-		"496509",
-		"509516",
+		"8o",
+		"9o",
+		"八[o0]",
+		"九[o0]",
+		"０",
+		"○",
+		"①",
+		"②",
+		"③",
+		"④",
+		"⑤",
+		"⑥",
+		"⑦",
+		"⑧",
+		"⑨",
+		"泏",
+		"釒",
 	},
 	["WhiteList"] = {
 	},
 	["BlackList"] = {
+		"86410866",
+		"24267225",
 	},
 	["ShieldPlayers"] = {
-		"塞纳.+号",
 	},
 }
 -----------------------------------------------------------------------
 -- Locals
 -----------------------------------------------------------------------
-local L = {
+
+cf.L = {
 	["You"] = "You",
 	["Space"] = ", ",
 	["Channel"] = "大脚世界频道",
+	["RaidAlert"] = "%*%*(.+)%*%*",
 	["QuestReport"] = "Quest progress%s?:",
 	["Achievement"] = "[%s] have earned the achievement %s!",
 	["LearnSpell"] = "You have learned: %s",
 	["UnlearnSpell"] = "You have unlearned: %s",
+	["FriendlistFull"] = "Your friend list is full, remove 2 for this addon to function properly!",
 }
 if (GetLocale() == "zhCN") then
-	L = {
+	cf.L = {
 		["You"] = "你",
 		["Space"] = "、",
 		["Channel"] = "大脚世界频道",
+		["RaidAlert"] = "%*%*(.+)%*%*",
 		["QuestReport"] = "任务进度%s?[:：]",
 		["Achievement"] = "[%s]获得了成就%s!",
 		["LearnSpell"] = "你学会了技能: %s",
 		["UnlearnSpell"] = "你遗忘了技能: %s",
+		["FriendlistFull"] = "你的好友列表已满，现已关闭过滤小号功能，如需再次打开，请在腾出空位后输入/cf level开启。",
 	}
 elseif (GetLocale() == "zhTW") then
-	L = {
+	cf.L = {
 		["You"] = "你",
 		["Space"] = "、",
 		["Channel"] = "大腳世界頻道",
+		["RaidAlert"] = "%*%*(.+)%*%*",
 		["QuestReport"] = "任務進度%s?[:：]",
 		["Achievement"] = "[%s]獲得了成就%s!",
 		["LearnSpell"] = "你學會了技能: %s",
 		["UnlearnSpell"] = "你遺忘了技能: %s",
+		["FriendlistFull"] = "你的好友列表已滿，現已關閉過濾小號功能，如需再次打開，請在騰出空位後輸入/cf level開啓。",
 	}
 end
 -----------------------------------------------------------------------
 -- ChatFilter
 -----------------------------------------------------------------------
-local ChatFilter, ChatFrames = CreateFrame("Frame")
+local _, cf = ...
+local Config = cf.Config
+local L = cf.L
 local _G = _G
-local prevLineId, orgmsg
-local CacheTable, ShieldTable = {}, {}
-local achievements, alreadySent, spellList = {}, {}, {}
-local totalCreated, resetTimer, craftList, craftQuantity, craftItemID, prevCraft = {}, {}, {}
-local spamCategories, specialFilters = {[95] = true, [155] = true, [168] = true, [14807] = true, [15165] = true}, {[456] = true, [1400] = true, [1402] = true, [2186] = true, [2187] = true, [2903] = true, [2904] = true, [3004] = true, [3005] = true, [3117] = true, [3259] = true, [3316] = true, [3808] = true, [3809] = true, [3810] = true, [3817] = true, [3818] = true, [3819] = true, [4078] = true, [4079] = true, [4080] = true, [4156] = true, [4576] = true, [7485] = true, [7486] = true, [7487] = true}
+local AddFriend = AddFriend
+local RemoveFriend = RemoveFriend
+
+local ChatFilter, ChatFilterLv, FriendsFrame, ChatFrames = CreateFrame("Frame"), CreateFrame("Frame"), FriendsFrame
+local AddonLoading, prevLineId, orgmsg, adding, addedtime, addedplayer, Latency, craftQuantity, craftItemID, prevCraft
+local CacheTable, ShieldTable, _ShieldTable, LevelTable, _LevelTable, ServerTable, AddedTable = {}, {}, {}, {}, {}, {}, {}
+local achievements, alreadySent, spellList, totalCreated, resetTimer, craftList = {}, {}, {}, {}, {}, {}
+local spamCategories, specialFilters = {[95] = true, [155] = true, [168] = true, [14807] = true, [15165] = true}, {[456] = true, [1400] = true, [1402] = true, [2186] = true, [2187] = true, [2903] = true, [2904] = true, [3004] = true, [3005] = true, [3117] = true, [3259] = true, [3316] = true, [3808] = true, [3809] = true, [3810] = true, [3817] = true, [3818] = true, [3819] = true, [4078] = true, [4079] = true, [4080] = true, [4156] = true, [4576] = true, [4626] = true, [5313] = true, [6954] = true, [7485] = true, [7486] = true, [7487] = true, [8089] = true, [8238] = true, [8246] = true, [8248] = true, [8249] = true, [8260] = true, [8306] = true, [8307] = true, [8398] = true, [8399] = true, [8400] = true, [8401] = true, [8430] = true, [8431] = true, [8432] = true, [8433] = true, [8434] = true, [8435] = true, [8436] = true, [8437] = true, [8438] = true, [8439] = true}
 
 local function deformat(text)
 	text = gsub(text, "%.", "%%.")
 	text = gsub(text, "%%%d$s", "(.+)")
 	text = gsub(text, "%%s", "(.+)")
 	text = gsub(text, "%%d", "(%%d+)")
-	text = "^" .. text .. "$"
+	text = "^"..text.."$"
 	return text
 end
 
@@ -188,6 +267,11 @@ local auctionstartedmsg = deformat(ERR_AUCTION_STARTED)
 local auctionremovedmsg = deformat(ERR_AUCTION_REMOVED)
 local duelwinmsg = deformat(DUEL_WINNER_KNOCKOUT)
 local duellosemsg = deformat(DUEL_WINNER_RETREAT)
+local friendaddedmsg = deformat(ERR_FRIEND_ADDED_S)
+local friendalreadymsg = deformat(ERR_FRIEND_ALREADY_S)
+local friendnotfoundmsg = deformat(ERR_FRIEND_NOT_FOUND)
+local friendlistfullmsg = deformat(ERR_FRIEND_LIST_FULL)
+local ignorelistfullmsg = deformat(ERR_IGNORE_FULL)
 local drunkmsg = {
 	deformat(DRUNK_MESSAGE_ITEM_OTHER1),
 	deformat(DRUNK_MESSAGE_ITEM_OTHER2),
@@ -197,10 +281,6 @@ local drunkmsg = {
 	deformat(DRUNK_MESSAGE_OTHER2),
 	deformat(DRUNK_MESSAGE_OTHER3),
 	deformat(DRUNK_MESSAGE_OTHER4),}
-local reportmsg = {
-	"%d+%..+%d+%.?%d?%a?%s?%(%d+%.?%d?%,?%s?%d+%.?%d?%%%)",
-	"%d?%..*%d+%.?%d?.*%d+%.?%d?%%.*%(%d+%.?%d?%)",
-}
 
 local function SendMessage(event, msg, r, g, b)
 	local info = ChatTypeInfo[strsub(event, 10)]
@@ -317,7 +397,7 @@ local function queueCraftMessage(craft, itemID, itemQuantity)
 	if (prevCraft and prevCraft ~= craft) then return end
 	prevCraft = craft
 	local Delay
-	if (select(3, GetNetStats()) > select(4, GetNetStats())) then 
+	if (select(3, GetNetStats()) > select(4, GetNetStats())) then
 		Delay = select(3, GetNetStats()) / 250 + 0.5
 	else
 		Delay = select(4, GetNetStats()) / 250 + 0.5
@@ -341,10 +421,28 @@ local function queueAchievementSpam(event, achievementID, playerdata)
 	ChatFilter:SetScript("OnUpdate", ChatFrames_OnUpdate)
 end
 
-if (Config.noprofanityFilter or Config.nojoinleaveChannel) then
-	ChatFilter:RegisterEvent("ADDON_LOADED")
+local function ignoreMore(player)
+	if (not player) then return end
+	local ignore = nil
+	if GetNumIgnores() >= 50 then
+		for i = 1, GetNumIgnores() do
+			local name = GetIgnoreName(i)
+			if (player == name) then
+				ignore = true
+				break
+			end
+		end
+		if (not ignore) then
+			_ShieldTable[player] = true
+			SendMessage("CHAT_MSG_SYSTEM", format(ERR_IGNORE_ADDED_S, player))
+		end
+	end
 end
 
+if (Config.IgnoreMore) then
+	hooksecurefunc("AddIgnore", ignoreMore)
+	hooksecurefunc("AddOrDelIgnore", ignoreMore)
+end
 if (Config.MergeManufacturing) then
 	hooksecurefunc("DoTradeSkill", function(index, quantity)
 			local itemID = strmatch(GetTradeSkillItemLink(index), "item:(%d+)")
@@ -357,9 +455,11 @@ if (Config.MergeManufacturing) then
 	ChatFilter:RegisterEvent("TRADE_SKILL_UPDATE")
 end
 
-ChatFilter:SetScript("OnEvent", function(self, event, ...)
+ChatFilter:RegisterEvent("ADDON_LOADED")
+ChatFilter:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+ChatFilter:SetScript("OnEvent", function(self, event)
 	if (not Config.Enabled) then return end
-	local arg1, arg2 = ...
 	if (event == "ADDON_LOADED") then
 		if (Config.noprofanityFilter) then
 			SetCVar("profanityFilter", 0)
@@ -380,6 +480,25 @@ ChatFilter:SetScript("OnEvent", function(self, event, ...)
 				ChatFrames:SetAltArrowKeyMode(false)
 			end
 		end
+		if (Config.noprofanityFilter) then
+			SetCVar("profanityFilter", 0)
+		end
+		AddonLoading = true
+	elseif (event == "PLAYER_ENTERING_WORLD") then
+		if (Config.FilterByLevel) then
+			for k, v in pairs(Config.ShieldPlayers) do
+				_ShieldTable[v] = true
+			end
+			local AddonLoadedTime = GetTime()
+			ChatFilterLv:SetScript("OnUpdate", function(self, elapsed)
+				if (GetTime() - AddonLoadedTime > 3) then
+					AddonLoading = nil
+					if (not (AddonLoading or adding)) then
+						self:SetScript("OnUpdate", nil)
+					end
+				end
+			end)
+		end
 	elseif (event == "TRADE_SKILL_UPDATE") then
 		if (GetTradeSkillLine() and not IsTradeSkillLinked()) then
 			for i = 1, GetNumTradeSkills() do
@@ -395,109 +514,111 @@ ChatFilter:SetScript("OnEvent", function(self, event, ...)
 	end
 end)
 
-local function ChatFilter_Rubbish(self, event, msg, player, _, _, _, flag, _, _, _, _, lineId, guid)
+local function ChatFilter_Rubbish(self, event, msg, player, _, _, _, flag, _, _, channel, _, lineId, guid)
 	if (not Config.Enabled) then return end
+	if (not (guid or player)) then return end
+	if (not Config.ScanOurself and UnitIsUnit(player,"player")) then return end
 	if (lineId ~= prevLineId) then
-		if (event == "CHAT_MSG_CHANNEL") then
-			if (Config.BlockInstance and select(2, IsInInstance()) ~= "none") or (Config.BlockCombat and InCombatLockdown()) or (Config.BlockBossCombat and UnitExists("boss1")) then
-				local id, channel
-				for i = 1, NUM_CHAT_WINDOWS do
-					local channels = {GetChatWindowChannels(i)}
-					for id, channel in ipairs(channels) do
-						if channel == L["Channel"] then
-							if (Config.BlockInstance and select(2, IsInInstance()) ~= "none") then return true end
-							if (Config.BlockCombat and InCombatLockdown()) then return true end
-							if (Config.BlockBossCombat and UnitExists("boss1")) then return true end
-						end
-					end
+		if (flag == "GM" or flag == "DEV") then return end
+		if (event == "CHAT_MSG_WHISPER") then
+			if (IsAddOnLoaded("WIM") or IsAddOnLoaded("Cellular")) then
+				local f = self:GetName() or "?"
+				if (f == "WIM_workerFrame" or f == "WIM3_HistoryChatFrame" or f == "Cellular") then
+					return
 				end
 			end
-		else
-			if (event == "CHAT_MSG_WHISPER") then
-				if (flag == "GM") then return end
-				for i = 1, select(2, BNGetNumFriends()) do
-					local toon = BNGetNumFriendToons(i)
-					for j = 1, toon do
-						local _, rName, rGame = BNGetFriendToonInfo(i, j)
-						if (not Config.ScanFriend and rName == player and rGame == "WoW") then return end
-					end
+			if (Config.FilterRaidAlert and msg:find(L["RaidAlert"])) then return true end
+			if (GetFriendInfo(player)) then return end
+			for i = 1, select(2, BNGetNumFriends()) do
+				local toon = BNGetNumFriendToons(i)
+				for j = 1, toon do
+					local _, rName, rGame = BNGetFriendToonInfo(i, j)
+					if (rName == player and rGame == "WoW") then return end
 				end
-			end
-			if (guid and tonumber(guid) and tonumber(guid:sub(-12, -9), 16) >0) then return end
-			if (Config.FilterRaidAlert and strfind(msg, "%*%*(.+)%*%*")) then return true end
-			if (Config.FilterQuestReport and strfind(msg, L["QuestReport"])) then return true end
-		end
-		if (not Config.ScanOurself and UnitIsUnit(player,"player")) then return end
-		if (not Config.ScanFriend and not CanComplainChat(lineId)) then return end
-		if (not Config.ScanTeam and (UnitInRaid(player) or UnitInParty(player))) then return end
-		if (not Config.ScanGuild and UnitIsInMyGuild(player)) then return end
-		for i = 1, getn(Config.ShieldPlayers) do
-			if (strfind(player, Config.ShieldPlayers[i])) then
-				return true
 			end
 		end
-		if (Config.ShieldAdvPlayer) then
-			for i = getn(ShieldTable), 1, -1 do
-				local shield = ShieldTable[i]
-				if (strfind(player, shield.Name)) then
-					if (GetTime() - shield.Time  > Config.ShieldTimes * 60) then
-						tremove(ShieldTable, i)
-					end
-					return true
+		local Time, Name, Server = GetTime()
+		if (guid and tonumber(guid)) then
+			if (tonumber(guid:sub(-12, -9), 16) > 0) then return end
+			Name = select(6, GetPlayerInfoByGUID(guid))
+			Server = select(7, GetPlayerInfoByGUID(guid))
+			if (Server and strlen(Server) > 0 and not player:find("%-")) then
+				player = Name.."-"..Server
+			end
+		end
+		if (ShieldTable[1] and Time - ShieldTable[1].Time  > Config.IgnoreAdTimes * 60) then
+			_ShieldTable[ShieldTable[1].Name] = nil
+			tremove(ShieldTable, 1)
+		end
+		if (LevelTable[1] and Time - LevelTable[1].Time > 30 * 60) then
+			_LevelTable[LevelTable[1].Name] = nil
+			tremove(LevelTable, 1)
+		end
+		if (_ShieldTable[player]) then
+			if (Config.Debug and event == Config.Debug) then
+				if (_ShieldTable[player] > 0) then
+					print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：屏蔽小号，玩家等级：".._ShieldTable[player])
+				else
+					print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：发广告被屏蔽。")
 				end
 			end
+			return true
 		end
 		if (Config.FilterRepeat or Config.FilterAdvertising) then
 			orgmsg = msg
 			msg = msg:lower()
-			local Symbols = {"{rt[1-8]}","%s","%p","，","。","、","？","！","：","；","’","‘","“","”","【","】","《","》","（","）","—","…"}
+			local Symbols = {"%s","%p","，","。","、","？","！","：","；","’","‘","“","”","【","】","《","》","（","）","—","…"}
 			for i = 1, getn(Symbols) do
 				msg = gsub(msg, Symbols[i], "")
 			end
 		end
 		for i = 1, getn(Config.WhiteList) do
-			if (strfind(msg, Config.WhiteList[i]) or strfind(orgmsg, Config.WhiteList[i])) then
+			if (msg:find(Config.WhiteList[i]) or orgmsg:find(Config.WhiteList[i])) then
 				return
 			end
 		end
 		for i = 1, getn(Config.BlackList) do
-			if (strfind(msg, Config.BlackList[i]) or strfind(orgmsg, Config.BlackList[i])) then
+			if (msg:find(Config.BlackList[i]) or orgmsg:find(Config.BlackList[i])) then
+				if (Config.Debug and event == Config.Debug) then
+					print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：消息中有黑名单词汇。")
+				end
 				return true
 			end
 		end
-		local Msg_Data = {Name = player, Msg = msg, Time = GetTime()}
-		local Player_Data = {Name = player, Time = GetTime()}
+		local Msg_Data = {Name = player, Msg = msg, Time = Time}
+		local Player_Data = {Name = player, Time = Time}
+		local matchs = 0
 		if (Config.FilterRepeat or Config.FilterMultiLine) then
-			local AllowLines, RepeatInterval, RepeatAlike = 10, 10, 95
-			if (event == "CHAT_MSG_CHANNEL" or "CHAT_MSG_SAY" or "CHAT_MSG_YELL") then
+			local lines, AllowLines, RepeatInterval, RepeatAlike = 1, 10, 10, 95
+			if (event == "CHAT_MSG_CHANNEL") then
 				RepeatInterval, RepeatAlike, AllowLines = Config.RepeatInterval, Config.RepeatAlike, Config.AllowLines
 			end
-			local lines = 1
 			for i = getn(CacheTable), 1, -1 do
 				local cache = CacheTable[i]
-				local interval = GetTime() - cache.Time
+				local interval = Time - cache.Time
 				if (interval > Config.RepeatInterval) then
 					tremove(CacheTable, i)
-				elseif (cache.Name == player) then
-					if (Config.FilterMultiLine) then
+				else
+					if (Config.FilterMultiLine and cache.Name == player) then
 						if (interval < 0.400) then
 							lines = lines + 1
 						end
 						if (lines >= AllowLines) then
-							if (event ~= "CHAT_MSG_CHANNEL") then
-								for i = 1, getn(reportmsg) do
-									if strfind(orgmsg, reportmsg[i]) then return end
-								end
+							if (Config.Debug and event == Config.Debug) then
+								print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：多行刷屏，数量："..lines.."行，本次消息为："..msg)
 							end
 							return true
 						end
 					end
-					if (Config.FilterRepeat and interval < RepeatInterval) then
-						if  (cache.Msg == msg) then
+					if (Config.FilterRepeat and interval < RepeatInterval and (cache.Name == player or (event == "CHAT_MSG_CHANNEL" and strlen(msg) > 20))) then
+						if (cache.Msg == msg) then
+							if (Config.Debug and event == Config.Debug) then
+								print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：重复消息刷屏，两次信息间隔："..interval.."秒，本次消息为："..msg.."，上次消息为："..cache.Msg)
+							end
 							return true
 						end
 						if (Config.RepeatAlike and Config.RepeatAlike < 100) then
-							local count = 0
+							local count, bigs, smalls = 0
 							if (strlen(msg) > strlen(cache.Msg)) then
 								bigs = msg
 								smalls = cache.Msg
@@ -511,6 +632,9 @@ local function ChatFilter_Rubbish(self, event, msg, player, _, _, _, flag, _, _,
 								end
 							end
 							if (count / strlen(bigs) * 100 > RepeatAlike) then
+								if (Config.Debug and event == Config.Debug) then
+									print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：重复消息刷屏，两次信息间隔："..interval.."秒，本次消息为："..msg.."，上次消息为："..cache.Msg)
+								end
 								return true
 							end
 						end
@@ -519,41 +643,112 @@ local function ChatFilter_Rubbish(self, event, msg, player, _, _, _, flag, _, _,
 			end
 		end
 		if (Config.FilterAdvertising) then
-			local matchs = 0
 			for i = 1, getn(Config.SafeWords) do
-				if (strfind(msg, Config.SafeWords[i])) then
+				if (msg:find(Config.SafeWords[i])) then
 					matchs = matchs - 1
 				end
 			end
 			for i = 1, getn(Config.DangerWords) do
-				local Pos = 0
+				local _, Pos = _, 0
 				if (strfind(msg, Config.DangerWords[i], Pos + 1)) then
 					matchs = matchs + 1
-					Pos = strfind(msg, Config.DangerWords[i], Pos +1)
-					if (strfind(msg, Config.DangerWords[i], Pos + 1)) then 
+					_, Pos = strfind(msg, Config.DangerWords[i], Pos +1)
+					if (strfind(msg, Config.DangerWords[i], Pos + 1)) then
 						matchs = matchs + 1
-						Pos = strfind(msg, Config.DangerWords[i], Pos +1)
-						if (strfind(msg, Config.DangerWords[i], Pos + 1)) then 
+						_, Pos = strfind(msg, Config.DangerWords[i], Pos +1)
+						if (strfind(msg, Config.DangerWords[i], Pos + 1)) then
 							matchs = matchs + 1
 						end
 					end
 				end
 			end
-			if (Config.AllowMatchs < 3) then
-				if (not CanComplainChat(lineId)) then matchs = matchs - 2 end
-				if (UnitInRaid(player) or UnitInParty(player) or UnitIsInMyGuild(player)) then matchs = matchs - 1 end
-			end
-			if (Config.AllowMatchs > 1) then
-				if (strlen(msg) > 120) then matchs = matchs + 1 end
-				if (event == "CHAT_MSG_WHISPER" and UnitLevel(player) == 0) then matchs = matchs + 1 end
+			if (Config.AllowMatchs < 3 and (not CanComplainChat(lineId) or UnitIsInMyGuild(player))) then
+				matchs = matchs - 1
 			end
 			if (matchs > Config.AllowMatchs) then
+				if (Config.Debug and event == Config.Debug) then
+					print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：消息中含有广告，广告数量："..matchs.."个，本次消息为："..msg)
+				end
 				tinsert(ShieldTable, Player_Data)
+				_ShieldTable[player] = 0
 				return true
 			end
 		end
-		if (getn(CacheTable) > 200) then
-			tremove(CacheTable, 1)
+		if (Config.FilterByLevel and (event == "CHAT_MSG_WHISPER" or (not Config.OnlyOnWhisper and event ~= "CHAT_MSG_WHISPER"))) then
+			local AllowLevel, added = Config.AllowLevel, nil
+			if (Server and strlen(Server) > 0) then
+				if (event == "CHAT_MSG_GUILD" or channel == L["Channel"]) then
+					ServerTable[Server] = true
+				else
+					if (not ServerTable[Server]) then
+						added = true
+					end
+				end
+			end
+			if (guid and tonumber(guid) and select(2, GetPlayerInfoByGUID(guid)) == DEATHKNIGHT) then
+				if (Config.AllowLevel <= 10) then
+					AllowLevel = 55 + Config.AllowLevel / 2
+				elseif (Config.AllowLevel <= 60) then
+					AllowLevel = 60
+				end
+			end
+			if (_LevelTable[player]) then
+				added = true
+				if (_LevelTable[player] <= 80) then
+					matchs = matchs + 1
+				end
+			end
+			if (matchs > Config.AllowMatchs) then
+				if (Config.Debug and event == Config.Debug) then
+					print("|cFF33FF99ChatFilter:|r [[''"..player.."'']]的发言被过滤，过滤原因：消息中含有广告且不是满级，广告数量："..(matchs - 1).."个，玩家等级：".._LevelTable[player].."级，本次消息为："..msg)
+				end
+				tinsert(ShieldTable, Player_Data)
+				_ShieldTable[player] = 0
+				return true
+			end
+			if (CanComplainChat(lineId) and not (added or adding or UnitIsInMyGuild(player))) then
+				if (not addedtime or Time - addedtime > Latency) then
+					adding = true
+					addedplayer = player
+					AddFriend(addedplayer)
+					AddedTable[addedplayer] = true
+					ChatFilterLv:RegisterEvent("FRIENDLIST_UPDATE")
+					FriendsFrame:UnregisterEvent("FRIENDLIST_UPDATE")
+					if (IsAddOnLoaded("Tukui")) then
+						TukuiStatFriends:UnregisterEvent("FRIENDLIST_UPDATE")
+					end
+				end
+				ChatFilterLv:SetScript("OnEvent", function(self, event)
+					if (event == "FRIENDLIST_UPDATE") then
+						if (not GetFriendInfo(addedplayer)) then
+							ShowFriends()
+						else
+							addedtime = GetTime()
+							Latency = addedtime - Time
+							local _, playerlevel = GetFriendInfo(addedplayer)
+							if (playerlevel >= AllowLevel) then
+								tinsert(LevelTable, {Name = addedplayer, Time = addedtime})
+								_LevelTable[addedplayer] = playerlevel
+							elseif (playerlevel > 0) then
+								tinsert(ShieldTable, {Name = addedplayer, Time = addedtime})
+								_ShieldTable[addedplayer] = playerlevel
+							end
+							for k in pairs(AddedTable) do
+								RemoveFriend(k)
+								AddedTable[k] = nil
+							end
+							adding = nil
+						end
+						if (not adding) then
+							if (IsAddOnLoaded("Tukui")) then
+								TukuiStatFriends:RegisterEvent("FRIENDLIST_UPDATE")
+							end
+							FriendsFrame:RegisterEvent("FRIENDLIST_UPDATE")
+							ChatFilterLv:UnregisterEvent("FRIENDLIST_UPDATE")
+						end
+					end
+				end)
+			end
 		end
 		tinsert(CacheTable, Msg_Data)
 		prevLineId = lineId
@@ -575,7 +770,7 @@ local function ChatFilter_Achievement(self, event, msg, player, _, _, _, _, _, _
 	end
 end
 
-local function ChatFilter_TalentSpec(self, event, msg)
+local function ChatFilter_SystemMSG(self, event, msg)
 	if (not Config.Enabled) then return end
 	if (Config.MergeTalentSpec) then
 		local learnID = strmatch(msg, learnspellmsg) or strmatch(msg, learnabilitymsg) or strmatch(msg, learnpassivemsg)
@@ -589,20 +784,48 @@ local function ChatFilter_TalentSpec(self, event, msg)
 			queueTalentSpecSpam("Unlearn", unlearnID)
 			return true
 		end
-		if (Config.FilterPetTalentSpec and (strfind(msg, petlearnspellmsg) or strfind(msg, petlearnabilitymsg) or strfind(msg, petunlearnspellmsg))) then
+		if (Config.FilterPetTalentSpec and (msg:find(petlearnspellmsg) or msg:find(petlearnabilitymsg) or msg:find(petunlearnspellmsg))) then
 			return true
 		end
 	end
-	if (Config.FilterDrunkMSG and not strfind(msg, L["You"])) then
+	if (Config.FilterDrunkMSG and not msg:find(L["You"])) then
 		for i = 1, getn(drunkmsg) do
-			if strfind(msg, drunkmsg[i]) then return true end 
+			if (msg:find(drunkmsg[i])) then return true end
 		end
 	end
-	if (Config.FilterDuelMSG and (not strfind(msg, GetUnitName("player"))) and (strfind(msg, duelwinmsg) or strfind(msg, duellosemsg))) then return true end
-	if (Config.FilterAuctionMSG and (strfind(msg, auctionstartedmsg) or strfind(msg, auctionremovedmsg))) then return true end
+	if (Config.FilterDuelMSG and (not msg:find(GetUnitName("player"))) and (msg:find(duelwinmsg) or msg:find(duellosemsg))) then return true end
+	if (Config.FilterAuctionMSG and (msg:find(auctionstartedmsg) or msg:find(auctionremovedmsg))) then return true end
+	if (Config.IgnoreMore and msg:find(ignorelistfullmsg)) then return true end
+	if (Config.FilterByLevel) then
+		if (AddonLoading) then
+			if (msg:find(friendaddedmsg)) then
+				local name = gsub(msg, gsub(friendaddedmsg, "%p", ""), "")
+				AddedTable[name] = true
+				return true
+			end
+			if (msg:find(friendnotfoundmsg)) then return true end
+		end
+		if (adding and msg:find(friendnotfoundmsg)) then
+			ChatFilterLv:SetScript("OnUpdate", function(self, elapsed)
+				adding = nil
+				if (not (AddonLoading or adding)) then
+					self:SetScript("OnUpdate", nil)
+				end
+			end)
+			return true
+		end
+		if (msg:find(friendlistfullmsg)) then
+			Config.FilterByLevel = nil
+			print("|cFF33FF99ChatFilter:|r", L["FriendlistFull"])
+		end
+		if (not addedplayer) then return end
+		msg = gsub(msg, "%-", "")
+		addedplayer = gsub(addedplayer, "%-", "")
+		if (msg:find(addedplayer) and (msg:find(friendaddedmsg) or msg:find(friendalreadymsg))) then return true end
+	end
 end
 
-local function ChatFilter_Created(self, event, msg)
+local function ChatFilter_CreateMSG(self, event, msg)
 	if (not Config.Enabled) then return end
 	if (Config.MergeManufacturing) then
 		local craft = self
@@ -613,32 +836,34 @@ local function ChatFilter_Created(self, event, msg)
 		if (not itemID) then return end
 		itemID = tonumber(strmatch(itemID, "item:(%d+)"))
 		itemQuantity = tonumber(itemQuantity)
-		if (itemID and craftList[itemID] and craftItemID == itemID and craftQuantity > 1) then 
+		if (itemID and craftList[itemID] and craftItemID == itemID and craftQuantity > 1) then
 			queueCraftMessage(craft, itemID, itemQuantity)
 			return true
 		end
 	end
 end
 
+local function ChatFilter_ReportMSG(self, event, msg)
+	if (not Config.Enabled) then return end
+	if (Config.FilterRaidAlert and msg:find(L["RaidAlert"])) then return true end
+	if (Config.FilterQuestReport and msg:find(L["QuestReport"])) then return true end
+end
+
 ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", ChatFilter_Rubbish)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatFilter_Rubbish)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChatFilter_Rubbish)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ChatFilter_Rubbish)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", ChatFilter_Rubbish)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", ChatFilter_Rubbish)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", ChatFilter_Created)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", ChatFilter_TalentSpec)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ChatFilter_ReportMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", ChatFilter_CreateMSG)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", ChatFilter_SystemMSG)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", ChatFilter_Achievement)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD_ACHIEVEMENT", ChatFilter_Achievement)
 -----------------------------------------------------------------------
@@ -649,13 +874,13 @@ SLASH_CHATFILTER2 = "/cf"
 
 SlashCmdList["CHATFILTER"] = function(msg)
 	local cmd = msg:lower()
-	if cmd == "on" then
+	if (cmd == "on") then
 		Config.Enabled = true
 		print("ChatFilter has been enabled.")
-	elseif cmd == "off" then
+	elseif (cmd == "off") then
 		Config.Enabled = nil
 		print("ChatFilter has been disabled.")
-	elseif cmd == "myself" then
+	elseif (cmd == "me") then
 		if (Config.ScanOurself) then
 			Config.ScanOurself = nil
 			print("ScanOurself has been disabled.")
@@ -663,55 +888,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.ScanOurself = true
 			print("ScanOurself has been enabled.")
 		end
-	elseif cmd == "friend" then
-		if (Config.ScanFriend) then
-			Config.ScanFriend = nil
-			print("ScanFriend has been disabled.")
-		else
-			Config.ScanFriend = true
-			print("ScanFriend has been enabled.")
-		end
-	elseif cmd == "team" then
-		if (Config.ScanTeam) then
-			Config.ScanTeam = nil
-			print("ScanTeam has been disabled.")
-		else
-			Config.ScanTeam = true
-			print("ScanTeam has been enabled.")
-		end
-	elseif cmd == "guild" then
-		if (Config.ScanGuild) then
-			Config.ScanGuild = nil
-			print("ScanGuild has been disabled.")
-		else
-			Config.ScanGuild = true
-			print("ScanGuild has been enabled.")
-		end
-	elseif cmd == "boss" then
-		if (Config.BlockBossCombat) then
-			Config.BlockBossCombat = nil
-			print("BlockBossCombat has been disabled.")
-		else
-			Config.BlockBossCombat = true
-			print("BlockBossCombat has been enabled.")
-		end
-	elseif cmd == "combat" then
-		if (Config.BlockCombat) then
-			Config.BlockCombat = nil
-			print("BlockCombat has been disabled.")
-		else
-			Config.BlockCombat = true
-			print("BlockCombat has been enabled.")
-		end
-	elseif cmd == "instance" then
-		if (Config.BlockInstance) then
-			Config.BlockInstance = nil
-			print("BlockInstance has been disabled.")
-		else
-			Config.BlockInstance = true
-			print("BlockInstance has been enabled.")
-		end
-	elseif cmd == "advertising" then
+	elseif (cmd == "ad") then
 		if (Config.FilterAdvertising) then
 			Config.FilterAdvertising = nil
 			print("FilterAdvertising has been disabled.")
@@ -719,7 +896,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterAdvertising = true
 			print("FilterAdvertising has been enabled.")
 		end
-	elseif cmd == "multiline" then
+	elseif (cmd == "mult") then
 		if (Config.FilterMultiLine) then
 			Config.FilterMultiLine = nil
 			print("FilterMultiLine has been disabled.")
@@ -727,7 +904,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterMultiLine = true
 			print("FilterMultiLine has been enabled.")
 		end
-	elseif cmd == "repeat" then
+	elseif (cmd == "repeat") then
 		if (Config.FilterRepeat) then
 			Config.FilterRepeat = nil
 			print("FilterRepeat has been disabled.")
@@ -735,7 +912,15 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterRepeat = true
 			print("FilterRepeat has been enabled.")
 		end
-	elseif cmd == "achievement" then
+	elseif (cmd == "level") then
+		if (Config.FilterByLevel) then
+			Config.FilterByLevel = nil
+			print("FilterByLevel has been disabled.")
+		else
+			Config.FilterByLevel = true
+			print("FilterByLevel has been enabled.")
+		end
+	elseif (cmd == "achieve") then
 		if (Config.MergeAchievement) then
 			Config.MergeAchievement = nil
 			print("MergeAchievement has been disabled.")
@@ -743,7 +928,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.MergeAchievement = true
 			print("MergeAchievement has been enabled.")
 		end
-	elseif cmd == "talent" then
+	elseif (cmd == "talent") then
 		if (Config.MergeTalentSpec) then
 			Config.MergeTalentSpec = nil
 			print("MergeTalentSpec has been disabled.")
@@ -751,7 +936,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.MergeTalentSpec = true
 			print("MergeTalentSpec has been enabled.")
 		end
-	elseif cmd == "creat" then
+	elseif (cmd == "creat") then
 		if (Config.MergeManufacturing) then
 			Config.MergeManufacturing = nil
 			print("MergeManufacturing has been disabled.")
@@ -759,7 +944,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.MergeManufacturing = true
 			print("MergeManufacturing has been enabled.")
 		end
-	elseif cmd == "auction" then
+	elseif (cmd == "auction") then
 		if (Config.FilterAuctionMSG) then
 			Config.FilterAuctionMSG = nil
 			print("FilterAuctionMSG has been disabled.")
@@ -767,7 +952,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterAuctionMSG = true
 			print("FilterAuctionMSG has been enabled.")
 		end
-	elseif cmd == "duel" then
+	elseif (cmd == "duel") then
 		if (Config.FilterDuelMSG) then
 			Config.FilterDuelMSG = nil
 			print("FilterDuelMSG has been disabled.")
@@ -775,7 +960,7 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterDuelMSG = true
 			print("FilterDuelMSG has been enabled.")
 		end
-	elseif cmd == "drunk" then
+	elseif (cmd == "drunk") then
 		if (Config.FilterDrunkMSG) then
 			Config.FilterDrunkMSG = nil
 			print("FilterDrunkMSG has been disabled.")
@@ -799,11 +984,19 @@ SlashCmdList["CHATFILTER"] = function(msg)
 			Config.FilterQuestReport = true
 			print("FilterQuestReport has been enabled.")
 		end
-	elseif cmd == "cache" then
-		print("缓存信息："..getn(CacheTable).."条 -- 屏蔽人物："..getn(Config.ShieldPlayers)+getn(ShieldTable).."个")
+	elseif (cmd == "cache") then
+		print("缓存信息："..getn(CacheTable).."条 -- 缓存等级："..getn(LevelTable).."个 -- 屏蔽人物："..getn(Config.ShieldPlayers) + getn(ShieldTable).."个")
+	elseif (strfind(cmd, "unignore") == 1) then
+		local player = gsub(cmd, "unignore", "")
+		player = gsub(player, "%s", "")
+		if (_ShieldTable[player]) then
+			_ShieldTable[player] = nil
+			SendMessage("CHAT_MSG_SYSTEM", format(ERR_IGNORE_REMOVED_S, player))
+		else
+			SendMessage("CHAT_MSG_SYSTEM", ERR_IGNORE_NOT_FOUND)
+		end
 	else
-		print("/cf [ on/off | myself | friend | team | guild | raidalert | questreport ]")
-		print("/cf [ advertising | multiline | repeat | boss | combat | instance]")
-		print("/cf [ talent | achievement | creat | duel | auction | drunk ]")
+		print("/cf [ on/off | ad | mult | repeat | level | achieve | talent | creat ]")
+		print("/cf [ raidalert | questreport | duel | drunk | auction | unignore ]")
 	end
 end

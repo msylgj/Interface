@@ -379,7 +379,8 @@ L:SetOptionLocalization({
 	MobC				= "第三波小怪",
 	SpecWarnJSA			= "特殊警告：注意减伤",
 	RangeFrame			= "显示距离框架(8码)",
-	warnMatterSwapped	= "警报：$spell:138618交换的目标"
+	warnMatterSwapped	= "警报：$spell:138618交换的目标",
+	SetIconOnFont           = DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -499,13 +500,15 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
-	specWarnIntermissionSoon	= "充能阶段即将到来"
+	specWarnIntermissionSoon	= "充能阶段即将到来",
+	warnDiffusionChainSpread	= "%s 传导至 >%s<",
 })
 
 L:SetOptionLocalization({
 	SoundWOP		= "语音警告：重要技能",
 	specWarnIntermissionSoon	= "特别警告：充能阶段即将到来",
 	RangeFrameLB	= "距离监视：当闪电球存在时切换到3码(英雄模式)",
+	warnDiffusionChainSpread	= "警告：$spell:135991 传导的目标",
 	cancelhud		= "当玩家白字说不需要分担时变换HUD标誌(输入监视关键字 例如:单吃)",
 	drpendp2		= "----减伤提示：第二阶段----",
 	drpend1			= "$spell:135695 1",
@@ -556,11 +559,11 @@ L:SetOptionLocalization({
 	specWarnVitarun	= "特别警告：生命传递跑位",
 	optDD			= "生命跑位策略",
 	nodd			= "正常循环成员(下方设定编号)",
-	DD1			= "替补1",
-	DD2			= "替补2",
-	DD3			= "替补3",
-	DD4			= "替补4",
-	DD5			= "替补5",
+	DD1				= "替补1",
+	DD2				= "替补2",
+	DD3				= "替补3",
+	DD4				= "替补4",
+	DD5				= "替补5",
 	lightnumber		= "正常循环成员编号(不会分配编号为0的团员)",
 	lastnumber		= "总共安排了多少正常循环成员[必须填写 非常重要]",
 	HudMAPAnima		= "高级定位监视(HUD)：$spell:138295爆炸",

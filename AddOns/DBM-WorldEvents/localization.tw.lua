@@ -36,24 +36,20 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("d286")
 
 L:SetWarningLocalization({
-	Submerged			= "艾胡恩已隱沒",
 	Emerged				= "艾胡恩已現身",
 	specWarnAttack		= "艾胡恩變得脆弱 - 現在攻擊!"
 })
 
 L:SetTimerLocalization({
 	SubmergTimer		= "隱沒",
-	EmergeTimer			= "現身",
-	TimerCombat			= "戰鬥開始"
+	EmergeTimer			= "現身"
 })
 
 L:SetOptionLocalization({
-	Submerged			= "當艾胡恩隱沒時顯示警告",
 	Emerged				= "當艾胡恩現身時顯示警告",
 	specWarnAttack		= "當艾胡恩變得脆弱時顯示特別警告",
 	SubmergTimer		= "為隱沒顯示計時器",
-	EmergeTimer			= "為現身顯示計時器",
-	TimerCombat			= "為戰鬥開始顯示計時器"
+	EmergeTimer			= "為現身顯示計時器"
 })
 
 L:SetMiscLocalization({
@@ -91,13 +87,8 @@ L:SetWarningLocalization({
 	warnHorsemanHead		= "旋風斬 - 轉換目標!"
 })
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "戰鬥開始"
-}
-
 L:SetOptionLocalization({
 	WarnPhase				= "為每個階段改變顯示警告",
-	TimerCombatStart		= "顯示戰鬥開始的計時器",
 	warnHorsemanSoldiers	= "為跳動的南瓜出現顯示警告",
 	warnHorsemanHead		= "為旋風斬顯示特別警告 (第二次及最後的頭顱出現)"
 })
@@ -159,7 +150,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	SetBubbles			= "自動地為$spell:101871關閉對話氣泡功能\n(當遊戲結束後還原功能)"
+	SetBubbles			= "自動地為$spell:101871關閉對話氣泡功能<br/>(當遊戲結束後還原功能)"
 })
 
 ----------------------
@@ -178,6 +169,25 @@ L = DBM:GetModLocalization("Rabbit")
 
 L:SetGeneralLocalization({
 	name = "暗月小兔"
+})
+
+-----------------------
+--  Darkmoon Moonfang  --
+-----------------------
+L = DBM:GetModLocalization("Moonfang")
+
+L:SetGeneralLocalization({
+	name = "月牙"
+})
+
+L:SetWarningLocalization({
+	specWarnCallPack		= "呼叫狼群 - 跑離月牙超過40碼!",
+	specWarnMoonfangCurse	= "月牙的詛咒- 跑離月牙超過10碼!"
+})
+
+L:SetOptionLocalization({
+	specWarnCallPack		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(144602),
+	specWarnMoonfangCurse	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(144590)
 })
 
 --------------------------

@@ -16,3 +16,4 @@ Plugins\HarmonyBar.lua
 Plugins\shadoworbs.lua
 Plugins\ArcaneCharge.lua
 Plugins\RuneOfPower.lua
+Plugins\holypower.lua

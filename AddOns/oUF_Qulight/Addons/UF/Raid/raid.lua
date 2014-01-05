@@ -547,7 +547,7 @@ local styleRaid = function(self)
 	RaidDebuffs:SetWidth(Qulight["raidframes"].aurasize)
 	RaidDebuffs:SetPoint("CENTER", self.Health, 0, 0)
 	RaidDebuffs:SetFrameStrata(self.Health:GetFrameStrata())
-	RaidDebuffs:SetFrameLevel(self.Health:GetFrameLevel() + 2)
+	RaidDebuffs:SetFrameLevel(self.Health:GetFrameLevel() + 5)
 			
 	CreateShadowclassbar(RaidDebuffs)
 			
@@ -935,6 +935,14 @@ end
 
 oUF:Factory(function(self)
     ns:Colors()
+	CompactRaidFrameManager:UnregisterAllEvents()
+	CompactRaidFrameManager.Show = dummy
+	CompactRaidFrameManager:Hide()
+
+	CompactRaidFrameContainer:UnregisterAllEvents()
+	CompactRaidFrameContainer.Show = dummy
+	CompactRaidFrameContainer:Hide()
+	
 	if Qulight["raidframes"].party then
 		local initconfig = [[
 			self:SetWidth(%d)
@@ -954,15 +962,6 @@ oUF:Factory(function(self)
 		ns._Headers[party:GetName()] = party
 	end
 	if Qulight["raidframes"].enable then
-		local frameM = CompactRaidFrameManager
-		frameM:UnregisterAllEvents()
-		frameM.Show = function() end
-		frameM:Hide()
-	
-		local frameC = CompactRaidFrameContainer
-		frameC:UnregisterAllEvents()
-		frameC.Show = function() end
-		frameC:Hide()
 		self:SetActiveStyle"Freebgrid"
 		if Qulight["raidframes"].multi then
 			local raid = {}

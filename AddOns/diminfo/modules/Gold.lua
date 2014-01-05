@@ -61,7 +61,7 @@ if cfg.Gold == true then
 		-- Setup Money Tooltip
 		self:SetAllPoints(Text)
 
-		local myPlayerRealm = GetCVar("realmName");
+		local myPlayerRealm = GetRealmName();
 		local myPlayerName  = UnitName("player");				
 		if (diminfo.gold == nil) then diminfo.gold = {}; end
 		if (diminfo.gold[myPlayerRealm]==nil) then diminfo.gold[myPlayerRealm]={}; end
@@ -125,7 +125,7 @@ if cfg.Gold == true then
 	
 	-- reset gold diminfo
 	local function RESETGOLD()
-		local myPlayerRealm = GetCVar("realmName");
+		local myPlayerRealm = GetRealmName();
 		local myPlayerName  = UnitName("player");
 		
 		diminfo.gold = {}

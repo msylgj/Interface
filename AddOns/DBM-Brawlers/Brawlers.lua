@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brawlers", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9771 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10689 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 --mod:SetModelID(41448)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -30,13 +30,13 @@ mod:RemoveOption("SpeedKillTimer")
 local playerIsFighting = false
 local currentFighter = nil
 local currentRank = 0--Used to stop bars for the right sub mod based on dynamic rank detection from pulls
-local currentZoneID = DBM:GetCurrentArea()--As core what current area is on load, since core should know
+local currentZoneID = select(8, GetInstanceInfo())--As core what current area is on load, since core should know
 local modsStopped = false
 local eventsRegistered = false
 local lastRank = 0
 local QueuedBuff = GetSpellInfo(132639)
 --Fix for not registering events on reloadui or login while already inside brawlers guild.
-if currentZoneID == 922 or currentZoneID == 925 then
+if currentZoneID == 369 or currentZoneID == 1043 then
 	eventsRegistered = true
 	mod:RegisterShortTermEvents(
 		"SPELL_CAST_START",
@@ -132,15 +132,18 @@ end
 function mod:UNIT_DIED(args)
 	if not args.destName then return end
 	--Another backup for when npc doesn't yell. This is a way to detect a wipe at least.
-	local thingThatDied = string.split("-", args.destName)--currentFighter never has realm name, so we need to strip it from combat log for CRZ support
-	if currentFighter and currentFighter == thingThatDied then--They wiped.
+	if currentFighter and args.destName == currentFighter and args:IsDestTypePlayer() then--They wiped. Fix match ends when mage's mirror image died. 
 		self:SendSync("MatchEnd")
 	end
 end
 
 function mod:ZONE_CHANGED_NEW_AREA()
-	currentZoneID = GetCurrentMapAreaID()
-	if currentZoneID == 922 or currentZoneID == 925 then
+	currentZoneID = select(8, GetInstanceInfo())
+	if currentZoneID == 369 or currentZoneID == 1043 then
+		playerIsFighting = false
+		currentFighter = nil
+		currentRank = 0
+		lastRank = 0
 		modsStopped = false
 		eventsRegistered = true
 		self:RegisterShortTermEvents(
@@ -170,7 +173,6 @@ function mod:ZONE_CHANGED_NEW_AREA()
 	modsStopped = true
 end
 
-
 local startCallbacks, endCallbacks = {}, {}
 
 function mod:OnMatchStart(callback)
@@ -193,14 +195,14 @@ function mod:OnSync(msg)
 				"UNIT_AURA player"
 			)
 		end
-		if not (currentZoneID == 0 or currentZoneID == 922 or currentZoneID == 925) then return end
+		if not (currentZoneID == 369 or currentZoneID == 1043) then return end
 		self:Stop()--Sometimes NPC doesn't yell when a match ends too early, if a new match begins we stop on begin before starting new stuff
 		berserkTimer:Start()
 		for i, v in ipairs(startCallbacks) do
 			v()
 		end
 	elseif msg == "MatchEnd" then
-		if not (currentZoneID == 0 or currentZoneID == 922 or currentZoneID == 925) then return end
+		if not (currentZoneID == 369 or currentZoneID == 1043) then return end
 		currentFighter = nil
 		self:Stop()
 		--Boss from any rank can be fought by any rank now, so we just need to always cancel them all

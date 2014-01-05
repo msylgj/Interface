@@ -1,17 +1,22 @@
 local mod	= DBM:NewMod("d288", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9464 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10679 $"):sub(12, -3))
 mod:SetCreatureID(36272, 36296, 36565)
 mod:SetModelID(16176)
+mod:SetZone()
+
 mod:SetReCombatTime(10)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_DAMAGE",
-	"SPELL_MISSED",
-	"CHAT_MSG_MONSTER_SAY"
+	"SPELL_MISSED"
 )
 
 local warnChainReaction			= mod:NewCastAnnounce(68821, 3)
