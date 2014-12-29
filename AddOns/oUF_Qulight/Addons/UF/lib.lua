@@ -445,15 +445,6 @@ lib.gen_ppbar = function(f)
 		h:SetPoint("BOTTOMRIGHT",5,-5)
 		CreateShadow00(h)
 	end
-	if f.mystyle == "partytarget" then
-		local h = CreateFrame("Frame", nil, s)
-		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
-		h:SetFrameLevel(10)
-		s:SetWidth(92)
-		h:SetPoint("TOPLEFT",-5,5)
-		h:SetPoint("BOTTOMRIGHT",5,-5)
-		CreateShadow00(h)
-	end
 	if f.mystyle == "focustarget" then
 		local h = CreateFrame("Frame", nil, s)
 		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
