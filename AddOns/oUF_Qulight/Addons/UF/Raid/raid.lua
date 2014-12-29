@@ -254,20 +254,30 @@ local function PostPower(power, unit)
     local _, ptype = UnitPowerType(unit)
     local _, class = UnitClass(unit)
 
-    if ptype == 'MANA' or Qulight["raidframes"].party and self.mystyle == "party" then
+    if ptype == 'MANA' or Qulight["raidframes"].party and (self.mystyle == "party" or self.mystyle == "partytarget") then
         power:Show()
 		if(Qulight["raidframes"].porientation == "VERTICAL")then
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				power:SetWidth(Qulight["raidframes"].partysize[1]*Qulight["raidframes"].powerbarsize)
-				self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[1])
+			if Qulight["raidframes"].party then 
+				if self.mystyle == "party" then
+					power:SetWidth(Qulight["raidframes"].partysize[1]*Qulight["raidframes"].powerbarsize)
+					self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[1])
+				elseif self.mystyle == "partytarget" then
+					power:SetWidth(Qulight["raidframes"].partytargetsize[1]*Qulight["raidframes"].powerbarsize)
+					self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partytargetsize[1])
+				end
 			else
 				power:SetWidth(Qulight["raidframes"].width*Qulight["raidframes"].powerbarsize)
 				self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].width)
 			end
 		else
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				power:SetHeight(Qulight["raidframes"].partysize[2]*Qulight["raidframes"].powerbarsize)
-				self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[2])
+			if Qulight["raidframes"].party then
+				if self.mystyle == "party" then
+					power:SetHeight(Qulight["raidframes"].partysize[2]*Qulight["raidframes"].powerbarsize)
+					self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partysize[2])
+				elseif self.mystyle == "partytarget" then
+					power:SetHeight(Qulight["raidframes"].partytargetsize[2]*Qulight["raidframes"].powerbarsize)
+					self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partytargetsize[2])
+				end
 			else
 				power:SetHeight(Qulight["raidframes"].height*Qulight["raidframes"].powerbarsize)
 				self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].height)
@@ -276,14 +286,22 @@ local function PostPower(power, unit)
     else
         power:Hide()
         if(Qulight["raidframes"].porientation == "VERTICAL")then
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				self.Health:SetWidth(Qulight["raidframes"].partysize[1])
+			if Qulight["raidframes"].party then
+				if self.mystyle == "party" then
+					self.Health:SetWidth(Qulight["raidframes"].partysize[1])
+				elseif self.mystyle == "partytarget" then
+					self.Health:SetWidth(Qulight["raidframes"].partytargetsize[1])
+				end
 			else
 				self.Health:SetWidth(Qulight["raidframes"].width)
 			end
         else
-			if Qulight["raidframes"].party and self.mystyle == "party" then
-				self.Health:SetHeight(Qulight["raidframes"].partysize[2])
+			if Qulight["raidframes"].party then
+				if self.mystyle == "party" then
+					self.Health:SetHeight(Qulight["raidframes"].partysize[2])
+				elseif self.mystyle == "partytarget" then
+					self.Health:SetHeight(Qulight["raidframes"].partytargetsize[2])
+				end
 			else
 				self.Health:SetHeight(Qulight["raidframes"].height)
 			end
@@ -294,8 +312,8 @@ local function PostPower(power, unit)
     -- This kinda conflicts with the threat module, but I don't really care
     if (perc < 10 and UnitIsConnected(unit) and ptype == 'MANA' and not UnitIsDeadOrGhost(unit)) then
         self.Threat:SetBackdropBorderColor(0, 0, 1, 1)
-        self.border:SetBackdropColor(0, 0, 1, 1)
-    else
+        self.border:SetBackdropColor(0, 0, 0, 1)
+    elseif (self.mystyle ~= 'partytarget') then
         -- pass the coloring back to the threat func
         updateThreat(self, nil, unit)
     end
@@ -317,7 +335,7 @@ local function PostPower(power, unit)
 
     if(b) then
         if Qulight["raidframes"].reversecolors or Qulight["raidframes"].powerclass then
-            power.bg:SetVertexColor(r*.2, g*.2, b*.2)
+            power.bg:SetVertexColor(r*.1, g*.1, b*.1)
             power:SetStatusBarColor(r, g, b)
         else
             power.bg:SetVertexColor(r, g, b)
@@ -340,19 +358,19 @@ function ns:UpdatePower(power)
     power.bg:SetTexture(statusbar_texture)
 
     power:ClearAllPoints()
-    if Qulight["raidframes"].orientation == "HORIZONTAL" and Qulight["raidframes"].porientation == "VERTICAL" then
-        power:SetPoint"LEFT"
-        power:SetPoint"TOP"
-        power:SetPoint"BOTTOM"
-    elseif Qulight["raidframes"].porientation == "VERTICAL" then
-        power:SetPoint"TOP"
-        power:SetPoint"RIGHT"
-        power:SetPoint"BOTTOM"
-    else
-        power:SetPoint"LEFT"
-        power:SetPoint"RIGHT"
-        power:SetPoint"BOTTOM"
-    end
+	if Qulight["raidframes"].orientation == "HORIZONTAL" and Qulight["raidframes"].porientation == "VERTICAL" then
+		power:SetPoint"LEFT"
+		power:SetPoint"TOP"
+		power:SetPoint"BOTTOM"
+	elseif Qulight["raidframes"].porientation == "VERTICAL" then
+		power:SetPoint"TOP"
+		power:SetPoint"RIGHT"
+		power:SetPoint"BOTTOM"
+	else
+		power:SetPoint"LEFT"
+		power:SetPoint"RIGHT"
+		power:SetPoint"BOTTOM"
+	end
 end
 
 -- Show Mouseover highlight
@@ -592,6 +610,14 @@ local stylePartyTarget = function(self)
 		outsideAlpha = Qulight["raidframes"].outsideRange,}
 	self:SetSize(unpack(Qulight["raidframes"].partytargetsize))
 	lib.gen_hpbar(self)
+    -- Power
+    self.Power = CreateFrame"StatusBar"
+    self.Power:SetParent(self)
+    self.Power.bg = self.Power:CreateTexture(nil, "BORDER")
+    self.Power.bg:SetAllPoints(self.Power)
+    ns:UpdatePower(self.Power)
+	--self.Power:ClearAllPoints()
+	self.Power:SetPoint("BOTTOM", self.Health, "BOTTOM", 0, 0)
 	lib.gen_hpstrings(self)
 	lib.gen_highlight(self)
 	lib.gen_RaidMark(self)
@@ -801,8 +827,7 @@ local styleParty = function(self)
 	RaidDebuffs.time = RaidDebuffs:CreateFontString(nil, "OVERLAY")
 	RaidDebuffs.time:SetFont(Qulight["media"].pxfont, Qulight["raidframes"].fontsize+4, Qulight["raidframes"].outline)
 	RaidDebuffs.time:SetPoint("CENTER")
-	RaidDebuffs.time:SetTextColor(1, .9, 0)
-						
+	RaidDebuffs.time:SetTextColor(1, .9, 0)						
 	self.RaidDebuffs = RaidDebuffs
 		
     -- Add events

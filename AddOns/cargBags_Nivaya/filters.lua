@@ -3,11 +3,11 @@ local cargBags = ns.cargBags
 
 local cbNivaya = cargBags:NewImplementation("Nivaya")
 cbNivaya:RegisterBlizzard()
-function cbNivaya:UpdateBags() for i = -2, 11 do cbNivaya:UpdateBag(i) end end
+function cbNivaya:UpdateBags() for i = -3, 11 do cbNivaya:UpdateBag(i) end end
 
 local L = cBnivL
 cB_Filters = {}
-cB_KnownItems = {}
+cB_KnownItems = cB_KnownItems or {}
 cBniv_CatInfo = {}
 cB_ItemClass = {}
 
@@ -19,6 +19,7 @@ cB_filterEnabled = { Armor = true, Quest = true, TradeGoods = true, Consumables 
 --------------------
 cB_Filters.fBags = function(item) return item.bagID >= 0 and item.bagID <= 4 end
 cB_Filters.fBank = function(item) return item.bagID == -1 or item.bagID >= 5 and item.bagID <= 11 end
+cB_Filters.fBankReagent = function(item) return item.bagID == -3 end
 cB_Filters.fBankFilter = function() return cBnivCfg.FilterBank end
 cB_Filters.fHideEmpty = function(item) if cBnivCfg.CompressEmpty then return item.link ~= nil else return true end end
 
@@ -44,15 +45,6 @@ end
 function cbNivaya:ClassifyItem(item)
 	-- keyring
 	if item.bagID == -2 then cB_ItemClass[item.id] = "Keyring"; return true end
-
-	-- TODO: remove after a while --
-	-- neccessary for upgrading from r36 or older:
-	local tcat = cBniv_CatInfo[item.name]
-	if tcat then
-		cBniv_CatInfo[item.id] = tcat
-		cBniv_CatInfo[item.name] = nil
-	end
-	-- TODO end --
 
 	-- user assigned containers
 	local tC = cBniv_CatInfo[item.id]
@@ -107,9 +99,9 @@ cB_Filters.fNewItems = function(item)
 	if not cBnivCfg.NewItems then return false end
 	if not ((item.bagID >= 0) and (item.bagID <= 4)) then return false end
 	if not item.link then return false end
-	if not cB_KnownItems[item.name] then return true end
-	local t = cbNivaya:getItemCount(item.name)
-	return (t > cB_KnownItems[item.name]) and true or false
+	if not cB_KnownItems[item.id] then return true end
+	local t = cbNivaya:getItemCount(item.id)
+	return (t > cB_KnownItems[item.id]) and true or false
 end
 
 -----------------------------------------
@@ -121,6 +113,7 @@ local IR = IsAddOnLoaded('ItemRack')
 local OF = IsAddOnLoaded('Outfitter')
 
 cB_Filters.fItemSets = function(item)
+	--print("fItemSets", item, item.isInSet)
 	if not cB_filterEnabled["ItemSets"] then return false end
 	if not item.link then return false end
 	local tC = cBniv_CatInfo[item.name]

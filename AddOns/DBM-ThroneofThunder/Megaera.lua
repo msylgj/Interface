@@ -1,12 +1,12 @@
-local mod	= DBM:NewMod(821, "DBM-ThroneofThunder", nil, 362)
+﻿local mod	= DBM:NewMod(821, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
-local sndXL	= mod:NewSound(nil, "SoundXL", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
+local sndXL	= mod:SoundMM("SoundXL")
 
-mod:SetRevision(("$Revision: 9808 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11446 $"):sub(12, -3))
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
+mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
-mod:SetQuestID(32748)
 mod:SetZone()
 mod:SetUsedIcons(7, 6, 4, 2)
 
@@ -136,11 +136,11 @@ local function showheadinfo()
 		local venomBehindcolor = "|cFF088A08"..venomBehind.."|r"
 		local arcaneBehindcolor = "|cFFB91FC7"..arcaneBehind.."|r"
 		if mod:IsDifficulty("heroic10", "heroic25") then
-			DBM.InfoFrame:SetHeader(L.Behind.." ("..(Ramcount + 1).."/7)")
-			DBM.InfoFrame:Show(4, "other", iceBehindcolor, iceinfob, venomBehindcolor, venominfob, fireBehindcolor, fireinfob, arcaneBehindcolor, arcaneinfob)
+			--DBM.InfoFrame:SetHeader(L.Behind.." ("..(Ramcount + 1).."/7)")
+			--DBM.InfoFrame:Show(4, "other", iceBehindcolor, iceinfob, venomBehindcolor, venominfob, fireBehindcolor, fireinfob, arcaneBehindcolor, arcaneinfob)
 		else
-			DBM.InfoFrame:SetHeader(L.Behind.." ("..(Ramcount + 1).."/7)")
-			DBM.InfoFrame:Show(3, "other", iceBehindcolor, iceinfob, venomBehindcolor, venominfob, fireBehindcolor, fireinfob)
+			--DBM.InfoFrame:SetHeader(L.Behind.." ("..(Ramcount + 1).."/7)")
+			--DBM.InfoFrame:Show(3, "other", iceBehindcolor, iceinfob, venomBehindcolor, venominfob, fireBehindcolor, fireinfob)
 		end
 	end
 end
@@ -153,21 +153,16 @@ local function warnTorrent(name)
 			specWarnTorrentofIceYou:Show()
 			timerTorrentofIce:Start()
 			yellTorrentofIce:Yell()
-			DBM.Flash:Shake(0, 0, 1)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\justrun.mp3") --快跑
+			-- DBM.Flash:Shake(0, 0, 1)
+			sndWOP:Play("justrun") --快跑
 		end
 	else
 		local uId = DBM:GetRaidUnitId(name)
-			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
-			if inRange and inRange < 6 then
-				specWarnTorrentofIceNear:Show(name)
-			end
+		if uId then
+			local inRange = DBM.RangeCheck:GetDistance("player", uId)
+		end
+		if inRange and inRange < 6 then
+			specWarnTorrentofIceNear:Show(name)
 		end
 	end
 end
@@ -278,8 +273,8 @@ function mod:RAID_BOSS_WHISPER(msg)
 		specWarnTorrentofIceYou:Show()
 		timerTorrentofIce:Start()
 		yellTorrentofIce:Yell()
-		DBM.Flash:Shake(0, 0, 1)
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\justrun.mp3") --快跑
+		-- DBM.Flash:Shake(0, 0, 1)
+		sndWOP:Play("justrun") --快跑
 	end
 end
 
@@ -290,7 +285,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnNetherTear:Show()
 		timerNetherTearCD:Start(args.sourceGUID)
 		if self:AntiSpam(10, 5) then
-			sndXL:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dragonnow.mp3")  --小龍出現
+			sndXL:Play("dragonnow")  --小龍出現
 		end
 	elseif args.spellId == 139866 then
 		timerTorrentofIceCD:Start(args.sourceGUID)
@@ -358,8 +353,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCinders:Show()
 			yellCinders:Yell()
 --			soundCinders:Play()
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\firerun.mp3")  --快跑 火焰點你
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("firerun")  --快跑 火焰點你
 		end
 		if self.Options.HudMAP then
 			local spelltext = GetSpellInfo(139822)
@@ -380,7 +375,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 139822 then
 		if args:IsPlayer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\safenow.mp3")
+			sndWOP:Play("safenow")
 		end
 		if FireMarkers[args.destName] then
 			FireMarkers[args.destName] = free(FireMarkers[args.destName])
@@ -394,7 +389,7 @@ end
 function mod:SPELL_DAMAGE(sourceGUID, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 139836 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnCindersMove:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -402,7 +397,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 139909 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnTorrentofIce:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -421,7 +416,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 		timerRampage:Start()	
 		if MyJS() then
 			SpecWarnJSA:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			sndWOP:Play("defensive") --注意減傷
 		else
 			DBM:PlayCountSound(Ramcount)
 		end		
@@ -429,7 +424,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 		arcaneRecent = false
 		warnRampageFaded:Show()
 		specWarnRampageFaded:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
+		sndWOP:Play("scattersoon")--注意分散
 		if self.Options.timerBreaths then
 			timerBreathsCD:Start(10)
 		end
@@ -464,7 +459,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 70628 then--Permanent Feign Death
 		local cid = self:GetCIDFromGUID(UnitGUID(uId))
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\gather.mp3")--快集合
+		sndWOP:Play("gather")--快集合
 		if cid == 70235 then--Frozen
 			iceInFront = iceInFront - 1
 			iceBehind = iceBehind + 2

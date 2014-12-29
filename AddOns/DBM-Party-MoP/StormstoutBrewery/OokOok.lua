@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(668, "DBM-Party-MoP", 2, 302)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56637)
@@ -51,7 +51,7 @@ function mod:SPELL_CAST_START(args)
 		warnGroundPound:Show()
 		specWarnGroundPound:Show()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+			sndWOP:Play("runaway")--快躲開
 		end
 		timerGroundPoundCD:Start()
 	end

@@ -1,12 +1,7 @@
 local addon, ns = ...
 ns.options = {
 
-itemSlotSize = 32,		-- Size of item slots
-itemSlotPadding = 2,	-- Gap between item slots
-
-bagsShownAtStartup = false,		-- Show Bags (Toggle Bags) by default
-
-currencyIcons = false,	-- Use Gold, Silver, Copper icons instead of G, S, C
+itemSlotSize = 32,	-- Size of item slots
 
 sizes = {
 	bags = {
@@ -20,6 +15,11 @@ sizes = {
 		largeItemCount = 96,	-- Switch to columnsLarge when >= this number of items in the bank
 	},	
 },
+
+
+--------------------------------------------------------------
+-- Anything below this is only effective when not using RealUI
+--------------------------------------------------------------
 
 fonts = {
 	-- Font to use for bag captions and other strings
@@ -46,7 +46,7 @@ fonts = {
 	-- Font to use for number of items in a stack
 	itemCount = {
 		[[Fonts\ARKai_T.ttf]], 	-- Font path
-		14, 						-- Font Size
+		12, 						-- Font Size
 		"OUTLINE",	-- Flags
 	},
 

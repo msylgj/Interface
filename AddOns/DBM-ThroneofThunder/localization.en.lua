@@ -315,10 +315,10 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	Eye		= "Eye",
-	xx1noset = "11111111 Life Drain on me!!!",
-	xx2noset = "22222 Life Drain Help!!! Help!!!",
-	xx3noset = "I'm gonna be sucked to death---------",
-	dx		= "HELP LIFE DRAIN HERE!!"
+	xx1noset = ">_<",
+	xx2noset = ">_< >_<",
+	xx3noset = ">_< >_< >_<",
+	dx		= ">_< >_< >_< >_<"
 })
 
 ----------------
@@ -421,7 +421,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Helpme			= "Help! Help! CLICK ME ~~~"
+	Helpme			= ">_<"
 })
 
 -------------------

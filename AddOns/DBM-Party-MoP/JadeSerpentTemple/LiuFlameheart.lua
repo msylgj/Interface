@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(658, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56732)
@@ -38,11 +38,11 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 106823 then--Phase 1 dragonstrike
 		warnDragonStrike:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\firewall.mp3")--^^
+		sndWOP:Play("firewall")--^^
 		timerDragonStrikeCD:Start()
 	elseif args.spellId == 106841 then--phase 2 dragonstrike
 		warnJadeDragonStrike:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\firewall.mp3")--^^
+		sndWOP:Play("firewall")--^^
 		timerJadeDragonStrikeCD:Start()
 	end
 end
@@ -50,7 +50,7 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 106797 then--Jade Essence removed, (Phase 3 trigger)
 		warnPhase3:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")--階段轉換
+		sndWOP:Play("pthree")--階段轉換
 		timerJadeDragonStrikeCD:Cancel()
 	end
 end
@@ -58,7 +58,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 106797 then--Jade Essence (Phase 2 trigger)
 		warnPhase2:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")--階段轉換
+		sndWOP:Play("ptwo")--階段轉換
 		timerDragonStrikeCD:Cancel()
 	elseif args.spellId == 107045 then
 		timerJadeFireCD:Start()
@@ -68,7 +68,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 107110 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnJadeFire:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("runaway")--快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -76,7 +76,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 118540 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnJadeFire:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("runaway")--快躲開
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

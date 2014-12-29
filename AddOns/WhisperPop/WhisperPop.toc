@@ -1,6 +1,6 @@
-## Interface: 50400
+## Interface: 60000
 ## Title: WhisperPop
-## Version: 5.4
+## Version: 6.0.3
 ## Author: Abin
 ## X-Category: Chat/Communication
 ## SavedVariables: WhisperPopDB

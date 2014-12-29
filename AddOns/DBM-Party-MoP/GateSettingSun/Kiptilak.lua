@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(655, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP = mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56906)
@@ -36,27 +36,22 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 107268 then
 		warnSabotage:Show(args.destName)
 		timerSabotage:Start(args.destName)
-		sndWOP:Schedule(1.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
-		sndWOP:Schedule(2.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Schedule(3.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Schedule(4.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Schedule(1.5, "countfour")
+		sndWOP:Schedule(2.5, "countthree")
+		sndWOP:Schedule(3.5, "counttwo")
+		sndWOP:Schedule(4.5, "countone")
 		timerSabotageCD:Start()
 		if self.Options.IconOnSabotage then
 			self:SetIcon(args.destName, 8)
 		end
 		if args:IsPlayer() then
 			specWarnSabotage:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runout.mp3")--跑開人群
+			sndWOP:Play("runout")--跑開人群
 		else
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\bombsoon.mp3")--準備炸彈
+			sndWOP:Play("bombsoon")--準備炸彈
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 10 then
 					specWarnSabotageNear:Show(args.destName)
 				end

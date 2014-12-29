@@ -1,6 +1,6 @@
 local F, C = unpack(select(2, ...))
 
-C.modules["Blizzard_Calendar"] = function()
+C.themes["Blizzard_Calendar"] = function()
 	local r, g, b = C.r, C.g, C.b
 
 	CalendarFrame:DisableDrawLayer("BORDER")
@@ -187,6 +187,10 @@ C.modules["Blizzard_Calendar"] = function()
 		local cbutton = _G[cbuttons[i]]
 		F.Reskin(cbutton)
 	end
+
+	CalendarViewEventAcceptButton.flashTexture:SetTexture("")
+	CalendarViewEventTentativeButton.flashTexture:SetTexture("")
+	CalendarViewEventDeclineButton.flashTexture:SetTexture("")
 
 	F.ReskinClose(CalendarCloseButton, "TOPRIGHT", CalendarFrame, "TOPRIGHT", -14, -4)
 	F.ReskinClose(CalendarCreateEventCloseButton)

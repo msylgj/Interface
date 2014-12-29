@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(688, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(59789)
@@ -33,7 +33,7 @@ local timerSummonSpiritsCD		= mod:NewNextTimer(60, 115147)--Although correction 
 
 function mod:OnCombatStart(delay)
 	timerRaiseCrusadeCD:Start(6-delay)
-	sndWOP:Schedule(5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3")--準備小怪
+	sndWOP:Schedule(5, "mobsoon")--準備小怪
 	timerEvictSoulCD:Start(15.5-delay)
 end
 
@@ -42,11 +42,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEvictSoul:Show(args.destName)
 		timerEvictSoul:Start(args.destName)
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")--快驅散
+			sndWOP:Play("dispelnow")--快驅散
 		end
 	elseif args:IsSpellID(115297, 116648) and args:IsPlayer() and self:AntiSpam() then
 		specWarnWind:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("runaway")--快躲開
 	end
 end
 
@@ -62,9 +62,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 115147 then--Summon Empowering Spirits
 		warnSummonSpirits:Show()
 		specWarnEmpoweredSpirit:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\killspirit.mp3") --靈魂快打
+		sndWOP:Play("killspirit") --靈魂快打
 		timerRaiseCrusadeCD:Start(20)--Raise crusaders always 20 seconds after spirits in all modes
-		sndWOP:Schedule(19, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\mobsoon.mp3") --準備小怪
+		sndWOP:Schedule(19, "mobsoon") --準備小怪
 	elseif args.spellId == 115139 then--Raise Fallen Crusade
 		warnRaiseCrusade:Show()
 		specWarnFallenCrusader:Show()

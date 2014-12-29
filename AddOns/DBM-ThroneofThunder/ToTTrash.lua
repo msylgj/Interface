@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 9678 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10977 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -88,13 +88,13 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif args.spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
 		specWarnSonicScreech:Show(args.sourceName)
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")
+		sndWOP:Play("kickcast")
 	elseif args.spellId == 139899 then
 		warnShadowNova:Show()
 		specWarnShadowNova:Show()
 		timerShadowNovaCD:Start()
 		if mod:IsMelee() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\justrun.mp3")
+			sndWOP:Play("justrun")
 		end
 	end
 end
@@ -105,8 +105,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		stormEnergyTargets[#stormEnergyTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnStormEnergy:Show()
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runout.mp3")
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("runout")
 		else
 			if self.Options.HudMAP then
 				lightmaker[args.destName] = register(DBMHudMap:PlaceRangeMarkerOnPartyMember("timer", args.destName, 10, 10, 1, 1, 1, 0.7):RegisterForAlerts())
@@ -121,7 +121,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		stormCloudTargets[#stormCloudTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnStormCloud:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runout.mp3")
+			sndWOP:Play("runout")
 		end
 		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
 			DBM.RangeCheck:Show(10)
@@ -134,7 +134,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerConductiveShieldCD:Start(20, args.destName, args.sourceGUID)
 		if args.sourceGUID == UnitGUID("target") then
 			specWarnConductiveShield:Show(args.destName)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stopattack.mp3")
+			sndWOP:Play("stopattack")
 		end
 	end
 end

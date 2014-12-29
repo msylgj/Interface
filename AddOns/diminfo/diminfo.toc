@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60000
 ## Author: Loshine
 ## Credits-to:Tukz, Katae
 ## Title: |cff777777dim|rinfo

@@ -81,7 +81,6 @@ HidePortrait = function(self, unit)
 end
 local channelingTicks = {
 	-- warlock
-	[GetSpellInfo(1120)] = 5, -- drain soul
 	[GetSpellInfo(689)] = 5, -- drain life
 	[GetSpellInfo(5740)] = 4, -- rain of fire
 	-- druid
@@ -441,6 +440,15 @@ lib.gen_ppbar = function(f)
 		local h = CreateFrame("Frame", nil, s)
 		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
 		h:SetFrameLevel(3)
+		s:SetWidth(92)
+		h:SetPoint("TOPLEFT",-5,5)
+		h:SetPoint("BOTTOMRIGHT",5,-5)
+		CreateShadow00(h)
+	end
+	if f.mystyle == "partytarget" then
+		local h = CreateFrame("Frame", nil, s)
+		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
+		h:SetFrameLevel(10)
 		s:SetWidth(92)
 		h:SetPoint("TOPLEFT",-5,5)
 		h:SetPoint("BOTTOMRIGHT",5,-5)

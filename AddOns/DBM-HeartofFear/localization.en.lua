@@ -50,7 +50,7 @@ L:SetMiscLocalization({
 L:SetWarningLocalization({
 	specwarnPlatform	= "Combat zone changed",
 	specwarnAttenuationL	= "LEFT!",
-	specwarnAttenuationR	= "RIGHR!",
+	specwarnAttenuationR	= "RIGHT!",
 	specwarnExhale		= "Exhale[%d] : %s",
 	specwarnDR			= ">>Damage reduction skill!<<",
 	specwarnExhaleB		= "Next: >>%d<< Exhale"
@@ -174,7 +174,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Helpme				= "Help me ~~~",
+	Helpme				= ">_<",
 	Reinforcements		= "Wind Lord Mel'jarak calls for reinforcements!"
 })
 

@@ -10,7 +10,7 @@ local cbNivaya = cargBags:GetImplementation("Nivaya")
 
 do	--Replacement for UIDropDownMenu
 
-	local font = ns.options.fonts.dropdown
+	local font = (RealUI and RealUI.font.pixel1) or ns.options.fonts.dropdown
 	local frameHeight = 14
 	local defaultWidth = 120
 	local frameInset = 16
@@ -21,16 +21,16 @@ do	--Replacement for UIDropDownMenu
 	
 	f:SetFrameStrata("FULLSCREEN_DIALOG")
 	f:SetSize(defaultWidth+frameInset,32)
+	f:SetClampedToScreen(true)
 
 	local inset = 1
 	f:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8x8", 
 		edgeFile = "Interface\\Buttons\\WHITE8x8", 
 		tile = true, tileSize = 16, edgeSize = 1, 
 		insets = { left = inset, right = inset, top = inset, bottom = inset }})
-	f:SetBackdropColor(unpack(ns.options.colors.background))
+	local colors = (RealUI and RealUI.media.window) or ns.options.colors.background
+	f:SetBackdropColor(unpack(colors))
 	f:SetBackdropBorderColor(0, 0, 0)
-	
-	f:SetClampedToScreen(true)
 
 	function f:CreateButton()
 		
@@ -134,7 +134,7 @@ do	--Replacement for UIDropDownMenu
 	end
 	
 	tinsert(UISpecialFrames,f:GetName())
-	
+
 end
 
 ---------------------------------------------
@@ -156,7 +156,7 @@ local optDefaults = {
 					Consumables = true,
 					Quest = true,
 					BankBlack = true,
-					scale = 1,
+					scale = 0.83,
 					FilterBank = true,
 					CompressEmpty = true,
 					Unlocked = true,
@@ -224,6 +224,7 @@ function cargBags_Nivaya:ADDON_LOADED(event, addon)
 	cB_Bags.bankBattlePet	= C:New("cBniv_BankPet")
 	cB_Bags.bankQuest		= C:New("cBniv_BankQuest")
 	cB_Bags.bankTrade		= C:New("cBniv_BankTrade")
+	cB_Bags.bankReagent		= C:New("cBniv_BankReagent")
 	cB_Bags.bank			= C:New("cBniv_Bank")
 
 	cB_Bags.bankSets		:SetMultipleFilters(true, cB_Filters.fBank, cB_Filters.fBankFilter, cB_Filters.fItemSets)
@@ -232,6 +233,7 @@ function cargBags_Nivaya:ADDON_LOADED(event, addon)
 	cB_Bags.bankBattlePet	:SetExtendedFilter(cB_Filters.fItemClass, "BankBattlePet")
 	cB_Bags.bankQuest		:SetExtendedFilter(cB_Filters.fItemClass, "BankQuest")
 	cB_Bags.bankTrade		:SetExtendedFilter(cB_Filters.fItemClass, "BankTradeGoods")
+	cB_Bags.bankReagent		:SetMultipleFilters(true, cB_Filters.fBankReagent, cB_Filters.fHideEmpty)
 	cB_Bags.bank			:SetMultipleFilters(true, cB_Filters.fBank, cB_Filters.fHideEmpty)
 	if cBniv.BankCustomBags then
 		for _,v in ipairs(cB_CustomBags) do cB_Bags['Bank'..v.name]:SetExtendedFilter(cB_Filters.fItemClass, 'Bank'..v.name) end
@@ -280,7 +282,7 @@ function cargBags_Nivaya:ADDON_LOADED(event, addon)
 	cB_Bags.main		:SetMultipleFilters(true, cB_Filters.fBags, cB_Filters.fHideEmpty)
 	for _,v in pairs(cB_CustomBags) do cB_Bags[v.name]:SetExtendedFilter(cB_Filters.fItemClass, v.name) end
 
-	cB_Bags.main:SetPoint("BOTTOMRIGHT", -80, 80)
+	cB_Bags.main:SetPoint("BOTTOMRIGHT", -99, 26)
 	cB_Bags.bank:SetPoint("TOPLEFT", 20, -20)
 	
 	cbNivaya:CreateAnchors()
@@ -319,7 +321,8 @@ function cbNivaya:CreateAnchors()
 	CreateAnchorInfo(cB_Bags.bankArmor, cB_Bags.bankSets, "Bottom")
 	CreateAnchorInfo(cB_Bags.bankSets, cB_Bags.bankTrade, "Bottom")
 	
-	CreateAnchorInfo(cB_Bags.bank, cB_Bags.bankConsumables, "Bottom")
+	CreateAnchorInfo(cB_Bags.bank, cB_Bags.bankReagent, "Bottom")
+	CreateAnchorInfo(cB_Bags.bankReagent, cB_Bags.bankConsumables, "Bottom")
 	CreateAnchorInfo(cB_Bags.bankConsumables, cB_Bags.bankQuest, "Bottom")
 	CreateAnchorInfo(cB_Bags.bankQuest, cB_Bags.bankBattlePet, "Bottom")
 	
@@ -337,18 +340,18 @@ function cbNivaya:CreateAnchors()
 	end
 	
 	-- Bag Anchors:
-	CreateAnchorInfo(cB_Bags.main, cB_Bags.key, "Bottom")
+	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.key, 			"Bottom")
 
-	CreateAnchorInfo(cB_Bags.main, cB_Bags.bagItemSets, "Left")
-	CreateAnchorInfo(cB_Bags.bagItemSets, cB_Bags.armor, "Top")
-	CreateAnchorInfo(cB_Bags.armor, cB_Bags.battlepet, "Top")
-	CreateAnchorInfo(cB_Bags.battlepet, cB_Bags.bagStuff, "Top")
-	
-	CreateAnchorInfo(cB_Bags.main, cB_Bags.tradegoods, "Top")
-	CreateAnchorInfo(cB_Bags.tradegoods, cB_Bags.consumables, "Top")
-	CreateAnchorInfo(cB_Bags.consumables, cB_Bags.quest, "Top")
-	CreateAnchorInfo(cB_Bags.quest, cB_Bags.bagJunk, "Top")
-	CreateAnchorInfo(cB_Bags.bagJunk, cB_Bags.bagNew, "Top")
+	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.bagItemSets, 	"Left")
+	CreateAnchorInfo(cB_Bags.bagItemSets, 	cB_Bags.armor, 			"Top")
+	CreateAnchorInfo(cB_Bags.armor, 		cB_Bags.battlepet, 		"Top")
+	CreateAnchorInfo(cB_Bags.battlepet, 	cB_Bags.bagStuff, 		"Top")
+
+	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.tradegoods, 	"Top")
+	CreateAnchorInfo(cB_Bags.tradegoods, 	cB_Bags.consumables, 	"Top")
+	CreateAnchorInfo(cB_Bags.consumables, 	cB_Bags.quest, 			"Top")
+	CreateAnchorInfo(cB_Bags.quest, 		cB_Bags.bagJunk, 		"Top")
+	CreateAnchorInfo(cB_Bags.bagJunk, 		cB_Bags.bagNew, 		"Top")
 	
 	-- Custom Container Anchors:
 	local ref = { [0] = 0, [1] = 0 }
@@ -397,14 +400,14 @@ end
 
 function cbNivaya:OnBankOpened() 
 	cB_Bags.bank:Show(); 
-	cbNivaya:ShowBags(cB_Bags.bankSets, cB_Bags.bankArmor, cB_Bags.bankQuest, cB_Bags.bankTrade, cB_Bags.bankConsumables, cB_Bags.bankBattlePet) 
+	cbNivaya:ShowBags(cB_Bags.bankSets, cB_Bags.bankReagent, cB_Bags.bankArmor, cB_Bags.bankQuest, cB_Bags.bankTrade, cB_Bags.bankConsumables, cB_Bags.bankBattlePet) 
 	if cBniv.BankCustomBags then
 		for _,v in ipairs(cB_CustomBags) do if v.active then cbNivaya:ShowBags(cB_Bags['Bank'..v.name]) end end
 	end
 end
 
 function cbNivaya:OnBankClosed()
-	cbNivaya:HideBags(cB_Bags.bank, cB_Bags.bankSets, cB_Bags.bankArmor, cB_Bags.bankQuest, cB_Bags.bankTrade, cB_Bags.bankConsumables, cB_Bags.bankBattlePet)
+	cbNivaya:HideBags(cB_Bags.bank, cB_Bags.bankSets, cB_Bags.bankReagent, cB_Bags.bankArmor, cB_Bags.bankQuest, cB_Bags.bankTrade, cB_Bags.bankConsumables, cB_Bags.bankBattlePet)
 	if cBniv.BankCustomBags then
 		for _,v in ipairs(cB_CustomBags) do if v.active then cbNivaya:HideBags(cB_Bags['Bank'..v.name]) end end
 	end
@@ -451,7 +454,6 @@ local DropDownInitialized
 function cbNivaya:CatDropDownInit()
 	if DropDownInitialized then return end
 	DropDownInitialized = true
-	level = 1
 	local info = {}--UIDropDownMenu_CreateInfo()
   
 	local function AddInfoItem(type)
@@ -460,14 +462,11 @@ function cbNivaya:CatDropDownInit()
 		info.text = t and t or type
 		info.value = type
 		
-		if (type == "-------------") then
+		if (type == "-------------") or (type == CANCEL) then
 			info.func = nil
 		else
 			info.func = function(self) cbNivaya:CatDropDownOnClick(self, type) end
 		end
-		
-	--	info.owner = self:GetParent()
-	--	UIDropDownMenu_AddButton(info, level)
 		
 		cbNivCatDropDown:AddButton(info.text, type, info.func)
 	end
@@ -482,7 +481,11 @@ function cbNivaya:CatDropDownInit()
 	AddInfoItem("Stuff")
 	AddInfoItem("Junk")
 	AddInfoItem("Bag")
-	for _,v in ipairs(cB_CustomBags) do if v.active then AddInfoItem(v.name) end end
+	for _,v in ipairs(cB_CustomBags) do
+		if v.active then AddInfoItem(v.name) end
+	end
+	AddInfoItem("-------------")
+	AddInfoItem(CANCEL)
 	
 	hooksecurefunc(NivayacBniv_Bag, "Hide", function() cbNivCatDropDown:Hide() end)
 end
@@ -493,9 +496,9 @@ function cbNivaya:CatDropDownOnClick(self, type)
 	local itemID = cbNivCatDropDown.itemID
 
 	if (type == "MarkAsNew") then
-		cB_KnownItems[itemName] = nil
+		table.remove(cB_KnownItems, itemID)
 	elseif (type == "MarkAsKnown") then
-		cB_KnownItems[itemName] = cbNivaya:getItemCount(itemName)
+		cB_KnownItems[itemID] = cbNivaya:getItemCount(itemName)
 	else
 		cBniv_CatInfo[itemID] = value
 		if (itemID ~= nil) then cB_ItemClass[itemID] = nil end
@@ -675,7 +678,7 @@ local Event =  CreateFrame('Frame', nil)
 Event:RegisterEvent("PLAYER_ENTERING_WORLD")
 Event:SetScript('OnEvent', function(self, event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
-		for bagID = -2, 11 do
+		for bagID = -3, 11 do
 			local slots = GetContainerNumSlots(bagID)
 			for slotID=1,slots do
 				local button = cbNivaya.buttonClass:New(bagID, slotID)
@@ -690,6 +693,40 @@ Event:SetScript('OnEvent', function(self, event, ...)
 			button:Free()
 		end
 		cbNivaya:UpdateBags()
+
+		if IsReagentBankUnlocked() then
+			NivayacBniv_Bank.reagentBtn:Show()
+		else
+			NivayacBniv_Bank.reagentBtn:Hide()
+			local buyReagent = CreateFrame("Button", nil, NivayacBniv_BankReagent, "UIPanelButtonTemplate")
+			buyReagent:SetText(BANKSLOTPURCHASE)
+			buyReagent:SetWidth(buyReagent:GetTextWidth() + 20)
+			buyReagent:SetPoint("CENTER", NivayacBniv_BankReagent, 0, 0)
+			buyReagent:SetScript("OnEnter", function(self)
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+				GameTooltip:AddLine(REAGENT_BANK_HELP, 1, 1, 1, true)
+				GameTooltip:Show()
+			end)
+			buyReagent:SetScript("OnLeave", function()
+				GameTooltip:Hide()
+			end)
+			buyReagent:SetScript("OnClick", function()
+				--print("Reagent Bank!!!")
+				StaticPopup_Show("CONFIRM_BUY_REAGENTBANK_TAB")
+			end)
+			buyReagent:SetScript("OnEvent", function(...)
+				--print("OnReagentPurchase", ...)
+				buyReagent:UnregisterEvent("REAGENTBANK_PURCHASED")
+				NivayacBniv_Bank.reagentBtn:Show()
+				buyReagent:Hide()
+			end)
+			if Aurora then
+				local F = Aurora[1]
+				F.Reskin(buyReagent)
+			end
+			buyReagent:RegisterEvent("REAGENTBANK_PURCHASED")
+		end
+
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	end
 end)

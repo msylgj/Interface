@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(860, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 10505 $"):sub(12, -3))
 mod:SetCreatureID(71953)
@@ -86,7 +86,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(144638)) then
 					specWarnSpectralSwipeOther:Show(args.destName)
 					if mod:IsTank() then
-						sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
+						sndWOP:Play("changemt") --換坦嘲諷
 					end
 				end
 			end
@@ -95,7 +95,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnAgility:Show(args.destName)
 		specWarnAgility:Show(args.destName)
 		if mod:IsMagicDispeller() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3") --快驅散
+			sndWOP:Play("dispelnow") --快驅散
 		end
 --		timerAgilityCD:Start()
 	end

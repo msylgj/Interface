@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(664, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
@@ -40,7 +40,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnUltimatePower:Show(args.destName)
 		timerUltimatePower:Start(args.destName)
 		if args.sourceGUID == UnitGUID("target") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\changetarget.mp3")--目標轉換
+			sndWOP:Play("changetarget")--目標轉換
 		end
 	end
 end

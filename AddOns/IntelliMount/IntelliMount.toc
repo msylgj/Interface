@@ -1,0 +1,19 @@
+## Interface: 60000
+## Title: IntelliMount
+## Version: 1.01
+## Author: Abin
+## SavedVariables: IntelliMountDB
+
+Includes\InterfaceOptionPage-1.0.lua
+
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Modules\ShapeShifts.lua
+Modules\Dragonwrath.lua
+Modules\Halloween.lua
+Modules\UtilityMounts.lua
+
+ActionButtons.lua
+OptionFrames.lua

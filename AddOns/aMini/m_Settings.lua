@@ -32,7 +32,7 @@ DEFAULT_CHAT_FRAME:AddMessage("|c0000FF00                      >>>使用/opoaui�
 SlashCmdList["OPOAUI"] = function(msg)   
   local cmd = msg:lower()
   if cmd == "cmd" then
-      print("常用指令说明:\n打开网格:/align\n移动任务追踪框体:/wf\n获取鼠标指向框体名:/gf\n快速切换天赋:/ss\n自动邀请:/ainv\n解散团队:/rd\n鼠标指向按键绑定 /hb\n模式化聊天框:/setchat\n伤害显示插件移动:/xct")
+      print("常用指令说明:\n打开网格:/align\n获取鼠标指向框体名:/gf\n快速切换天赋:/ss\n自动邀请:/ainv\n解散团队:/rd\n鼠标指向按键绑定 /hb\n模式化聊天框:/setchat\n伤害显示插件移动:/xct")
   elseif cmd == "lua" then
 	  print("常用设置修改:\n聊天设置:m_Chat\\m_Chat.lua\n技能监视:Sora's AuraWatch\\AuraWatchList.lua\n小地图位置:m_Minimap\\m_Minimap.lua\n姓名板相关:m_Nameplates\\cfg.lua\n头像相关:oUF_Qulight\\cfg.lua")
   else
@@ -77,37 +77,6 @@ SlashCmdList["FRAME"] = function(arg)
 	end
 end
 SLASH_FRAME1 = "/gf"
-
--- Quest tracker(by Tukz)
-local wf = WatchFrame
-local wfmove = false 
-
-wf:SetMovable(true);
-wf:SetClampedToScreen(false); 
-wf:ClearAllPoints()
-wf:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -35, -200)
-wf:SetWidth(250)
-wf:SetHeight(500)
-wf:SetUserPlaced(true)
-wf.SetPoint = function() end
-
-local function WATCHFRAMELOCK()
-	if wfmove == false then
-		wfmove = true
-		print("WatchFrame unlocked for drag")
-		wf:EnableMouse(true);
-		wf:RegisterForDrag("LeftButton"); 
-		wf:SetScript("OnDragStart", wf.StartMoving); 
-		wf:SetScript("OnDragStop", wf.StopMovingOrSizing);
-	elseif wfmove == true then
-		wf:EnableMouse(false);
-		wfmove = false
-		print("WatchFrame locked")
-	end
-end
-
-SLASH_WATCHFRAMELOCK1 = "/wf"
-SlashCmdList["WATCHFRAMELOCK"] = WATCHFRAMELOCK
 
 -- simple spec switching
 SlashCmdList["SPEC"] = function() 
@@ -297,72 +266,45 @@ if autoacceptDE then
 	end)
 end
 
----副本自动收起任务追踪
-local autocollapse = CreateFrame("Frame")
-autocollapse:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-autocollapse:RegisterEvent("PLAYER_ENTERING_WORLD")
-autocollapse:SetScript("OnEvent", function(self)
-   if IsInInstance() then
-      WatchFrame.userCollapsed = true
-      WatchFrame_Collapse(WatchFrame)
-   else
-      WatchFrame.userCollapsed = nil
-      WatchFrame_Expand(WatchFrame)
-   end
-end)
-----修复地城导览
-hooksecurefunc("EncounterJournal_LoadUI", function()
-    function EncounterJournal_Loot_OnUpdate(self)
-        if GameTooltip:IsOwned(self) then
-            if IsModifiedClick("COMPAREITEMS") or
-                    (GetCVarBool("alwaysCompareItems") and not GameTooltip:IsEquippedItem()) then
-                GameTooltip_ShowCompareItem();
-            else
-                ShoppingTooltip1:Hide();
-                ShoppingTooltip2:Hide();
-                ShoppingTooltip3:Hide();
-            end
+--快速隐藏显示头盔披风 y368413分享
+local GameTooltip = GameTooltip 
+local helmcb = CreateFrame("CheckButton", nil, PaperDollFrame) 
+helmcb:ClearAllPoints() 
+helmcb:SetSize(22,22) 
+helmcb:SetFrameLevel(10) 
+helmcb:SetPoint("TOPLEFT", CharacterHeadSlot, "BOTTOMRIGHT", 5, 5) 
+helmcb:SetScript("OnClick", function() ShowHelm(not ShowingHelm()) end) 
+helmcb:SetScript("OnEnter", function(self) 
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT") 
+   GameTooltip:SetText("显示/隐藏 头部") 
+end) 
+helmcb:SetScript("OnLeave", function() GameTooltip:Hide() end) 
+helmcb:SetScript("OnEvent", function() helmcb:SetChecked(ShowingHelm()) end) 
+helmcb:SetNormalTexture("Interface\\Buttons\\UI-CheckBox-Up") 
+helmcb:SetPushedTexture("Interface\\Buttons\\UI-CheckBox-Down") 
+helmcb:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight") 
+helmcb:SetDisabledCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled") 
+helmcb:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check") 
+helmcb:RegisterEvent("UNIT_MODEL_CHANGED") 
 
-            if IsModifiedClick("DRESSUP") then
-                ShowInspectCursor();
-            else
-                ResetCursor();
-            end
-        end
-    end
-end)
+local cloakcb = CreateFrame("CheckButton", nil, PaperDollFrame) 
+cloakcb:ClearAllPoints() 
+cloakcb:SetSize(22,22) 
+cloakcb:SetFrameLevel(10) 
+cloakcb:SetPoint("TOPLEFT", CharacterBackSlot, "BOTTOMRIGHT", 5, 5) 
+cloakcb:SetScript("OnClick", function() ShowCloak(not ShowingCloak()) end) 
+cloakcb:SetScript("OnEnter", function(self) 
+   GameTooltip:SetOwner(self, "ANCHOR_RIGHT") 
+   GameTooltip:SetText("显示/隐藏 披风") 
+end) 
+cloakcb:SetScript("OnLeave", function() GameTooltip:Hide() end) 
+cloakcb:SetScript("OnEvent", function() cloakcb:SetChecked(ShowingCloak()) end) 
+cloakcb:SetNormalTexture("Interface\\Buttons\\UI-CheckBox-Up") 
+cloakcb:SetPushedTexture("Interface\\Buttons\\UI-CheckBox-Down") 
+cloakcb:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight") 
+cloakcb:SetDisabledCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled") 
+cloakcb:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check") 
+cloakcb:RegisterEvent("UNIT_MODEL_CHANGED") 
 
---快速隐藏显示头盔披风 斬擊分享
-local c = {}
-local createCheckbox = function(i)
-   local cb = CreateFrame("CheckButton", nil, PaperDollFrame)
-      cb:SetSize(20, 20)
-      cb:SetFrameLevel(10)
-      cb:SetNormalTexture([[Interface\Buttons\UI-CheckBox-Up]])
-      cb:SetPushedTexture([[Interface\Buttons\UI-CheckBox-Down]])
-      cb:SetCheckedTexture([[Interface\Buttons\UI-CheckBox-Check]])
-      cb:SetHighlightTexture([[Interface\Buttons\UI-CheckBox-Highlight]])
-      cb:SetDisabledCheckedTexture([[Interface\Buttons\UI-CheckBox-Check-Disabled]])
-   if i == 1 then
-      cb:SetPoint("BOTTOMRIGHT", CharacterHeadSlot, "BOTTOMRIGHT", 5, -5)
-      cb:SetScript("OnClick", function() ShowHelm(not ShowingHelm()) end)
-      cb:SetChecked(ShowingHelm())
-      c[i] = cb
-   else
-      cb:SetPoint("BOTTOMRIGHT", CharacterBackSlot, "BOTTOMRIGHT", 5, -5)
-      cb:SetScript("OnClick", function() ShowCloak(not ShowingCloak()) end)
-      cb:SetChecked(ShowingCloak())
-      c[i] = cb
-   end
-end
-
-for i = 1, 2 do
-   createCheckbox(i)
-end
-
-local F = CreateFrame("Frame")
-   F:RegisterEvent("UNIT_MODEL_CHANGED")
-   F:SetScript("OnEvent", function()
-      c[1]:SetChecked(ShowingHelm())
-      c[2]:SetChecked(ShowingCloak())
-   end)
+helmcb:SetChecked(ShowingHelm()) 
+cloakcb:SetChecked(ShowingCloak())

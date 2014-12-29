@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60000
 ## Notes: My Layout for oUF
 ## RequiredDeps: oUF_Qulight
 ## X-Category: UnitFrame

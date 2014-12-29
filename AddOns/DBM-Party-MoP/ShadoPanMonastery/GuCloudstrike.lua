@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(673, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 10172 $"):sub(12, -3))
 mod:SetCreatureID(56747)--56747 (Gu Cloudstrike), 56754 (Azure Serpent)
@@ -55,18 +55,13 @@ function mod:StaticFieldTarget(targetname, uId)
 		if targetname == UnitName("player") then
 			specWarnStaticField:Show()
 			yellStaticField:Yell()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+			sndWOP:Play("runaway")--快躲開
 		else
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 6 then
 					specWarnStaticFieldNear:Show(targetname)
-					sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+					sndWOP:Play("runaway")--快躲開
 				end
 			end
 		end
@@ -111,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 		warnMagneticShroud:Show()
 		specWarnMagneticShroud:Show()
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\healall.mp3")--注意群療
+			sndWOP:Play("healall")--注意群療
 		end
 		timerMagneticShroudCD:Start()
 	end
@@ -128,7 +123,7 @@ end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 128889 and destGUID == UnitGUID("player") and self:AntiSpam() then
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("runaway")--快躲開
 		specWarnStaticField:Show()
 	end
 end

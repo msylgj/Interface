@@ -274,48 +274,6 @@ DBMSkin:SetScript("OnEvent", function()
 		hooksecurefunc(DBM.BossHealth,"AddBoss",SkinBoss)
 		hooksecurefunc(DBM.BossHealth,"UpdateSettings",SkinBoss)
 
-		DBM.RangeCheck:Show()
-		DBM.RangeCheck:Hide()
-		DBMRangeCheck:HookScript("OnShow",function(self)
-			self:SetBackdrop({
-				edgeFile = "Interface\\Buttons\\WHITE8x8", 
-				edgeSize = 1, 
-			})
-			self:SetBackdropBorderColor(65/255, 74/255, 79/255)
-			self.shadow = CreateFrame("Frame", nil, self)
-			self.shadow:SetFrameLevel(1)
-			self.shadow:SetFrameStrata(self:GetFrameStrata())
-			self.shadow:SetPoint("TOPLEFT", -5, 5)
-			self.shadow:SetPoint("BOTTOMRIGHT", 5, -5)
-			self.shadow:SetBackdrop({
-				edgeFile = "Interface\\AddOns\\DBM-Skin\\media\\glowTex", 
-				edgeSize = 5,
-				insets = { left = 4, right = 4, top = 4, bottom = 4 }
-			})
-			self.shadow:SetBackdropBorderColor(0,0,0)
-		end)
-
-		DBMRangeCheckRadar:HookScript("OnShow",function(self)
-			self:SetBackdrop({
-				edgeFile = "Interface\\Buttons\\WHITE8x8", 
-				edgeSize = 1, 
-			})
-			self:SetBackdropBorderColor(65/255, 74/255, 79/255)
-			self.shadow = CreateFrame("Frame", nil, self)
-			self.shadow:SetFrameLevel(1)
-			self.shadow:SetFrameStrata(self:GetFrameStrata())
-			self.shadow:SetPoint("TOPLEFT", -5, 5)
-			self.shadow:SetPoint("BOTTOMRIGHT", 5, -5)
-			self.shadow:SetBackdrop({
-				edgeFile = "Interface\\AddOns\\DBM-Skin\\media\\glowTex", 
-				edgeSize = 5,
-				insets = { left = 4, right = 4, top = 4, bottom = 4 }
-			})
-			self.shadow:SetBackdropBorderColor(0,0,0)
-			self.text:SetFont(DBMRangeCheckRadar.text:GetFont(), 14, "THINOUTLINE")
-		end)
-
-
 		local RaidNotice_AddMessage_=RaidNotice_AddMessage
 		RaidNotice_AddMessage=function(noticeFrame, textString, colorInfo)
 			if textString:find(" |T") then
@@ -330,9 +288,9 @@ end)
 local ForceOptions = function()
 	DBM_SavedOptions.Enabled=true
 		
-	DBT_SavedOptions["DBM"].Scale = 1
-	DBT_SavedOptions["DBM"].HugeScale = 1
-	DBT_SavedOptions["DBM"].BarXOffset = 0
+	DBT_PersistentOptions["DBM"].Scale = 1
+	DBT_PersistentOptions["DBM"].HugeScale = 1
+	DBT_PersistentOptions["DBM"].BarXOffset = 0
 end
 
 local loadOptions = CreateFrame("Frame")

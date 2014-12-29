@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(690, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(61243, 61337, 61338, 61339, 61340)--61243 (Gekkan), 61337 (Glintrok Ironhide), 61338 (Glintrok Skulker), 61339 (Glintrok Oracle), 61340 (Glintrok Hexxer)
@@ -48,7 +48,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnHexDispel:Show(args.destName)
 		timerHex:Start(args.destName)
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")--快驅散
+			sndWOP:Play("dispelnow")--快驅散
 		end
 	end
 end
@@ -76,7 +76,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHexInterrupt:Show(args.sourceName)
 		timerHexCD:Start()
 		if args.sourceGUID == UnitGUID("target") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--打斷施法
+			sndWOP:Play("kickcast")--打斷施法
 		end
 	elseif args.spellId == 118963 then
 		warnShank:Show()
@@ -85,7 +85,7 @@ function mod:SPELL_CAST_START(args)
 		warnCleansingFlame:Show()
 		specWarnCleansingFlame:Show(args.sourceName)
 		if args.sourceGUID == UnitGUID("target") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--打斷施法
+			sndWOP:Play("kickcast")--打斷施法
 		end
 	end
 end

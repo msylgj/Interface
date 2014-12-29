@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(686, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(56884)
@@ -54,7 +54,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnHazeofHate:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnHazeofHate:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_zhgg.mp3")--憎恨過高
+			sndWOP:Play("ex_mop_zhgg")--憎恨過高
 		end
 	elseif args.spellId == 107356 then
 		warnRisingHate:Show()
@@ -67,7 +67,7 @@ function mod:SPELL_CAST_START(args)
 		warnGrippingHatred:Show()
 		specWarnGrippingHatred:Show()
 		timerGrippingHartedCD:Start()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_zqkd.mp3")--紫球快打
+		sndWOP:Play("ex_mop_zqkd")--紫球快打
 	end
 end
 
@@ -81,7 +81,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overk
 	if spellId == 112933 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnDarkH:Show()
 		if not mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+			sndWOP:Play("runaway")--快躲開
 		end
 	end
 end

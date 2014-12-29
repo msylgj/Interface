@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 10185 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
@@ -222,9 +222,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerSpecialCD:Cancel()
 		end)
 		if mod:IsDps() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_bwzkd.mp3") --保衛者快打
+			sndWOP:Play("ex_mop_bwzkd") --保衛者快打
 		else
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_bwzcx.mp3") --保衛者出現
+			sndWOP:Play("ex_mop_bwzcx") --保衛者出現
 		end
 	elseif args:IsSpellID(123505) and self.Options.SetIconOnGuardfix then
 		if guardActivated == 0 then
@@ -249,19 +249,19 @@ function mod:SPELL_AURA_APPLIED(args)
 			showDamagedHealthBar(self, args.sourceGUID, args.spellName, getAwayHealth)
 		end
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\healall.mp3") --注意群療
+			sndWOP:Play("healall") --注意群療
 		else
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_slkd.mp3") --首領快打
+			sndWOP:Play("ex_mop_slkd") --首領快打
 		end
 		Crushcount = Crushcount + 1
 		if MyJS() then
 			specWarnJSA:Schedule(1)
-			sndWOP:Schedule(1, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			sndWOP:Schedule(1, "defensive") --注意減傷
 		end
 	elseif args:IsSpellID(123121) then
 		if not mod:IsTank() and args:IsPlayer() and (not hideActive) and self:AntiSpam(2, 1) then
 			specWarnSprayNT:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲开
+			sndWOP:Play("runaway") --快躲开
 		end
 		if (args.amount or 1) % 3 == 0 and args:IsDestTypePlayer() then
 			warnSpray:Show(args.destName, args.amount)
@@ -271,7 +271,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if args.amount >= 6 and not UnitDebuff("player", GetSpellInfo(123121)) and not UnitIsDeadOrGhost("player") then
 					specWarnSprayOther:Show(args.destName)
 					if mod:IsTank() and (not hideActive) then
-						sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
+						sndWOP:Play("changemt") --換坦嘲諷
 					end
 				end
 			end
@@ -362,9 +362,7 @@ function mod:OnSync(msg, icon)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(123244) then
-		hideDebug = 0
-		damageDebug = 0
+	if args.spellId == 123244 then
 		hideTime = GetTime()
 		specialsCast = specialsCast + 1
 		hideActive = true
@@ -374,8 +372,8 @@ function mod:SPELL_CAST_START(args)
 		specWarnHide:Show()
 		timerSpecialCD:Start(nil, specialsCast+1)
 		self:SetWipeTime(60)--If she hides at 1.6% or below, she will be killed during hide. In this situration, yell fires very slowly. This hack can prevent recording as wipe.
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_yszb.mp3") --隱身準備
-		sndWOP:Schedule(1, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\scattersoon.mp3")--注意分散
+		sndWOP:Play("ex_mop_yszb") --隱身準備
+		sndWOP:Schedule(1, "scattersoon")--注意分散
 		self:RegisterShortTermEvents(
 			"INSTANCE_ENCOUNTER_ENGAGE_UNIT",--We register on hide, because it also fires just before hide, every time and don't want to trigger "hide over" at same time as hide.
 			"SPELL_DAMAGE",
@@ -424,22 +422,18 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, _, _, s
 end
 mod.SPELL_PERIODIC_DAMAGE = mod.SPELL_DAMAGE
 mod.RANGE_DAMAGE = mod.SPELL_DAMAGE
---NOTE: It breaks early if protect phase is triggered (ie boss hits 80 60 40 or 20 during hide)
---Results (may need to do LFR results with RANGE_DAMAGE flag)
----LFR1 (that didn't break early from protect)
-----Spell Hit Lei Shi: 74
-----Total Damage: 1174176
 
---Fires twice when boss returns, once BEFORE visible (and before we can detect unitID, so it flags unknown), then once a 2nd time after visible
---"<233.9> [INSTANCE_ENCOUNTER_ENGAGE_UNIT] Fake Args:#nil#nil#Unknown#0xF130F6070000006C#normal#0#nil#nil#nil#nil#normal#0#nil#nil#nil#nil#normal#0#nil#nil#nil#nil#normal#0#Real Args:", -- [14168]
 function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT(event)
-	hideActive = false
+	if hideActive then --Mini_Dragon
+        hideActive = false
+		return
+	end
 	self:SetWipeTime(3)
 	self:UnregisterShortTermEvents()--Once boss appears, unregister event, so we ignore the next two that will happen, which will be 2nd time after reappear, and right before next Hide.
 	warnHideOver:Show(GetSpellInfo(123244))
 	warnHideProgress:Cancel()
 	warnHideProgress:Show(hideDebug, damageDebug, tostring(format("%.1f", timeDebug)))--Show right away instead of waiting out the schedule
-	sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_mop_ysjs.mp3") --隱身結束
+	sndWOP:Play("ex_mop_ysjs") --隱身結束 
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)--Go back to showing only tanks
 	end

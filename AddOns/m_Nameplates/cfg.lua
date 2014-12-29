@@ -1,34 +1,28 @@
   local addon, ns = ...
   local cfg = CreateFrame("Frame")
 
-  -----------------------------
+  cfg.nameplates = {
+  
   -- MEDIA
-  -----------------------------
-  local MediaPath = "Interface\\AddOns\\m_Nameplates\\media\\"
-  cfg.statusbar = MediaPath.."statusbar"
-  cfg.backdrop_edge = MediaPath.."glowTex"
-  cfg.font = "Fonts\\ARKai_T.ttf"
-  cfg.icontex = MediaPath.."iconborder"
-  
-  -----------------------------
+	font = "Fonts\\ARKai_T.ttf",
+	icontex = "Interface\\AddOns\\m_Nameplates\\media\\iconborder",
+	backdrop_edge = "Interface\\AddOns\\m_Nameplates\\media\\glowTex",
+	statusbar = "Interface\\AddOns\\m_Nameplates\\media\\statusbar",
+	
   -- CONFIG
-  -----------------------------
-  cfg.fontsize = 9					-- Font size for Name and HP text
-  cfg.fontflag = "THINOUTLINE"		-- Text outline
-  cfg.hpHeight = 9					-- Health bar height
-  cfg.hpWidth = 110					-- Health bar width
-  cfg.raidIconSize = 18				-- Raid icon size
-  cfg.cbIconSize = 20				-- Cast bar icon size
-  cfg.cbHeight = 5					-- Cast bar height
-  cfg.cbWidth = 100					-- Cast bar width
-  cfg.combat_toggle = true 			-- If set to true nameplates will be automatically toggled on when you enter the combat
+	fontsize = 10,					-- Font size for Name and HP text
+	fontflag = "THINOUTLINE",		-- Text outline
+	hpHeight = 9,					-- Health bar height
+	hpWidth = 110,					-- Health bar width
+	namecolor = false,				-- Colorize names based on reaction
+	raidIconSize = 25,				-- Raid icon size
+	combat_toggle = true, 			-- If set to true nameplates will be automatically toggled on when you enter the combat
+	castbar = {
+		icon_size = 20,				-- Cast bar icon size
+		height = 6,					-- Cast bar height
+	},
+  }
   
-  cfg.TotemIcon = true 				-- Toggle totem icons
-  cfg.TotemSize = 20				-- Totem icon size
-  
-  
-  cfg.cast_time = true
-  cfg.namecolor = true
-  
+
   -- HANDOVER
   ns.cfg = cfg

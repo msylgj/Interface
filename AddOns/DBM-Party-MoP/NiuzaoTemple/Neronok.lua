@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(727, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(62205)
@@ -36,12 +36,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnResin:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnResin:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\keepjump.mp3")--保持跳動
+			sndWOP:Play("keepjump")--保持跳動
 		end
 	elseif args.spellId == 121443 then
 		if args:IsPlayer() then
 			specWarnCausticPitch:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+			sndWOP:Play("runaway")--快躲開
 		end
 	elseif args.spellId == 121282 and not windsActive then
 		windsActive = true
@@ -60,7 +60,7 @@ end
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.Fly or msg:find(L.Fly) then
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\justrun.mp3")--快跑
+		sndWOP:Play("justrun")--快跑
 		specWarnFly:Show()
 	end
 end

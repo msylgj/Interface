@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60000
 ## Title: mono|cffffffffMinimap|r
 ## Notes: Minimap modifications
 ## Author: Monolit

@@ -1,11 +1,10 @@
 ﻿local mod	= DBM:NewMod(691, "DBM-Pandaria", nil, 322)	-- 322 = Pandaria/Outdoor I assume
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 10466 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11120 $"):sub(12, -3))
 mod:SetCreatureID(60491)
 mod:SetReCombatTime(20)
-mod:SetQuestID(32099)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetMinSyncRevision(10466)
 mod:SetZone()
@@ -135,7 +134,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 119488 then
 		warnUnleashedWrath:Show()
 		specWarnUnleashedWrath:Show()
-		sndWOP:Schedule(2, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --AE
+		sndWOP:Schedule(2, "aesoon") --AE
 		timerUnleashedWrath:Start()
 	elseif args.spellId == 119622 then
 		timerGrowingAngerCD:Start()
@@ -164,11 +163,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnGrowingAnger:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\findmc.mp3") --心控
-			sndWOP:Schedule(1.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runout.mp3")
-			sndWOP:Schedule(3.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-			sndWOP:Schedule(4.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-			sndWOP:Schedule(5.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+			sndWOP:Play("findmc") --心控
+			sndWOP:Schedule(1.5, "runout")
+			sndWOP:Schedule(3.5, "countthree")
+			sndWOP:Schedule(4.5, "counttwo")
+			sndWOP:Schedule(5.5, "countone")
 		end
 		self:Unschedule(showpreMC)
 		if #warnpreMCTargets >= 3 then
@@ -207,7 +206,7 @@ end
 function mod:UNIT_AURA(uId)
 	if UnitDebuff("player", bitterThought) and self:AntiSpam(2) and not playerMCed then
 		specWarnBitterThoughts:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+		sndWOP:Play("runaway")--快躲開
 	end
 end
 

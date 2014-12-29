@@ -49,15 +49,17 @@ BagButton.itemFadeAlpha = 0.2
 
 local buttonNum = 0
 function BagButton:Create(bagID)
+
 	buttonNum = buttonNum+1
 	local name = addon.."BagButton"..buttonNum
+	local isBankBag = (bagID>=5 and bagID<=11)
+	local button = setmetatable(CreateFrame("CheckButton", name, nil, (isBankBag and "BankItemButtonBagTemplate") or "ItemButtonTemplate"), self.__index)
 
-	local button = setmetatable(CreateFrame("CheckButton", name, nil, "ItemButtonTemplate"), self.__index)
-
-	local invID = ContainerIDToInventoryID(bagID)
+	local invID = (isBankBag and (bagID-4)) or ContainerIDToInventoryID(bagID)
 	button.invID = invID
 	button:SetID(invID)
 	button.bagID = bagID
+	button.isBankBag = isBankBag
 
 	button:RegisterForDrag("LeftButton", "RightButton")
 	button:RegisterForClicks("anyUp")
@@ -93,7 +95,7 @@ function BagButton:Create(bagID)
 end
 
 function BagButton:Update()
-	local icon = GetInventoryItemTexture("player", self.invID)
+	local icon = GetInventoryItemTexture("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
 	self.Icon:SetTexture(icon or self.bgTex)
 	self.Icon:SetDesaturated(IsInventoryItemLocked(self.invID))
 
@@ -129,7 +131,11 @@ function BagButton:OnEnter()
 		end
 	end
 
-	BagSlotButton_OnEnter(self)
+	if self.isBankBag then
+		BankFrameItemButton_OnEnter(self)
+	else
+		BagSlotButton_OnEnter(self)
+	end
 end
 
 function BagButton:OnLeave()
@@ -155,7 +161,7 @@ function BagButton:OnClick()
 		return StaticPopup_Show("CONFIRM_BUY_BANK_SLOT")
 	end
 
-	if(PutItemInBag(self.invID)) then return end
+	if(PutItemInBag((self.GetInventorySlot and self:GetInventorySlot()) or self.invID)) then return end
 
 	-- Somehow we need to disconnect this from the filter-sieve
 	local container = self.bar.container

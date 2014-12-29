@@ -67,18 +67,22 @@ if cfg.Spec == true then
 				local c = GetActiveSpecGroup(false,false)
 				local majorTree1 = GetSpecialization(false,false,1)
 				local spec1 = { }
-				for i = 1, 18 do 
-					local name, iconTexture, tier, column, selected, available = GetTalentInfo(i,false,1)
-					if selected then
-						table.insert(spec1,name)
+				for i = 1, 7 do
+					for j = 1, 3 do
+						local talentID, name, iconTexture, selected, available = GetTalentInfo(i,j,1)
+						if selected then
+							table.insert(spec1,i.."-"..name)
+						end
 					end
 				end
 				local majorTree2 = GetSpecialization(false,false,2)
 				local spec2 = { }
-				for i = 1, 18 do 
-					local name, iconTexture, tier, column, selected, available = GetTalentInfo(i,false,2)
-					if selected then
-						table.insert(spec2,name)
+				for i = 1, 7 do
+					for j = 1, 3 do
+						local talentID, name, iconTexture, selected, available = GetTalentInfo(i,j,2)
+						if selected then
+							table.insert(spec2,i.."-"..name)
+						end
 					end
 				end
 				GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 6)

@@ -1,11 +1,10 @@
 ﻿local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
-mod:SetRevision(("$Revision: 10466 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11472 $"):sub(12, -3))
 mod:SetCreatureID(69161)
 mod:SetReCombatTime(20)
-mod:SetQuestID(32519)
 mod:SetZone()
 mod:SetMinSyncRevision(10466)
 
@@ -66,16 +65,16 @@ function mod:SPELL_CAST_START(args)
 		specWarnPiercingRoar:Show()
 		timerPiercingRoarCD:Start()
 		if mod:IsManaUser() and mod:IsRanged() then
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stopcast.mp3") --停止施法
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("stopcast") --停止施法
 		else
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")
+			sndWOP:Play("aesoon")
 		end
 	elseif args.spellId == 137505 then
 		warnFrillBlast:Show()
 		specWarnFrillBlast:Show()
 		timerFrillBlastCD:Start()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\watchwave.mp3") --衝擊波
+		sndWOP:Play("watchwave") --衝擊波
 	end
 end
 
@@ -96,7 +95,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if (args.amount or 1) >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(137504)) then
 				specWarnCrushOther:Show(args.destName)
 				if mod:IsTank() then
-					sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
+					sndWOP:Play("changemt") --換坦嘲諷
 				end
 			end
 		end

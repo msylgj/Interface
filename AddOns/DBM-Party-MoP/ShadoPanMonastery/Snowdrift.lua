@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(657, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(56541)
@@ -66,7 +66,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFists:Show()
 		timerFistsOfFuryCD:Start()
 		if mod:IsTank() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")--快躲開
+			sndWOP:Play("runaway")--快躲開
 		end
 	elseif args.spellId == 106434 then
 		warnTornadoKick:Show()
@@ -79,10 +79,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		phase = phase + 1
 		if phase == 2 then
 			warnPhase2:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")
+			sndWOP:Play("phasechange")
 		elseif phase == 3 then
 			warnPhase3:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")
+			sndWOP:Play("phasechange")
 		end
 		timerFistsOfFuryCD:Cancel()
 		timerTornadoKickCD:Cancel()

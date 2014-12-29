@@ -35,6 +35,7 @@ local scantip = CreateFrame("GameTooltip", "ItemUpgradeScanTooltip", nil, "GameT
 scantip:SetOwner(UIParent, "ANCHOR_NONE")
 
 local function GetItemUpgradeLevel(itemLink)
+	scantip:SetOwner(UIParent, "ANCHOR_NONE")
 	scantip:SetHyperlink(itemLink)
 	for i = 2, scantip:NumLines() do -- Line 1 = name so skip
 		local text = _G["ItemUpgradeScanTooltipTextLeft"..i]:GetText()
@@ -45,32 +46,12 @@ local function GetItemUpgradeLevel(itemLink)
 			end
 		end
 	end
+	scantip:Hide()
 end
 
 local function Round(num, idp)
 	local mult = 10^(idp or 0)
 	return math.floor(num * mult + 0.5) / mult
-end
-
-local function retrieveFont()
-	return ns.options.fonts.itemInfo
-end
-
-local ilvlLimits = {
-	normal = 385,
-	uncommon = 437,
-	rare = 463,
-}
-local function GetILVLColor(ilvl)
-	if ilvl >= ilvlLimits.rare then
-		return {GetItemQualityColor(4)}
-	elseif ilvl >= ilvlLimits.uncommon then
-		return {GetItemQualityColor(3)}
-	elseif ilvl >= ilvlLimits.normal then
-		return {GetItemQualityColor(2)}
-	else
-		return {0.8, 0.8, 0.8, "ffd0d0d0"}
-	end
 end
 
 local function ItemColorGradient(perc, ...)
@@ -88,8 +69,6 @@ local function ItemColorGradient(perc, ...)
 end
 
 local function CreateInfoString(button, position)
-	local font = retrieveFont()
-
 	local str = button:CreateFontString(nil, "OVERLAY")
 	if position == "TOP" then
 		str:SetJustifyH("LEFT")
@@ -98,6 +77,7 @@ local function CreateInfoString(button, position)
 		str:SetJustifyH("RIGHT")
 		str:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1.5, 1.5)
 	end	
+	local font = (RealUI and RealUI.font.pixel1) or ns.options.fonts.itemCount
 	str:SetFont(unpack(font))
 
 	return str
@@ -115,13 +95,9 @@ local function ItemButton_Scaffold(self)
 	self.Border:SetPoint("TOPLEFT", self.Icon, 0, 0)
 	self.Border:SetPoint("BOTTOMRIGHT", self.Icon, 0, 0)
 	self.Border:SetBackdrop({
-		-- bgFile = "Interface\\Buttons\\WHITE8x8",
-		edgeFile = "Interface\\Buttons\\WHITE8x8",
-		edgeSize = bordersize,
+		edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = bordersize,
 	})
-	-- self.Border:SetBackdropColor(0, 0, 0, 0)
 	self.Border:SetBackdropBorderColor(0, 0, 0, 0)
-	self.Border:SetFrameLevel(1)
 
 	self.TopString = CreateInfoString(self, "TOP")
 	self.BottomString = CreateInfoString(self, "BOTTOM")
@@ -132,10 +108,20 @@ end
 	@param item <table> The itemTable holding information, see Implementation:GetItemInfo()
 	@callback OnUpdate(item)
 ]]
-local ilvlTypes = {Armor = true, Weapon = true}
+local L = cargBags:GetLocalizedTypes()
+local ilvlTypes = {[L["Armor"]] = true, [L["Weapon"]] = true}
 local function ItemButton_Update(self, item)
-	self.Icon:SetTexture(item.texture or self.bgTex)
-    self.Icon:SetTexCoord(.08, .92, .08, .92)
+	if item.texture then
+		self.Icon:SetTexture(item.texture or ((cBnivCfg.CompressEmpty and self.bgTex) or unpack({1,1,1,0.1})))
+		self.Icon:SetTexCoord(.08, .92, .08, .92)
+	else
+		if cBnivCfg.CompressEmpty then
+			self.Icon:SetTexture(self.bgTex)
+			self.Icon:SetTexCoord(.08, .92, .08, .92)
+		else
+			self.Icon:SetTexture(1,1,1,0.1)
+		end
+	end
 	if(item.count and item.count > 1) then
 		self.Count:SetText(item.count >= 1e3 and "*" or item.count)
 		self.Count:Show()
@@ -171,7 +157,7 @@ local function ItemButton_Update(self, item)
 			end
 
 			self.BottomString:SetText(itemLevel)
-			self.BottomString:SetTextColor(unpack(GetILVLColor(itemLevel)))
+			self.BottomString:SetTextColor(GetItemQualityColor(itemRarity))
 		else
 			self.BottomString:SetText("")
 		end

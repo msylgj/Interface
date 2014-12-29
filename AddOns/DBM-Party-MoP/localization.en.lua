@@ -9,7 +9,7 @@ local L
 L= DBM:GetModLocalization(672)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
 })
 
@@ -19,7 +19,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(664)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
@@ -33,7 +33,7 @@ L:SetWarningLocalization({
 L= DBM:GetModLocalization(658)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -42,7 +42,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(335)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -54,7 +54,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(668)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -63,7 +63,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(669)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -76,7 +76,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(670)
 
 L:SetOptionLocalization({
-	SoundWOP 				= "voice warning: important skills",
+	SoundWOP 				= "Voice Warning: Important Skills",
 	SpecWarnFizzyBubbles	= "Show special warning when you are missing $spell:114459 debuff",
 	RangeFrame				= "Show range frame (10) for $spell:106546",
 })
@@ -99,7 +99,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923),
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -113,7 +113,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnRemainingNovice	= "Announce how many Novices remain",
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -128,7 +128,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -141,7 +141,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(686)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	InfoFrame			= "Show info frame for $journal:5827"
 })
 
@@ -154,7 +154,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(655)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
 })
 
@@ -164,7 +164,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(675)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -177,7 +177,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(676)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------------
@@ -186,7 +186,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(649)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -212,7 +212,7 @@ L:SetMiscLocalization({
 })
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -221,7 +221,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(690)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -230,7 +230,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(698)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -242,7 +242,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(693)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -255,7 +255,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	TimerWave	= "Show timer for next mob wave"
 })
 
@@ -270,7 +270,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(692)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -287,7 +287,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	specWarnFly		= "Special warning: When the boss to fly to the other end of the bridge"
 })
 
@@ -300,7 +300,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(659)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -309,7 +309,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(663)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -322,7 +322,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SoundWOP 			= "voice warning: important skills",
+	SoundWOP 			= "Voice Warning: Important Skills",
 	SpecWarnGetBoned	= "Show special warning when you are missing $spell:113996 debuff",
 	InfoFrame			= "Show info frame for players not affected by $spell:113996"
 })
@@ -341,7 +341,7 @@ L:SetMiscLocalization({
 })
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -350,7 +350,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(684)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -362,7 +362,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(660)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -371,7 +371,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(654)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 L:SetMiscLocalization({
@@ -384,7 +384,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(656)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -396,7 +396,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(688)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })
 
 -----------------------
@@ -405,7 +405,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills",
+	SoundWOP 		= "Voice Warning: Important Skills",
 	KickArrow	= "Show DBM arrow when $spell:114487 is near you",
 })
 
@@ -416,5 +416,5 @@ L= DBM:GetModLocalization(674)
 
 
 L:SetOptionLocalization({
-	SoundWOP 		= "voice warning: important skills"
+	SoundWOP 		= "Voice Warning: Important Skills"
 })

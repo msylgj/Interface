@@ -1,28 +1,27 @@
 local mod	= DBM:NewMod("BrawlRank2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
 
-mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11898 $"):sub(12, -3))
 mod:SetModelID(46712)
 mod:SetZone()
 
 mod:RegisterEvents(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_START 133308 135234",
+	"SPELL_CAST_SUCCESS 133227 132670",
 	"UNIT_DIED"
 )
 
-local warnSummonTwister			= mod:NewSpellAnnounce(132670, 3)
-local warnStormCloud			= mod:NewSpellAnnounce(135234, 3)--Can be interrupted
-local warnThrowNet				= mod:NewSpellAnnounce(133308, 3)--Pretty dangerous but probably no need for special warning.
-local warnGoblinDevice			= mod:NewSpellAnnounce(133227, 4)
+local warnSummonTwister			= mod:NewSpellAnnounce(132670, 3)--Kirrawk
+local warnStormCloud			= mod:NewSpellAnnounce(135234, 3)--Kirrawk
+local warnThrowNet				= mod:NewSpellAnnounce(133308, 3)--Fran and Riddoh
+local warnGoblinDevice			= mod:NewSpellAnnounce(133227, 4)--Fran and Riddoh
 
-local specWarnStormCloud		= mod:NewSpecialWarningInterrupt(135234)
-local specWarnGoblinDevice		= mod:NewSpecialWarningSpell(133227)--This is debuff cast, it makes YOU drop mines 3-4 seconds later. you can drop these where you want.
+local specWarnStormCloud		= mod:NewSpecialWarningInterrupt(135234)--Kirrawk
+local specWarnGoblinDevice		= mod:NewSpecialWarningSpell(133227)--Fran and Riddoh
 
-local timerSummonTwisterCD		= mod:NewCDTimer(15, 132670)--15-17 sec variation
-local timerThrowNetCD			= mod:NewCDTimer(20, 133308)
-local timerGoblinDeviceCD		= mod:NewCDTimer(22, 133227)
+local timerSummonTwisterCD		= mod:NewCDTimer(15, 132670)--Kirrawk
+local timerThrowNetCD			= mod:NewCDTimer(20, 133308)--Fran and Riddoh
+local timerGoblinDeviceCD		= mod:NewCDTimer(22, 133227)--Fran and Riddoh
 
 mod:RemoveOption("HealthFrame")
 mod:RemoveOption("SpeedKillTimer")
@@ -39,7 +38,6 @@ function mod:SPELL_CAST_START(args)
 		--CD seems to be 32 seconds usually but sometimes only 16? no timer for now
 		if brawlersMod:PlayerFighting() then
 			specWarnStormCloud:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")
 		end
 	end
 end

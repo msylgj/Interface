@@ -154,30 +154,3 @@ SLASH_ALOAD2 = "/al"
 SlashCmdList["ALOAD"] = function (msg)
    loadf:Show()
 end
-
---localize the game menu buttons
-local menu = _G.GameMenuFrame
-local macros = _G.GameMenuButtonMacros
-local ratings = _G.GameMenuButtonRatings
-local logout = _G.GameMenuButtonLogout
-
-local showb = CreateFrame("button", "GameMenuButtonAddonManager", GameMenuFrame, "GameMenuButtonTemplate")
-showb:SetText("插件管理")
-
-if Aurora then
-	local F, C = unpack(Aurora)
-	F.Reskin(showb)
-end
-showb:SetPoint("TOP", "GameMenuButtonStore", "BOTTOM", 0, -1)
-GameMenuButtonOptions:ClearAllPoints()
-GameMenuButtonOptions:SetPoint('TOP', showb, 'BOTTOM', 0, -1)
-GameMenuButtonOptions.SetPoint = function() end
-
-GameMenuButtonContinue:ClearAllPoints()
-GameMenuButtonContinue:SetPoint('TOP', GameMenuButtonQuit, 'BOTTOM', 0, -10)
-
-showb:SetScript("OnClick", function()
-	PlaySound("igMainMenuOption")
-	HideUIPanel(GameMenuFrame)
-	loadf:Show()
-end)

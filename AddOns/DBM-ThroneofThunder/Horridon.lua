@@ -1,18 +1,16 @@
-local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
+﻿local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 --BH ADD
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
-local sndDB		= mod:NewSound(nil, "SoundDB", false)
-local sndWSP	= mod:NewSound(nil, "SoundWSP", true)
-local sndOrb	= mod:NewSound(nil, "SoundOrb", mod:IsTank())
-local LibRange = LibStub("LibRangeCheck-2.0")
+local sndWOP	= mod:SoundMM("SoundWOP")
+local sndWSP	= mod:SoundMM("SoundWSP")
+local LibRange	= LibStub("LibRangeCheck-2.0")
 --BH ADD END
 
-mod:SetRevision(("$Revision: 9769 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
 mod:SetCreatureID(68476)
-mod:SetQuestID(32745)
+mod:SetEncounterID(1575)
 mod:SetZone()
-mod:SetUsedIcons(1)
+mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
 
 mod:RegisterCombat("combat")
 
@@ -127,17 +125,17 @@ local function checksprange()
 			if min and max then
 				if min <= 8 then
 					if mod:AntiSpam(1, 6) then
-						DBM.Flash:Shake(1, 0, 0)
-						sndWSP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stilldanger.mp3") --危險
+						-- DBM.Flash:Shake(1, 0, 0)
+						sndWSP:Play("stilldanger") --危險
 					end
 				elseif min <= 15 then
 					if mod:AntiSpam(4, 5) then
-						DBM.Flash:Shake(1, 0, 0)
-						sndWSP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\killspirit.mp3") --靈魂快打
+						-- DBM.Flash:Shake(1, 0, 0)
+						sndWSP:Play("killspirit") --靈魂快打
 					end
 --				elseif min >= 60 then
 --					if mod:AntiSpam(4, 5) then
---						sndWSP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\safenow.mp3")
+--						sndWSP:Play("safenow")
 --					end
 				end
 			end	
@@ -169,7 +167,7 @@ function mod:OnCombatStart(delay)
 	timerPunctureCD:Start(10-delay)
 	self:Schedule(9, function()
 		if self:IsTanking("player", "boss1") or mod.Options.ccsoon then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\watchimpale.mp3")
+			sndWOP:Play("watchimpale")
 		end
 	end)
 	timerDoubleSwipeCD:Start(16-delay)--16-17 second variation
@@ -181,9 +179,9 @@ function mod:OnCombatStart(delay)
 		--BH ADD
 		if mod:IsHealer() then
 			if select(2, UnitClass("player")) == "PRIEST" then
-				sndWOP:Schedule(42, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_esnh.mp3")
+				sndWOP:Schedule(42, "ex_tt_esnh")
 			end
-			sndWOP:Schedule(57, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmhn.mp3")
+			sndWOP:Schedule(57, "ex_tt_wmhn")
 		end
 		if mod.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(GetSpellInfo(137458))
@@ -218,13 +216,15 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 136741 then--Regular double swipe
 		warnDoubleSwipe:Show()
 		specWarnDoubleSwipe:Show()
-		sndDB:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_scsj.mp3") --雙重掃擊
+		if mod:IsMelee() then
+			sndWOP:Play("ex_tt_scsj") --雙重掃擊
+		end
 		--The only flaw is charge is sometimes delayed by unexpected events like using an orb, we may fail to start timer once in a while when it DOES come before a charge.
 		if timerChargeCD:GetTime() < 32 then--Check if charge is less than 18 seconds away, if it is, double swipe is going tobe delayed by quite a bit and we'll trigger timer after charge
 			timerDoubleSwipeCD:Start()
 		end
 	elseif args.spellId == 136770 then--Double swipe that follows a charge (136769)
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_scsj.mp3")
+		sndWOP:Play("ex_tt_scsj")
 		warnDoubleSwipe:Show()
 		specWarnDoubleSwipe:Show()
 		timerDoubleSwipeCD:Start(11.5)--Hard coded failsafe. 136741 version is always 11.5 seconds after 136770 version
@@ -235,24 +235,24 @@ function mod:SPELL_CAST_START(args)
 		timerDireCallCD:Start(nil, direNumber+1)--CD still reset when he breaks a door?
 		if mod:IsHealer() then
 			if select(2, UnitClass("player")) == "PRIEST" then
-				sndWOP:Schedule(42, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_esnh.mp3")
+				sndWOP:Schedule(42, "ex_tt_esnh")
 			end
-			sndWOP:Schedule(57, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_wmhn.mp3")
+			sndWOP:Schedule(57, "ex_tt_wmhn")
 		end
 		nhcount = nhcount + 1		
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --準備AE
+		sndWOP:Play("aesoon") --準備AE
 		if nhcount == 3 then nhcount = 0 end
 	elseif args:IsSpellID(136587) then
 		warnVenomBolt:Show()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnVenomBolt:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--快打斷
+			sndWOP:Play("kickcast")--快打斷
 		end
 	elseif args:IsSpellID(136480) then
 		warnChainLightning:Show()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnChainLightning:Show(args.sourceName)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--快打斷
+			sndWOP:Play("kickcast")--快打斷
 		end
 	elseif args:IsSpellID(136465) then
 		warnFireball:Show()
@@ -266,22 +266,22 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 136487 then
 		specWarnLightTT:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_sdtt.mp3")--閃電圖騰
+		sndWOP:Play("ex_tt_sdtt")--閃電圖騰
 	elseif args.spellId == 136512 then		
 		qscount = qscount + 1
 		if ((mod.Options.optQS == "QS1") and (qscount % 3 == 1)) or ((mod.Options.optQS == "QS2") and (qscount % 3 == 2)) or ((mod.Options.optQS == "QS3") and (qscount % 3 == 0)) or (mod.Options.optQS == "allQS") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3") --快驅散
+			sndWOP:Play("dispelnow") --快驅散
 			specWarnWitchDebuff:Show()
 		end
 	elseif args.spellId == 136719 then
 		qscount = qscount + 1
 		if ((mod.Options.optQS == "QS1") and (qscount % 3 == 1)) or ((mod.Options.optQS == "QS2") and (qscount % 3 == 2)) or ((mod.Options.optQS == "QS3") and (qscount % 3 == 0)) or (mod.Options.optQS == "allQS") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3") --快驅散
+			sndWOP:Play("dispelnow") --快驅散
 			specWarnSunDebuff:Show()
 		end
 	elseif args.spellId == 136564 then
 		if self:AntiSpam(2, 7) then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_bqxx.mp3") --冰球小心
+			sndWOP:Play("ex_tt_bqxx") --冰球小心
 		end
 	end
 end
@@ -295,7 +295,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		--BH ADD
 		self:Schedule(9, function()
 			if self:IsTanking("player", "boss1") or mod.Options.ccsoon then
-				sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\watchimpale.mp3")
+				sndWOP:Play("watchimpale")
 			end
 		end)
 		--BH ADD END
@@ -307,7 +307,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if (args.amount or 1) >= 9 and not UnitDebuff("player", GetSpellInfo(136767)) and not UnitIsDeadOrGhost("player") then--Other tank has at least one stack and you have none
 				specWarnPunctureOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 				if mod:IsTank() then
-					sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\changemt.mp3") --換坦嘲諷
+					sndWOP:Play("changemt") --換坦嘲諷
 				end
 			end
 		end
@@ -316,7 +316,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	--He jumps down 10 seconds after 4th door is smashed, or when Horridon reaches 30%
 	--BH ADD
 	elseif args.spellId == 137240 and (args.amount or 1) == 4 and not jalakEngaged then
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ptwo.mp3")
+		sndWOP:Play("ptwo")
 	--BH ADD END
 	elseif args.spellId == 136817 then
 		warnBestialCry:Show(args.destName, args.amount or 1)
@@ -325,31 +325,31 @@ function mod:SPELL_AURA_APPLIED(args)
 		pxcount = pxcount + 1
 		if MyJS() then
 			specWarnJSA:Schedule(6)
-			sndWOP:Schedule(6, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			sndWOP:Schedule(6, "defensive") --注意減傷
 		else
-			sndWOP:Schedule(6, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --準備AE
+			sndWOP:Schedule(6, "aesoon") --準備AE
 		end
-		sndWOP:Schedule(7.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Schedule(8.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Schedule(9.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Schedule(7.5, "countthree")
+		sndWOP:Schedule(8.5, "counttwo")
+		sndWOP:Schedule(9.5, "countone")
 		--BH ADD END		
 	elseif args.spellId == 136821 then
 		warnRampage:Show(args.destName)
 		specWarnRampage:Show(args.destName)
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_hldn.mp3")--哈里登暴怒
+		sndWOP:Play("ex_tt_hldn")--哈里登暴怒
 	elseif args.spellId == 136797 then
 		warnMending:Show()
 		--BH MODIFY
 		if mod.Options.ddyls then
 			specWarnMending:Show(args.sourceName)
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3")--快打斷
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("kickcast")--快打斷
 		end
 		--BH MODIFY END
 	elseif args.spellId == 137237 then
 		warnOrbofControl:Show()
 		specWarnOrbofControl:Show()
-		sndOrb:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_ksbz.mp3") --控獸寶珠
+		sndWOP:Play("ex_tt_ksbz") --控獸寶珠
 	elseif args.spellId == 137240 then
 		warnCrackedShell:Show(args.destName, args.amount or 1)
 --[[	elseif args.spellId == 136587 then
@@ -373,40 +373,40 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDireFixate:Show()
 --BH DELETE		soundDireFixate:Play()
 			-- BH ADD
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_lhsd.mp3")
-			sndWOP:Schedule(1,"Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_lhsd.mp3")
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("ex_tt_lhsd")
+			sndWOP:Schedule(1,"ex_tt_lhsd")
 			checksprange()
 			-- BH ADD END
 		end
 	elseif args.spellId == 136512 then
 		if args:IsPlayer() then
 			specWarnHex:Show()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\stopattack.mp3") -- 停止攻擊
+			sndWOP:Play("stopattack") -- 停止攻擊
 		elseif args.destName == mod.Options.dispsetHex then
 			specWarnHexOther:Show(args.destName)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\helpdispel.mp3") -- 幫忙驅散
+			sndWOP:Play("helpdispel") -- 幫忙驅散
 		end
 	-- BH ADD
 	elseif args.spellId == 137294 then
 		closedoor = closedoor + 1
 		timerHeadache:Start(10)
-		sndWOP:Schedule(5.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfive.mp3")
-		sndWOP:Schedule(6.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
-		sndWOP:Schedule(7.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Schedule(8.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Schedule(9.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Schedule(5.5, "countfive")
+		sndWOP:Schedule(6.5, "countfour")
+		sndWOP:Schedule(7.5, "countthree")
+		sndWOP:Schedule(8.5, "counttwo")
+		sndWOP:Schedule(9.5, "countone")
 		if closedoor == 1 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_smgb.mp3")--沙門關閉
+			sndWOP:Play("ex_tt_smgb")--沙門關閉
 		elseif closedoor == 2 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_dmgb.mp3")--毒門關閉
+			sndWOP:Play("ex_tt_dmgb")--毒門關閉
 		elseif closedoor == 3 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_bmgb.mp3")--冰門關閉
+			sndWOP:Play("ex_tt_bmgb")--冰門關閉
 		end
 	elseif args.spellId ==  136670 then
 		if args:IsPlayer() then
 			if (args.amount or 1) >= 2 then
-				sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dshigh.mp3")--致死過高
+				sndWOP:Play("dshigh")--致死過高
 			end
 		end
 	-- BH ADD END
@@ -423,16 +423,16 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 136723 and destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
 		specWarnSandTrap:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	elseif spellId == 136646 and destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
 		specWarnLivingPoison:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	elseif spellId == 136573 and destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
 		specWarnFrozenBolt:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	elseif spellId == 136490 and destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
 		specWarnLightningNova:Show()
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3") --快躲開
+		sndWOP:Play("runaway") --快躲開
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -447,16 +447,16 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT(event)
 		specWarnJalak:Show()
 		timerBestialCryCD:Start(5, 1)
 		-- BH ADD
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_zscz.mp3") --戰神參戰
+		sndWOP:Play("ex_tt_zscz") --戰神參戰
 		if MyJS() then
 			specWarnJSA:Schedule(2)
-			sndWOP:Schedule(2, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3") --注意減傷
+			sndWOP:Schedule(2, "defensive") --注意減傷
 		else
-			sndWOP:Schedule(2, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3") --準備AE
+			sndWOP:Schedule(2, "aesoon") --準備AE
 		end
-		sndWOP:Schedule(2.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Schedule(3.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Schedule(4.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Schedule(2.5, "countthree")
+		sndWOP:Schedule(3.5, "counttwo")
+		sndWOP:Schedule(4.5, "countone")
 		-- BH ADD END
 		self:UnregisterShortTermEvents()--TODO, maybe add unit health checks to warn dog is close to 40% if we aren't done with doors yet. If it's added, we can unregister health here as well
 	end
@@ -483,11 +483,11 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 69374 then
 		timerBestialCryCD:Cancel()
-		sndWOP:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\defensive.mp3")
-		sndWOP:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\aesoon.mp3")
-		sndWOP:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Cancel("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+		sndWOP:Cancel("defensive")
+		sndWOP:Cancel("aesoon")
+		sndWOP:Cancel("countthree")
+		sndWOP:Cancel("counttwo")
+		sndWOP:Cancel("countone")
 	elseif cid == 69176 then--shaman
 		shamandead = shamandead + 1
 		if shamandead == 3 then
@@ -520,11 +520,11 @@ function mod:OnSync(msg, target)
 		if target == UnitName("player") then
 			specWarnCharge:Show()
 			yellCharge:Yell()
-			DBM.Flash:Shake(1, 0, 0)
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_nbcf.mp3")
-			sndWOP:Schedule(0.5,"Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_nbcf.mp3")
+			-- DBM.Flash:Shake(1, 0, 0)
+			sndWOP:Play("ex_tt_nbcf")
+			sndWOP:Schedule(0.5,"ex_tt_nbcf")
 		else
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_cfkd.mp3") --衝鋒快躲
+			sndWOP:Play("ex_tt_cfkd") --衝鋒快躲
 		end
 		if UnitExists(target) and self.Options.SetIconOnCharge then
 			self:SetIcon(target, 1, 5)--star
@@ -539,27 +539,27 @@ function mod:OnSync(msg, target)
 		warnDino:Schedule(56.75)
 		specWarnDino:Schedule(56.75)
 		if mod:IsDps() then
-			sndWOP:Schedule(56.75, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_ylsd.mp3") --禦龍師快打
+			sndWOP:Schedule(56.75, "ex_tt_ylsd") --禦龍師快打
 		else
-			sndWOP:Schedule(56.75, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_ylsc.mp3") --禦龍師出現
+			sndWOP:Schedule(56.75, "ex_tt_ylsc") --禦龍師出現
 		end
 		if doorNumber == 1 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_smkq.mp3") --沙門開啟
+			sndWOP:Play("ex_tt_smkq") --沙門開啟
 			timerAdds:Start(18.9, Farraki)
 			warnAdds:Schedule(18.9, Farraki)
 			self:Schedule(18.9, addsDelay, Farraki)
 		elseif doorNumber == 2 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_dmkq.mp3") --毒门開啟
+			sndWOP:Play("ex_tt_dmkq") --毒门開啟
 			timerAdds:Start(18.9, Gurubashi)
 			warnAdds:Schedule(18.9, Gurubashi)
 			self:Schedule(18.9, addsDelay, Gurubashi)
 		elseif doorNumber == 3 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_bmkq.mp3") --冰门開啟
+			sndWOP:Play("ex_tt_bmkq") --冰门開啟
 			timerAdds:Start(18.91, Drakkari)
 			warnAdds:Schedule(18.9, Drakkari)
 			self:Schedule(18.9, addsDelay, Drakkari)
 		elseif doorNumber == 4 then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_xmkq.mp3") --熊門開啟
+			sndWOP:Play("ex_tt_xmkq") --熊門開啟
 			timerAdds:Start(18.9, Amani)
 			warnAdds:Schedule(18.9, Amani)
 			self:Schedule(18.9, addsDelay, Amani)
@@ -579,11 +579,11 @@ function mod:OnSync(msg, target)
 		if target == UnitName("player") then
 			specWarnSandTrapYou:Show()
 			yellSandTrap:Yell()
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\runaway.mp3")
+			sndWOP:Play("runaway")
 		end
 	elseif msg == "Duye" then
 		if self:AntiSpam(2, 10) then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\ex_tt_zyfs.mp3") --注意分身
+			sndWOP:Play("ex_tt_zyfs") --注意分身
 		end
 	end
 end

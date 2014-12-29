@@ -1,10 +1,9 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: ShestakUI Filger
 ## Notes: Class timers
 ## Notes-zhCN: |cffC495DD法术计时器|r
 ## Notes-zhTW: |cffC495DD法術計時器|r
 ## Author: Nils Ruesch
-## Version: 4.42
 ## Credits: Affli, Ildyria, SinaC
 ## Thanks: Erratic, Wetxius
 ## Website: http://shestak.org

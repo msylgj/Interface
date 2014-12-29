@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(335, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56439)
@@ -32,10 +32,10 @@ function mod:OnCombatStart(delay)
 	timerWitherWillCD:Start(-delay)
 	timerTouchofNothingnessCD:Start(13-delay)
 	timerBoundsOfRealityCD:Start(22-delay)
-	sndWOP:Schedule(18.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
-	sndWOP:Schedule(19.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-	sndWOP:Schedule(20.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-	sndWOP:Schedule(21.5, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
+	sndWOP:Schedule(18.5, "countfour")
+	sndWOP:Schedule(19.5, "countthree")
+	sndWOP:Schedule(20.5, "counttwo")
+	sndWOP:Schedule(21.5, "countone")
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -54,17 +54,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerTouchofNothingnessCD:Cancel()
 		timerBoundsOfReality:Start()
 		timerBoundsOfRealityCD:Start()
-		sndWOP:Schedule(56, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countfour.mp3")
-		sndWOP:Schedule(57, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countthree.mp3")
-		sndWOP:Schedule(58, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\counttwo.mp3")
-		sndWOP:Schedule(59, "Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\countone.mp3")
-		sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\phasechange.mp3")--階段轉換
+		sndWOP:Schedule(56, "countfour")
+		sndWOP:Schedule(57, "countthree")
+		sndWOP:Schedule(58, "counttwo")
+		sndWOP:Schedule(59, "countone")
+		sndWOP:Play("phasechange")--階段轉換
 	elseif args.spellId == 106113 then
 		warnTouchofNothingness:Show(args.destName)
 		specWarnTouchOfNothingness:Show(args.destName)
 		timerTouchofNothingness:Start(args.destName)
 		if mod:IsHealer() then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\dispelnow.mp3")--快驅散
+			sndWOP:Play("dispelnow")--快驅散
 		end
 	elseif args.spellId == 110099 and args:IsPlayer() then
 		specWarnShadowsOfDoubt:Show()

@@ -1,6 +1,6 @@
 ﻿local mod	= DBM:NewMod(857, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
-local sndWOP	= mod:NewSound(nil, "SoundWOP", true)
+local sndWOP	= mod:SoundMM("SoundWOP")
 
 mod:SetRevision(("$Revision: 10466 $"):sub(12, -3))
 mod:SetCreatureID(71952)
@@ -53,7 +53,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnInspiringSong:Show(args.sourceName)
 		timerInspiringSongCD:Start()
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
-			sndWOP:Play("Interface\\AddOns\\"..DBM.Options.CountdownVoice.."\\kickcast.mp3") --快打斷
+			sndWOP:Play("kickcast") --快打斷
 		end
 	elseif args.spellId == 144471 then
 		warnBlazingSong:Show()
