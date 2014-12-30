@@ -69,12 +69,12 @@ if cfg.Friends == true then
 	end
 
 	local levelNameString = "|cff%02x%02x%02x%d|r |cff%02x%02x%02x%s|r"
-	local clientLevelNameString = "[%s] |cff%02x%02x%02x%d|r |cff%02x%02x%02x%s|r%s |cff%02x%02x%02x%s|r"
+	local clientLevelNameString = "[%s] |cff%02x%02x%02x%d|r  |cff%02x%02x%02x%s|r%s |cff%02x%02x%02x%s|r"
 	local levelNameClassString = "|cff%02x%02x%02x%d|r %s%s%s"
 	local worldOfWarcraftString = "World of Warcraft"
 	local battleNetString = "Battle.NET"
 	local wowString = "WoW"
-	local otherGameInfoString = "[  %s ]  ??  %s"
+	local otherGameInfoString = "[%s]  ??   %s"
 	local otherGameInfoString2 = "%s %s"
 	local tthead, ttsubh, ttoff = {r=0.4, g=0.78, b=1}, {r=0.75, g=0.9, b=1}, {r=.3,g=1,b=.3}
 	local activezone, inactivezone = {r=0.3, g=1.0, b=0.3}, {r=0.65, g=0.65, b=0.65}
@@ -108,7 +108,8 @@ if cfg.Friends == true then
 		for i = 1, total do
 			presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
 			if isOnline then 
-				_, _, _, realmName, _, faction, race, class, _, zoneName, level = BNGetToonInfo(presenceID)
+				_, _, realClient, realmName, _, faction, race, class, _, zoneName, level = BNGetToonInfo(presenceID)
+				client = realClient
 				for k,v in pairs(LOCALIZED_CLASS_NAMES_MALE) do if class == v then class = k end end
 				BNTable[i] = { presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, isAFK, isDND, noteText, realmName, faction, race, class, zoneName, level }
 			end
