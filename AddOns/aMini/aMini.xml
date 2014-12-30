@@ -2,7 +2,7 @@
 	<Script file="!QuestItemButtonFix.lua"/>
 	<Script file="AchievementLinkFix.lua"/>
 	<Script file="Align.lua"/>
-	<Script file="alRaidCD.lua"/>
+	<!--<Script file="alRaidCD.lua"/>-->
 	<Script file="AlreadyKnown.lua"/>
 	<Script file="AuctionPlus.lua"/>
 	<Script file="BlizzBugsSuck.lua"/>
@@ -12,6 +12,7 @@
 	<Script file="cooldown.lua"/>
 	<Script file="damagemeters.lua"/>
 	<Script file="Focuser.lua"/>
+	<Script file="Foglight.lua"/>
 	<Script file="InspectFix.lua"/>
 	<Script file="idQuestAutomation.lua"/>
 	<Script file="JewelTips.lua"/>
@@ -22,6 +23,5 @@
 	<Script file="ProfessionTabs.lua"/>
 	<Script file="SpellID.lua"/>
 	<Script file="StrataFix.lua"/>
-	<Script file="WillItMog.lua"/>
 	<Script file="yGravier.lua"/>
 </Ui>

@@ -1,0 +1,10 @@
+## Interface: 60000
+
+## Title: Will It Mog?
+## Notes: Display whether an item can be transmogrified in tooltips
+## Author: Nathanyel
+## Version: 0.6
+## SavedVariables: WillItMog
+
+embeds.xml
+WillItMog.lua

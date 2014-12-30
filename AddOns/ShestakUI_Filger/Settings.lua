@@ -33,7 +33,7 @@ local Media = "Interface\\AddOns\\ShestakUI_Filger\\Media\\"
 	-- Spells.lua
 	Misc.Tbar = "OFF"				-- 开(ON)\关(OFF) target_bar 目标计时条 - (主图标注号 9)
 	Misc.Pbar = "OFF"				-- 开(ON)\关(OFF) pve_cc 计时条 - (主图标注号 7)
-	Misc.CD = "ON"					-- 开(ON)\关(OFF) COOLDOWN 冷却图标 - (主图标注号 8)
+	Misc.CD = "OFF"					-- 开(ON)\关(OFF) COOLDOWN 冷却图标 - (主图标注号 8)
 	Misc.barw = 160					-- 计时条长度 - (主图标注号 7,9)
 	Misc.CDnum = 6					-- COOLDOWN 冷却图标每行显示几个 - (主图标注号 8)
 	Misc.IconSize = 38				-- 图标大小 - (主图标注号 1,2,3,4,5,6)

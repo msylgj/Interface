@@ -748,7 +748,7 @@ function MyContainer:OnCreate(name, settings)
 		self.hint:SetPoint("BOTTOMLEFT", infoFrame, -0.5, 31.5)
 		self.hint:SetFont(unpack(font))
 		self.hint:SetTextColor(1, 1, 1, 0.4)
-		self.hint:SetText("Ctrl + Alt + Right Click an item to assign category")
+		self.hint:SetText("Ctrl+Alt+Right Click item to assign category")
 		self.hintShown = true
 		
 		-- The money display

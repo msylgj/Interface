@@ -140,32 +140,16 @@ local menuList = {
     func = function() ToggleAchievementFrame() end},
     {text = "坐骑与宠物",
     func = function() TogglePetJournal() end},
-    {text = "任务日志",
-    func = function() ToggleFrame(QuestLogFrame) end},
+    {text = "地图和任务日志",
+    func = function() ToggleFrame(WorldMapFrame) end},
     {text = "社交",
     func = function() ToggleFriendsFrame(1) end},
     {text = "公会",
     func = function() ToggleGuildFrame(1) end},
-    {text = "PvP",
-    func = function() 
-      --ToggleFrame(PVPUIFrame) 
-      if PVPUIFrame then
-         if UnitLevel("player") >= 10 then
-            if PVPUIFrame:IsShown() then
-               HideUIPanel(PVPUIFrame)
-            else
-               ShowUIPanel(PVPUIFrame)
-            end
-         end
-      else
-         LoadAddOn("Blizzard_PVPUI")
-         ShowUIPanel(PVPUIFrame)
-      end
-	end},
+    {text = "寻找队伍",
+    func = function() ToggleFrame(PVEFrame) end},
     {text = "地城导览手册",
     func = function() ToggleEncounterJournal() end},
-    {text = "地下城查找器",
-    func = function() ToggleFrame(PVEFrame) end},
     {text = "团队浏览器",
     func = function() ToggleRaidBrowser() end},
     {text = "帮助",
@@ -190,8 +174,6 @@ Minimap:SetScript('OnMouseUp', function(self, button)
 Minimap:StopMovingOrSizing()
     if(button=="MiddleButton") then
         ToggleCalendar()
-	elseif (IsAltKeyDown() and button=="RightButton") then
-	    ToggleFrame(QuestLogFrame)
     elseif(button=="RightButton") then
         EasyMenu(menuList, menuFrame, "cursor", 0, 0, "MENU", 2)
 	elseif IsAltKeyDown() then
