@@ -40,7 +40,7 @@ C.media = {
 	["arrowRight"] = "Interface\\AddOns\\Aurora\\media\\arrow-right-active",
 	["backdrop"] = "Interface\\ChatFrame\\ChatFrameBackground",
 	["checked"] = "Interface\\AddOns\\Aurora\\media\\CheckButtonHilight",
-	["font"] = "Interface\\AddOns\\Aurora\\media\\font.ttf",
+	["font"] = "Fonts\\ARKai_T.ttf",
 	["gradient"] = "Interface\\AddOns\\Aurora\\media\\gradient",
 	["roleIcons"] = "Interface\\Addons\\Aurora\\media\\UI-LFG-ICON-ROLES",
 }

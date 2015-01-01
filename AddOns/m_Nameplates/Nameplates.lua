@@ -303,7 +303,7 @@ local function NamePlateInit(plate)
 	CreateBackdrop(plate.healthbar)
 	--threat
 	plate.threat:SetParent(plate.healthbar)
-	plate.threat:SetTexture("Interface\\AddOns\\rNamePlates2\\media\\threat_glow")
+	plate.threat:SetTexture("Interface\\AddOns\\m_Nameplates\\media\\threat_glow")
 	plate.threat:SetTexCoord(0,1,0,1)
 	--level
 	plate.level:SetParent(RNP.pastebin) --trash the level string, it will come back OnShow and OnDrunk otherwise ;)

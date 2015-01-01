@@ -1,0 +1,12 @@
+﻿## Interface: 60000
+## Version: 6.0.3-1.2
+
+## Title: PrepCheck
+## Notes: Minimalistic buff-check boxes.
+## Author: banur
+
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: PrepCheckDB
+
+PrepCheck.lua

@@ -69,6 +69,7 @@ local frames = {
     "MiniMapVoiceChatFrame",
     "MiniMapWorldMapButton",
     "MiniMapMailBorder",
+	"GarrisonLandingPageMinimapButton",
     --"MiniMapBattlefieldBorder",
 }
 
@@ -146,6 +147,8 @@ local menuList = {
     func = function() ToggleFriendsFrame(1) end},
     {text = "公会",
     func = function() ToggleGuildFrame(1) end},
+    {text = "要塞",
+    func = function() GarrisonLandingPage_Toggle() end},
     {text = "寻找队伍",
     func = function() ToggleFrame(PVEFrame) end},
     {text = "地城导览手册",

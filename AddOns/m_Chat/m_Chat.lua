@@ -1,7 +1,7 @@
 ﻿local AutoApply = true											--自动按以下参数设置聊天框
 local TabCHANNEL = false                                      --TAB键切换频道时包括综合,交易等世界频道
 --Setchat parameters. Those parameters will apply to ChatFrame1 when you use /setchat
-local def_position = {"BOTTOMLEFT",UIParent,"BOTTOMLEFT",0,15}  --聊天框位置
+local def_position = {"BOTTOMLEFT",UIParent,"BOTTOMLEFT",0,17}  --聊天框位置
 local chat_height = 175  --聊天框高度
 local chat_width = 320   --聊天框宽度
 local font = "Fonts\\ARKai_T.ttf"   --字体

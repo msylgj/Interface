@@ -163,7 +163,11 @@ cast.PostCastStart = function(self, unit, name, rank, text)
 	self:SetStatusBarColor(unpack(self.casting and self.CastingColor or self.ChannelingColor))
 	if unit == "player" then
 		local sf = self.SafeZone
-		sf.timeDiff = GetTime() - sf.sendTime
+		if sf.sendTime then
+			sf.timeDiff = GetTime() - sf.sendTime
+		else
+			sf.timeDiff = GetTime()
+		end
 		sf.timeDiff = sf.timeDiff > self.max and self.max or sf.timeDiff
 		sf:SetWidth(self:GetWidth() * sf.timeDiff / self.max)
 		sf:Show()
@@ -1546,6 +1550,7 @@ local function CreatePlayerStyle(self, unit, isSingle)
 	if Qulight["unitframes"].showEclipsebar then lib.addEclipseBar(self) end
 	self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 	self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", UpdateThreat)
 end
 local function CreateTargetStyle(self, unit, isSingle)
 	self.mystyle = "target"

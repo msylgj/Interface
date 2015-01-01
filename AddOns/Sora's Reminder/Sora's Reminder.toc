@@ -1,8 +1,0 @@
-## Interface: 60000
-## Title: |cff70C0F5Sora's|r BuffReminder
-## Notes: Sora's O(∩_∩)O
-## Author: Neavo
-
-## X-Email:neavo7@Gmail.com
-
-Load_Reminder.xml
