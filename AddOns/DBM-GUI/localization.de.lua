@@ -114,6 +114,7 @@ L.ShowLoadMessage 			= "Zeige Lademeldungen für Mods im Chatfenster"
 L.ShowPizzaMessage 			= "Zeige Meldungen für Timerbroadcasts im Chatfenster"
 L.ShowCombatLogMessage 		= "Zeige DBM-Meldungen für das spieleigene Kampflog im Chatfenster"
 L.ShowTranscriptorMessage	= "Zeige DBM-Meldungen für das \"Transcriptor\"-Log im Chatfenster"
+L.ShowAllVersions	 		= "Zeige Boss Mod Versionen aller Gruppenmitglieder im Chatfenster"
 L.CombatMessages			= "Kampfmeldungen"
 L.ShowEngageMessage 		= "Zeige Meldungen für den Beginn von Kämpfen im Chatfenster"
 L.ShowKillMessage 			= "Zeige Meldungen für Siege im Chatfenster"
@@ -161,6 +162,7 @@ L.Area_SpecWarn				= "Einstellungen für Spezialwarnungen"
 L.SpecWarn_Enabled			= "Zeige Spezialwarnungen für Bossfähigkeiten"
 L.SpecWarn_FlashFrame		= "Aktiviere aufblinkenden Bildschirm bei Spezialwarnungen"
 L.SpecWarn_AdSound			= "Erweiterte Soundeinstellungen für Spezialwarnungen (benötigt /reload)"
+L.SpecWarn_NoSoundsWVoice	= "Spiele keine Spezialwarnungssounds für Warnungen, für die eine Sprachausgabe verfügbar ist"
 L.SpecWarn_Font				= "Schriftart für Spezialwarnungen" --unused
 L.SpecWarn_FontSize			= "Schriftgröße: %d"
 L.SpecWarn_FontColor		= "Schriftfarbe"
@@ -185,6 +187,7 @@ L.Panel_SpamFilter			= "Filter / Spam-Filter"
 L.Area_SpamFilter_Outgoing	= "globale Filtereinstellungen"
 L.SpamBlockNoShowAnnounce	= "Zeige keine Mitteilungen und spiele keine Warnungssounds"
 L.DontShowFarWarnings		= "Zeige keine Mitteilungen/Timer für weit entfernte Ereignisse"
+L.SpamBlockNoRunAway		= "Spiele keine \"Lauf weg!\"-Sounds"
 L.SpamBlockNoSendWhisper	= "Flüstere keine Bosswarnungen an andere Spieler"
 L.SpamBlockNoSetIcon		= "Setze keine Zeichen auf Ziele"
 L.SpamBlockNoRangeFrame		= "Zeige kein Abstandsfenster/-radar an"
@@ -201,10 +204,10 @@ L.BigBrotherAnnounceToRaid	= "Verkünde Ergebnis der \"BigBrother\"-Buffprüfung
 
 L.Area_SpecFilter			= "Filtereinstellungen für Spezialisierungen"
 L.FilterTankSpec			= "Unterdrücke Warnungen für Tanks, falls deine aktuelle Spezialisierung keine \"Schutz\"-Spezialisierung ist (Hinweis: Diese Filterung sollte normalerweise nicht deaktiviert werden, da alle individuellen \"Spott\"-Warnungen nun standardmäßig aktiviert sind.)"
-
-
-
-
+--
+--
+--
+--
 --L.FilterHealerSpec		= "Unterdrücke Warnungen für Heiler, falls deine aktuelle Spezialisierung keine \"Heilung\"-Spezialisierung ist"--Not in use
 --L.FilterDamagerSpec		= "Unterdrücke Warnungen für DDs, falls deine aktuelle Spezialisierung keine \"Schaden\"-Spezialisierung ist"--Not in use
 
@@ -220,7 +223,11 @@ L.Panel_HideBlizzard		= "Verberge Spielelemente"
 L.Area_HideBlizzard			= "Einstellungen zum Verbergen von Spielelementen"
 L.HideBossEmoteFrame		= "Verberge das Fenster \"RaidBossEmoteFrame\" während Bosskämpfen"
 L.HideWatchFrame			= "Verberge das Fenster für die Questverfolgung während Bosskämpfen, falls keine Erfolge verfolgt werden"
+L.HideGarrisonUpdates		= "Verberge Garnisonsmeldungen während Bosskämpfen"
 L.HideTooltips				= "Verberge Tooltips während Bosskämpfen"
+L.HideApplicantAlerts		= "Unterdrücke Anwärteralarme in organisierten Gruppen"
+L.HideApplicantAlertsFull	= "falls Gruppe voll ist"
+L.HideApplicantAlertsNotL	= "falls du nicht der Gruppenleiter bist (\"Gruppe ist voll\"-Filter, falls du der Leiter bist)"
 L.SpamBlockSayYell			= "Sprechblasen-Ansagen im Chatfenster ausblenden"
 L.DisableCinematics			= "Verberge Videosequenzen"
 L.AfterFirst				= "Nach jeweils einmaligem Abspielen"

@@ -8,7 +8,7 @@ local cfg = {
     tex = mediapath.."statusbar2",
 
     scale = 1,
-    point = {"RIGHT","RIGHT",-10,-150},
+    point = {"RIGHT","RIGHT",-10,-50},
     cursor = false, --跟随鼠标
     combathide = true,  --战斗中隐藏
 	

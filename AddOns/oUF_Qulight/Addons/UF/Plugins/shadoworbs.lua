@@ -16,8 +16,8 @@ local function Update(self, event, unit, powerType)
 	end
 
 	local numOrbs = UnitPower('player', SPELL_POWER_SHADOW_ORBS)
-
-	for i = 1, PRIEST_BAR_NUM_ORBS do
+	local numOrbsMax = UnitPowerMax("player", SPELL_POWER_SHADOW_ORBS)
+	for i = 1, numOrbsMax do
 		if i <= numOrbs then
 			sb[i]:SetAlpha(1)
 		else

@@ -20,8 +20,8 @@
 	<Script file="MissionHush.lua"/>
 	<Script file="noTaint.lua"/>
 	<Script file="ncHoverBind.lua"/>
-	<Script file="ProfessionTabs.lua"/>
 	<Script file="SpellID.lua"/>
 	<Script file="StrataFix.lua"/>
+	<Script file="TradeTabs.lua"/>
 	<Script file="yGravier.lua"/>
 </Ui>

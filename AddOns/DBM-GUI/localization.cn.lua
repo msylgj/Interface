@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Dec 4, 2014@11926
+-- Last update: Dec 31, 2014@12240
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -12,8 +12,8 @@ local L = DBM_GUI_Translations
 L.MainFrame 				= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "本地化："
-L.TranslationBy 			= "Diablohu & yleaf & sunlcy & Mini_Dragon"
-L.Website					= "拜访我们的论坛（英文） |cFF73C2FBwww.deadlybossmods.com|r (hosted by Elitist Jerks!)"
+L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
+L.Website					= "拜访我们的论坛（英文） |cFF73C2FBwww.deadlybossmods.com|r (托管于 Elitist Jerks!)，或在Twitter上关注首席程序员 @MysticalOS"
 L.WebsiteButton				= "论坛"
 
 L.OTabBosses				= "模块"
@@ -26,12 +26,13 @@ L.TabCategory_CATA	 		= "大地的裂变"
 L.TabCategory_WOTLK 		= "巫妖王之怒"
 L.TabCategory_BC 			= "燃烧的远征"
 L.TabCategory_CLASSIC 		= "经典旧世"
+--L.TabCategory_PVP 			Same as English
 L.TabCategory_OTHER    		= "其它"
 
 L.BossModLoaded 			= "%s状态"
 L.BossModLoad_now 			= [[该模块尚未启动。
 当你进入相应副本时其会自动加载。
-你也可以点击该按钮手动启动该模块。]]
+你也可以点击开启模块按钮手动启动该模块。]]
 
 L.PosX 						= 'X坐标'
 L.PosY 						= 'Y坐标'
@@ -58,10 +59,10 @@ L.Statistic_Incompletes		= "未完成:"
 L.Statistic_BestKill		= "最好成绩:"
 
 -- Tab: General Options
-L.General 					= "DBM综合设置"
+L.General 					= "DBM核心综合设置"
 L.EnableDBM 				= "启用DBM"
-L.EnableMiniMapIcon			= "显示小地图图标"
-L.UseMasterVolume			= "使用游戏总声道播放音频"
+L.EnableMiniMapIcon			= "显示小地图按钮"
+L.UseMasterVolume			= "使用游戏主声道播放音频"
 L.Latency_Text				= "设定启用同步功能的最高延迟阈值：%d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "DBM计时条综合设置"
@@ -124,6 +125,7 @@ L.ShowLoadMessage 			= "在聊天窗口中显示模块载入信息"
 L.ShowPizzaMessage 			= "在聊天窗口中显示计时条广播信息"
 L.ShowCombatLogMessage 			= "在聊天窗口中显示DBM战斗记录"
 L.ShowTranscriptorMessage		= "在聊天窗口中显示DBM Transcriptor 记录"
+L.ShowAllVersions	 		= "在聊天窗口中显示所有团员的Boss模组版本"
 L.CombatMessages			= "战斗信息设置"
 L.ShowEngageMessage 			= "在聊天窗口中显示开战信息"
 L.ShowKillMessage 			= "在聊天窗口中显示击杀信息"
@@ -157,7 +159,7 @@ L.AreaTitle_BarSetupHuge 		= "大型计时条设置"
 L.EnableHugeBar 			= "开启大型计时条（2号计时条）"
 L.BarIconLeft 				= "左侧图标"
 L.BarIconRight 				= "右侧图标"
-L.ExpandUpwards				= "折叠"
+L.ExpandUpwards				= "计时条向上伸展" --感谢飘去的梦， 木沐的小胖狼@NGA
 L.FillUpBars				= "填充计时条"
 L.ClickThrough				= "禁用鼠标点击事件（允许你点击计时条后面的目标）"
 L.Bar_DBMOnly				= "以下设置只对 \"DBM\" 计时条有效."
@@ -173,6 +175,7 @@ L.SpecWarn_Enabled			= "显示首领技能特殊警报"
 L.SpecWarn_FlashFrame			= "特殊警报时屏幕边缘泛光"
 L.SpecWarn_ShakeFrame			= "为毁灭性的技能闪烁屏幕"
 L.SpecWarn_AdSound			= "启用特别警告高级声音选项（需要UI重载）"
+L.SpecWarn_NoSoundsWVoice	= "当技能存在语音包语音时，屏蔽播放特殊警报声（当心，毁灭）"
 L.SpecWarn_Font				= "特殊警报字体"
 L.SpecWarn_DemoButton			= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"
@@ -184,12 +187,6 @@ L.SpecWarn_FlashDur			= "泛光持续时间: %0.1f"
 L.SpecWarn_FlashAlpha			= "泛光透明度: %0.1f"
 L.SpecWarn_ResetMe			= "重置"
 
-L.Panel_LTSpecWarnFrame			= "长效特殊警报"
-L.Area_LTSpecWarn			= "长效特殊警报设置"
-L.LTSpecWarn_Enabled			= "显示长效特殊警报"
-L.LTSpecWarn_Font			= "长效特殊警报字体"
-L.TestWarningEnd			= "范例只存在五秒，但真实的长效特别警告会长时间的存在於你的屏幕上直到触发取消事件"
-
 -- Tab: HealthFrame
 L.Panel_HPFrame				= "生命值框体"
 L.Area_HPFrame				= "生命值框体选项"
@@ -198,32 +195,34 @@ L.HP_GrowUpwards			= "向上扩展"
 L.HP_ShowDemo				= "显示框体"
 L.BarWidth				= "计量条宽度: %d"
 
--- Tab: Spam Filter
-L.Panel_SpamFilter			= "全局及信息过滤"
-L.StripServerName			= "警告和计时器中不显示服务器名"
-L.Area_SpamFilter			= "信息过滤设置"
-L.HideBossEmoteFrame			= "隐藏团队首领表情框体"
-L.SpamBlockBossWhispers			= "战斗中过滤DBM密语警报"
-L.BlockVersionUpdateNotice		= "禁用升级提示"
-L.ShowBBOnCombatStart			= "战斗开始时使用Big Brother检测增益情况"
-L.BigBrotherAnnounceToRaid		= "报告Big Brother的检测结果给团队"
-L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信息"
-
-L.Area_SpecFilter			= "专精过滤选项"
-L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
---
+-- Tab: Global Filter
+L.Panel_SpamFilter				= "全局及信息过滤"
 L.Area_SpamFilter_Outgoing		= "全局过滤设置"
 L.SpamBlockNoShowAnnounce		= "不显示警报或播放警报音效"
 L.DontShowFarWarnings			= "不显示过远事件的通告和计时器"
+L.SpamBlockNoRunAway			= "不要播放'快跑啊，小姑娘'"
 L.SpamBlockNoSendWhisper		= "不发送悄悄话提示给其他玩家"
 L.SpamBlockNoSetIcon			= "不设定标记在目标上"
 L.SpamBlockNoRangeFrame			= "不显示距离监视器"
 L.SpamBlockNoInfoFrame			= "不显示信息监视器"
 L.SpamBlockNoHealthFrame		= "不显示生命值监视器"
 
+-- Tab: Spam Filter
+L.Area_SpamFilter				= "信息过滤设置"
+L.StripServerName				= "警告和计时器中不显示服务器名"
+L.SpamBlockBossWhispers			= "战斗中过滤DBM密语警报"
+L.BlockVersionUpdateNotice		= "禁用升级提示"
+L.ShowBBOnCombatStart			= "战斗开始时使用Big Brother检测增益情况"
+L.BigBrotherAnnounceToRaid		= "报告Big Brother的检测结果给团队"
+
+L.Area_SpecFilter			= "专精过滤选项"
+L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
+--L.FilterHealerSpec		= "Filter warnings designated for Healer role when not Healer spec"--Not in use
+--L.FilterDamagerSpec		= "Filter warnings designated for Damager role when not Damager spec"--Not in use
+
 L.Area_PullTimer			= "开怪倒计时过滤设置"
 L.DontShowPT				= "不显示开怪倒计时条"
-L.DontShowPTCountdownText		= "不显示开怪倒计时动画"
+L.DontShowPTCountdownText	= "不显示开怪倒计时动画"
 L.DontPlayPTCountdown			= "不播放开怪倒计时语音"
 L.DontShowPTText			= "不显示开怪倒计时文字"
 L.DontShowPTNoID			= "不显示不同区域发送的倒计时"
@@ -232,8 +231,12 @@ L.PT_Threshold				= "不显示高于%d秒的倒计时动画"
 L.Panel_HideBlizzard			= "隐藏暴雪框架"
 L.Area_HideBlizzard			= "隐藏暴雪框架选项"
 L.HideBossEmoteFrame			= "首领战中隐藏团队首领表情框体"
-L.HideWatchFrame			= "首领战中隐藏任务追踪框体"
+L.HideWatchFrame			= "在没有成就追踪的情况下，首领战中隐藏任务追踪框体"
+L.HideGarrisonUpdates		= "首领战中隐藏要塞队列完成提示"
 L.HideTooltips				= "首领战中隐藏鼠标提示窗体 （tooltips）"
+L.HideApplicantAlerts		= "屏蔽预创建队伍邀请信息"
+L.HideApplicantAlertsFull	= "当团队已满时"
+L.HideApplicantAlertsNotL	= "当我不是团长时 （团长别选）"
 L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信息"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.AfterFirst				= "仅第一次播放"

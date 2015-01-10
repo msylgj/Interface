@@ -939,7 +939,7 @@ local function freebHeader(name, group, temp, pet, MT)
 	else
 		local header = oUF:SpawnHeader(name, template, 'raid,party,solo',
 		'oUF-initialConfigFunction', (initconfig):format(Qulight["raidframes"].width, Qulight["raidframes"].height),
-		'showPlayer',Qulight["raidframes"].player,
+		'showPlayer',true,
 		'showSolo', Qulight["raidframes"].solo,
 		'showParty', true,
 		'showRaid', true,
@@ -976,7 +976,7 @@ oUF:Factory(function(self)
 		self:SetActiveStyle"Party"
 		local party = self:SpawnHeader("oUF_Party", nil, "custom [@raid6,exists][petbattle] hide;show",
 		'oUF-initialConfigFunction', (initconfig):format(unpack(Qulight["raidframes"].partysize)),
-		'showPlayer', Qulight["raidframes"].player,
+		'showPlayer', Qulight["raidframes"].solo,
 		'showSolo', Qulight["raidframes"].solo,
 		'showParty', true,
 		'showRaid', true,

@@ -1,0 +1,13 @@
+tag 1.6.1
+fa7b8675a8a0718eac3f533aff898bd49b1fd067
+Steffen Buehl <sb@sbuehl.com>
+2015-01-01 19:54:15 +0100
+
+tagging as 1.6.1
+
+
+--------------------
+
+Steffen Buehl:
+	- experimental "detach tooltip" function, doesn't work yet - needs more work
+	- add custom mission icons

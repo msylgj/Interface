@@ -1302,19 +1302,19 @@ lib.genHarmony = function(self)
 		CreateShadowclassbar2(hb)
 		hb:SetBackdropBorderColor(0,0,0,0)
 		hb:SetFrameLevel(6)
-			for i = 1, 5 do
-				hb[i] = CreateFrame("StatusBar", "HarmonyBar"..i, hb)
-				hb[i]:SetHeight(6)
-				hb[i]:SetStatusBarTexture(statusbar_texture)
-					
-				if i == 1 then
-					hb[i]:SetWidth(100 / 5)
-					hb[i]:SetPoint("LEFT", hb, "LEFT", 0, 0)
-				else
-					hb[i]:SetWidth((100 / 5) - 1)
-					hb[i]:SetPoint("LEFT", hb[i-1], "RIGHT", 1, 0)
-				end
+		for i = 1, 5 do
+			hb[i] = CreateFrame("StatusBar", "HarmonyBar"..i, hb)
+			hb[i]:SetHeight(6)
+			hb[i]:SetStatusBarTexture(statusbar_texture)
+				
+			if i == 1 then
+				hb[i]:SetWidth(100 / 5)
+				hb[i]:SetPoint("LEFT", hb, "LEFT", 0, 0)
+			else
+				hb[i]:SetWidth((100 / 5) - 1)
+				hb[i]:SetPoint("LEFT", hb[i-1], "RIGHT", 1, 0)
 			end
+		end
 		self.HarmonyBar = hb
 	end
 end
@@ -1330,20 +1330,20 @@ lib.genShards = function(self)
 		wb:SetBackdropBorderColor(0, 0, 0)	
 		CreateShadowclassbar2(wb)
 		wb:SetFrameLevel(6)
-			for i = 1, 4 do
-				wb[i] = CreateFrame("StatusBar", "WarlockSpecBars"..i, wb)
-				wb[i]:SetHeight(6)
-				wb[i]:SetStatusBarTexture(statusbar_texture)
-						
-					if i == 1 then
-						wb[i]:SetWidth(120 / 4, 6)
-						wb[i]:SetPoint("LEFT", wb, "LEFT", 0, 0)
-					else
-						wb[i]:SetWidth(120 / 4, 6)
-						wb[i]:SetPoint("LEFT", wb[i-1], "RIGHT", 1, 0)
-					end
-						wb[i].bg = wb[i]:CreateTexture(nil, 'ARTWORK')
+		for i = 1, 4 do
+			wb[i] = CreateFrame("StatusBar", "WarlockSpecBars"..i, wb)
+			wb[i]:SetHeight(6)
+			wb[i]:SetStatusBarTexture(statusbar_texture)
+					
+			if i == 1 then
+				wb[i]:SetWidth(120 / 4, 6)
+				wb[i]:SetPoint("LEFT", wb, "LEFT", 0, 0)
+			else
+				wb[i]:SetWidth(120 / 4, 6)
+				wb[i]:SetPoint("LEFT", wb[i-1], "RIGHT", 1, 0)
 			end
+			wb[i].bg = wb[i]:CreateTexture(nil, 'ARTWORK')
+		end
 		wb:SetScript("OnShow", function(self) 
 		local f = self:GetParent()			
 		end)
@@ -1364,9 +1364,9 @@ lib.genShadowOrbsBar = function(self)
 	SoBar:SetHeight(6)
 	SoBar:SetFrameLevel(6)
 		
-	for i = 1, 3 do
+	for i = 1, 5 do
 		SoBar[i] = CreateFrame("StatusBar", nil, SoBar)
-		SoBar[i]:SetWidth((SoBar:GetWidth() - 5)/3)
+		SoBar[i]:SetWidth((SoBar:GetWidth() - 5)/5)
 		SoBar[i]:SetHeight(SoBar:GetHeight())	
 		SoBar[i]:SetStatusBarTexture(statusbar_texture)
 		SoBar[i]:SetStatusBarColor(0.70, 0.32, 0.75)

@@ -25,6 +25,13 @@ L:SetMiscLocalization({
 ------------------
 L= DBM:GetModLocalization(1196)
 
+L:SetOptionLocalization({
+	InterruptCounter	= "Setze \"Verrottung\"-Zähler zurück nach",
+	Two					= "zwei Wirkungen",
+	Three				= "drei Wirkungen",
+	Four				= "vier Wirkungen"
+})
+
 --------------
 -- Twin Ogron --
 --------------
@@ -32,13 +39,24 @@ L= DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
 	PhemosSpecial	= "Spiele akustischen Countdown für Phemos' Spezialfähigkeiten",
-	PolSpecial		= "Spiele akustischen Countdown für Pols Spezialfähigkeiten"
+	PolSpecial		= "Spiele akustischen Countdown für Pols Spezialfähigkeiten",
+	PhemosSpecialVoice	= "Spiele gesprochene Warnungen für Phemos' Spezialfähigkeiten",
+	PolSpecialVoice		= "Spiele gesprochene Warnungen für Pols Spezialfähigkeiten"
 })
 
 --------------------
 --Koragh --
 --------------------
 L= DBM:GetModLocalization(1153)
+
+
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "Teufelsenergie endet in 5s - geh zum Start"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "Spezialwarnung zum Hingehen zur Startposition, wenn $spell:172895 endet"
+})
 
 L:SetMiscLocalization({
 	supressionTarget1	= "Ich werde Euch zermalmen!",
@@ -53,7 +71,9 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1197)
 
 L:SetMiscLocalization({
-	BrandedYell			= "Gebrandmarkt (%s) auf %s"
+	BrandedYell			= "Gebrandmarkt (%s) auf %s",
+	GazeYell			= "Starren endet in %d",
+	PlayerDebuffs		= "Closest to Glimpse"--translate
 })
 
 -------------
