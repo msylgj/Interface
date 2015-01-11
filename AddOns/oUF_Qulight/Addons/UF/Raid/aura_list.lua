@@ -1,395 +1,243 @@
-local _, ns = ...
-local oUF = ns.oUF or oUF
+	do
+		local ORD = oUF_RaidDebuffs
 
-RaidBuffs = {
-	DRUID = {
-		{774, "TOPRIGHT", {0.8, 0.4, 0.8}},					-- Rejuvenation
-		{8936, "BOTTOMLEFT", {0.2, 0.8, 0.2}},				-- Regrowth
-		{33763, "TOPLEFT", {0.4, 0.8, 0.2}},				-- Lifebloom
-		{48438, "BOTTOMRIGHT", {0.8, 0.4, 0}},				-- Wild Growth
-		{102342, "LEFT", {0.45, 0.3, 0.2}, true},			-- Ironbark
-		{155777, "RIGHT", {0.4, 0.9, 0.4}},				-- Rejuvenation (Germination)
-	},
-	MONK = {
-		{119611, "TOPRIGHT", {0.2, 0.7, 0.7}},				-- Renewing Mist
-		{132120, "TOPLEFT", {0.4, 0.8, 0.2}},			-- Enveloping Mist
-		{124081, "BOTTOMRIGHT", {0.7, 0.4, 0}},				-- Zen Sphere
-		{116849, "LEFT", {0.81, 0.85, 0.1}, true},			-- Life Cocoon
-	},
-	PALADIN = {
-		{53563, "TOPRIGHT", {0.7, 0.3, 0.7}},				-- Beacon of Light
-		{20925, "BOTTOMLEFT", {0.9, 0.9, 0.1}},				-- Sacred Shield
-		{114163, "BOTTOMLEFT", {0.9, 0.6, 0.4}},			-- Eternal Flame
-		{157007, "TOPLEFT", {1, 0.5, 0.2}},				-- Beacon of Insight
-		{1022, "BOTTOMRIGHT", {0.2, 0.2, 1}, true},			-- Hand of Protection
-		{1044, "BOTTOMRIGHT", {0.89, 0.45, 0}, true},		-- Hand of Freedom
-		{1038, "BOTTOMRIGHT", {0.93, 0.75, 0}, true},		-- Hand of Salvation
-		{6940, "BOTTOMRIGHT", {0.89, 0.1, 0.1}, true},		-- Hand of Sacrifice
-		{114039, "BOTTOMRIGHT", {0.4, 0.6, 0.8}, true},		-- Hand of Purity
-	},
-	PRIEST = {
-		{6788, "TOPRIGHT", {1, 0, 0}, true},				-- Weakened Soul
-		{41635, "BOTTOMRIGHT", {0.2, 0.7, 0.2}},			-- Prayer of Mending
-		{139, "BOTTOMLEFT", {0.4, 0.7, 0.2}}, 				-- Renew
-		{17, "TOPLEFT", {0.81, 0.85, 0.1}, true},			-- Power Word: Shield
-		{33206, "LEFT", {0.89, 0.1, 0.1}, true},			-- Pain Suppression
-		{47788, "LEFT", {0.86, 0.52, 0}, true},				-- Guardian Spirit
-	},
-	SHAMAN = {
-		{61295, "TOPRIGHT", {0.7, 0.3, 0.7}},				-- Riptide
-		{974, "BOTTOMLEFT", {0.2, 0.7, 0.2}, true},			-- Earth Shield
-	},
-	HUNTER = {
-		{35079, "TOPRIGHT", {0.2, 0.2, 1}},					-- Misdirection
-	},
-	MAGE = {
-		{111264, "TOPRIGHT", {0.2, 0.2, 1}},				-- Ice Ward
-	},
-	ROGUE = {
-		{57933, "TOPRIGHT", {0.89, 0.1, 0.1}},				-- Tricks of the Trade
-	},
-	WARLOCK = {
-		{20707, "TOPRIGHT", {0.7, 0.32, 0.75}},				-- Soulstone
-	},
-	WARRIOR = {
-		{114030, "TOPLEFT", {0.2, 0.2, 1}},					-- Vigilance
-		{3411, "TOPRIGHT", {0.89, 0.1, 0.1}},				-- Intervene
-	},
-	ALL = {
-		{23333, "LEFT", {1, 0, 0}, true}, 					-- Warsong flag, Horde
-		{23335, "LEFT", {0, 0, 1}, true},					-- Warsong flag, Alliance
-		{34976, "LEFT", {1, 0, 0}, true}, 					-- Netherstorm Flag
-	},
-}
+		if not ORD then return end
+		
+		ORD.ShowDispelableDebuff = true
+		ORD.FilterDispellableDebuff = true
+		ORD.MatchBySpellName = true
+		ORD.DeepCorruption = true
+		
+		local function SpellName(id)
+			local name = select(1, GetSpellInfo(id))
+			return name	
+		end
 
-RaidBuffsIgnore = {
-	[65148] = true,		-- Sacred Shield (Proc)
-}
+		debuffids = {
+			-------------------------------<<  PVE  >>-------------------------------
 
-local function SpellName(id)
-	local name = select(1, GetSpellInfo(id))
-	return name
-end
+			-- 心智 [尤格萨隆]
+			SpellName(63050),
 
-RaidDebuffs = {
------------------------------------------------------------------
--- Draenor
------------------------------------------------------------------
--- Blackrock Foundry
-	-- Beastlord Darmac
-	-- Flamebender Ka'graz
-	-- Gruul the Subjugated
-	-- Blast Furnace
-	-- Hans'gar and Franzok
-	-- Iron Maidens
-	-- Kromog
-	-- Operator Thogar
-	-- Oregorger
-	-- Warlord Blackhand
--- Highmaul
-	-- The Butcher
-	[SpellName(156152)] = 3,	-- Gushing Wounds
-	[SpellName(156147)] = 3,	-- The Cleaver
-	-- Kargath Bladefist
-	[SpellName(159178)] = 3,	-- Open Wounds (Tank switch)
-	[SpellName(159113)] = 3,	-- Impale (DoT)
-	-- Twin Ogron
-	[SpellName(155569)] = 3,	-- Injured (DoT)
-	[SpellName(167200)] = 3,	-- Arcane Wound (DoT)
-	-- Ko'ragh
-	[SpellName(161242)] = 3,	-- Caustic Energy (DoT)
-	[SpellName(162184)] = 3,	-- Expel Magic: Shadow
-	-- Tectus
-	[SpellName(162892)] = 3,	-- Petrification
-	-- Brackenspore
-	[SpellName(163241)] = 3,	-- Rot (Stacks)
-	-- Imperator Mar'gok
-	[SpellName(158605)] = 3,	-- Mark of Chaos
-	[SpellName(164176)] = 3,	-- Mark of Chaos: Displacement
-	[SpellName(164178)] = 3,	-- Mark of Chaos: Fortification
-	[SpellName(164191)] = 3,	-- Mark of Chaos: Replication
-	[SpellName(157763)] = 3,	-- Fixate
-	[SpellName(158553)] = 3,	-- Crush Armor (Stacks)
------------------------------------------------------------------
--- Pandaria
------------------------------------------------------------------
--- Siege of Orgrimmar
-	-- Immerseus
-	[SpellName(143436)] = 2,	-- Corrosive Blast (Tank switch)
-	[SpellName(143459)] = 3,	-- Sha Residue
-	[SpellName(143579)] = 3,
-	-- The Fallen Protectors
-	[SpellName(143434)] = 4,	-- Shadow Word: Bane (Dispel)
-	[SpellName(143198)] = 3,	-- Garrote (DoT)
-	[SpellName(143962)] = 3,        -- јддский удар
-	[SpellName(143842)] = 5,	-- Mark of Anguish
-	[SpellName(147383)] = 3,	-- Debilitation
-	[SpellName(143424)] = 3,        -- ќжог Ўа
-	-- Norushen
-	[SpellName(146124)] = 3,	-- Self Doubt (Tank switch)
-	[SpellName(144514)] = 4,	-- Lingering Corruption (Dispel)
-	-- Sha of Pride
-	[SpellName(144358)] = 3,	-- Wounded Pride (Tank switch)
-	[SpellName(144351)] = 4,	-- Mark of Arrogance (Dispel)
-	[SpellName(146594)] = 3,	-- Gift of the Titans
-	[SpellName(147207)] = 2,	-- Weakened Resolve (Heroic)
-	-- Galakras
-	[SpellName(147029)] = 3,	-- Flames of Galakrond (DoT)
-	[SpellName(146765)] = 3,	-- Flame Arrows (DoT)
-	[SpellName(146902)] = 4,	-- Poison-Tipped Blades (Poison stacks)
-	-- Iron Juggernaut
-	[SpellName(144467)] = 4,	-- Ignite Armor (Tank stacks)
-	[SpellName(144459)] = 3,	-- Laser Burn (DoT)
-	-- Kor'kron Dark Shaman
-	[SpellName(144215)] = 2,	-- Froststorm Strike (Tank stacks)
-	[SpellName(144089)] = 3,	-- Toxic Mist (DoT)
-	[SpellName(144330)] = 3,	-- Iron Prison (Heroic)
-	-- General Nazgrim
-	[SpellName(143494)] = 3,	-- Sundering Blow (Tank stacks)
-	[SpellName(143638)] = 3,	-- Bonecracker (DoT)
-	[SpellName(143431)] = 4,	-- Magistrike (Dispel)
-	[SpellName(143480)] = 3,	-- Assassin's Mark (Fixate)
-	-- Malkorok
-	[SpellName(142990)] = 3,	-- Fatal Strike (Tank stacks)
-	[SpellName(142864)] = 3,	-- Ancient Barrier
-	[SpellName(142865)] = 3,	-- Strong Ancient Barrier
-	[SpellName(142913)] = 4,	-- Displaced Energy (Dispel)
-	-- Spoils of Pandaria
-	[SpellName(145218)] = 3,	-- Harden Flesh (Dispel)
-	[SpellName(146235)] = 3,	-- Breath of Fire (Dispel)
-	-- Thok the Bloodthirsty
-	[SpellName(143766)] = 3,	-- Panic (Tank stacks)
-	[SpellName(143780)] = 3,	-- Acid Breath (Tank stacks)
-	[SpellName(143773)] = 3,	-- Freezing Breath (Tank Stacks)
-	[SpellName(143800)] = 3,	-- Icy Blood (Random Stacks)
-	[SpellName(143767)] = 3,	-- Scorching Breath (Tank Stacks)
-	[SpellName(143791)] = 4,	-- Corrosive Blood (Dispel)
-	-- Siegecrafter Blackfuse
-	[SpellName(143385)] = 3,	-- Electrostatic Charge (Tank stacks)
-	[SpellName(144236)] = 3,	-- Pattern Recognition
-	-- Paragons of the Klaxxi
-	[SpellName(142929)] = 3,	-- Tenderizing Strikes (Tank stacks)
-	[SpellName(143275)] = 3,	-- Hewn (Tank stacks)
-	[SpellName(143279)] = 3,	-- Genetic Alteration (Tank stacks)
-	[SpellName(143974)] = 3,	-- Shield Bash (Tank stun)
-	[SpellName(142948)] = 3,	-- Aim
-	-- Garrosh Hellscream
-	[SpellName(145183)] = 3,	-- Gripping Despair (Tank stacks)
-	[SpellName(145195)] = 3,	-- Empowered Gripping Despair (Tank stacks)
-	[SpellName(145065)] = 3,	-- Touch of Y'Shaarj
-	[SpellName(145171)] = 3,	-- Empowered Touch of Y'Shaarj
 
- 	-- Other
-	[SpellName(87023)] = 4,		-- Cauterize
- 	[SpellName(94794)] = 4,		-- Rocket Fuel Leak
-	[SpellName(116888)] = 4,	-- Shroud of Purgatory
-	[SpellName(121175)] = 2,	-- Orb of Power
+			----------------------------------WOD------------------------------------
+			--  [970]  悬槌堡
+			-- 0   小怪
+			-- 污染之爪
+			SpellName(175601),
+			-- 剧毒辐射
+			SpellName(172069),
+			-- 毁灭符文
+			SpellName( 56037),
+			-- 瓦解符文
+			SpellName(175654),
+			-- 冰冻核心
+			SpellName(174404),
+			-- 野火
+			SpellName(173827),
+			-- 熔火炸弹
+			SpellName(161635),
 
--- Throne of Thunder
-	-- Jin'rokh the Breaker
-	[SpellName(137162)] = 4,	-- Static Burst (Tank switch)
-	[SpellName(138349)] = 3,	-- Static Wound (Tank stacks)
-	[SpellName(137371)] = 4,	-- Thundering Throw (Tank stun)
-	[SpellName(138732)] = 3,	-- Ionization (Heroic - Dispel)
-	[SpellName(137422)] = 3,	-- Focused Lightning (Fixated - Kiting)
-	-- Horridon
-	[SpellName(136767)] = 3,	-- Triple Puncture (Tank stacks)
-	[SpellName(136708)] = 4,	-- Stone Gaze (Stun - Dispel)
-	[SpellName(136654)] = 3,	-- Rending Charge (DoT)
-	[SpellName(136719)] = 3,	-- Blazing Sunlight (Dispel)
-	[SpellName(136587)] = 3,	-- Venom Bolt Volley (Dispel)
-	[SpellName(136710)] = 3,	-- Deadly Plague (Dispel)
-	[SpellName(136512)] = 3,	-- Hex of Confusion (Dispel)
-	-- Council of Elders
-	[SpellName(136903)] = 3,	-- Frigid Assault (Tank stacks)
-	[SpellName(136922)] = 3,	-- Frostbite (DoT)
-	[SpellName(136992)] = 3,	-- Biting Cold (DoT)
-	[SpellName(136857)] = 4,	-- Entrapped (Dispel)
-	[SpellName(137359)] = 3,	-- Marked Soul (Fixated - Kiting)
-	[SpellName(137641)] = 3,	-- Soul Fragment (Heroic)
-	-- Tortos
-	[SpellName(136753)] = 3,	-- Slashing Talons (Tank DoT)
-	[SpellName(137633)] = 3,	-- Crystal Shell (Heroic)
-	[SpellName(140701)] = 4,	-- Crystal Shell: Full Capacity! (Heroic)
-	-- Megaera
-	[SpellName(137731)] = 3,	-- Ignite Flesh (Tank stacks)
-	[SpellName(139843)] = 3,	-- Arctic Freeze (Tank stacks)
-	[SpellName(139840)] = 3,	-- Rot Armor (Tank stacks)
-	[SpellName(134391)] = 4,	-- Cinder (DoT - Dispell)
-	[SpellName(139857)] = 4,	-- Torrent of Ice (Fixated - Kiting)
-	[SpellName(140179)] = 4,	-- Suppression (Heroic - Dispell)
-	-- Ji-Kun
-	[SpellName(134366)] = 4,	-- Talon Rake (Tank stacks)
-	[SpellName(140092)] = 3,	-- Infected Talons (Tank DoT)
-	[SpellName(134256)] = 3,	-- Slimed (DoT)
-	-- Durumu the Forgotten
-	[SpellName(133768)] = 4,	-- Arterial Cut (Tank DoT)
-	[SpellName(133767)] = 3,	-- Serious Wound (Tank stacks)
-	[SpellName(133798)] = 3,	-- Life Drain (Stun)
-	[SpellName(133597)] = 3,	-- Dark Parasite (Heroic - Dispel)
-	-- Primordius
-	[SpellName(136050)] = 3,	-- Malformed Blood (Tank stacks)
-	[SpellName(136228)] = 4,	-- Volatile Pathogen (DoT)
-	-- Dark Animus
-	[SpellName(138569)] = 4,	-- Explosive Slam (Tank stacks)
-	[SpellName(138609)] = 4,	-- Matter Swap (Dispel)
-	[SpellName(138659)] = 3,	-- Touch of the Animus (DoT)
-	-- Iron Qon
-	[SpellName(134691)] = 3,	-- Impale (Tank stacks)
-	[SpellName(136192)] = 4,	-- Lightning Storm (Stun)
-	[SpellName(136193)] = 3,	-- Arcing Lightning
-	-- Twin Consorts
-	[SpellName(137408)] = 3,	-- Fan of Flames (Tank stacks)
-	[SpellName(136722)] = 3,	-- Slumber Spores (Dispel)
-	[SpellName(137341)] = 3,	-- Beast of Nightmares (Fixate)
-	[SpellName(137360)] = 3,	-- Corrupted Healing (Healer stacks)
-	-- Lei Shen
-	[SpellName(135000)] = 3,	-- Decapitate (Tank only)
-	[SpellName(136478)] = 3,	-- Fusion Slash (Tank only)
-	[SpellName(136914)] = 3,	-- Electrical Shock (Tank staks)
-	[SpellName(135695)] = 3,	-- Static Shock (Damage Split)
-	[SpellName(136295)] = 3,	-- Overcharged
-	[SpellName(139011)] = 3,	-- Helm of Command (Heroic)
-	-- Ra-den
-	[SpellName(138297)] = 3,	-- Unstable Vita
-	[SpellName(138329)] = 3,	-- Unleashed Anima
-	[SpellName(138372)] = 4,	-- Vita Sensitivity
--- Terrace of Endless Spring
-	-- Protectors of the Endless
-	[SpellName(117519)] = 3,	-- Touch of Sha
-	[SpellName(117436)] = 4,	-- Lightning Prison
-	-- Tsulong
-	[SpellName(122752)] = 3,	-- Shadow Breath
-	[SpellName(123011)] = 3,	-- Terrorize
-	[SpellName(122777)] = 3,	-- Nightmares
-	[SpellName(123036)] = 3,	-- Fright
-	-- Lei Shi
-	[SpellName(123121)] = 3,	-- Spray
-	[SpellName(123705)] = 3,	-- Scary Fog
-	-- Sha of Fear
-	[SpellName(119086)] = 3,	-- Penetrating Bolt
-	[SpellName(120669)] = 3,	-- Naked and Afraid
-	[SpellName(120629)] = 3,	-- Huddle in Terror
--- Heart of Fear
-	-- Imperial Vizier Zor'lok
-	[SpellName(122761)] = 3,	-- Exhale
-	[SpellName(122740)] = 3,	-- Convert
-	-- Blade Lord Ta'yak
-	[SpellName(123180)] = 3,	-- Wind Step
-	[SpellName(123474)] = 3,	-- Overwhelming Assault
-	-- Garalon
-	[SpellName(122835)] = 3,	-- Pheromones
-	[SpellName(123081)] = 4,	-- Pungency
-	-- Wind Lord Mel'jarak
-	[SpellName(129078)] = 4,	-- Amber Prison
-	[SpellName(122055)] = 3,	-- Residue
-	[SpellName(122064)] = 3,	-- Corrosive Resin
-	[SpellName(123963)] = 4,	-- Kor'thik Strike
-	-- Amber-Shaper Un'sok
-	[SpellName(121949)] = 3,	-- Parasitic Growth
-	[SpellName(122370)] = 3,	-- Reshape Life
-	-- Grand Empress Shek'zeer
-	[SpellName(123707)] = 3,	-- Eyes of the Empress
-	[SpellName(123713)] = 3,	-- Servant of the Empress
-	[SpellName(123788)] = 3,	-- Cry of Terror
-	[SpellName(124849)] = 3,	-- Consuming Terror
-	[SpellName(124863)] = 3,	-- Visions of Demise
--- Mogu'shan Vaults
-	-- The Stone Guard
-	[SpellName(125206)] = 3,	-- Rend Flesh
-	[SpellName(130395)] = 3,	-- Jasper Chains
-	[SpellName(116281)] = 3,	-- Cobalt Mine Blast
-	-- Feng the Accursed
-	[SpellName(131788)] = 3,	-- Lightning Lash
-	[SpellName(116942)] = 3,	-- Flaming Spear
-	[SpellName(131790)] = 3,	-- Arcane Shock
-	[SpellName(131792)] = 3,	-- Shadowburn
-	[SpellName(116374)] = 4,	-- Lightning Charge
-	[SpellName(116784)] = 3,	-- Wildfire Spark
-	[SpellName(116417)] = 3,	-- Arcane Resonance
-	-- Gara'jal the Spiritbinder
-	[SpellName(122151)] = 4,	-- Voodoo Doll
-	[SpellName(116161)] = 3,	-- Crossed Over
-	[SpellName(117723)] = 3,	-- Frail Soul
-	-- The Spirit Kings
-	[SpellName(117708)] = 3,	-- Maddening Shout
-	[SpellName(118303)] = 3,	-- Fixate
-	[SpellName(118048)] = 3,	-- Pillaged
-	[SpellName(118135)] = 3,	-- Pinned Down
-	[SpellName(118163)] = 3,	-- Robbed Blind
-	-- Elegon
-	[SpellName(117878)] = 3,	-- Overcharged
-	[SpellName(117949)] = 3,	-- Closed Circuit
-	[SpellName(132222)] = 3,	-- Destabilizing Energies
-	-- Will of the Emperor
-	[SpellName(116835)] = 3,	-- Devastating Arc
-	[SpellName(116778)] = 3,	-- Focused Defense
-	[SpellName(116525)] = 3,	-- Focused Assault
--- Sha of Anger
-	[SpellName(119626)] = 3,	-- Aggressive Behavior
------------------------------------------------------------------
--- PvP
------------------------------------------------------------------
-	-- Death Knight
-	[SpellName(115001)] = 3,	-- Remorseless Winter
-	[SpellName(108194)] = 3,	-- Asphyxiate
-	[SpellName(47476)] = 3,		-- Strangulate
-	[SpellName(91800)] = 3,		-- Gnaw (Ghoul)
-	[SpellName(91797)] = 3,		-- Monstrous Blow (Mutated Ghoul)
-	-- Druid
-	[SpellName(33786)] = 3,		-- Cyclone
-	[SpellName(339)] = 2,		-- Entangling Roots
-	[SpellName(78675)] = 3,		-- Solar Beam
-	-- Hunter
-	[SpellName(3355)] = 3,		-- Freezing Trap
-	[SpellName(117526)] = 3,	-- Binding Shot
-	[SpellName(19386)] = 3,		-- Wyvern Sting
-	-- Mage
-	[SpellName(31661)] = 3,		-- Dragon's Breath
-	[SpellName(82691)] = 3,		-- Ring of Frost
-	[SpellName(44572)] = 3,		-- Deep Freeze
-	[SpellName(61305)] = 3,		-- Polymorph
-	[SpellName(102051)] = 3,	-- Frostjaw
-	[SpellName(122)] = 2,		-- Frost Nova
-	[SpellName(111340)] = 2,	-- Ice Ward
-	-- Monk
-	[SpellName(115078)] = 3,	-- Paralysis
-	[SpellName(119381)] = 3,	-- Leg Sweep
-	-- Paladin
-	[SpellName(20066)] = 3,		-- Repentance
-	[SpellName(853)] = 3,		-- Hammer of Justice
-	[SpellName(105593)] = 3,	-- Fist of Justice
-	[SpellName(105421)] = 3,	-- Blinding Light
-	-- Priest
-	[SpellName(605)] = 3,		-- Dominate Mind
-	[SpellName(8122)] = 3,		-- Psychic Scream
-	[SpellName(64044)] = 3,		-- Psychic Horror
-	[SpellName(15487)] = 3,		-- Silence
-	--[SpellName(6788)] = 3,		-- Silence
-	-- Rogue
-	[SpellName(6770)] = 3,		-- Sap
-	[SpellName(2094)] = 3,		-- Blind
-	[SpellName(1776)] = 3,		-- Gouge
-	-- Shaman
-	[SpellName(51514)] = 3,		-- Hex
-	[SpellName(118905)] = 3,	-- Static Charge
-	[SpellName(63685)] = 2,		-- Freeze
-	-- Warlock
-	[SpellName(118699)] = 3,	-- Fear
-	[SpellName(6789)] = 3,		-- Mortal Coil
-	[SpellName(5484)] = 3,		-- Howl of Terror
-	[SpellName(6358)] = 3,		-- Seduction (Succubus)
-	[SpellName(115268)] = 3,	-- Mesmerize (Shivarra)
-	[SpellName(30283)] = 3,		-- Shadowfury
-	-- Warrior
-	[SpellName(46968)] = 3,		-- Shockwave
-	[SpellName(132169)] = 3,	-- Storm Bolt
-}
+			-- 1   卡加斯.刃拳
+			-- 烈焰喷射
+			SpellName(159311),
+			-- 抓钩
+			SpellName(159188),
+			-- 狂暴冲锋
+			SpellName(158986),
+			-- 钢铁炸弹
+			SpellName(159386),
+			-- 迸裂创伤 (仅坦克)
+			SpellName(159178),
+			-- 穿刺 (DoT)
+			SpellName(159113),
+			-- 锁链投掷
+			SpellName(159947),
+			-- 暴虐酒
+			SpellName(159413),
+			-- 邪恶吐息
+			SpellName(160521),
+			-- 搜寻猎物
+			SpellName(162497),
 
-RaidDebuffsReverse = {
-	--[spellID] = true,			-- Spell name
-}
+			-- 2   屠夫
+			-- 捶肉槌
+			SpellName(156151),
+			-- 龟裂创伤
+			SpellName(156152),
+			-- 切肉刀
+			SpellName(156143),
+			-- 白鬼硫酸
+			SpellName(163046),
 
-RaidDebuffsIgnore = {
-	[138309] = true,			-- Slimed
-}
+			-- 3   泰克图斯
+			-- 晶化弹幕
+			SpellName(162346),
+			SpellName(162370),
+			-- 石化
+			SpellName(162892),
+
+			-- 4   布兰肯斯波
+			-- 感染孢子
+			SpellName(163242),
+			-- 蚀脑真菌
+			SpellName(160179),
+			-- 死疽吐息
+			SpellName(159220),
+			-- 脉冲高热
+			SpellName(163666),
+			-- 溃烂
+			SpellName(163241),
+			-- 滑溜溜的苔藓
+			SpellName(163590),
+
+			-- 5   独眼魔双子
+			-- 致衰咆哮
+			SpellName(158026),
+			-- 防御削弱
+			SpellName(159709),
+			-- 受伤
+			SpellName(155569),
+			-- 烈焰
+			SpellName(158241),
+			-- 奥能动荡
+			SpellName(163372),
+			-- 奥术之伤
+			SpellName(167200),
+
+			-- 6   克拉戈
+			-- 腐蚀能量
+			SpellName(161242),
+			-- 压制力场
+			SpellName(161345),
+			-- 魔能散射:冰霜
+			SpellName(172813),
+			-- 魔能散射:暗影
+			SpellName(162184),
+			-- 魔能散射:火焰
+			SpellName(162185),
+			-- 魔能散射:奥术
+			SpellName(162186),
+			-- 魔能散射:邪能
+			SpellName(172895),
+			SpellName(172917),
+			-- 统御之力
+			SpellName(163472),
+			-- 废灵标记
+			SpellName(172886),
+			-- 废灵壁垒
+			SpellName(163134),
+
+			-- 7   元首马尔高克
+			-- 混沌标记
+			SpellName(158605),
+			-- 混沌标记:偏移
+			SpellName(164176),
+			-- 混沌标记:强固
+			SpellName(164178),
+			-- 混沌标记:复制
+			SpellName(164191),
+			-- 拘禁
+			SpellName(158619),
+			-- 碾碎护甲
+			SpellName(158553),
+			-- 锁定
+			SpellName(157763),
+			-- 减速
+			SpellName(157801),
+			-- 毁灭共鸣
+			SpellName(159200),
+			SpellName(174106),
+			-- 烙印
+			SpellName(156225),
+			-- 烙印:偏移
+			SpellName(164004),
+			-- 烙印:强固
+			SpellName(164005),
+			-- 烙印:复制
+			SpellName(164006),
+			-- 蔓延暗影(M)
+			SpellName(176533),
+			-- 深渊凝视(M)
+			SpellName(176537),
+			-- 深渊凝视(爆炸)(M)
+			SpellName(165595),
+			-- 无尽黑暗制(M)
+			SpellName(165102),
+			-- 熵能冲击(M)
+			SpellName(165116),		
+			
+		-----------------------------------------------------------------
+		-- PvP
+		-----------------------------------------------------------------
+			-- Death Knight
+			SpellName(115001),	-- Remorseless Winter
+			SpellName(108194),	-- Asphyxiate
+			SpellName(47476),	-- Strangulate
+			SpellName(47481),	-- Gnaw (Ghoul)
+			SpellName(91797),	-- Monstrous Blow (Mutated Ghoul)
+			-- Druid
+			SpellName(33786),	-- Cyclone
+			SpellName(2637),	-- Hibernate
+			SpellName(339),		-- Entangling Roots
+			SpellName(78675),	-- Solar Beam
+			-- Hunter
+			SpellName(3355),	-- Freezing Trap
+			SpellName(117526),	-- Binding Shot
+			SpellName(1513),	-- Scare Beast
+			SpellName(19503),	-- Scatter Shot
+			SpellName(34490),	-- Silence Shot
+			SpellName(19386),	-- Wyvern Sting
+
+			-- Mage
+			SpellName(31661),	-- Dragon's Breath
+			SpellName(82691),	-- Ring of Frost
+			SpellName(61305),	-- Polymorph
+			SpellName(102051),	-- Frostjaw
+			SpellName(55021),	-- Improved Counterspell
+			SpellName(122),		-- Frost Nova
+			SpellName(111340),	-- Ice Ward
+			-- Monk
+			SpellName(115078),	-- Paralysis
+			-- Paladin
+			SpellName(20066),	-- Repentance
+			SpellName(853),		-- Hammer of Justice
+			SpellName(105593),	-- Fist of Justice
+			SpellName(105421),	-- Blinding Light
+			-- Priest
+			SpellName(605),		-- Dominate Mind
+			SpellName(8122),	-- Psychic Scream
+			SpellName(113792),	-- Psychic Terror
+			SpellName(64044),	-- Psychic Horror
+			SpellName(15487),	-- Silence
+			SpellName(6778),	-- Silence
+			-- Rogue
+			SpellName(2094),	-- Blind
+			SpellName(1776),	-- Gouge
+			SpellName(6770),	-- Sap
+			-- Shaman
+			SpellName(51514),	-- Hex
+			SpellName(118905),	-- Static Charge
+			SpellName(3600),	-- Earthbind
+			SpellName(8056),	-- Frost Shock
+			SpellName(63685),	-- Freeze
+			-- Warlock
+			SpellName(118699),	-- Fear
+			SpellName(104045),	-- Sleep
+			SpellName(6789),	-- Mortal Coil
+			SpellName(5484),	-- Howl of Terror
+			SpellName(6358),	-- Seduction (Succubus)
+			SpellName(115268),	-- Mesmerize (Shivarra)
+			SpellName(30283),	-- Shadowfury
+			-- Warrior
+			SpellName(46968),	-- Shockwave
+			SpellName(20511),	-- Intimidating Shout
+			--测试用
+			--SpellName(41425),
+		}
+
+		ReverseTimer = {
+		},
+		
+		ORD:RegisterDebuffs(debuffids)
+	end

@@ -188,7 +188,7 @@ local function PostHealth(hp, unit)
     elseif Qulight["raidframes"].definecolors then
         hp.bg:SetVertexColor(unpack(Qulight["raidframes"].hpbgcolor))
         hp:SetStatusBarColor(unpack(Qulight["raidframes"].hpcolor))
-        return 
+        return
     end
 
     local r, g, b, t
@@ -264,6 +264,9 @@ local function PostPower(power, unit)
 				elseif self.mystyle == "partytarget" then
 					power:SetWidth(Qulight["raidframes"].partytargetsize[1]*Qulight["raidframes"].powerbarsize)
 					self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partytargetsize[1])
+				else
+					power:SetWidth(Qulight["raidframes"].width*Qulight["raidframes"].powerbarsize)
+					self.Health:SetWidth((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].width)
 				end
 			else
 				power:SetWidth(Qulight["raidframes"].width*Qulight["raidframes"].powerbarsize)
@@ -277,6 +280,9 @@ local function PostPower(power, unit)
 				elseif self.mystyle == "partytarget" then
 					power:SetHeight(Qulight["raidframes"].partytargetsize[2]*Qulight["raidframes"].powerbarsize)
 					self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].partytargetsize[2])
+				else
+					power:SetHeight(Qulight["raidframes"].height*Qulight["raidframes"].powerbarsize)
+					self.Health:SetHeight((0.98 - Qulight["raidframes"].powerbarsize)*Qulight["raidframes"].height)
 				end
 			else
 				power:SetHeight(Qulight["raidframes"].height*Qulight["raidframes"].powerbarsize)
@@ -291,6 +297,8 @@ local function PostPower(power, unit)
 					self.Health:SetWidth(Qulight["raidframes"].partysize[1])
 				elseif self.mystyle == "partytarget" then
 					self.Health:SetWidth(Qulight["raidframes"].partytargetsize[1])
+				else
+					self.Health:SetWidth(Qulight["raidframes"].width)
 				end
 			else
 				self.Health:SetWidth(Qulight["raidframes"].width)
@@ -301,6 +309,8 @@ local function PostPower(power, unit)
 					self.Health:SetHeight(Qulight["raidframes"].partysize[2])
 				elseif self.mystyle == "partytarget" then
 					self.Health:SetHeight(Qulight["raidframes"].partytargetsize[2])
+				else
+					self.Health:SetHeight(Qulight["raidframes"].height)
 				end
 			else
 				self.Health:SetHeight(Qulight["raidframes"].height)

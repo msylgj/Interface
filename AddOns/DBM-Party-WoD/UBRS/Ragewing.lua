@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1229, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12261 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(76585)
 mod:SetEncounterID(1760)
 mod:SetZone()
@@ -29,7 +29,7 @@ local specWarnMagmaSpit		= mod:NewSpecialWarningMove(155051)
 local specWarnMagmaSpitYou	= mod:NewSpecialWarningYou(155051)
 local yellMagmaSpit			= mod:NewYell(155051)
 local specWarnMagmaPool		= mod:NewSpecialWarningMove(155057)
-local specWarnEngulfingFire	= mod:NewSpecialWarningSpell(154996, nil, nil, nil, 3)
+local specWarnEngulfingFire	= mod:NewSpecialWarningDodge(154996, nil, nil, nil, 3)
 
 local timerEngulfingFireCD	= mod:NewCDTimer(24, 154996)
 local timerSwirlingWinds	= mod:NewBuffActiveTimer(20, 167203)

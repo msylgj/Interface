@@ -615,20 +615,12 @@ lib.gen_castbar = function(f)
     s:SetHeight(13)
     s:SetWidth(f:GetWidth()-22)
     if f.mystyle == "player" then
-		s:SetHeight(15)
-		s:SetWidth(200)
-		s:SetPoint("TOP", f, "TOP", 10,20)
+		s:SetPoint("BOTTOM", f, "BOTTOM", 10,-20)
     elseif f.mystyle == "target" then
-	    s:SetHeight(15)
-		s:SetWidth(200)
-		s:SetPoint("TOP", f, "TOP", -10,20)
+		s:SetPoint("BOTTOM", f, "BOTTOM", -10,-20)
 	elseif f.mystyle == "focus" then
-		s:SetWidth(f:GetWidth()-18)
-        s:SetPoint("BOTTOM", Anchorfocuscastbar)
-    end
-	if f.mystyle == "boss"  then
-	    s:SetHeight(10)
-        s:SetWidth(135)
+        s:SetPoint("TOP", f, "TOP", 10,20)
+	elseif f.mystyle == "boss"  then
 	    s:SetPoint("TOPRIGHT",f,"BOTTOMRIGHT",0,-6)
 	end
 	
@@ -1618,7 +1610,11 @@ local function CreateFocusStyle(self, unit, isSingle)
 	if Qulight["unitframes"].HealthcolorClass then
 	self.Health.colorClass = true
 	end
+	if not Qulight["unitframes"].bigcastbar then
 	lib.gen_castbar(self)
+	else
+	lib.gen_bigcastbar(self)
+	end
 	lib.createAuras(self)
 	if Qulight["unitframes"].showPortrait then lib.gen_portrait(self) end
 end

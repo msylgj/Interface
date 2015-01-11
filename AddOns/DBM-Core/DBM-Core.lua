@@ -15,7 +15,7 @@
 --    * ruRU: TOM_RUS					http://www.curseforge.com/profiles/TOM_RUS/
 --    * zhTW: Whyv						ultrashining@gmail.com
 --    * koKR: nBlueWiz					everfinale@gmail.com
---    * zhCN: Mini Hè					https://twitter.com/Mini_Dragon_CN/
+--    * zhCN: Mini Dragon				projecteurs@gmail.com
 --
 -- The former/inactive-translators:
 --    * deDE: Tandanu					http://www.deadlybossmods.com
@@ -53,9 +53,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 12321 $"):sub(12, -3)),
-	DisplayVersion = "6.0.11 alpha", -- the string that is shown as version
-	ReleaseRevision = 12226 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 12372 $"):sub(12, -3)),
+	DisplayVersion = "6.0.12 alpha", -- the string that is shown as version
+	ReleaseRevision = 12328 -- the revision of the latest stable version that is available
 }
 
 -- Legacy crap; that stupid "Version" field was never a good idea.
@@ -84,9 +84,9 @@ DBM.DefaultOptions = {
 	SpecialWarningSound4 = "Sound\\Creature\\HoodWolf\\HoodWolfTransformPlayer01.ogg",
 	ModelSoundValue = "Short",
 	ChallengeBest = "Realm",
-	CountdownVoice = "Corsica",
-	CountdownVoice2 = "Kolt",
-	CountdownVoice3 = "Pewsey",
+	CountdownVoice = "VP:Yike",
+	CountdownVoice2 = "VP:Yike",
+	CountdownVoice3 = "VP:Yike",
 	ChosenVoicePack = "Yike",
 	VoiceOverSpecW = false,
 	ShowCountdownText = false,
@@ -297,7 +297,7 @@ local timerRequestInProgress = false
 local updateNotificationDisplayed = 0
 local tooltipsHidden = false
 local SWFilterDisabed = false
-local fakeBWRevision = 12489
+local fakeBWRevision = 12525
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 local guiRequested = false
@@ -310,6 +310,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-SiegeOfOrgrimmar",--Block legacy version. New version is "DBM-SiegeOfOrgrimmarV2"
 	"DBM-HighMail",
 	"DBM-ProvingGrounds-MoP",--Renamed to DBM-ProvingGrounds in 6.0 version since blizzard updated content for WoD
+	"DBM-VPKiwiBeta",--Renamed to DBM-VPKiwi in final version.
 }
 
 --------------------------------------------------------
@@ -1003,13 +1004,17 @@ do
 					end
 				end
 				if GetAddOnMetadata(i, "X-DBM-Voice") and enabled ~= 0 then
-					local voiceValue = GetAddOnMetadata(i, "X-DBM-Voice-ShortName")
-					local voiceVersion = tonumber(GetAddOnMetadata(i, "X-DBM-Voice-Version") or 0)
-					tinsert(self.Voices, { text = GetAddOnMetadata(i, "X-DBM-Voice-Name"), value = voiceValue })
-					self.VoiceVersions[voiceValue] = voiceVersion
-					self:Schedule(10, self.CheckVoicePackVersion, self, voiceValue)--Still at 1 since the count sounds won't break any mods or affect filter. V2 if support countsound path
-					if voiceVersion >= 2 then--Supports adding countdown options, insert new countdown into table
-						tinsert(self.Counts, { text = GetAddOnMetadata(i, "X-DBM-Voice-Name"), value = "VP:"..voiceValue })
+					if checkEntry(bannedMods, addonName) then
+						self:AddMsg("The mod " .. addonName .. " is deprecated and will not be available. Please remove the folder " .. addonName .. " from your Interface" .. (IsWindowsClient() and "\\" or "/") .. "AddOns folder to get rid of this message. Check for an updated version of " .. addonName .. " that is compatible with your game version.")
+					else
+						local voiceValue = GetAddOnMetadata(i, "X-DBM-Voice-ShortName")
+						local voiceVersion = tonumber(GetAddOnMetadata(i, "X-DBM-Voice-Version") or 0)
+						tinsert(self.Voices, { text = GetAddOnMetadata(i, "X-DBM-Voice-Name"), value = voiceValue })
+						self.VoiceVersions[voiceValue] = voiceVersion
+						self:Schedule(10, self.CheckVoicePackVersion, self, voiceValue)--Still at 1 since the count sounds won't break any mods or affect filter. V2 if support countsound path
+						if voiceVersion >= 2 then--Supports adding countdown options, insert new countdown into table
+							tinsert(self.Counts, { text = GetAddOnMetadata(i, "X-DBM-Voice-Name"), value = "VP:"..voiceValue })
+						end
 					end
 				end
 			end
@@ -1027,6 +1032,7 @@ do
 				"UNIT_SPELLCAST_SUCCEEDED",
 				"ENCOUNTER_START",
 				"ENCOUNTER_END",
+				"BOSS_KILL",
 				"UNIT_DIED",
 				"UNIT_DESTROYED",
 				"UNIT_HEALTH mouseover target focus player",
@@ -3162,19 +3168,12 @@ do
 					if #newerVersionPerson == 2 and updateNotificationDisplayed < 2 then--Only requires 2 for update notification.
 						--Find min revision.
 						updateNotificationDisplayed = 2
-						local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision))
-						if not DBM.Options.BlockVersionUpdateNotice or revDifference > 200 then
-							DBM:ShowUpdateReminder(displayVersion, version)
-						else
-							DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
-							DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
-							DBM:AddMsg(("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
-						end
+						DBM:ShowUpdateReminder(displayVersion, version)
 					elseif #newerVersionPerson == 3 then--Requires 3 for force disable.
 						--Find min revision.
 						local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
 						--The following code requires at least THREE people to send that higher revision (I just upped it from 2). That should be more than adaquate, especially since there is also a display version validator now too (that had to be writen when bigwigs was sending bad revisions few versions back)
-						if revDifference > 300 then--WTF? Sorry but your DBM is being turned off until you update. Grossly out of date mods cause fps loss, freezes, lua error spam, or just very bad information, if mod is not up to date with latest changes. All around undesirable experience to put yourself or other raid mates through
+						if revDifference > 250 then--WTF? Sorry but your DBM is being turned off until you update. Grossly out of date mods cause fps loss, freezes, lua error spam, or just very bad information, if mod is not up to date with latest changes. All around undesirable experience to put yourself or other raid mates through
 							if updateNotificationDisplayed < 3 then
 								updateNotificationDisplayed = 3
 								DBM:AddMsg(DBM_CORE_UPDATEREMINDER_DISABLE:format(revDifference))
@@ -3233,8 +3232,10 @@ do
 		end
 	end
 	
-	syncHandlers["RBW"] = function(sender, spellId, spellName)
+	syncHandlers["RBW2"] = function(sender, spellId, spellName)
+		if sender == playerName then return end
 		if DBM.Options.DebugLevel > 2 or (Transcriptor and Transcriptor:IsLogging()) then
+			if not spellName then spellName = UNKNOWN end
 			DBM:Debug("RAID_BOSS_WHISPER on "..sender.." with spell of "..spellName.." ("..spellId..")")
 		end
 	end
@@ -3907,7 +3908,7 @@ do
 	--TODO, waste less cpu and register Unit only events for boss1-5
 	function DBM:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, _, spellId)
 		if not (uId == "boss1" or uId == "boss2" or uId == "boss3" or uId == "boss4" or uId == "boss5") then return end
-		--Changed, only fire for debug level 3 period. transcriptor running now only forces RBW and UTC.
+		--Changed, only fire for debug level 3 period. transcriptor running now only forces RBW2 and UTC.
 		--This event is way too spammy to see every time transcriptor running. Only want from time to time
 		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..spellId..")", 3)
 	end
@@ -3967,6 +3968,10 @@ do
 				return
 			end
 		end
+	end
+	
+	function DBM:BOSS_KILL(encounterID, name)
+		self:Debug("BOSS_KILL event fired: "..encounterID.." "..name)
 	end
 
 	local function checkExpressionList(exp, str)
@@ -4032,7 +4037,7 @@ do
 		if msg:find("spell:") and IsInGroup() then
 			local spellId = string.match(msg, "spell:(%d+)") or UNKNOWN
 			local spellName = string.match(msg, "h%[(.-)%]|h") or UNKNOWN
-			sendSync("RBW", spellId, spellName)
+			sendSync("RBW2", spellId, spellName)
 		end
 	end
 
@@ -5199,10 +5204,12 @@ function DBM:ToggleGarrisonAlertsFrame(toggle, custom)
 		GarrisonUnregistered = true
 		AlertFrame:UnregisterEvent("GARRISON_MISSION_FINISHED")
 		AlertFrame:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE")
+--		AlertFrame:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")--6.1
 	elseif toggle == 0 and GarrisonUnregistered then
 		GarrisonUnregistered = false
 		AlertFrame:RegisterEvent("GARRISON_MISSION_FINISHED")
 		AlertFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE")
+--		AlertFrame:RegisterEvent("GARRISON_RANDOM_MISSION_ADDED")--6.1
 	end
 end
 
@@ -6198,6 +6205,10 @@ function bossModPrototype:CanRemoveCurse()
 	return class == "DRUID" or class == "MAGE"
 end
 
+function bossModPrototype:CanRemovePoison()
+	return class == "DRUID" or class == "MONK" or class == "PALADIN"
+end
+
 function bossModPrototype:IsMagicDispeller()
 	return class == "MAGE" or class == "PRIEST" or class == "SHAMAN"
 end
@@ -6511,6 +6522,8 @@ do
 			end
 		elseif announceType == "phase" or announceType == "prephase" then
 			text = DBM_CORE_AUTO_ANNOUNCE_TEXTS[announceType]:format(tostring(spellId))
+		elseif announceType == "phasechange" then
+			text = DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell
 		else
 			text = DBM_CORE_AUTO_ANNOUNCE_TEXTS[announceType]:format(spellName)
 		end
@@ -6599,6 +6612,10 @@ do
 
 	function bossModPrototype:NewPhaseAnnounce(phase, color, icon, ...)
 		return newAnnounce(self, "phase", phase, color or 1, icon or "Interface\\Icons\\Spell_Nature_WispSplode", ...)
+	end
+
+	function bossModPrototype:NewPhaseChangeAnnounce(color, icon, ...)
+		return newAnnounce(self, "phasechange", 0, color or 1, icon or "Interface\\Icons\\Spell_Nature_WispSplode", ...)
 	end
 
 	function bossModPrototype:NewPrePhaseAnnounce(phase, color, icon, ...)
@@ -7160,6 +7177,10 @@ do
 
 	function bossModPrototype:NewSpecialWarningMove(text, optionDefault, ...)
 		return newSpecialWarning(self, "move", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningDodge(text, optionDefault, ...)
+		return newSpecialWarning(self, "dodge", text, nil, optionDefault, ...)
 	end
 	
 	function bossModPrototype:NewSpecialWarningMoveAway(text, optionDefault, ...)

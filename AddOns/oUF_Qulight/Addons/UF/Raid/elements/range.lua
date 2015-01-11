@@ -176,9 +176,6 @@ local function Disable ( self )
 	end
 end
 
-
-
-
 local _, Class = UnitClass( "player" );
 --- Optional lists of low level baseline skills with greater than 28 yard range.
 -- First known spell in the appropriate class list gets used.

@@ -16,7 +16,7 @@
 ## X-DBM-Mod-Has-Mythic : 1
 ## X-DBM-Mod-Sort: 101
 ## X-DBM-Mod-MapID: 1205
-## X-Curse-Packaged-Version: 6.0.10-94-g4304ba9
+## X-Curse-Packaged-Version: 6.0.11-43-g2a729b6
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline

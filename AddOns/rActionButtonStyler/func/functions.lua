@@ -322,7 +322,7 @@
     SpellFlyoutHorizontalBackground:SetTexture(nil)
     SpellFlyoutVerticalBackground:SetTexture(nil)
     local function checkForFlyoutButtons(self)
-      local NUM_FLYOUT_BUTTONS = 10
+      local NUM_FLYOUT_BUTTONS = 20
       for i = 1, NUM_FLYOUT_BUTTONS do
         styleActionButton(_G["SpellFlyoutButton"..i])
       end

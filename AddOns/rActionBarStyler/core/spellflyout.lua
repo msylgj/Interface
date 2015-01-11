@@ -8,7 +8,7 @@
     --print(self:GetParent():GetParent():GetParent():GetName())
     local frame = self:GetParent():GetParent():GetParent()
     if frame and frame.mouseover and frame.mouseover.enable then
-      local NUM_FLYOUT_BUTTONS = 10
+      local NUM_FLYOUT_BUTTONS = 20
       local buttonList = {}
       for i = 1, NUM_FLYOUT_BUTTONS do
         local button = _G["SpellFlyoutButton"..i]

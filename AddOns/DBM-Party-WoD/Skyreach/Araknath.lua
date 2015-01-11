@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(966, "DBM-Party-WoD", 7, 476)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12254 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
 mod:SetCreatureID(76141)
 mod:SetEncounterID(1699)--Verify, name doesn't match
 mod:SetZone()
@@ -19,7 +19,7 @@ local warnEnergize		= mod:NewSpellAnnounce(154159, 3)
 local warnBurst			= mod:NewCountAnnounce(154135, 3)
 
 local specWarnBurst		= mod:NewSpecialWarningCount(154135, nil, nil, nil, 2)
-local specWarnSmash		= mod:NewSpecialWarningMove("OptionVersion2", 154110, mod:IsTank())
+local specWarnSmash		= mod:NewSpecialWarningDodge("OptionVersion2", 154110, mod:IsTank())
 
 local timerEnergozeCD	= mod:NewNextTimer(20, 154159)
 local timerBurstCD		= mod:NewCDCountTimer(23, 154135)
