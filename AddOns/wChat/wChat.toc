@@ -1,0 +1,8 @@
+## Interface: 60000
+## Title: |cff3399FFw|rChat|r
+## Version: 7.0
+## Author: Weasoug
+## Notes: Chat Mods!
+## X-WoWI-ID: 17838
+
+wChat.lua

@@ -10,3 +10,6 @@
 ## X-oUF: oUF_Qulight
 
 oUF_Qulight.xml
+Root\Libs\oUF\oUF.xml
+Addons\UF\uf.xml
+Addons\UF\Raid\load.xml

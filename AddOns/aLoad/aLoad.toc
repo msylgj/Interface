@@ -1,7 +1,0 @@
-## Interface: 60000
-## Title: a|cffee0000Load|r
-## Notes: Lightweight ingame addon manager.
-## Author: Fernir
-## Version: 1.4
-
-aLoad.lua

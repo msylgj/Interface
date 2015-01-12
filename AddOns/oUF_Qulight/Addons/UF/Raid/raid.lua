@@ -226,9 +226,17 @@ function ns:UpdateHealth(hp)
     }
 
     if not Qulight["raidframes"].powerbar then
-		if Qulight["raidframes"].party and self.mystyle == "party" then
-			hp:SetHeight(Qulight["raidframes"].partysize[2])
-			hp:SetWidth(Qulight["raidframes"].partysize[1])
+		if Qulight["raidframes"].party then
+			if self.mystyle == "party" then
+				hp:SetHeight(Qulight["raidframes"].partysize[2])
+				hp:SetWidth(Qulight["raidframes"].partysize[1])
+			elseif self.mystyle == "partytarget" then
+				hp:SetHeight(Qulight["raidframes"].partytargetsize[2])
+				hp:SetWidth(Qulight["raidframes"].partytargetsize[1])
+			else
+				hp:SetHeight(Qulight["raidframes"].height)
+				hp:SetWidth(Qulight["raidframes"].width)
+			end
 		else
 			hp:SetHeight(Qulight["raidframes"].height)
 			hp:SetWidth(Qulight["raidframes"].width)
@@ -254,7 +262,7 @@ local function PostPower(power, unit)
     local _, ptype = UnitPowerType(unit)
     local _, class = UnitClass(unit)
 
-    if ptype == 'MANA' or Qulight["raidframes"].party and (self.mystyle == "party" or self.mystyle == "partytarget") then
+    if ptype == 'MANA' then
         power:Show()
 		if(Qulight["raidframes"].porientation == "VERTICAL")then
 			if Qulight["raidframes"].party then 
@@ -317,17 +325,17 @@ local function PostPower(power, unit)
 			end
         end
     end
-
+	
     local perc = oUF.Tags.Methods['perpp'](unit)
     -- This kinda conflicts with the threat module, but I don't really care
-    if (perc < 10 and UnitIsConnected(unit) and ptype == 'MANA' and not UnitIsDeadOrGhost(unit)) then
+    if (perc < 10 and UnitIsConnected(unit) and ptype == 'MANA' and not UnitIsDeadOrGhost(unit)) and self.mystyle ~= "partytarget" then
         self.Threat:SetBackdropBorderColor(0, 0, 1, 1)
-        self.border:SetBackdropColor(0, 0, 0, 1)
-    elseif (self.mystyle ~= 'partytarget') then
+        self.border:SetBackdropColor(0, 0, 1, 1)
+    elseif self.mystyle ~= "partytarget" then
         -- pass the coloring back to the threat func
         updateThreat(self, nil, unit)
     end
-
+	
     if Qulight["raidframes"].powerdefinecolors then
         power.bg:SetVertexColor(unpack(Qulight["raidframes"].powerbgcolor))
         power:SetStatusBarColor(unpack(Qulight["raidframes"].powercolor))
@@ -611,31 +619,107 @@ local styleRaid = function(self)
 
     table.insert(ns._Objects, self)
 end
+
 local stylePartyTarget = function(self)
 	self.mystyle = "partytarget"
-	lib.init(self)
-	self.scale = scale
-    self.SpellRange = {
-		insideAlpha = 1,
-		outsideAlpha = Qulight["raidframes"].outsideRange,}
+	self.menu = menu
 	self:SetSize(unpack(Qulight["raidframes"].partytargetsize))
-	lib.gen_hpbar(self)
+	self:SetScale(Qulight["raidframes"].scale)
+   -- Backdrop
+    self.BG = CreateFrame("Frame", nil, self)
+    self.BG:SetPoint("TOPLEFT", self, "TOPLEFT")
+    self.BG:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
+    self.BG:SetFrameLevel(3)
+    self.BG:SetBackdrop(backdrop)
+    self.BG:SetBackdropColor(.3,.3,.3,.9)
+
+    self.border = CreateFrame("Frame", nil, self)
+    self.border:SetPoint("TOPLEFT", self, "TOPLEFT")
+    self.border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
+    self.border:SetFrameLevel(2)
+    self.border:SetBackdrop(border2)
+    self.border:SetBackdropColor(0, 0, 0)
+
+    -- Mouseover script
+    self:SetScript("OnEnter", OnEnter)
+    self:SetScript("OnLeave", OnLeave)
+    self:RegisterForClicks"AnyUp"
+
+    -- Health
+    self.Health = CreateFrame"StatusBar"
+    self.Health:SetParent(self)
+    self.Health.frequentUpdates = true
+
+    self.Health.bg = self.Health:CreateTexture(nil, "BORDER")
+    self.Health.bg:SetAllPoints(self.Health)
+
+    self.Health.PostUpdate = PostHealth
+    ns:UpdateHealth(self.Health)
+	
+	-- Name
+    local name = self.Health:CreateFontString(nil, "OVERLAY")
+    name:SetPoint("CENTER")
+    name:SetJustifyH("CENTER")
+    name:SetFont(Qulight["media"].font, Qulight["raidframes"].fontsize, Qulight["raidframes"].outline)
+    name:SetShadowOffset(1.25, -1.25)
+    name:SetWidth(Qulight["raidframes"].width)
+    name.overrideUnit = true
+    self.Name = name
+    self:Tag(self.Name, '[color][name]')
+
+    ns:UpdateName(self.Name)
+	
     -- Power
     self.Power = CreateFrame"StatusBar"
     self.Power:SetParent(self)
     self.Power.bg = self.Power:CreateTexture(nil, "BORDER")
     self.Power.bg:SetAllPoints(self.Power)
     ns:UpdatePower(self.Power)
-	--self.Power:ClearAllPoints()
-	self.Power:SetPoint("BOTTOM", self.Health, "BOTTOM", 0, 0)
-	lib.gen_hpstrings(self)
-	lib.gen_highlight(self)
-	lib.gen_RaidMark(self)
-	self.Health.frequentUpdates = false
-	if Qulight["unitframes"].HealthcolorClass then
-		self.Health.colorClass = true
-		self.Health.colorReaction = true
-	end
+
+    -- Highlight tex
+    local hl = self.Health:CreateTexture(nil, "OVERLAY")
+    hl:SetAllPoints(self)
+    hl:SetTexture([=[Interface\AddOns\oUF_Qulight\Root\Media\raidbg.tga]=])
+    hl:SetVertexColor(.5,.5,.5,.1)
+    hl:SetBlendMode("ADD")
+    hl:Hide()
+    self.Highlight = hl
+			
+    -- Raid Icons
+    local ricon = self.Health:CreateTexture(nil, 'OVERLAY')
+    ricon:SetPoint("TOP", self, 0, 10)
+	ricon:SetTexture("Interface\\AddOns\\oUF_Qulight\\Root\\Media\\raidicons")	
+    ricon:SetSize(Qulight["raidframes"].leadersize+2, Qulight["raidframes"].leadersize+2)
+    self.RaidIcon = ricon
+
+    -- Leader Icon
+    self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
+    self.Leader:SetPoint("TOPLEFT", self, 0, 8)
+    self.Leader:SetSize(Qulight["raidframes"].leadersize, Qulight["raidframes"].leadersize)
+
+    -- Assistant Icon
+    self.Assistant = self.Health:CreateTexture(nil, "OVERLAY")
+    self.Assistant:SetPoint("TOPLEFT", self, 0, 8)
+    self.Assistant:SetSize(Qulight["raidframes"].leadersize, Qulight["raidframes"].leadersize)
+
+    local masterlooter = self.Health:CreateTexture(nil, 'OVERLAY')
+    masterlooter:SetSize(Qulight["raidframes"].leadersize, Qulight["raidframes"].leadersize)
+    masterlooter:SetPoint('LEFT', self.Leader, 'RIGHT')
+    self.MasterLooter = masterlooter
+
+    -- Role Icon
+    if Qulight["raidframes"].roleicon then
+        local lfd = fs(self.Health, "OVERLAY", fontsymbol, 10, OUTLINE, 1, 1, 1)
+		lfd:SetPoint("LEFT", self.Health, 0, 6)
+		lfd:SetJustifyH"LEFT"
+	    self:Tag(lfd, '[LFD]')
+    end
+	
+    -- SpellRange
+    self.SpellRange = {
+		insideAlpha = 1,
+		outsideAlpha = Qulight["raidframes"].outsideRange,	}
+	
 	if Qulight["unitframes"].showPortrait then lib.gen_portrait(self) end
 end
 
@@ -977,25 +1061,23 @@ oUF:Factory(function(self)
 	CompactRaidFrameContainer:UnregisterAllEvents()
 	CompactRaidFrameContainer.Show = dummy
 	CompactRaidFrameContainer:Hide()
-	
 	if Qulight["raidframes"].party then
-		local initconfig = [[
-			self:SetWidth(%d)
-			self:SetHeight(%d)
-		]]
 		self:SetActiveStyle"Party"
-		local party = self:SpawnHeader("oUF_Party", nil, "custom [@raid6,exists][petbattle] hide;show",
-		'oUF-initialConfigFunction', (initconfig):format(unpack(Qulight["raidframes"].partysize)),
-		'showPlayer', Qulight["raidframes"].solo,
-		'showSolo', Qulight["raidframes"].solo,
-		'showParty', true,
-		'showRaid', true,
-		'yOffset', 80,
-		'point' , 'TOP',
-		'template', 'oUF_PartyTtemplate')
+		local party = oUF:SpawnHeader('oUF_Party', nil, 'custom [@raid6,exists] hide;show',
+			'oUF-initialConfigFunction', ([[
+				self:SetWidth(%d)
+				self:SetHeight(%d)
+			]]):format(Qulight["raidframes"].partysize[1], Qulight["raidframes"].partysize[2]),
+			'showPlayer', Qulight["raidframes"].player,
+			'showSolo', Qulight["raidframes"].solo,
+			'showParty', true,
+			'showRaid', true,
+			'yOffset', 30,
+			'point', 'BOTTOM',
+			'template', 'oUF_Party')
 		party:SetPoint(unpack(Qulight["raidframes"].Anchorparty))
-		ns._Headers[party:GetName()] = party
 	end
+	
 	if Qulight["raidframes"].enable then
 		self:SetActiveStyle"Freebgrid"
 		if Qulight["raidframes"].multi then
@@ -1016,5 +1098,4 @@ oUF:Factory(function(self)
 			ns._Headers[raid:GetName()] = raid
 		end
 	end
-	
 end)

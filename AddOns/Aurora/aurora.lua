@@ -13,7 +13,12 @@ core[2] = {} -- C, constants/config
 
 Aurora = core
 
-AuroraConfig = {}
+AuroraConfig = {
+	["tooltips"] = false,
+	["bags"] = false,
+	["loot"] = false,
+	["enableFont"] = false,
+}
 
 local F, C = unpack(select(2, ...))
 

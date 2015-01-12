@@ -1,0 +1,16 @@
+
+<Bindings>
+
+	<Binding name="Toogle Full Screen" header="FULLSCREENTOOGLE">
+
+	if (GetCVar("gxWindow") == "1") then
+		SetCVar("gxWindow", 0);
+	else
+		SetCVar("gxWindow", 1);
+	end
+
+	RestartGx();
+
+	</Binding>
+
+</Bindings>

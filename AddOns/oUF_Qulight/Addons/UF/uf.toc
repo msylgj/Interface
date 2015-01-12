@@ -3,18 +3,5 @@
 ## RequiredDeps: oUF_Qulight
 ## X-Category: UnitFrame
 
+uf.xml
 template.xml
-tags.lua
-lib.lua
-
-Plugins\Smooth.lua
-Plugins\Experience.lua
-Plugins\TotemBar.lua
-Plugins\ThreatBar.lua
-Plugins\Reputation.lua
-Plugins\WarlockSpecBars.lua
-Plugins\HarmonyBar.lua
-Plugins\shadoworbs.lua
-Plugins\ArcaneCharge.lua
-Plugins\RuneOfPower.lua
-Plugins\holypower.lua

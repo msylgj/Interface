@@ -18,12 +18,14 @@
 			</Button>
 		</Frames>
 	</Button>
-	<Button name="oUF_PartyTtemplate" inherits="SecureUnitButtonTemplate" hidden="true" virtual="true" movable="true">
+	<Button name="oUF_Party" inherits="SecureUnitButtonTemplate" hidden="true" virtual="true" movable="true">
 		<Frames>
-			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate" >
 				<Anchors>
-					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent">
-					<Offset><AbsDimension x="10" y="0"/></Offset>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent" >
+						<Offset>
+							<AbsDimension x="8" y="4"/>
+						</Offset>
 					</Anchor>
 				</Anchors>
 				<Attributes>
@@ -34,5 +36,5 @@
 				</Attributes>
 			</Button>
 		</Frames>
-	</Button>	
+	</Button>
 </Ui>

@@ -21,7 +21,7 @@ end
 local retVal = function(f, val1, val2, val3, val4)
 	if f.mystyle == "player" or f.mystyle == "target" then
 		return val1
-	elseif f.mystyle == "party" or f.mystyle == "focus" then
+	elseif f.mystyle == "focus" then
 		return val3
 	elseif f.mystyle == "oUF_MT" then
 		return val4
@@ -32,16 +32,8 @@ end
 lib.menu = function(self)
     local unit = self.unit:sub(1, -2)
     local cunit = self.unit:gsub("(.)", string.upper, 1)
-    if unit == "party" then
-	    if Qulight["raidframes"].hidemenu and InCombatLockdown() then return end
+    if(unit == "party" or unit == "partypet") then
 		ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
-	elseif Qulight["raidframes"].party and unit == "raid" then
-		if Qulight["raidframes"].hidemenu and InCombatLockdown() then return end
-		if UnitIsUnit(self.unit, "player") then
-			ToggleDropDownMenu(1, nil, _G["PlayerFrameDropDown"], "cursor", 0, 0)
-		else
-			ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..(self.id -1).."DropDown"], "cursor", 0, 0)
-		end
     elseif(_G[cunit.."FrameDropDown"]) then
 		ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
     end
@@ -315,7 +307,7 @@ lib.gen_hpbar = function(f)
     h:SetPoint("TOPLEFT",-5,5)
 	if f.mystyle == "target" or f.mystyle == "player" then
 		h:SetPoint("BOTTOMRIGHT",5,-5)
-	elseif f.mystyle == "party" or f.mystyle == "focus" then
+	elseif f.mystyle == "focus" then
 		h:SetPoint("BOTTOMRIGHT",5,-5)
 	else
 		h:SetPoint("BOTTOMRIGHT",5,-5)
@@ -339,8 +331,6 @@ lib.gen_hpstrings = function(f)
 	if f.mystyle == "player" then
 		f:Tag(name, "[level] [color][namelong][afk]")
 	elseif f.mystyle == "target" then
-		f:Tag(name, "[level] [color][namelong][afk]")
-	elseif f.mystyle == "party" then
 		f:Tag(name, "[level] [color][namelong][afk]")
 	elseif f.mystyle == "focus" then	
 		f:Tag(name, "[level] [color][name][afk]")
@@ -385,15 +375,6 @@ lib.gen_ppbar = function(f)
 		h:SetPoint("TOPLEFT",-5,5)
 		h:SetPoint("BOTTOMRIGHT",5,-5)
 		CreateShadow00(h)		
-	end
-	if f.mystyle == "party" then
-		local h = CreateFrame("Frame", nil, s)
-		s:SetPoint("BOTTOM",f,"BOTTOM",0,4)
-		h:SetFrameLevel(3)
-		s:SetWidth(172)
-		h:SetPoint("TOPLEFT",-5,5)
-		h:SetPoint("BOTTOMRIGHT",5,-5)	
-		CreateShadow00(h)
 	end
 	if f.mystyle == "focus" then
 		local h = CreateFrame("Frame", nil, s)
