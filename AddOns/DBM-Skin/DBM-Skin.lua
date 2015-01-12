@@ -5,7 +5,7 @@ All rights reserved.
 ]]--
 
 local DBMskin = true
-
+local applyFailed = false
 if DBMskin then
 
 local DBMSkin = CreateFrame("Frame")
@@ -42,145 +42,150 @@ DBMSkin:SetScript("OnEvent", function()
 		self.Border:SetBackdropBorderColor(65/255, 74/255, 79/255,1)
 		self.Border:SetFrameLevel(0)
 		end
-
+		
 		local function SkinBars(self)
 			for bar in self:GetBarIterator() do
 				if not bar.injected then
-						bar.ApplyStyle=function()
-						local frame = bar.frame
-						local tbar = _G[frame:GetName().."Bar"]
-						local spark = _G[frame:GetName().."BarSpark"]
-						local texture = _G[frame:GetName().."BarTexture"]
-						local icon1 = _G[frame:GetName().."BarIcon1"]
-						local icon2 = _G[frame:GetName().."BarIcon2"]
-						local name = _G[frame:GetName().."BarName"]
-						local timer = _G[frame:GetName().."BarTimer"]
-				
-						if not (icon1.overlay) then
-							icon1.overlay = CreateFrame("Frame", "$parentIcon1Overlay", tbar)
-							--icon1.overlay:CreatePanel(template, buttonsize+2, buttonsize+2, "BOTTOMRIGHT", tbar, "BOTTOMLEFT", -buttonsize/4, -3)
-							icon1.overlay:SetFrameLevel(1)
-							icon1.overlay:SetSize(buttonsize+2, buttonsize+2)
-							icon1.overlay:SetFrameStrata("BACKGROUND")
-							icon1.overlay:SetPoint("BOTTOMRIGHT", tbar, "BOTTOMLEFT", -buttonsize/4, -3)
-					
-							local backdroptex = icon1.overlay:CreateTexture(nil, "BORDER")
-							backdroptex:SetTexture([=[Interface\Icons\Spell_Nature_WispSplode]=])
-							backdroptex:SetPoint("TOPLEFT", icon1.overlay, "TOPLEFT", 3, -3)
-							backdroptex:SetPoint("BOTTOMRIGHT", icon1.overlay, "BOTTOMRIGHT", -3, 3)
-							backdroptex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-							CreateBorder(icon1.overlay)
-							CreateShadow(icon1.overlay)
-						end
+					bar.ApplyStyle=function()
+					applyFailed = true
+					local frame = bar.frame
+					local tbar = _G[frame:GetName().."Bar"]
+					local spark = _G[frame:GetName().."BarSpark"]
+					local texture = _G[frame:GetName().."BarTexture"]
+					local icon1 = _G[frame:GetName().."BarIcon1"]
+					local icon2 = _G[frame:GetName().."BarIcon2"]
+					local name = _G[frame:GetName().."BarName"]
+					local timer = _G[frame:GetName().."BarTimer"]
 
-						if not (icon2.overlay) then
-							icon2.overlay = CreateFrame("Frame", "$parentIcon2Overlay", tbar)
-							--icon2.overlay:CreatePanel(template, buttonsize+2, buttonsize+2, "BOTTOMLEFT", tbar, "BOTTOMRIGHT", buttonsize/4, -3)
-							icon2.overlay:SetFrameLevel(1)
-							icon2.overlay:SetSize(buttonsize+2, buttonsize+2)
-							icon2.overlay:SetFrameStrata("BACKGROUND")
-							icon2.overlay:SetPoint("BOTTOMLEFT", tbar, "BOTTOMRIGHT", buttonsize/4, -3)
-					
-							local backdroptex = icon2.overlay:CreateTexture(nil, "BORDER")
-							backdroptex:SetTexture([=[Interface\Icons\Spell_Nature_WispSplode]=])
-							backdroptex:SetPoint("TOPLEFT", icon2.overlay, "TOPLEFT", 3, -3)
-							backdroptex:SetPoint("BOTTOMRIGHT", icon2.overlay, "BOTTOMRIGHT", -3, 3)
-							backdroptex:SetTexCoord(0.08, 0.92, 0.08, 0.92)		
-							CreateBorder(icon2.overlay)
-							CreateShadow(icon2.overlay)
-						end
+					if not (icon1.overlay) then
+						icon1.overlay = CreateFrame("Frame", "$parentIcon1Overlay", tbar)
+						--icon1.overlay:CreatePanel(template, buttonsize+2, buttonsize+2, "BOTTOMRIGHT", tbar, "BOTTOMLEFT", -buttonsize/4, -3)
+						icon1.overlay:SetFrameLevel(1)
+						icon1.overlay:SetSize(buttonsize+2, buttonsize+2)
+						icon1.overlay:SetFrameStrata("BACKGROUND")
+						icon1.overlay:SetPoint("BOTTOMRIGHT", tbar, "BOTTOMLEFT", -buttonsize/4, -3)
 
-						if bar.color then
-							tbar:SetStatusBarColor(bar.color.r, bar.color.g, bar.color.b)
-						else
-							tbar:SetStatusBarColor(bar.owner.options.StartColorR, bar.owner.options.StartColorG, bar.owner.options.StartColorB)
-						end
-				
-						if bar.enlarged then frame:SetWidth(bar.owner.options.HugeWidth) else frame:SetWidth(bar.owner.options.Width) end
-						if bar.enlarged then tbar:SetWidth(bar.owner.options.HugeWidth) else tbar:SetWidth(bar.owner.options.Width) end
-		
-						if not frame.styled then
-							frame:SetScale(1)
-							frame.SetScale = function() return end
-							frame:SetHeight(buttonsize/2)
-							if not frame.bg then
-								frame.bg = CreateFrame("Frame", nil, frame)
-								frame.bg:SetPoint("TOPLEFT", 0, 0)
-								frame.bg:SetPoint("BOTTOMRIGHT", 0, 0)
-							end
-							CreateShadow(frame.bg)
-
-
-							frame.styled=true
-						end
-
-						if not spark.killed then
-							spark:SetAlpha(0)
-							spark:SetTexture(nil)
-							spark.killed=true
-						end
-	
-						if not icon1.styled then
-							icon1:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-							icon1:ClearAllPoints()
-							icon1:SetPoint("TOPLEFT", icon1.overlay, 3, -3)
-							icon1:SetPoint("BOTTOMRIGHT", icon1.overlay, -3, 3)
-							icon1.styled=true
-						end
-				
-						if not icon2.styled then
-							icon2:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-							icon2:ClearAllPoints()
-							icon2:SetPoint("TOPLEFT", icon2.overlay, 3, -3)
-							icon2:SetPoint("BOTTOMRIGHT", icon2.overlay, -3, 3)
-							icon2.styled=true
-						end
-
-						if not texture.styled then
-							texture:SetTexture("Interface\\AddOns\\DBM-Skin\\media\\statusbar")
-							texture.styled=true
-						end
-				
-						tbar:SetStatusBarTexture("Interface\\AddOns\\DBM-Skin\\media\\statusbar")
-						if not tbar.styled then
-							tbar:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
-							tbar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
-					
-							tbar.styled=true
-						end
-
-						if not name.styled then
-							name:ClearAllPoints()
-							name:SetPoint("LEFT", frame, "LEFT", 4, 2)
-							name:SetWidth(165)
-							name:SetHeight(8)
-							name:SetFont(GameTooltipText:GetFont(), 14, "THINOUTLINE")
-							name:SetJustifyH("LEFT")
-							name:SetShadowColor(0, 0, 0, 0)
-							name.SetFont = function() return end
-							name.styled=true
-						end
-				
-						if not timer.styled then	
-							timer:ClearAllPoints()
-							timer:SetPoint("RIGHT", frame, "RIGHT", -4, 2)
-							timer:SetFont(GameTooltipText:GetFont(), 14, "THINOUTLINE")
-							timer:SetJustifyH("RIGHT")
-							timer:SetShadowColor(0, 0, 0, 0)
-							timer.SetFont = function() return end
-							timer.styled=true
-						end
-
-						if bar.owner.options.IconLeft then icon1:Show() icon1.overlay:Show() else icon1:Hide() icon1.overlay:Hide() end
-						if bar.owner.options.IconRight then icon2:Show() icon2.overlay:Show() else icon2:Hide() icon2.overlay:Hide() end
-						tbar:SetAlpha(1)
-						frame:SetAlpha(1)
-						texture:SetAlpha(1)
-						frame:Show()
-						bar:Update(0)
-						bar.injected=true
+						local backdroptex = icon1.overlay:CreateTexture(nil, "BORDER")
+						backdroptex:SetTexture([=[Interface\Icons\Spell_Nature_WispSplode]=])
+						backdroptex:SetPoint("TOPLEFT", icon1.overlay, "TOPLEFT", 3, -3)
+						backdroptex:SetPoint("BOTTOMRIGHT", icon1.overlay, "BOTTOMRIGHT", -3, 3)
+						backdroptex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+						CreateBorder(icon1.overlay)
+						CreateShadow(icon1.overlay)
 					end
+
+					if not (icon2.overlay) then
+						icon2.overlay = CreateFrame("Frame", "$parentIcon2Overlay", tbar)
+						--icon2.overlay:CreatePanel(template, buttonsize+2, buttonsize+2, "BOTTOMLEFT", tbar, "BOTTOMRIGHT", buttonsize/4, -3)
+						icon2.overlay:SetFrameLevel(1)
+						icon2.overlay:SetSize(buttonsize+2, buttonsize+2)
+						icon2.overlay:SetFrameStrata("BACKGROUND")
+						icon2.overlay:SetPoint("BOTTOMLEFT", tbar, "BOTTOMRIGHT", buttonsize/4, -3)
+
+						local backdroptex = icon2.overlay:CreateTexture(nil, "BORDER")
+						backdroptex:SetTexture([=[Interface\Icons\Spell_Nature_WispSplode]=])
+						backdroptex:SetPoint("TOPLEFT", icon2.overlay, "TOPLEFT", 3, -3)
+						backdroptex:SetPoint("BOTTOMRIGHT", icon2.overlay, "BOTTOMRIGHT", -3, 3)
+						backdroptex:SetTexCoord(0.08, 0.92, 0.08, 0.92)		
+						CreateBorder(icon2.overlay)
+						CreateShadow(icon2.overlay)
+					end
+
+					if bar.color then
+						tbar:SetStatusBarColor(bar.color.r, bar.color.g, bar.color.b)
+					else
+						tbar:SetStatusBarColor(bar.owner.options.StartColorR, bar.owner.options.StartColorG, bar.owner.options.StartColorB)
+					end
+
+					if bar.enlarged then frame:SetWidth(bar.owner.options.HugeWidth) else frame:SetWidth(bar.owner.options.Width) end
+					if bar.enlarged then tbar:SetWidth(bar.owner.options.HugeWidth) else tbar:SetWidth(bar.owner.options.Width) end
+
+					if not frame.styled then
+						frame:SetScale(1)
+						frame.SetScale = function() return end
+						frame:SetHeight(buttonsize/2)
+						if not frame.bg then
+							frame.bg = CreateFrame("Frame", nil, frame)
+							frame.bg:SetPoint("TOPLEFT", 0, 0)
+							frame.bg:SetPoint("BOTTOMRIGHT", 0, 0)
+						end
+						CreateShadow(frame.bg)
+
+
+						frame.styled=true
+					end
+
+					if not spark.killed then
+						spark:SetAlpha(0)
+						spark:SetTexture(nil)
+						spark.killed=true
+					end
+
+					if not icon1.styled then
+						icon1:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+						icon1:ClearAllPoints()
+						icon1:SetPoint("TOPLEFT", icon1.overlay, 3, -3)
+						icon1:SetPoint("BOTTOMRIGHT", icon1.overlay, -3, 3)
+						icon1.styled=true
+					end
+
+					if not icon2.styled then
+						icon2:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+						icon2:ClearAllPoints()
+						icon2:SetPoint("TOPLEFT", icon2.overlay, 3, -3)
+						icon2:SetPoint("BOTTOMRIGHT", icon2.overlay, -3, 3)
+						icon2.styled=true
+					end
+
+					if not texture.styled then
+						texture:SetTexture("Interface\\AddOns\\DBM-Skin\\media\\statusbar")
+						texture.styled=true
+					end
+
+					tbar:SetStatusBarTexture("Interface\\AddOns\\DBM-Skin\\media\\statusbar")
+					if not tbar.styled then
+						tbar:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
+						tbar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
+
+						tbar.styled=true
+					end
+
+					if not name.styled then
+						name:ClearAllPoints()
+						name:SetPoint("LEFT", frame, "LEFT", 4, 2)
+						name:SetWidth(165)
+						name:SetHeight(8)
+						name:SetFont(GameTooltipText:GetFont(), 14, "THINOUTLINE")
+						name:SetJustifyH("LEFT")
+						name:SetShadowColor(0, 0, 0, 0)
+						name.SetFont = function() return end
+						name.styled=true
+					end
+
+					if not timer.styled then	
+						timer:ClearAllPoints()
+						timer:SetPoint("RIGHT", frame, "RIGHT", -4, 2)
+						timer:SetFont(GameTooltipText:GetFont(), 14, "THINOUTLINE")
+						timer:SetJustifyH("RIGHT")
+						timer:SetShadowColor(0, 0, 0, 0)
+						timer.SetFont = function() return end
+						timer.styled=true
+					end
+
+					if bar.owner.options.IconLeft then icon1:Show() icon1.overlay:Show() else icon1:Hide() icon1.overlay:Hide() end
+					if bar.owner.options.IconRight then icon2:Show() icon2.overlay:Show() else icon2:Hide() icon2.overlay:Hide() end
+					tbar:SetAlpha(1)
+					frame:SetAlpha(1)
+					texture:SetAlpha(1)
+					frame:Show()
+					bar:Update(0)
+					bar.injected=true
+					applyFailed = false
+				end
 					bar:ApplyStyle()
+				end
+				if applyFailed then
+					applyFailed = false
 				end
 			end
 		end
