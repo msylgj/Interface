@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Dec 31, 2014@12240
+-- Last update: Jan 12, 2015@12395
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -40,7 +40,7 @@ L.PosY 						= 'Y坐标'
 L.MoveMe					= '移动'
 L.Button_OK 				= '确定'
 L.Button_Cancel 			= '取消'
-L.Button_LoadMod 			= '加载插件'
+L.Button_LoadMod 			= '加载模块'
 L.Mod_Enabled				= "开启模块"
 L.Mod_Reset					= "恢复默认设置"
 L.Reset 					= "重置"
@@ -73,11 +73,6 @@ L.ChallengeTimerPersonal		= "个人"
 L.ChallengeTimerGuild			= "公会"
 L.ChallengeTimerRealm			= "服务器"
 
-L.DisableCinematics			= "在副本时自动跳过游戏内过场动画"
-L.DisableCinematicsOutside		= "在副本外时自动跳过游戏内过场动画"
-L.SKT_Enabled				= "永远显示最速击杀计时条（无论该首领的相关设置如何）"
-L.Latency_Text				= "设定启用同步功能的最高延迟阀值：%d"
-
 L.ModelOptions				= "3D模型选项"
 L.EnableModels				= "在首领选项中启用3D模型"
 L.ModelSoundOptions			= "为模型查看器设置声音选项"
@@ -101,22 +96,17 @@ L.InfoRaidWarning			= [[你可以对团队警报的文本颜色及其位置进�
 在这里会显示诸如“玩家X受到了Y效果的影响”之类的信息。]]
 L.ColorResetted 			= "该颜色设置已重置"
 L.ShowWarningsInChat 		= "在聊天窗口中显示警报"
-L.ShowSWarningsInChat 		= "在聊天窗口中显示特殊警报"
 L.ShowFakedRaidWarnings 	= "以伪装团队警报信息的方式显示警报内容"
 L.WarningIconLeft 			= "左侧显示图标"
 L.WarningIconRight 			= "右侧显示图标"
 L.WarningIconChat 			= "在聊天窗口中显示图标"
-L.ShowCountdownText			= "为第一倒计时显示文本"
 L.RaidWarnMessage 			= "感谢您使用Deadly Boss Mods"
 L.BarWhileMove 				= "可移动团队警报"
 L.RaidWarnSound				= "发出团队警报时播放声音"
-L.CountdownVoice			= "设置第一倒计时语音"
-L.CountdownVoice2			= "设置第二倒计时语音"
-L.CountdownVoice3			= "设置第三倒计时语音"
-L.VoicePackChoice			= "设置语音报警的语音包(快躲开！)"
 L.SpecialWarnSound			= "针对你发出特殊警报时播放的声音"
 L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音(默认:当心)"
 L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音(默认:毁灭)"
+L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages	 		= "综合信息"
@@ -145,7 +135,6 @@ L.BarDBM				= "DBM"
 L.BarBigWigs				= "BigWigs (没动画)"
 L.BarStartColor				= "初始颜色"
 L.BarEndColor 				= "结束颜色"
-L.ExpandUpwards				= "向上扩展"
 L.Bar_Font				= "计时条字体"
 L.Bar_FontSize				= "字体大小"
 L.Bar_Height				= "计时条高度: %d"
@@ -172,10 +161,8 @@ L.BarFlash				= "当计时条快走完时闪动"
 L.Panel_SpecWarnFrame			= "特殊警报"
 L.Area_SpecWarn				= "特殊警报设置"
 L.SpecWarn_Enabled			= "显示首领技能特殊警报"
-L.SpecWarn_FlashFrame			= "特殊警报时屏幕边缘泛光"
-L.SpecWarn_ShakeFrame			= "为毁灭性的技能闪烁屏幕"
-L.SpecWarn_AdSound			= "启用特别警告高级声音选项（需要UI重载）"
-L.SpecWarn_NoSoundsWVoice	= "当技能存在语音包语音时，屏蔽播放特殊警报声（当心，毁灭）"
+L.SpecWarn_FlashFrame		= "特殊警报时屏幕边缘泛光"
+L.ShowSWarningsInChat 		= "在聊天窗口中显示特殊警报"
 L.SpecWarn_Font				= "特殊警报字体"
 L.SpecWarn_DemoButton			= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"
@@ -186,6 +173,20 @@ L.SpecWarn_FlashColor			= "泛光顏色 (%d)"
 L.SpecWarn_FlashDur			= "泛光持续时间: %0.1f"
 L.SpecWarn_FlashAlpha			= "泛光透明度: %0.1f"
 L.SpecWarn_ResetMe			= "重置"
+
+-- Tab: Spoken Alerts Frame
+L.Panel_SpokenAlerts		= "语音警告"
+L.Area_VoiceSelection		= "语音选项"
+L.CountdownVoice			= "设置第一倒计时语音"
+L.CountdownVoice2			= "设置第二倒计时语音"
+L.CountdownVoice3			= "设置第三倒计时语音"
+L.VoicePackChoice			= "设置语音报警的语音包(快躲开！)"
+L.Area_CountdownOptions		= "倒计时选项"
+L.ShowCountdownText			= "为第一倒计时显示文本"
+L.Area_VoicePackOptions		= "语音包选项(第三方)"
+L.SpecWarn_NoSoundsWVoice	= "当技能存在语音包语音时，屏蔽播放特殊警报声（当心，毁灭）"
+L.SpecWarn_AlwaysVoice		= "总是播放所有语音警告(覆盖首领特定的选项,建议指挥使用)"
+--TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 
 -- Tab: HealthFrame
 L.Panel_HPFrame				= "生命值框体"
@@ -211,7 +212,6 @@ L.SpamBlockNoHealthFrame		= "不显示生命值监视器"
 L.Area_SpamFilter				= "信息过滤设置"
 L.StripServerName				= "警告和计时器中不显示服务器名"
 L.SpamBlockBossWhispers			= "战斗中过滤DBM密语警报"
-L.BlockVersionUpdateNotice		= "禁用升级提示"
 L.ShowBBOnCombatStart			= "战斗开始时使用Big Brother检测增益情况"
 L.BigBrotherAnnounceToRaid		= "报告Big Brother的检测结果给团队"
 

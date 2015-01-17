@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12361 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12425 $"):sub(12, -3))
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
+--Could not find south path for this one
 mod:SetHotfixNoticeRev(11939)
 
 mod:RegisterCombat("combat")
@@ -20,17 +21,11 @@ mod:RegisterEventsInCombat(
 )
 
 --Phemos
-local warnEnfeeblingroar			= mod:NewCountAnnounce(158057, 3)
-local warnWhirlwind					= mod:NewCountAnnounce(157943, 3)
-local warnQuake						= mod:NewCountAnnounce(158200, 3)
-local warnArcaneTwisted				= mod:NewTargetAnnounce(163297, 2)--Mythic, the boss that's going to use empowered abilities
+local warnArcaneTwisted				= mod:NewTargetAnnounce("OptionVersion2", 163297, 2, nil, false)--Mythic, the boss that's going to use empowered abilities
 local warnArcaneVolatility			= mod:NewTargetAnnounce(163372, 4)--Mythic
 local warnArcaneWound				= mod:NewStackAnnounce("OptionVersion2", 167200, 2, nil, false)--Arcane debuff irrelevant. off by default, even for tanks unless blizz changes it.
 --Pol
-local warnShieldCharge				= mod:NewSpellAnnounce(158134, 4)--Target scanning assumed
-local warnInterruptingShout			= mod:NewCastAnnounce(158093, 3)
 local warnPulverize					= mod:NewCountAnnounce(158385, 3)--158385 is primary activation with SPELL_CAST_SUCCESS, cast at start, followed by 3 channeled IDs using SPELL_CAST_START
-local warnArcaneCharge				= mod:NewCastAnnounce(163336, 4)--Mythic. Seems not reliable timer, has a chance to happen immediately after a charge (but not always)
 
 --Phemos
 local specWarnEnfeeblingRoar		= mod:NewSpecialWarningCount(158057, nil, nil, nil, nil, nil, true)
@@ -155,7 +150,7 @@ local function updateInfoFrame()
 		if bossPower < 33 then--Shield Charge
 			lines[UnitName("boss1")] = bossPower
 			if UnitBuff("boss1", arcaneTwisted) then--Empowered attack
-				lines["|cFFFF0000"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
+				lines["|cFF9932CD"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
 			else
 				lines[GetSpellInfo(158134)] = ""
 			end
@@ -168,7 +163,7 @@ local function updateInfoFrame()
 		lines[UnitName("boss2")] = bossPower2
 		if bossPower2 < 33 then--Shield Charge
 			if UnitBuff("boss2", arcaneTwisted) then--Empowered attack
-				lines["|cFFFF0000"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
+				lines["|cFF9932CD"..GetSpellInfo(158134).."|r"] = GetSpellInfo(163336)
 			else
 				lines[GetSpellInfo(158134)] = ""
 			end
@@ -230,7 +225,6 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 158057 then
 		self.vb.EnfeebleCount = self.vb.EnfeebleCount + 1
-		warnEnfeeblingroar:Show(self.vb.EnfeebleCount)
 		specWarnEnfeeblingRoar:Show(self.vb.EnfeebleCount)
 		if not self:IsMythic() then--On all other difficulties, quake is 1 second longer
 			timerQuakeCD:Start(PhemosEnergyRate+1, self.vb.QuakeCount+1)--Next Special
@@ -240,16 +234,15 @@ function mod:SPELL_CAST_START(args)
 			timerQuakeCD:Start(PhemosEnergyRate, self.vb.QuakeCount+1)--Next Special
 			countdownPhemos:Start(PhemosEnergyRate)
 			voicePhemos:Schedule(PhemosEnergyRate - 6.5, "158200")
-		end	
+		end
 	elseif spellId == 157943 then
 		self.vb.WWCount = self.vb.WWCount + 1
-		warnWhirlwind:Show(self.vb.WWCount)
 		specWarnWhirlWind:Show(self.vb.WWCount)
 		timerEnfeeblingRoarCD:Start(PhemosEnergyRate, self.vb.EnfeebleCount+1)--Next Special
 		countdownPhemos:Start(PhemosEnergyRate)
-		voicePhemos:Schedule(PhemosEnergyRate - 6.5, "158057") --roar
+		voicePhemos:Schedule(PhemosEnergyRate - 6.8, "158057")
+		voicePhemos:Schedule(PhemosEnergyRate - 5.3, "gather")--Stack
 	elseif spellId == 158134 then
-		warnShieldCharge:Show()
 		specWarnShieldCharge:Show()
 		timerInterruptingShoutCD:Start(polEnergyRate)--Next Special
 		countdownPol:Start(polEnergyRate)
@@ -258,7 +251,6 @@ function mod:SPELL_CAST_START(args)
 			voicePol:Schedule(polEnergyRate - 0.5, "stopcast")
 		end
 	elseif spellId == 158093 then
-		warnInterruptingShout:Show()
 		specWarnInterruptingShout:Show()
 		if not self:IsMythic() then
 			timerPulverizeCD:Start(polEnergyRate+1)--Next Special
@@ -272,7 +264,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 158200 then
 		self.vb.LastQuake = GetTime()
 		self.vb.QuakeCount = self.vb.QuakeCount + 1
-		warnQuake:Show(self.vb.QuakeCount)
 		specWarnQuake:Show(self.vb.QuakeCount)
 		timerWhirlwindCD:Start(PhemosEnergyRate, self.vb.WWCount+1)
 		countdownPhemos:Start(PhemosEnergyRate)
@@ -300,7 +291,6 @@ function mod:SPELL_CAST_START(args)
 		self.vb.PulverizeCount = self.vb.PulverizeCount + 1
 		warnPulverize:Show(self.vb.PulverizeCount)
 	elseif spellId == 163336 and self:AntiSpam(2, 1) then
-		warnArcaneCharge:Show()
 		specWarnArcaneCharge:Show()
 	end
 end

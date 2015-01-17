@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12357 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12425 $"):sub(12, -3))
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetModelSound("sound\\creature\\tectus\\VO_60_HMR_TECTUS_AGGRO_01.ogg", "sound\\creature\\tectus\\vo_60_hmr_tectus_spell_05.ogg")
 
 mod:RegisterCombat("combat")
 mod:SetMinSyncTime(4)--Rise Mountain can occur pretty often.
@@ -24,25 +25,19 @@ mod:RegisterEventsInCombat(
 --TODO, find better icons for adds, these are filler icons for spells they use.
 --TODO, figure out what's wrong with DBM-Core stripping most of EJ spellname in specWarnEarthwarper (it's saying "Night - Switch" instead of "Night-Twisted Earthshaper - Switch")
 --Tectus
-local warnEarthenPillar				= mod:NewSpellAnnounce(162518, 3)--No way to detect unless it hits a player :\
-local warnTectonicUpheaval			= mod:NewSpellAnnounce(162475, 3)
 local warnCrystallineBarrage		= mod:NewTargetAnnounce(162346, 3)
-local warnEarthwarper				= mod:NewSpellAnnounce("ej10061", 3, 162894)
 local warnBerserker					= mod:NewSpellAnnounce("ej10062", 3, 163312)
---Night-Twisted NPCs
-local warnEarthenFlechettes			= mod:NewSpellAnnounce(162968, 3, nil, mod:IsMelee())
-local warnGiftOfEarth				= mod:NewCountAnnounce(162894, 4, nil, mod:IsMelee())
-local warnRavingAssault				= mod:NewSpellAnnounce(163312, 3)--Target scanning? Emote?
 
-local specWarnEarthwarper			= mod:NewSpecialWarningSwitch("ej10061", nil, nil, nil, nil, nil, true)
+local specWarnEarthwarper			= mod:NewSpecialWarningSwitch("OptionVersion2", "ej10061", not mod:IsHealer(), nil, nil, nil, nil, true)
 local specWarnTectonicUpheaval		= mod:NewSpecialWarningSpell(162475, nil, nil, nil, 2, nil, true)
 local specWarnEarthenPillar			= mod:NewSpecialWarningSpell(162518, nil, nil, nil, 3, nil, true)
 local specWarnCrystallineBarrageYou	= mod:NewSpecialWarningYou(162346, nil, nil, nil, nil, nil, true)
 local yellCrystalineBarrage			= mod:NewYell(162346)
 local specWarnCrystallineBarrage	= mod:NewSpecialWarningMove(162370, nil, nil, nil, nil, nil, true)
 --Night-Twisted NPCs
+local specWarnRavingAssault			= mod:NewSpecialWarningDodge(163312, mod:IsMelee(), nil, nil, nil, nil, true)
 local specWarnEarthenFlechettes		= mod:NewSpecialWarningDodge(162968, mod:IsMelee(), nil, nil, nil, nil, true)
-local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, mod:IsTank(), nil, nil, nil, nil, true)
+local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, mod:IsMelee(), nil, nil, nil, nil, true)
 
 local timerEarthwarperCD			= mod:NewNextTimer(41, "ej10061", nil, nil, nil, 162894)--Both of these get delayed by upheavel
 local timerBerserkerCD				= mod:NewNextTimer(41, "ej10062", nil, mod:IsTank(), nil, 163312)--Both of these get delayed by upheavel
@@ -187,12 +182,10 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 162475 and self:AntiSpam(5, 1) then--Antispam for later fight.
-		warnTectonicUpheaval:Show()
 		specWarnTectonicUpheaval:Show()
 		voiceTectonicUpheaval:Play("aesoon")
 	elseif spellId == 162968 then
 		local guid = args.souceGUID
-		warnEarthenFlechettes:Show()
 		specWarnEarthenFlechettes:Show()
 		timerEarthenFlechettesCD:Start(guid)
 		if guid == UnitGUID("target") or guid == UnitGUID("focus") then
@@ -205,12 +198,11 @@ function mod:SPELL_CAST_START(args)
 			earthDuders[GUID] = 0
 		end
 		earthDuders[GUID] = earthDuders[GUID] + 1
-		warnGiftOfEarth:Show(earthDuders[GUID])
 		specWarnGiftOfEarth:Show(earthDuders[GUID])
 		timerGiftOfEarthCD:Start(GUID)
 		voiceGiftOfEarth:Play("162894")
 	elseif spellId == 163312 then
-		warnRavingAssault:Show()
+		specWarnRavingAssault:Show()
 		voiceRavingAssault:Play("chargemove")
 	end
 end
@@ -300,7 +292,6 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
 	if npc == Earthwarper then
 		self.vb.EarthwarperAlive = self.vb.EarthwarperAlive + 1
-		warnEarthwarper:Show()
 		specWarnEarthwarper:Show()
 		voiceEarthwarper:Play("killmob")
 		timerGiftOfEarthCD:Start(10)
@@ -320,7 +311,6 @@ end
 
 function mod:OnSync(msg)
 	if msg == "TectusPillar" and self:IsInCombat() then
-		warnEarthenPillar:Show()
 		specWarnEarthenPillar:Show()
 		voiceEarthenPillar:Play("watchstep")
 	end

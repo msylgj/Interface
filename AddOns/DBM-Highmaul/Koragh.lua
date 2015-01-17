@@ -1,11 +1,13 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12353 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12425 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
+--Could not find sound path on internet
+mod:SetHotfixNoticeRev(12324)
 
 mod:RegisterCombat("combat")
 
@@ -22,14 +24,11 @@ mod:RegisterEventsInCombat(
 
 --TODO, find number of targets of MC and add SetIconsUsed with correct icon count.
 --TODO, see if MC works. I think it's every 3rd balls
-local warnCausticEnergy				= mod:NewTargetAnnounce(161242, 3)
-local warnNullBarrier				= mod:NewTargetAnnounce(156803, 2)
-local warnVulnerability				= mod:NewTargetAnnounce(160734, 1)
-local warnTrample					= mod:NewTargetCountAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
-local warnExpelMagicFire			= mod:NewSpellAnnounce(162185, 3)
-local warnExpelMagicShadow			= mod:NewSpellAnnounce(162184, 3, nil, mod:IsHealer())
+local warnCausticEnergy				= mod:NewTargetAnnounce("OptionVersion2", 161242, 3, nil, false)
+local warnVulnerability				= mod:NewTargetAnnounce("OptionVersion2", 160734, 1, nil, false)
+local warnTrample					= mod:NewTargetAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
 local warnExpelMagicFrost			= mod:NewTargetAnnounce(161411, 3)
-local warnExpelMagicArcane			= mod:NewTargetAnnounce(162186, 4)--Everyone, so they know to avoid him
+local warnExpelMagicArcane			= mod:NewTargetAnnounce(162186, 4)
 local warnBallsSoon					= mod:NewPreWarnAnnounce(161612, 6.5, 2)
 local warnBallsHit					= mod:NewCountAnnounce(161612, 2)
 local warnMC						= mod:NewTargetAnnounce(163472, 4)--Mythic
@@ -74,9 +73,9 @@ local countdownBalls				= mod:NewCountdown("Alt30", 161612)
 local countdownFel					= mod:NewCountdownFades("AltTwo11", 172895)
 
 local voiceExpelMagicFire			= mod:NewVoice(162185)
-local voiceExpelMagicShadow			= mod:NewVoice(162184, mod:IsHealer())
+local voiceExpelMagicShadow			= mod:NewVoice("OptionVersion2", 162184, mod:IsHealer())
 local voiceExpelMagicFrost			= mod:NewVoice(161411)
-local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion2", 162186, mod:IsTank())
+local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion3", 162186)
 local voiceMC						= mod:NewVoice(163472, mod:IsDps())
 local voiceTrample					= mod:NewVoice(163101)
 local voiceBalls					= mod:NewVoice(161612)
@@ -87,25 +86,27 @@ mod:AddSetIconOption("SetIconOnMC", 163472, false)
 mod:AddSetIconOption("SetIconOnFel", 172895, false)
 mod:AddArrowOption("FelArrow", 172895, true, 3)
 
-mod.vb.supressionCount = 0
 mod.vb.ballsCount = 0
 mod.vb.shieldCharging = false
+mod.vb.fireActive = false
 local lastX, LastY = nil, nil--Not in VB table because it player personal position
 local barName = GetSpellInfo(156803)
+local arcaneDebuff = GetSpellInfo(162186)
 
 local function closeRange(self)
-	if self.Options.RangeFrame then
+	if self.Options.RangeFrame and not UnitDebuff("player", arcaneDebuff) then
 		DBM.RangeCheck:Hide()
 	end
+	self.vb.fireActive = false
 end
 
 local function ballsWarning(self)
-	warnBallsSoon:Show()
 	DBM:Debug("Balls should be falling in 6.5 second")
 	if UnitPower("player", 10) > 0 then--Player is soaker
-		specWarnBallsSoon:Show()
+		specWarnBallsSoon:Show()--Player who soaks
 		voiceBalls:Play("161612")
 	else
+		warnBallsSoon:Show()--Everyone else
 		if self:IsMythic() and ((self.vb.ballsCount+1) % 2) == 0 then
 --			specWarnMCSoon:Show()
 		end
@@ -124,7 +125,7 @@ local function returnPosition(self)
 	specWarnExpelMagicFelFades:Show()
 	voiceExpelMagicArcaneFel:Play("172895")
 	if self.Options.FelArrow and lastX and LastY then
-		DBM.Arrow:ShowRunTo(lastX, LastY, 1, 5)
+		DBM.Arrow:ShowRunTo(lastX, LastY, 0, 5)
 	end
 end
 
@@ -133,9 +134,9 @@ function mod:FrostTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	self.vb.supressionCount = 0
 	self.vb.ballsCount = 0
 	self.vb.shieldCharging = false
+	self.vb.fireActive = false
 	timerExpelMagicFireCD:Start(6-delay)
 	timerExpelMagicArcaneCD:Start(30-delay)
 	timerBallsCD:Start(36-delay, 1)
@@ -163,7 +164,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 162185 then
-		warnExpelMagicFire:Show()
+		self.vb.fireActive = true
 		specWarnExpelMagicFire:Schedule(5)--Give you about 4 seconds to spread out
 		--Even if you AMS or resist debuff, need to avoid others that didn't, so rangecheck now here
 		if self.Options.RangeFrame then
@@ -180,7 +181,6 @@ function mod:SPELL_CAST_START(args)
 		voiceExpelMagicFire:Schedule(5, "scatter")
 		self:Schedule(11.5, closeRange, self)
 	elseif spellId == 162184 then
-		warnExpelMagicShadow:Show()
 		specWarnExpelMagicShadow:Show()
 		if self.vb.shieldCharging then
 			timerExpelMagicShadowCD:Start(87)
@@ -246,7 +246,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156803 then
 		self.vb.shieldCharging = false
-		warnNullBarrier:Show(args.destName)
 		specWarnNullBarrier:Show(args.destName)
 	elseif spellId == 162186 then
 		warnExpelMagicArcane:Show(args.destName)
@@ -274,7 +273,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnMC:CombinedShow(0.5, args.destName)
 		if self:AntiSpam(3, 1) then
 			specWarnMC:Show()
-			voiceMC:Play("killmob")
+			voiceMC:Play("findmc")
 		end
 		if self.Options.SetIconOnMC then
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
@@ -299,7 +298,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame then
+	if spellId == 162186 and args:IsPlayer() and self.Options.RangeFrame and not self.vb.fireActive then
 		DBM.RangeCheck:Hide()
 	elseif spellId == 163472 and self.Options.SetIconOnMC then
 		self:SetIcon(args.destName, 0)
@@ -392,9 +391,7 @@ function mod:OnSync(msg, targetname)
 		timerTrampleCD:Start()
 		local target = DBM:GetUnitFullName(targetname)
 		if target and self:AntiSpam(3, target) then--Syncs sending from same realm don't send realm name, while other realms do, so it bypasses sync spam code since two diff args. So filter here after GetUnitFullName
-			--Investigating someone theory that frost orbs are after every 4 self.vb.supressionCount, except for first, which is after 2. They wanted a counter added
-			self.vb.supressionCount = self.vb.supressionCount + 1
-			warnTrample:Show(self.vb.supressionCount, target)
+			warnTrample:Show(target)
 			if target == UnitName("player") then
 				specWarnTrample:Show()
 				yellTrample:Yell()

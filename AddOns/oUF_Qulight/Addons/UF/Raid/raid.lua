@@ -1072,7 +1072,7 @@ oUF:Factory(function(self)
 			'showSolo', Qulight["raidframes"].solo,
 			'showParty', true,
 			'showRaid', true,
-			'yOffset', 30,
+			'yOffset', 10,
 			'point', 'BOTTOM',
 			'template', 'oUF_Party')
 		party:SetPoint(unpack(Qulight["raidframes"].Anchorparty))

@@ -344,7 +344,7 @@ lib.gen_hpstrings = function(f)
 	end
 	
 	local per = f.Health:CreateFontString(nil, "OVERLAY")
-	per:SetPoint("RIGHT", -2, -3)
+	per:SetPoint("RIGHT", -2.5, -3)
 	per:SetFont(Qulight["media"].font, (Qulight["media"].fontsize - 1), "OUTLINE")
 	f:Tag(per, retVal(f,'[color][power] | [perpp]%'))
 end

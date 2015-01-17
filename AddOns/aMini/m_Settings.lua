@@ -32,7 +32,7 @@ DEFAULT_CHAT_FRAME:AddMessage("|c0000FF00                      >>>使用/opoaui�
 SlashCmdList["OPOAUI"] = function(msg)   
   local cmd = msg:lower()
   if cmd == "cmd" then
-      print("常用指令说明:\n打开网格:/align\n获取鼠标指向框体名:/gf\n快速切换天赋:/ss\n自动邀请:/ainv\n解散团队:/rd\n鼠标指向按键绑定 /hb\n模式化聊天框:/setchat\n伤害显示插件移动:/xct")
+      print("常用指令说明:\n打开网格:/align\n获取鼠标指向框体名:/gf\n快速切换天赋:/ss\n自动邀请:/ainv\n解散团队:/rd\n鼠标指向按键绑定 /hb\n模式化聊天框:/setchat\n伤害显示插件移动:/dct\n/dex\n获得buff文字提示移动:/dex\n背包缩放:/cbniv scale 数字")
   elseif cmd == "lua" then
 	  print("常用设置修改:\n聊天设置:m_Chat\\m_Chat.lua\n技能监视:Sora's AuraWatch\\AuraWatchList.lua\n小地图位置:m_Minimap\\m_Minimap.lua\n姓名板相关:m_Nameplates\\cfg.lua\n头像相关:oUF_Qulight\\cfg.lua")
   else
@@ -80,8 +80,8 @@ SLASH_FRAME1 = "/gf"
 
 -- simple spec switching
 SlashCmdList["SPEC"] = function() 
-local spec = GetActiveTalentGroup()
-if spec == 1 then SetActiveTalentGroup(2) elseif spec == 2 then SetActiveTalentGroup(1) end
+	local spec = GetActiveSpecGroup(false,false)
+	SetActiveSpecGroup(spec == 1 and 2 or 1)
 end
 SLASH_SPEC1 = "/ss"
 
@@ -94,16 +94,16 @@ hooksecurefunc("ShowReadyCheck", ShowReadyCheckHook)
 
 -- UI缩放修正 --
 SlashCmdList["AutoSet"] = function()
-if not InCombatLockdown() then
-SetCVar("useUiScale", 1)
-local scale = 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")
-if scale < .64 then
-UIParent:SetScale(scale)
-else
-SetCVar("uiScale", scale)
-end
-ReloadUI()
-end
+	if not InCombatLockdown() then
+		SetCVar("useUiScale", 1)
+		local scale = 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")
+		if scale < .64 then
+			UIParent:SetScale(scale)
+		else
+			SetCVar("uiScale", scale)
+		end
+		ReloadUI()
+	end
 end
 SLASH_AutoSet1 = "/autoset"
 SLASH_AutoSet2 = "/as"

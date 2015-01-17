@@ -82,7 +82,7 @@ options = {
 	},
 	BarYOffset = {
 		type = "number",
-		default = 0,
+		default = 18,
 	},
 	HugeBarXOffset = {
 		type = "number",
@@ -90,7 +90,7 @@ options = {
 	},
 	HugeBarYOffset = {
 		type = "number",
-		default = 0,
+		default = 22,
 	},
 	ExpandUpwards = {
 		type = "boolean",
@@ -166,11 +166,11 @@ options = {
 	},
 	Height = {
 		type = "number",
-		default = 20,
+		default = 10,
 	},
 	Scale = {
 		type = "number",
-		default = 0.9,
+		default = 1,
 	},
 	HugeBarsEnabled = {
 		type = "boolean",
@@ -182,7 +182,7 @@ options = {
 	},
 	HugeScale = {
 		type = "number",
-		default = 1.03,
+		default = 1.2,
 	},
 	TimerPoint = {
 		type = "string",
@@ -194,7 +194,7 @@ options = {
 	},
 	TimerY = {
 		type = "number",
-		default = -31,
+		default = -60,
 	},
 	HugeTimerPoint = {
 		type = "string",
@@ -206,7 +206,7 @@ options = {
 	},
 	HugeTimerY = {
 		type = "number",
-		default = -127,
+		default = -150,
 	},
 	EnlargeBarsTime = {
 		type = "number",
@@ -349,7 +349,7 @@ do
 			return
 		end
 		local enabled = GetAddOnEnableState(UnitName("player"), "DBM-DefaultSkin")
-		if enabled ~= 0 and skins[self.options.Skin].loaded == nil then
+		if enabled ~= 0 and (not self.options.Skin or skins[self.options.Skin].loaded == nil) then
 			-- The currently set skin is no longer loaded, revert to DefaultSkin. If enabled (else, person wants textureless bar on purpose)
 			self:SetSkin("DefaultSkin")
 		end
@@ -616,7 +616,7 @@ function barPrototype:Pause()
 end
 
 function barPrototype:Resume()
-	sel.paused = nil
+	self.paused = nil
 end
 
 function barPrototype:SetElapsed(elapsed)
