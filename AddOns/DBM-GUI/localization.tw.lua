@@ -2,7 +2,7 @@
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
 local L = DBM_GUI_Translations
 
-L.MainFrame		 = "Deadly Boss Mods"
+L.MainFrame	= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻譯:"
 L.TranslationBy 			= "Imbav@聖光之願"
@@ -191,10 +191,9 @@ L.HP_ShowDemo				= "顯示血量框架"
 L.BarWidth					= "寬度:%d"
 
 -- Tab: Global Filter
-L.Panel_SpamFilter			= "整體及垃圾過濾"
-L.Area_SpamFilter_Outgoing	= "整體過濾選項"
+L.Panel_SpamFilter			= "全局禁用及過濾"
+L.Area_SpamFilter_Outgoing	= "全局禁用選項"
 L.SpamBlockNoShowAnnounce	= "不顯示提示或播放警告音效"
-L.DontShowFarWarnings		= "不發送距離過遠的事件提示/計時器"
 L.SpamBlockNoSendWhisper	= "不發送密語給其他玩家"
 L.SpamBlockNoSetIcon		= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame		= "不顯示距離框架"
@@ -204,6 +203,7 @@ L.SpamBlockNoCountdowns		= "不播放倒數音效"
 
 -- Tab: Spam Filter
 L.Area_SpamFilter			= "垃圾過濾選項"
+L.DontShowFarWarnings		= "不發送距離過遠的事件提示/計時器"
 L.StripServerName			= "隱藏警告和計時器的玩家伺服器名稱"
 L.SpamBlockBossWhispers		= "當戰鬥時過濾 &lt;DBM&gt; 密語警告"
 L.ShowBBOnCombatStart		= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"
@@ -246,7 +246,7 @@ L.RoleSpecAlert				= "當你加入團隊時捨取專精不符合你目前專精�
 L.CheckGear					= "當你裝備的裝備等級低於包包裡40等以上時顯示警告訊息"
 L.WorldBossAlert			= "當你的工會成員或是朋友可能在你的伺服器上開戰世界首領時顯示警告訊息(如果發送者是被戰復的會不準確)"
 L.Area_SoundAlerts			= "聲音警告選項"
-L.LFDEnhance				= "使用主要聲音頻道播放準備確認音效給腳色確認和戰場/隨機團隊進場(I.E. 即使因為被關閉了也會發出音效而且很大聲!)"
+L.LFDEnhance				= "使用主要聲音頻道播放準備確認音效給角色確認和戰場/隨機團隊進場(I.E. 即使因為被關閉了也會發出音效而且很大聲!)"
 L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效(蓋過特定首領選項)"
 L.AFKHealthWarning			= "播放警告聲音假如你在暫離時被攻擊"
 L.Area_AutoLogging			= "自動記錄選項"
@@ -266,6 +266,24 @@ L.PizzaTimer_Mins 			= "分"
 L.PizzaTimer_Secs 			= "秒"
 L.PizzaTimer_ButtonStart 	= "開始計時"
 L.PizzaTimer_BroadCast		= "向團隊廣播"
+
+L.Panel_Profile				= "配置檔"
+L.Area_CreateProfile        = "建立配置檔"
+L.EnterProfileName			= "輸入配置檔名稱"
+L.CreateProfile				= "建立DBM核心選項配置檔"
+L.Area_ApplyProfile			= "套用DBM核心選項配置檔"
+L.SelectProfileToApply		= "選擇配置檔套用"
+L.Area_DeleteProfile		= "移除DBM核心選項配置檔"
+L.SelectProfileToDelete		= "選擇配置檔刪除"
+L.Area_DualProfile			= "首領模組配置檔選項"
+L.DualProfile				= "啟用多首領模組專精設定檔。可依據你的專精去設定不同的首領選項設定。(首領配置檔管理在首領模組頁面下)"
+
+L.Area_ModProfile			= "從其他角色/專精複製或刪除模組設定"
+L.ModAllReset				= "重置所有模組設定"
+L.ModAllStatReset			= "重置所有模組狀態"
+L.SelectModProfileCopy		= "複製所有設定"
+L.SelectModProfileCopySound	= "只複製音效設定"
+L.SelectModProfileDelete	= "刪除模組設定"
 
 -- Misc
 L.FontHeight	= 18

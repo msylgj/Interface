@@ -20,6 +20,11 @@ local MissionPage = GarrisonMissionFrame.MissionTab.MissionPage
 local AddFollowerToMission = C_Garrison.AddFollowerToMission
 local GetPartyMissionInfo = C_Garrison.GetPartyMissionInfo
 local RemoveFollowerFromMission = C_Garrison.RemoveFollowerFromMission
+local GetFollowerInfoForBuilding = C_Garrison.GetFollowerInfoForBuilding
+local RemoveFollowerFromBuilding = C_Garrison.RemoveFollowerFromBuilding
+local AssignFollowerToBuilding = C_Garrison.AssignFollowerToBuilding
+local GetFollowerStatus = C_Garrison.GetFollowerStatus
+local After = C_Timer.After
 local GARRISON_FOLLOWER_IN_PARTY = GARRISON_FOLLOWER_IN_PARTY
 local GetFramesRegisteredForEvent = GetFramesRegisteredForEvent
 local CANCEL = CANCEL
@@ -27,6 +32,8 @@ local HybridScrollFrame_GetOffset = HybridScrollFrame_GetOffset
 local GetCurrencyInfo = GetCurrencyInfo
 local MissionPageFollowers = GarrisonMissionFrame.MissionTab.MissionPage.Followers
 local RED_FONT_COLOR_CODE = RED_FONT_COLOR_CODE
+local FONT_COLOR_CODE_CLOSE = FONT_COLOR_CODE_CLOSE
+local GARRISON_FOLLOWER_MAX_LEVEL = GARRISON_FOLLOWER_MAX_LEVEL
 
 -- Config
 local ingored_followers = {}
@@ -75,6 +82,11 @@ event_frame:SetScript("OnEvent", function(self, event, arg1)
    if event == "GARRISON_LANDINGPAGE_SHIPMENTS" then
       event_frame:UnregisterEvent("GARRISON_LANDINGPAGE_SHIPMENTS")
       CheckPartyForProfessionFollowers()
+   end
+
+   if event == "GARRISON_BUILDING_UPDATE" then
+      GarrisonBuilding_UpdateCurrentFollowers()
+      GarrisonBuilding_UpdateButtons()
    end
 
    if event == "ADDON_LOADED" and arg1 == addon_name then
@@ -163,20 +175,32 @@ local function FindBestFollowersForMission(mission, followers, mode)
       local follower1 = followers[i1]
       local follower1_id = follower1.followerID
       local follower1_maxed = follower1.levelXP == 0 and 1 or 0
+      local follower1_level = follower1.level if follower1_level == GARRISON_FOLLOWER_MAX_LEVEL then follower1_level = follower1.iLevel end
       for i2 = min[2] or (i1 + 1), max[2] do
          local follower2_maxed = 0
          local follower2 = followers[i2]
          local follower2_id
+         local follower2_level = 0
          if follower2 then
             follower2_id = follower2.followerID
             if follower2.levelXP == 0 then follower2_maxed = 1 end
+            follower2_level = follower2.level if follower2_level == GARRISON_FOLLOWER_MAX_LEVEL then follower2_level = follower2.iLevel end
          end
          for i3 = min[3] or (i2 + 1), max[3] do
+            local follower3_maxed = 0
             local follower3 = followers[i3]
-            local followers_maxed = follower1_maxed + follower2_maxed + ((follower3 and follower3.levelXP == 0) and 1 or 0)
+            local follower3_id
+            local follower3_level = 0
+            if follower3 then
+               follower3_id = follower3.followerID
+               if follower3.levelXP == 0 then follower3_maxed = 1 end
+               follower3_level = follower3.level if follower3_level == GARRISON_FOLLOWER_MAX_LEVEL then follower3_level = follower3.iLevel end
+            end
+
+            local followers_maxed = follower1_maxed + follower2_maxed + follower3_maxed
+            local follower_level_total = follower1_level + follower2_level + follower3_level
             -- On follower XP-only missions throw away any team that is completely filled with maxed out followers
             if xp_only_rewards and slots == followers_maxed then break end
-            local follower3_id = follower3 and follower3.followerID
 
             -- Assign followers to mission
             if not AddFollowerToMission(mission_id, follower1_id) then --[[ error handling! ]] end
@@ -247,6 +271,10 @@ local function FindBestFollowersForMission(mission, followers, mode)
                      if cTotalTimeSeconds > totalTimeSeconds then found = true break end
                      if cTotalTimeSeconds < totalTimeSeconds then break end
 
+                     local c_follower_level_total = current.follower_level_total
+                     if c_follower_level_total > follower_level_total then found = true break end
+                     if c_follower_level_total < follower_level_total then break end
+
                      local cBuffCount = current.buffCount
                      if cBuffCount > buffCount then found = true break end
                      if cBuffCount < buffCount then break end
@@ -270,6 +298,8 @@ local function FindBestFollowersForMission(mission, followers, mode)
                      new.buffCount = buffCount
                      new.isEnvMechanicCountered = isEnvMechanicCountered
                      new.gr_yield = gr_yield
+                     new.no_reward = xp_only_rewards and slots == followers_maxed
+                     new.follower_level_total = follower_level_total
                      tinsert(top_list, idx, new)
                      top_list[5] = nil
                      break
@@ -345,12 +375,21 @@ end
 
 local function SetTeamButtonText(button, top_entry)
    if top_entry.successChance then
-      local material_multiplier = top_entry.gr_rewards and top_entry.materialMultiplier > 1 and top_entry.materialMultiplier or nil
+      local xp_bonus
+      if top_entry.no_reward then
+         xp_bonus = 'NO'
+      else
+         xp_bonus = top_entry.xpBonus > 0 and top_entry.xpBonus or ''
+      end
+      local xp_bonus_icon = xp_bonus ~= '' and " |TInterface\\Icons\\XPBonus_Icon:0|t" or ''
+      local material_multiplier = top_entry.gr_rewards and top_entry.materialMultiplier > 1 and top_entry.materialMultiplier or ''
+      local material_multiplier_icon = material_multiplier ~= '' and garrison_currency_texture or ''
+
       button:SetFormattedText(
-         "%d%%\n%s%s%s",
+         "%d%%\n%s%s%s%s%s",
          top_entry.successChance,
-         top_entry.xpBonus > 0 and (top_entry.xpBonus .. " |TInterface\\Icons\\XPBonus_Icon:0|t") or "",
-         material_multiplier and (material_multiplier .. garrison_currency_texture) or "",
+         xp_bonus, xp_bonus_icon,
+         material_multiplier, material_multiplier_icon,
          top_entry.isMissionTimeImproved and time_texture or ""
       )
    else
@@ -449,7 +488,7 @@ CheckPartyForProfessionFollowers = function()
             local id, name, texPrefix, icon, description, rank, currencyID, currencyQty, goldQty, buildTime, needsPlan, isPrebuilt, possSpecs, upgrades, canUpgrade, isMaxLevel, hasFollowerSlot, knownSpecs, currSpec, specCooldown, isBuilding, startTime, buildDuration, timeLeftStr, canActivate = C_Garrison.GetOwnedBuildingInfo(plotID)
             -- print(nameLanding, hasFollowerSlot, rank, shipmentsReady)
             if hasFollowerSlot and rank and rank > 1 then -- TODO: check if just hasFollowerSlot is enough
-               local followerName, level, quality, displayID, followerID, garrFollowerID, status, portraitIconID = C_Garrison.GetFollowerInfoForBuilding(plotID)
+               local followerName, level, quality, displayID, followerID, garrFollowerID, status, portraitIconID = GetFollowerInfoForBuilding(plotID)
                if not followerName then
                   local possible_followers = C_Garrison.GetPossibleFollowersForBuilding(plotID)
                   if #possible_followers > 0 then
@@ -567,6 +606,7 @@ local function GarrisonMissionList_Update_More()
                      top_for_this_mission.gr_rewards = top1.gr_rewards
                      top_for_this_mission.xpBonus = top1.xpBonus
                      top_for_this_mission.isMissionTimeImproved = top1.isMissionTimeImproved
+                     top_for_this_mission.no_reward = top1.no_reward
                   end
                   top_for_mission[mission.missionID] = top_for_this_mission
                end
@@ -585,11 +625,265 @@ local function GarrisonMissionList_Update_More()
 
    if more_missions_to_cache and more_missions_to_cache > 0 then
       -- print(more_missions_to_cache, GetTime())
-      C_Timer.After(0.001, GarrisonMissionList_Update_More)
+      After(0.001, GarrisonMissionList_Update_More)
    end
 end
 hooksecurefunc("GarrisonMissionList_Update", GarrisonMissionList_Update_More)
 hooksecurefunc(GarrisonMissionFrame.MissionTab.MissionList.listScroll, "update", GarrisonMissionList_Update_More)
+
+local assign_remove_buildings_list = {}
+local assign_remove_building_names = {}
+local assign_remove_current_followers = {}
+local assign_followers_best = {}
+local assign_followers_status = {}
+local assign_remove_buildings_count
+local can_remove
+local can_assign
+local can_assign_busy
+
+local function GarrisonBuilding_UpdateAssignBestFollowers()
+   if assign_remove_buildings_count == 0 then return end
+   wipe(assign_followers_best)
+   for plotID, possible_followers in pairs(assign_remove_buildings_list) do  
+      local best_follower
+      for follower_idx = 1, #possible_followers do
+         local other_follower = possible_followers[follower_idx]
+         if not best_follower then
+            best_follower = other_follower
+         elseif other_follower.level > best_follower.level then
+            best_follower = other_follower
+         elseif other_follower.level == best_follower.level and other_follower.iLevel < best_follower.iLevel then
+            best_follower = other_follower
+         end
+      end
+      if best_follower then
+         assign_followers_best[plotID] = best_follower
+      end
+   end
+end
+
+GarrisonBuilding_UpdateCurrentFollowers = function()
+   if not GarrisonBuildingFrame:IsVisible() or assign_remove_buildings_count == 0 then return end
+   wipe(assign_remove_current_followers)
+   can_remove = nil
+   can_assign = nil
+   can_assign_busy = nil
+   for plotID in pairs(assign_remove_buildings_list) do
+      local followerName, level, quality, displayID, followerID, garrFollowerID, status, portraitIconID = GetFollowerInfoForBuilding(plotID)
+      if followerName then
+         assign_remove_current_followers[plotID] = followerName
+         can_remove = true
+      else
+         local status = GetFollowerStatus(assign_followers_best[plotID].followerID)
+         assign_followers_status[plotID] = status
+         can_assign_busy = true
+         if not status then
+            can_assign = true
+         end
+      end
+   end
+end
+
+local function GarrisonBuilding_UpdateAssignRemoveBuildings()
+   wipe(assign_remove_buildings_list)
+   local assign_remove_buildings_count = 0
+   local buildings = C_Garrison.GetBuildings()
+   for idx = 1, #buildings do
+      local building = buildings[idx]
+      local buildingID = building.buildingID
+      if buildingID then
+         local plotID = building.plotID
+         local possible_followers = C_Garrison.GetPossibleFollowersForBuilding(plotID)
+         if possible_followers and next(possible_followers) ~= nil then
+            assign_remove_buildings_list[plotID] = possible_followers
+            local id, name, texPrefix, icon, description, rank, currencyID, currencyQty, goldQty, buildTime, needsPlan, isPrebuilt, possSpecs, upgrades, canUpgrade, isMaxLevel, hasFollowerSlot, knownSpecs, currSpec, specCooldown, isBuilding, startTime, buildDuration, timeLeftStr, canActivate = C_Garrison.GetOwnedBuildingInfo(plotID)
+            assign_remove_building_names[plotID] = name
+            assign_remove_buildings_count = assign_remove_buildings_count + 1
+         end
+      end
+   end
+   GarrisonBuilding_UpdateAssignBestFollowers()
+   GarrisonBuilding_UpdateCurrentFollowers()
+end
+
+GarrisonBuilding_UpdateButtons = function ()
+   if assign_remove_in_progress or assign_remove_buildings_count == 0 then
+      gmm_buttons.remove_all_workers:Disable()
+      gmm_buttons.assign_all_workers:Hide()
+      gmm_buttons.assign_all_workers_disabled:Show()
+   else
+      if can_assign then
+         gmm_buttons.assign_all_workers:Show()
+         gmm_buttons.assign_all_workers:Enable()
+         gmm_buttons.assign_all_workers_disabled:Hide()
+      else
+         if can_assign_busy then
+            gmm_buttons.assign_all_workers:Hide()
+            gmm_buttons.assign_all_workers_disabled:Show()
+         else
+            gmm_buttons.assign_all_workers:Show()
+            gmm_buttons.assign_all_workers:Disable()
+            gmm_buttons.assign_all_workers_disabled:Hide()
+         end
+      end
+
+      if can_remove then
+         gmm_buttons.remove_all_workers:Enable()
+      else
+         gmm_buttons.remove_all_workers:Disable()
+      end
+   end
+end
+
+local function GarrisonBuilding_HideTooltip()
+   return GameTooltip:Hide()
+end
+
+local concat_list = {}
+local function RemoveAllWorkers_TooltipSetText()
+   wipe(concat_list)
+   local idx = 0
+   for plotID, followerName in pairs(assign_remove_current_followers) do
+      if idx ~= 0 then 
+         idx = idx + 1
+         concat_list[idx] = "\n"
+      end
+      idx = idx + 1
+      concat_list[idx] = followerName
+      idx = idx + 1
+      concat_list[idx] = " ("
+      idx = idx + 1
+      concat_list[idx] = assign_remove_building_names[plotID]
+      idx = idx + 1
+      concat_list[idx] = ")"
+   end
+   GameTooltip:SetText(table.concat(concat_list, ''))
+end
+
+local function AssignAllWorkers_TooltipSetText()
+   wipe(concat_list)
+   local idx = 0
+   for plotID, followerName in pairs(assign_remove_buildings_list) do
+      if not assign_remove_current_followers[plotID] then
+         local best_follower = assign_followers_best[plotID]
+         if idx ~= 0 then 
+            idx = idx + 1
+            concat_list[idx] = "\n"
+         end
+         local status = assign_followers_status[plotID]
+         if status then
+            idx = idx + 1
+            concat_list[idx] = RED_FONT_COLOR_CODE
+         end
+         idx = idx + 1
+         concat_list[idx] = best_follower.name
+         if status then
+            idx = idx + 1
+            concat_list[idx] = " - "
+            idx = idx + 1
+            concat_list[idx] = status
+         end
+         idx = idx + 1
+         concat_list[idx] = " ("
+         idx = idx + 1
+         concat_list[idx] = assign_remove_building_names[plotID]
+         idx = idx + 1
+         concat_list[idx] = ")"
+         if status then
+            idx = idx + 1
+            concat_list[idx] = FONT_COLOR_CODE_CLOSE
+         end
+      end
+   end
+   GameTooltip:SetText(table.concat(concat_list, ''))
+end
+
+local function AssignRemove_PerformInit()
+   PlaySound("gsTitleOptionOK")
+   event_frame:UnregisterEvent("GARRISON_BUILDING_UPDATE")
+   assign_remove_in_progress = true
+   GarrisonBuilding_UpdateButtons()
+end
+
+local function AssignRemove_PerformFinalize(sound)
+   assign_remove_in_progress = nil
+   GarrisonBuilding_UpdateCurrentFollowers()
+   GarrisonBuilding_UpdateButtons()
+   PlaySound(sound)
+   GarrisonBuildingFrame_OnShow(GarrisonBuildingFrame)
+   event_frame:RegisterEvent("GARRISON_BUILDING_UPDATE")
+end
+
+local function AssignAllWorkers_Perform()
+   assign_remove_in_progress = true
+   if not can_assign then return end
+   if not GarrisonBuildingFrame:IsVisible() then return end
+   GarrisonBuilding_UpdateCurrentFollowers()
+   local empty
+   for plotID in pairs(assign_remove_buildings_list) do
+      if not assign_remove_current_followers[plotID] then
+         local best_follower = assign_followers_best[plotID]
+         if not best_follower.status then
+            empty = true
+            AssignFollowerToBuilding(plotID, best_follower.followerID)
+         end
+      end
+   end
+   if not empty then
+      AssignRemove_PerformFinalize("UI_Garrison_CommandTable_AssignFollower")
+   else
+      After(0.001, AssignAllWorkers_Perform)
+   end
+end
+
+local function AssignAllWorkers()
+   if not GarrisonBuildingFrame:IsVisible() then return end
+
+   GarrisonBuilding_UpdateCurrentFollowers()
+   if can_assign then
+      AssignRemove_PerformInit()
+      AssignAllWorkers_Perform()
+   end
+end
+
+local function RemoveAllWorkers_Perform()
+   if not can_remove then return end
+   if not GarrisonBuildingFrame:IsVisible() then return end
+   local empty = true
+   GarrisonBuilding_UpdateCurrentFollowers()
+   for plotID, followerName in pairs(assign_remove_current_followers) do
+      if GetFollowerInfoForBuilding(plotID) then
+         empty = false
+         RemoveFollowerFromBuilding(plotID)
+      end
+   end
+   if empty then
+      AssignRemove_PerformFinalize("UI_Garrison_CommandTable_UnassignFollower")
+   else
+      After(0.001, RemoveAllWorkers_Perform)
+   end
+end
+
+local function RemoveAllWorkers()
+   if not GarrisonBuildingFrame:IsVisible() then return end
+
+   GarrisonBuilding_UpdateCurrentFollowers()
+   if can_remove then
+      AssignRemove_PerformInit()
+      RemoveAllWorkers_Perform()
+   end
+end
+
+GarrisonBuildingFrame:HookScript("OnShow", function()
+   assign_remove_in_progress = nil
+   GarrisonBuilding_UpdateAssignRemoveBuildings()
+   GarrisonBuilding_UpdateButtons()
+   event_frame:RegisterEvent("GARRISON_BUILDING_UPDATE")
+end)
+
+GarrisonBuildingFrame:HookScript("OnHide", function()
+   event_frame:UnregisterEvent("GARRISON_BUILDING_UPDATE")
+end)
 
 local function MissionPage_ButtonsInit()
    local prev
@@ -646,6 +940,58 @@ local function MissionList_ButtonsInit()
    -- GarrisonMissionFrame.MissionTab.MissionList.listScroll.scrollBar:SetFrameLevel(gmm_buttons['MissionList1']:GetFrameLevel() - 3)
 end
 
+local function GarrisonBuilding_ButtonsInit()
+   local anchor = GarrisonBuildingFrame
+
+   -- "Disabled" pseudo-button that still shows tooltip
+   local button = CreateFrame("Button", nil, anchor, "UIPanelButtonTemplate")
+   button:SetText(GARRISON_FOLLOWERS)
+   button:SetWidth(100)
+   button:SetHeight(50)
+   button:SetPoint("LEFT", anchor, "RIGHT", 0, 0)
+   button:SetPoint("TOP", anchor.InfoBox, "TOP", 0, 0)
+   button:SetScript('OnEnter', function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+      AssignAllWorkers_TooltipSetText()
+      GameTooltip:Show()
+   end)
+   button:SetScript('OnLeave', GarrisonBuilding_HideTooltip)
+   button:SetScript("OnMouseDown", nil)
+   button:SetScript("OnMouseUp", nil)
+   button:HookScript("OnShow", function(self) self:GetScript("OnDisable")(self) end)
+   gmm_buttons['assign_all_workers_disabled'] = button
+
+   local button = CreateFrame("Button", nil, anchor, "UIPanelButtonTemplate")
+   button:SetText(GARRISON_FOLLOWERS)
+   button:SetWidth(100)
+   button:SetHeight(50)
+   button:SetPoint("LEFT", anchor, "RIGHT", 0, 0)
+   button:SetPoint("TOP", anchor.InfoBox, "TOP", 0, 0)
+   button:SetScript('OnClick', AssignAllWorkers)
+   button:SetScript('OnEnter', function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+      AssignAllWorkers_TooltipSetText()
+      GameTooltip:Show()
+   end)
+   button:SetScript('OnLeave', GarrisonBuilding_HideTooltip)
+   gmm_buttons['assign_all_workers'] = button
+   local prev = button
+
+   local button = CreateFrame("Button", nil, anchor, "UIPanelButtonTemplate")
+   button:SetText(REMOVE)
+   button:SetWidth(100)
+   button:SetHeight(50)
+   button:SetPoint("TOPLEFT", prev, "BOTTOMLEFT", 0, 0)
+   button:SetScript('OnClick', RemoveAllWorkers)
+   button:SetScript('OnEnter', function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+      RemoveAllWorkers_TooltipSetText()
+      GameTooltip:Show()
+   end)
+   button:SetScript('OnLeave', GarrisonBuilding_HideTooltip)
+   gmm_buttons['remove_all_workers'] = button
+end
+
 local function MissionPage_WarningInit()
    for idx = 1, #MissionPageFollowers do
       local follower_frame = MissionPageFollowers[idx]
@@ -660,6 +1006,7 @@ end
 
 MissionPage_ButtonsInit()
 MissionList_ButtonsInit()
+GarrisonBuilding_ButtonsInit()
 MissionPage_WarningInit()
 hooksecurefunc("GarrisonMissionPage_ShowMission", BestForCurrentSelectedMission)
 -- local count = 0
@@ -694,7 +1041,7 @@ hooksecurefunc(GarrisonFollowerOptionDropDown, "initialize", function(self)
    local follower = C_Garrison.GetFollowerInfo(followerID)
    if follower and follower.isCollected then
       info_ignore_toggle.arg1 = followerID
-      info_ignore_toggle.text = ingored_followers[followerID] and "GMM: Unignore" or "GMM: Ignore"
+      info_ignore_toggle.text = ingored_followers[followerID] and "GMM: 还原" or "GMM: 忽略"
       local old_num_buttons = DropDownList1.numButtons
       local old_last_button = _G["DropDownList1Button" .. old_num_buttons]
       local old_is_cancel = old_last_button.value == CANCEL
@@ -755,28 +1102,6 @@ local function GarrisonFollowerList_Update_More(self)
    end
 end
 hooksecurefunc("GarrisonFollowerList_Update", GarrisonFollowerList_Update_More)
-
-function GMM_RemoveAllWorkers()
-   if not GarrisonBuildingFrame:IsVisible() then return end
-
-   local removed
-   local buildings = C_Garrison.GetBuildings()
-   for idx = 1, #buildings do
-      local building = buildings[idx]
-      local buildingID = building.buildingID;
-      if buildingID then
-         local plotID = building.plotID
-         local followerName, level, quality, displayID, followerID, garrFollowerID, status, portraitIconID = C_Garrison.GetFollowerInfoForBuilding(plotID)
-         if followerName then
-            print(followerName)
-            C_Garrison.RemoveFollowerFromBuilding(plotID)
-            removed = true
-         end
-      end
-   end
-   if removed then C_Timer.After(0.001, RemoveAllWorkers) end
-end
-
 
 -- Globals deliberately exposed for people outside
 function GMM_Click(button_name)

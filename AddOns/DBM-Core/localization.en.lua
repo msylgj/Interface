@@ -13,6 +13,7 @@ DBM_CORE_LOAD_GUI_ERROR				= "Could not load GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will be loaded out of combat. After GUI loaded, you can load GUI in combat."
 DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your timers will likely not work correctly and generate several lua errors. This is often caused by 3rd party mods trying to apply skin changes in combat. Recommended to reloadui after you leave combat"
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
+DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
 DBM_CORE_BLIZZ_BUGS					= "Blizzard change with Addons in 6.0:\n1. If you play with sound effects enabled, you may lose addon sounds in combat if number of simultaneous sounds exceeds your max sound channels. Mods get set to lower channel priority. To work around this, DBM now force sets your sound channels to 64 automatically. If you still experience mod sound loss, only work around is to disable 'Sound Effects' completely."
 
@@ -51,6 +52,27 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s was engaged %s ago, recovering timers..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor logging started."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
+DBM_CORE_PROFILE_CREATED			= "'%s' profile created."
+DBM_CORE_PROFILE_CREATE_ERROR		= "Create profile failed. Invalid profile name."
+DBM_CORE_PROFILE_APPLIED			= "'%s' profile applied."
+DBM_CORE_PROFILE_APPLY_ERROR		= "Apply profile failed. '%s' profile does not exist."
+DBM_CORE_PROFILE_DELETED			= "'%s' profile deleted. 'Default' profile will be applied."
+DBM_CORE_PROFILE_DELETE_ERROR		= "Delete profile failed. '%s' profile does not exist."
+DBM_CORE_PROFILE_CANNOT_DELETE		= "Cannot delete 'Default' profile."
+DBM_CORE_MPROFILE_COPY_SUCCESS		= "%s's (%d spec) mod settings have been copied."
+DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "Cannot copy character settings to itself"
+DBM_CORE_MPROFILE_COPY_S_ERROR		= "Source is corrupted. Settings not copied or partly copied. Copy failed."
+DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s's (%d spec) mod sound settings have been copied."
+DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "Cannot copy character sound settings to itself"
+DBM_CORE_MPROFILE_COPYS_S_ERROR		= "Source is corrupted. Sound settings not copied or partly copied. Copy failed."
+DBM_CORE_MPROFILE_DELETE_SUCCESS	= "%s's (%d spec) mod settings deleted."
+DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "Cannot delete mod settings currently in use."
+DBM_CORE_MPROFILE_DELETE_S_ERROR	= "Source is corrupted. Settings not deleted or partly deleted. Delete failed."
+
+DBM_CORE_ALLMOD_DEFAULT_LOADED		= "Default options for all mods in this instance have been loaded."
+DBM_CORE_ALLMOD_STATS_RESETED		= "All mod stats have been reset."
+DBM_CORE_MOD_DEFAULT_LOADED			= "Default options for this fight have been loaded."
+
 DBM_CORE_WORLDBOSS_ENGAGED			= "%s was possibly engaged on your realm at %s percent health. (Sent by %s)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s was possibly defeated on your realm (Sent by %s)."
 
@@ -72,9 +94,12 @@ DBM_CORE_GENERIC_TIMER_COMBAT		= "Combat starts"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Show timer for combat start"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Show boss health frame"
 
-DBM_CORE_OPTION_CATEGORY_TIMERS		= "Bars"
-DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Announces"
-DBM_CORE_OPTION_CATEGORY_SOUNDS		= "Sounds"
+DBM_CORE_OPTION_CATEGORY_TIMERS			= "Bars"
+DBM_CORE_OPTION_CATEGORY_WARNINGS		= "General Announces"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_YOU	= "Personal Announces"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_OTHER	= "Target Announces"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_ROLE	= "Role Announces"
+DBM_CORE_OPTION_CATEGORY_SOUNDS			= "Sounds"
 
 DBM_CORE_AUTO_RESPONDED						= "Auto-responded."
 DBM_CORE_STATUS_WHISPER						= "%s: %s, %d/%d people alive"
@@ -114,6 +139,7 @@ DBM_CORE_UPDATEREMINDER_HOTFIX			= "Your version of DBM will have incorrect time
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible. If you are getting this message on 6.0 beta, download beta mod here: http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing"
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "WARNING: You are using a version of Deadly Boss Mods not intended to be used with this game version. Please make sure you download the appropriate version for your game client from deadlybossmods.com or curse."
 DBM_CORE_VEM							= "WARNING: You are running both Deadly Boss Mods and Voice Encounter Mods. DBM will not run in this configuration and therefore will not be loaded."
+DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed to avoid conflict."
 
 DBM_CORE_MOVABLE_BAR				= "Drag me!"
 
@@ -169,6 +195,7 @@ DBM_CORE_LEFT						= "Left"
 DBM_CORE_RIGHT						= "Right"
 DBM_CORE_BACK						= "Back"--BACK
 DBM_CORE_FRONT						= "Front"
+DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
 DBM_CORE_BREAK_START				= "Break starting now -- you have %s minute(s)! (Sent by %s)"
 DBM_CORE_BREAK_MIN					= "Break ends in %s minute(s)!"
@@ -221,27 +248,29 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 }
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
-	spell		= "%s!",
-	ends		= "%s ended",
-	fades		= "%s faded",
-	soon		= "%s soon",
-	prewarn		= "%s in %s",
-	dispel		= "%s on >%%s< - dispel now",
-	interrupt	= "%s - interrupt >%%s<!",
-	you			= "%s on you",
-	target		= "%s on >%%s<",
-	taunt		= "%s on >%%s< - taunt now",
-	close		= "%s on >%%s< near you",
-	move		= "%s - move away",
-	dodge		= "%s - dodge attack",
-	moveaway	= "%s - move away from others",
-	moveto		= "%s - move to >%%s<",
-	run			= "%s - run away",
-	cast		= "%s - stop casting",
-	reflect		= "%s on >%%s< - stop attacking",
-	count		= "%s! (%%d)",
-	stack		= "%%d stacks of %s on you",
-	switch		= ">%s< - switch targets"
+	spell			= "%s!",
+	ends			= "%s ended",
+	fades			= "%s faded",
+	soon			= "%s soon",
+	prewarn			= "%s in %s",
+	dispel			= "%s on >%%s< - dispel now",
+	interrupt		= "%s - interrupt >%%s<!",
+	interruptcount	= "%s - interrupt >%%s<! (%%d)",
+	you				= "%s on you",
+	target			= "%s on >%%s<",
+	taunt			= "%s on >%%s< - taunt now",
+	close			= "%s on >%%s< near you",
+	move			= "%s - move away",
+	dodge			= "%s - dodge attack",
+	moveaway		= "%s - move away from others",
+	moveto			= "%s - move to >%%s<",
+	run				= "%s - run away",
+	cast			= "%s - stop casting",
+	reflect			= "%s on >%%s< - stop attacking",
+	count			= "%s! (%%d)",
+	stack			= "%%d stacks of %s on you",
+	switch			= ">%s< - switch targets",
+	switchcount		= ">%s< - switch targets (%%d)"
 }
 
 -- Auto-generated Special Warning Localizations
@@ -268,6 +297,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	stack 		= "Show special warning when you are affected by >=%d stacks of $spell:%s",
 	switch		= "Show special warning to switch targets for $spell:%s"
 }
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {

@@ -211,7 +211,7 @@ list:RegisterEvent("CHAT_MSG_BN_WHISPER")
 list:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 
 list:SetScript("OnEvent", function (self, event, text, name, _, _, _, status, _, _, _, _, _, guid, BNguid)
-	if type(text) ~= "string" or type(name) ~= "string" or (BNguid == 0 and (type(guid) ~= "string")) or WhisperPop:IsIgnoredMessage(text) or status == "DND" then
+	if type(text) ~= "string" or type(name) ~= "string" or (BNguid == 0 and (type(guid) ~= "string")) or WhisperPop:IsIgnoredMessage(text) or WhisperPop:IsFilterMessage(text) or status == "DND" then
 		return
 	end
 	local bnFriend = event == "CHAT_MSG_BN_WHISPER" or event == "CHAT_MSG_BN_WHISPER_INFORM"

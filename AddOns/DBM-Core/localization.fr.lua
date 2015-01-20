@@ -1,5 +1,5 @@
 ﻿if GetLocale() ~= "frFR" then return end
-DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant www.deadlybossmods.com ou en envoyant un message à tandanu@deadlybossmods.com ou à nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Bienvenue sur DBM. Tapez /dbm help pour une liste des commandes supportées. Pour accédez aux options, tapez /dbm dans la fenêtre de discussion pour commencer la configuration. Chargez des zones spécifiques manuellement pour configurer tous les paramètres spécifiques aux boss selon vos envies. DBM essaie de le faire pour vous en analysant votre spécialisation au premier lancement, mais nous savons que de toute façon certaines personnes souhaitant activer d'autres options."
 
 DBM_FORUMS_MESSAGE                                      = "Tu as remarqué un bug ou un timer mal réglé? Tu penses que certains combats ont besoin de plus d'alertes, timers ou autres fonctionnalités?\nVisite le nouveau sujet sur DBM, les rapports de bug et propositions sur le forum à l'adresse suivante: |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
@@ -196,21 +196,23 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.fades           = "%s s'est dissipé"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon            = "%s bientôt"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn         = "%s dans %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s on >%%s< - dissipez maintenant"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompez >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s - interrompez >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s - interrompez >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you             = "%s sur vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s sur >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt           = "%s sur >%%s< - provoquez maintenant"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s sur >%%s< près de vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - écartez-vous"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME (this is a temp until localized properly as a dodge warning)
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway        = "%s - écartez-vous du raid"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto          = "%s - dirigez-vous vers >%%s<"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - fuyez"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - arrêtez d'incanter"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect         = "%s sur >%%s< - arrêtez d'attaquer"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.count           = "%s! (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway      = "%s - écartez-vous du raid"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto        = "%s - dirigez-vous vers >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.run			= "%s - fuyez"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast			= "%s - arrêtez d'incanter"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect       = "%s sur >%%s< - arrêtez d'attaquer"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.count         = "%s! (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - Changer de cible"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Changer de cible (%%d)"
 
 
 -- Auto-generated Special Warning Localizations
@@ -235,6 +237,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect         = "Afficher une alerte spéciale
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count           = "Afficher une alerte spéciale pour $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Afficher une alerte spéciale lorsque vous cumulez >=%d stacks de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 		= "Afficher une alerte spéciale de changement de cible pour\n $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"

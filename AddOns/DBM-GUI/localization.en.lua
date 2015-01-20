@@ -191,10 +191,9 @@ L.HP_ShowDemo				= "Show HP frame"
 L.BarWidth					= "Bar width: %d"
 
 -- Tab: Global Filter
-L.Panel_SpamFilter			= "Global and Spam Filters"
-L.Area_SpamFilter_Outgoing	= "Global Filter Options"
+L.Panel_SpamFilter			= "Global Disables and Filters"
+L.Area_SpamFilter_Outgoing	= "Global Disable Options"
 L.SpamBlockNoShowAnnounce	= "Do not show announces or play warning sounds"
-L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
 L.SpamBlockNoSendWhisper	= "Do not send boss warning whispers to other players"
 L.SpamBlockNoSetIcon		= "Do not set icons on targets"
 L.SpamBlockNoRangeFrame		= "Do not show range frame"
@@ -204,6 +203,7 @@ L.SpamBlockNoCountdowns		= "Do not play countdown sounds"
 
 -- Tab: Spam Filter
 L.Area_SpamFilter			= "Spam Filter Options"
+L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
 L.StripServerName			= "Strip realm name in warnings and timers"
 L.SpamBlockBossWhispers		= "Filter &lt;DBM&gt; warning whispers while fighting"
 L.ShowBBOnCombatStart		= "Perform Big Brother buff check on combat start"
@@ -266,6 +266,24 @@ L.PizzaTimer_Mins 			= "Min"
 L.PizzaTimer_Secs 			= "Sec"
 L.PizzaTimer_ButtonStart 	= "Start timer"
 L.PizzaTimer_BroadCast		= "Broadcast to raid"
+
+L.Panel_Profile				= "Profiles"
+L.Area_CreateProfile        = "Profile Creation"
+L.EnterProfileName			= "Enter profile name"
+L.CreateProfile				= "Create profile for DBM Core Options"
+L.Area_ApplyProfile			= "Set Active Profile for DBM Core Options"
+L.SelectProfileToApply		= "Select profile to apply"
+L.Area_DeleteProfile		= "Remove Profile for DBM Core Options"
+L.SelectProfileToDelete		= "Select profile to delete"
+L.Area_DualProfile			= "Boss mod profile options"
+L.DualProfile				= "Enable support for different boss mod options per spec. (Managing of boss mod profiles is done from loaded boss mod stats screen)"
+
+L.Area_ModProfile			= "Copy mod settings from another char/spec or delete mod settings"
+L.ModAllReset				= "Reset all mod settings"
+L.ModAllStatReset			= "Reset all mod stats"
+L.SelectModProfileCopy		= "Copy all settings from"
+L.SelectModProfileCopySound	= "Copy just sound setting from"
+L.SelectModProfileDelete	= "Delete mod settings for"
 
 -- Misc
 L.FontHeight	= 16

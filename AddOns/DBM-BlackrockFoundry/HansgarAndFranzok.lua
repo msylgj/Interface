@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1155, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12426 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(76974, 76973)
 mod:SetEncounterID(1693)
 mod:SetZone()
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 --TODO, find target scanning for skullcracker. Also, find out how it behaves when it's more than 1 target (just recast?)
 --TODO, maybe use http://beta.wowhead.com/spell=154785 for aftershock/Shattered Vertebrae instead?'
 local warnSkullcracker					= mod:NewSpellAnnounce(153470, 3, nil, false)--This seems pretty worthless.
-local warnShatteredVertebrae			= mod:NewStackAnnounce(157139, 2, nil, mod:IsTank())
+local warnShatteredVertebrae			= mod:NewStackAnnounce(157139, 2, nil, "Tank")
 local warnSearingPlates					= mod:NewSpellAnnounce(161570, 4)--Types
 local warnPulverized					= mod:NewSpellAnnounce(174825, 4)--Types
 

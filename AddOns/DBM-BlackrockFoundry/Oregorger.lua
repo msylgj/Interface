@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1202, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12426 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(77182)
 mod:SetEncounterID(1696)
 mod:SetZone()
@@ -30,10 +30,10 @@ local warnHungerDrive				= mod:NewSpellAnnounce(165127, 4)
 local warnHungerDriveStack			= mod:NewStackAnnounce(155819, 3, nil, false)--Similar to thok, count may be useful measure of how long to drag phase out for.
 
 local specWarnBlackrockBarrage		= mod:NewSpecialWarningInterrupt(156877, false)--Strategy dependant
-local specWarnAcidTorrent			= mod:NewSpecialWarningSpell(156240, mod:IsTank(), nil, nil, 3)
+local specWarnAcidTorrent			= mod:NewSpecialWarningSpell(156240, "Tank", nil, nil, 3)
 local yellRetchedBlackrock			= mod:NewYell(156179)
 local specWarnRetchedBlackrock		= mod:NewSpecialWarningMove(156203, nil, nil, nil, nil, nil, true)
-local specWarnExplosiveShard		= mod:NewSpecialWarningDodge(156390, mod:IsMelee())--No target scanning available. prefers melee if I remember correctly. Double check this!
+local specWarnExplosiveShard		= mod:NewSpecialWarningDodge(156390, "Melee")--No target scanning available. prefers melee if I remember correctly. Double check this!
 local specWarnHungerDrive			= mod:NewSpecialWarningSpell(165127, nil, nil, nil, 2)
 local specWarnHungerDriveEnded		= mod:NewSpecialWarningFades(165127)
 

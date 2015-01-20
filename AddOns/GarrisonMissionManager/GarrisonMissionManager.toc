@@ -1,11 +1,11 @@
 ## Interface: 60000
-## X-Curse-Packaged-Version: v16
+## X-Curse-Packaged-Version: v18
 ## X-Curse-Project-Name: Garrison Mission Manager
 ## X-Curse-Project-ID: garrison-mission-manager
 ## X-Curse-Repository-ID: wow/garrison-mission-manager/mainline
 
-## Title: 要塞任务管理器
-## Version: v16
+## Title: 要塞任务管家
+## Version: v18
 ## Notes: Assists you with selecting best team for garrison missions
 ## Author: Oleg "Rowaa[SR13]" Volkov
 

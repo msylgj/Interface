@@ -1,9 +1,0 @@
-
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="Tip.lua"/>
-	<Script file="Itemicons.lua"/>
-	<Script file="ReforgeInfo.lua"/>
-	<Script file="Itemlevel.lua"/>
-	<Script file="Talent.lua"/>
-	<Script file="Raidrole.lua"/>
-</Ui>

@@ -1,6 +1,6 @@
 ﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 
-DBM_CORE_NEED_SUPPORT				= "¿Eres bueno programando o con los idiomas? Si es así, el Equipo DBM necesita tu ayuda para mantener el DBM como el mejor BossMod del WoW. Únete al equipo visitando www.deadlybossmods.com o enviando un mensaje a tandanu@deadlybossmods.com o nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "¿Eres bueno programando o con los idiomas? Si es así, el Equipo DBM necesita tu ayuda para mantener el DBM como el mejor BossMod del WoW. Únete al equipo visitando http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Bienvenido a DBM. Para acceder a las opciones escribe /dbm en tu chat para empezar a configurarlo. Puedes cargar las zonas manualmente para configurar las opciones específicas de cada Boss a tu gusto. DBM intenta hacer esto escaneando tu clase la primera vez que se inicia, pero quizás quieras más alertas de las que necesita tu clase."
 
 DBM_FORUMS_MESSAGE					= "¿Has encontrado un bug o un temporizador no va bien? ¿Piensas que algún jefe necesita un algún aviso adicional, un nuevo temporizador o alguna otra funcionalidad?\nVisita los nuevos foros de discusión, informe de bugs y solicitud de nuevas funcionalidades de Deadly Boss Mods en |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (puedes pulsar el enlace para copiar la URL)"
@@ -192,6 +192,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon		= "%s pronto"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn		= "%s en %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s en >%%s< - ¡dispelea ahora!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - ¡interrumpe >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - ¡interrumpe >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "¡%s en ti!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s en >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s en >%%s< cerca tuyo"
@@ -203,6 +204,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s en >%%s< - ¡para de atacar!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count		= "%s! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%%d acumulaciones de %s en ti"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - ¡cambio de objetivos!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - ¡cambio de objetivos! (%%d)"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Mostrar aviso especial para $spell:%s"
@@ -223,6 +225,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 	= "Mostrar aviso especial para parar de
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 		= "Mostrar aviso especial para $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Mostrar aviso especial cuando tienes >=%d acumulaciones de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Mostrar aviso especial para cambiar objetivos con $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"

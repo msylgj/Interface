@@ -14,6 +14,7 @@ DBM_CORE_LOAD_GUI_ERROR				= "Не удалось загрузить GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI не может быть изначально загружено в бою. GUI будет загружено после боя. После загрузки GUI вы сможете загружать его в бою."
 DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your timers will likely not work correctly and generate several lua errors. This is often caused by 3rd party mods trying to apply skin changes in combat. Recommended to reloadui after you leave combat"
 DBM_CORE_BAD_LOAD					= "DBM не удалось полностью загрузить модуль для этого подземелья, т.к. вы находитесь в режиме боя. Как только вы выйдите из боя, пожалуйста сделайте /console reloadui как можно скорее."
+DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s не может быть загружен потому что ваш DBM-Core не соответствует требованиям. Требуется обновленная версия."
 
 DBM_CORE_BLIZZ_BUGS					= "Обнаружены следующие баги с аддонами в 6.0:\n1. Если у вас включены звуковые эффекты, то звуки аддонов будут иногда пропадать в бою. Это происходит если одновременное количество звуковых эффектов превышает количество максимальных звуковых каналов (см. настройки звука). В патче 6.0 для звуков аддонов был установлен минимальный приоритет."
 
@@ -52,6 +53,27 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s был атакован %s назад, в
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Логирование с помощью Transcriptor начато."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Логирование с помощью Transcriptor окончено."
 
+DBM_CORE_PROFILE_CREATED			= "Профиль '%s' создан."
+DBM_CORE_PROFILE_CREATE_ERROR		= "Не удалось создать профиль. Некорректное имя профиля."
+DBM_CORE_PROFILE_APPLIED			= "Профиль '%s' применен."
+DBM_CORE_PROFILE_APPLY_ERROR		= "Не удалось применить профиль. Профиль '%s' не существует."
+DBM_CORE_PROFILE_DELETED			= "Профиль '%s' удален. Профиль 'По умолчанию' будет применен."
+DBM_CORE_PROFILE_DELETE_ERROR		= "Не удалось удалить профиль. Профиль '%s' не существует."
+DBM_CORE_PROFILE_CANNOT_DELETE		= "Невозможно удалить профиль 'По умолчанию'."
+DBM_CORE_MPROFILE_COPY_SUCCESS		= "Настройки модуля от %s (специализация %d) были скопированы."
+DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "Невозможно скопировать настройки персонажа сами в себя."
+DBM_CORE_MPROFILE_COPY_S_ERROR		= "Источник поврежден. Настройки не скопированы или скопированы частично. Скопировать не удалось."
+DBM_CORE_MPROFILE_COPYS_SUCCESS		= "Звуковые настройки модуля от %s (специализация %d) были скопированы."
+DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "Невозможно скопировать звуковые настройки персонажа сами в себя."
+DBM_CORE_MPROFILE_COPYS_S_ERROR		= "Источник поврежден. Звуковые настройки не скопированы или скопированы частично. Скопировать не удалось."
+DBM_CORE_MPROFILE_DELETE_SUCCESS	= "Настройки модуля от %s (специализация %d) были удалены."
+DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "Невозможно удалить настройки модуля, используемого в данный момент."
+DBM_CORE_MPROFILE_DELETE_S_ERROR	= "Источник поврежден. Настройки не удалены или удалены частично. Удалить не удалось."
+
+DBM_CORE_ALLMOD_DEFAULT_LOADED		= "Настройки по умолчанию были загружены для всех модулей в этом подземелье."
+DBM_CORE_ALLMOD_STATS_RESETED		= "Вся статистика модуля была сброшена."
+DBM_CORE_MOD_DEFAULT_LOADED			= "Настройки по умолчанию для этого боя были загружены."
+
 DBM_CORE_WORLDBOSS_ENGAGED			= "В вашем игровом мире возможно начался бой с %s (%s процентов здоровья, отправил %s)."
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s возможно был побежден в вашем игровом мире (отправил %s)."
 
@@ -73,12 +95,15 @@ DBM_CORE_GENERIC_TIMER_COMBAT		= "Бой начинается"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Отсчет времени до начала боя"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Отображать здоровье босса"
 
-DBM_CORE_OPTION_CATEGORY_TIMERS		= "Индикаторы"
-DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Предупреждения"
-DBM_CORE_OPTION_CATEGORY_SOUNDS		= "Звуки"
+DBM_CORE_OPTION_CATEGORY_TIMERS			= "Индикаторы"
+DBM_CORE_OPTION_CATEGORY_WARNINGS		= "Общие предупреждения"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_YOU	= "Персональные предупреждения"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_OTHER	= "Предупреждения для цели"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_ROLE	= "Предупреждения для роли"
+DBM_CORE_OPTION_CATEGORY_SOUNDS			= "Звуки"
 
-DBM_CORE_AUTO_RESPONDED				= "Авто-ответ."
-DBM_CORE_STATUS_WHISPER				= "%s: %s, %d/%d человек живые"
+DBM_CORE_AUTO_RESPONDED						= "Авто-ответ."
+DBM_CORE_STATUS_WHISPER						= "%s: %s, %d/%d человек живые"
 --Bosses
 DBM_CORE_AUTO_RESPOND_WHISPER				= "%s сейчас занят, в бою против %s (%s, %d/%d человек живые)"
 DBM_CORE_WHISPER_COMBAT_END_KILL			= "%s одержал победу над %s!"
@@ -115,6 +140,7 @@ DBM_CORE_UPDATEREMINDER_HOTFIX			= "Ваша версия DBM будет име�
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "ПРЕДУПРЕЖДЕНИЕ: Из-за того, что ваш Deadly Boss Mods устарел, он был отключен до обновления, т.к. это большой игровой патч. Это необходимо для того, чтобы старый и несовместимый код не приводил к ухудшению игрового опыта для вас и членов вашего рейда. Убедитесь что вы скачали новую версию с deadlybossmods.com или curse.com как только она станет доступна."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "WARNING: You are using a version of Deadly Boss Mods not intended to be used with this game version. Please make sure you download the appropriate version for your game client from deadlybossmods.com or curse."
 DBM_CORE_VEM							= "ПРЕДУПРЕЖДЕНИЕ: Вы используете Deadly Boss Mods и Voice Encounter Mods одновременно. DBM не был загружен, т.к. эти два аддона не могут работать вместе."
+DBM_CORE_3RDPROFILES					= "ПРЕДУПРЕЖДЕНИЕ: DBM-Profiles не совместим с этой версией DBM. Он должен быть удален прежде чем DBM сможет продолжить, чтобы избежать конфликтов."
 
 DBM_CORE_MOVABLE_BAR				= "Перетащите!"
 
@@ -170,6 +196,7 @@ DBM_CORE_LEFT						= "Налево"
 DBM_CORE_RIGHT						= "Направо"
 DBM_CORE_BACK						= "Назад"
 DBM_CORE_FRONT						= "Вперед"
+DBM_CORE_INTERMISSION				= "Переходная фаза"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
 DBM_CORE_BREAK_START				= "Перерыв начинается -- у вас есть %s мин.!"
 DBM_CORE_BREAK_MIN					= "Перерыв заканчивается через %s мин.!"
@@ -224,6 +251,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon		= "Скоро %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn	= "%s через %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel 	= "%s на |3-5(>%%s<) - рассейте заклинание"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - прервите"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - прервите (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you 		= "%s на вас"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target 	= "%s на |3-5(>%%s<)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt		= "%s на >%%s< - затаунти"
@@ -238,6 +266,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect 	= "%s на |3-5(>%%s<) - прекрати
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count 	= "%s! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack 	= "На вас %%d стаков от %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch 	= ">%s< - переключитесь"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount 	= ">%s< - переключитесь (%%d)"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Спец-предупреждение для $spell:%s"
@@ -261,6 +290,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 	= "Спец-предупреждени�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 		= "Спец-предупреждение для $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Спец-предупреждение, когда на вас >=%d стаков $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Спец-предупреждение о смене цели для $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target 		= "%s: >%%s<"
@@ -292,7 +323,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS.nextsource	= "Отсчет времени до сл�
 DBM_CORE_AUTO_TIMER_OPTIONS.nextspecial	= "Отсчет времени до следующей спец-способности"
 DBM_CORE_AUTO_TIMER_OPTIONS.achievement = "Отсчет времени для %s"
 DBM_CORE_AUTO_TIMER_OPTIONS.phase		= "Отсчет времени до следующей фазы"
-
+DBM_CORE_AUTO_TIMER_OPTIONS.roleplay	= "Отсчет времени для ролевой игры"
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Устанавливать метки на цели заклинания $spell:%s"
 DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Устанавливать метки на $spell:%s"

@@ -41,6 +41,7 @@ do
 	local BackDropTable = { bgFile = "" }
 
 	local TabFrame1 = CreateFrame("Frame", "DBM_GUI_DropDown", UIParent)
+	local ClickFrame = CreateFrame("Button", nil, UIParent)
 
 	TabFrame1:SetBackdrop({
 		bgFile="Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -135,6 +136,7 @@ do
 				if values[i+self.offset].font then
 					_G[self.buttons[i]:GetName().."NormalText"]:SetFont(values[i+self.offset].font, values[i+self.offset].fontsize or 14)
 				else
+					_G[self.buttons[i]:GetName().."NormalText"]:SetFont(STANDARD_TEXT_FONT, 10)
 					_G[self.buttons[i]:GetName().."NormalText"]:SetFontObject(GameFontHighlightSmall)
 				end
 				self.buttons[i]:Show()
@@ -154,6 +156,7 @@ do
 		for k, button in pairs(self.buttons) do
 			button:SetWidth(width)
 		end
+		ClickFrame:Show()
 	end
 
 	function TabFrame1:HideMenu()
@@ -166,12 +169,21 @@ do
 		self:SetWidth(default_button_width+22)
 		self:Hide()
 		self.text:Hide()
+		ClickFrame:Hide()
 	end
 
 	function TabFrame1:Refresh()
 		self:ShowMenu(self.dropdown.values)
 	end
 	
+	ClickFrame:SetAllPoints(DBM_GUI_OptionsFrame)
+	ClickFrame:SetFrameStrata("TOOLTIP")
+	ClickFrame:RegisterForClicks("AnyDown")
+	ClickFrame:Hide()
+	ClickFrame:SetScript("OnClick", function()
+		TabFrame1:HideMenu()
+	end)
+
 	------------------------------------------------------------------------------------------
 	
 	local dropdownPrototype = CreateFrame("Frame")
@@ -188,7 +200,7 @@ do
 		end
 	end
 	
-	function DBM_GUI:CreateDropdown(title, values, selected, callfunc, width, parent)
+	function DBM_GUI:CreateDropdown(title, values, vartype, var, callfunc, width, height, parent)
 		local FrameTitle = "DBM_GUI_DropDown"
 		
 		-- Check Values
@@ -212,6 +224,7 @@ do
 			end
 		end
 		dropdown:SetWidth(width + 30)	-- required to fix some setpoint problems
+		dropdown:SetHeight(height or 32)
 		_G[dropdown:GetName().."Text"]:SetWidth(width + 30)
 		_G[dropdown:GetName().."Text"]:SetJustifyH("LEFT")
 		_G[dropdown:GetName().."Middle"]:SetWidth(width + 30)
@@ -231,23 +244,24 @@ do
 				TabFrame1:ShowMenu(self:GetParent().values)
 			end
 		end)
-		
-		for k,v in next, dropdown.values do
-			if v.value ~= nil and v.value == selected or v.text == selected then
-				_G[dropdown:GetName().."Text"]:SetText(v.text)
-				dropdown.value = v.value
-				dropdown.text = v.text
-			end
-		end
-		
+
 		if not (not title or title == "") then
 			dropdown.titletext = dropdown:CreateFontString(FrameTitle..self:GetCurrentID().."Text", 'BACKGROUND')
-			dropdown.titletext:SetPoint('BOTTOMLEFT', dropdown, 'TOPLEFT', 21, 0)
+			dropdown.titletext:SetPoint('BOTTOMLEFT', dropdown, 'TOPLEFT', 21, 1)
 			dropdown.titletext:SetFontObject('GameFontNormalSmall')
 			dropdown.titletext:SetText(title)
 		end
 		
 		local obj = setmetatable(dropdown, {__index = dropdownPrototype})
+
+		if vartype and vartype == "DBM" and DBM.Options[var] ~= nil then
+			dropdown:SetScript("OnShow", function() dropdown:SetSelectedValue(DBM.Options[var]) end)
+		elseif vartype and vartype == "DBT" then
+			dropdown:SetScript("OnShow", function() dropdown:SetSelectedValue(DBM.Bars:GetOption(var)) end)
+		elseif vartype then
+			dropdown:SetScript("OnShow", function() dropdown:SetSelectedValue(vartype.Options[var]) end)
+		end
+
 		return obj
 	end
 end

@@ -1690,7 +1690,7 @@ local function CreateBossStyle(self, unit, isSingle)
 	lib.AltPowerBar(self)
 	lib.createBuffs(self)
 	lib.createDebuffs(self)
-	self.Health.frequentUpdates = false
+	self.Health.frequentUpdates = true
 	if Qulight["unitframes"].showPortrait then lib.gen_portrait(self) end
 end
 local function CreateMTStyle(self)

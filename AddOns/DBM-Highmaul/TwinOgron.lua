@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12425 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12467 $"):sub(12, -3))
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
@@ -36,28 +36,31 @@ local specWarnArcaneVolatility		= mod:NewSpecialWarningMoveAway(163372, nil, nil
 local yellArcaneVolatility			= mod:NewYell(163372)--Mythic
 --Pol
 local specWarnShieldCharge			= mod:NewSpecialWarningSpell(158134, nil, nil, nil, 2, nil, true)
-local specWarnInterruptingShout		= mod:NewSpecialWarningCast("OptionVersion2", 158093, mod:IsSpellCaster())
+local specWarnInterruptingShout		= mod:NewSpecialWarningCast("OptionVersion2", 158093, "SpellCaster")
 local specWarnPulverize				= mod:NewSpecialWarningSpell(158385, nil, nil, nil, 2, nil, true)
 local specWarnArcaneCharge			= mod:NewSpecialWarningSpell(163336, nil, nil, nil, 2)
 
 --Phemos (100-106 second full rotation, 33-34 in between)
+mod:AddTimerLine((EJ_GetSectionInfo(9590)))
 local timerEnfeeblingRoarCD			= mod:NewNextCountTimer(33, 158057)
 local timerWhirlwindCD				= mod:NewNextCountTimer(33, 157943)
 local timerQuakeCD					= mod:NewNextCountTimer(34, 158200)
 --Pol (84 seconds full rotation, 28-29 seconds in between)
+mod:AddTimerLine((EJ_GetSectionInfo(9595)))
 local timerShieldChargeCD			= mod:NewNextTimer(28, 158134)
 local timerInterruptingShoutCD		= mod:NewNextTimer(28, 158093)
-local timerInterruptingShout		= mod:NewCastTimer(3, 158093, nil, mod:IsSpellCaster())
+local timerInterruptingShout		= mod:NewCastTimer(3, 158093, nil, "SpellCaster")
 local timerPulverizeCD				= mod:NewNextTimer(29, 158385)
 --^^Even though 6 cd timers, coded smart to only need 2 up at a time, by using the predictability of "next ability" timing.
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerArcaneTwistedCD			= mod:NewNextTimer(55, 163297)
 local timerArcaneVolatilityCD		= mod:NewNextTimer(60, 163372)--Only first one acurate now. Now it's a mess, was fine on beta. 60 second cd. but now it's boss power based, off BOTH bosses and is a real mess
-
+mod:AddTimerLine(ALL)
 local berserkTimer					= mod:NewBerserkTimer(420)--As reported in feedback threads
 
 local countdownPhemos				= mod:NewCountdown(33, nil, nil, "PhemosSpecial")
 local countdownPol					= mod:NewCountdown("Alt28", nil, nil, "PolSpecial")
-local countdownArcaneVolatility		= mod:NewCountdown("AltTwo60", 163372, not mod:IsTank())
+local countdownArcaneVolatility		= mod:NewCountdown("AltTwo60", 163372, "-Tank")
 
 local voicePhemos					= mod:NewVoice(nil, nil, "PhemosSpecialVoice")
 local voicePol						= mod:NewVoice(nil, nil, "PolSpecialVoice")

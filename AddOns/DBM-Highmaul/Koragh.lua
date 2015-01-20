@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12425 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12472 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -25,7 +25,6 @@ mod:RegisterEventsInCombat(
 --TODO, find number of targets of MC and add SetIconsUsed with correct icon count.
 --TODO, see if MC works. I think it's every 3rd balls
 local warnCausticEnergy				= mod:NewTargetAnnounce("OptionVersion2", 161242, 3, nil, false)
-local warnVulnerability				= mod:NewTargetAnnounce("OptionVersion2", 160734, 1, nil, false)
 local warnTrample					= mod:NewTargetAnnounce(163101, 3)--Technically it's supression field, then trample, but everyone is going to know it more by trample cause that's the part of it that matters
 local warnExpelMagicFrost			= mod:NewTargetAnnounce(161411, 3)
 local warnExpelMagicArcane			= mod:NewTargetAnnounce(162186, 4)
@@ -41,14 +40,14 @@ local specWarnTrample				= mod:NewSpecialWarningYou(163101, nil, nil, nil, nil, 
 local yellTrample					= mod:NewYell(163101)
 local specWarnTrampleNear			= mod:NewSpecialWarningClose(163101)
 local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, nil, true)
-local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, mod:IsHealer(), nil, nil, nil, nil, true)
+local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, "Healer", nil, nil, nil, nil, true)
 local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, nil, true)
 local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, nil, true)
 local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, nil, true)
 local yellExpelMagicArcane			= mod:NewYell(162186)
 local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, nil, true)
 --local specWarnMCSoon				= mod:NewSpecialWarningPreWarn(163472, true, 6.5)
-local specWarnMC					= mod:NewSpecialWarningSwitch(163472, mod:IsDps())
+local specWarnMC					= mod:NewSpecialWarningSwitch(163472, "Dps")
 local specWarnForfeitPower			= mod:NewSpecialWarningInterrupt(163517)--Spammy?
 local specWarnExpelMagicFel			= mod:NewSpecialWarningYou(172895)--Maybe needs "do not move" warning or at very least "try not to move" since sometimes you have to move for trample.
 local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, nil, true)--No generic that describes this
@@ -61,11 +60,12 @@ local timerExpelMagicFire			= mod:NewBuffFadesTimer("OptionVersion2", 11.5, 1621
 local timerExpelMagicFireCD			= mod:NewCDTimer(60, 162185)--60-66 Variation
 local timerExpelMagicFrost			= mod:NewBuffActiveTimer("OptionVersion3", 20, 161411, nil, false)
 local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411)--60-63 variation
-local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, mod:IsHealer() or mod:IsTank())--60-63 variation
-local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, mod:IsTank() or mod:IsHealer())
-local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, mod:IsTank())--26-32
+local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, "Tank|Healer")--60-63 variation
+local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
+local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank")--26-32
 local timerBallsCD					= mod:NewNextCountTimer(30, 161612)
-local timerExpelMagicFelCD			= mod:NewCDTimer("OptionVersion2", 15.5, 172895, nil, not mod:IsTank())--Mythic
+mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
+local timerExpelMagicFelCD			= mod:NewCDTimer("OptionVersion2", 15.5, 172895, nil, "-Tank")--Mythic
 local timerExpelMagicFel			= mod:NewBuffFadesTimer(12, 172895)--Mythic
 
 local countdownMagicFire			= mod:NewCountdownFades(11.5, 162185)
@@ -73,10 +73,10 @@ local countdownBalls				= mod:NewCountdown("Alt30", 161612)
 local countdownFel					= mod:NewCountdownFades("AltTwo11", 172895)
 
 local voiceExpelMagicFire			= mod:NewVoice(162185)
-local voiceExpelMagicShadow			= mod:NewVoice("OptionVersion2", 162184, mod:IsHealer())
+local voiceExpelMagicShadow			= mod:NewVoice("OptionVersion2", 162184, "Healer")
 local voiceExpelMagicFrost			= mod:NewVoice(161411)
 local voiceExpelMagicArcane			= mod:NewVoice("OptionVersion3", 162186)
-local voiceMC						= mod:NewVoice(163472, mod:IsDps())
+local voiceMC						= mod:NewVoice(163472, "Dps")
 local voiceTrample					= mod:NewVoice(163101)
 local voiceBalls					= mod:NewVoice(161612)
 local voiceExpelMagicArcaneFel		= mod:NewVoice(172895)
@@ -315,7 +315,6 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 156803 then--Null barrier fall off boss
 		DBM:Debug("Koragh Lost his shield")
 		self.vb.shieldCharging = true
-		warnVulnerability:Show(args.destName)
 		specWarnVulnerability:Show(args.destName)
 		timerVulnerability:Start()
 		timerTrampleCD:Cancel()

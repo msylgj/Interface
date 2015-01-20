@@ -1,5 +1,5 @@
 local api, _, T = {}, ...
-if T.Mark ~= 16 then return end
+if T.Mark ~= 23 then return end
 local EV, L = T.Evie, {}
 setmetatable(L, {__call=function(self,k) if T.L then L = T.L return L(k) end return k end})
 
@@ -157,7 +157,7 @@ local function SetFollowerInfo(t)
 				AddCounterMechanic(fit, C_Garrison.GetFollowerTraitAtIndex(fid, i))
 			end
 			AddCounterMechanic(fit, C_Garrison.GetFollowerTraitAtIndex(fid, 3))
-			ft[fid] = fit
+			ft[fid], v.affinity = fit, T.Affinities[v.garrFollowerID or v.followerID]
 		end
 	end
 	for k, v in pairs(C_Garrison.GetInProgressMissions()) do
@@ -231,6 +231,11 @@ function api.GetFollowerTraits()
 			for k in pairs(info.traits) do
 				local t = ci[k] or {}
 				ci[k], t[#t+1] = t, fid
+			end
+			local k = info.affinity
+			if k and k > 0 then
+				local t = ci[-k] or {}
+				ci[-k], t[#t+1] = t, fid
 			end
 		end
 		data.traits = ci
@@ -488,18 +493,7 @@ do -- GetMissionSeen
 			return _G.time(t)
 		end
 	end
-	local expire = {} do
-		for n, r in ("000210611621id2e56516c16o17i0:0ga6b:0o2103rz4rz5r86136716e26q37ji9549eja23ai1al3aqg:102zd3h86vm82mak0ap0:1y9a39y3:20050100190:9b8pfb7a"):gmatch("(%w%w)(%w+)") do
-			local n = tonumber(n, 36)
-			for s, l in r:gmatch("(%w%w)(%w)") do
-				local s = tonumber(s, 36)
-				for i=s, s+tonumber(l, 36) do
-					expire[i] = n
-				end
-			end
-		end
-	end
-	local isPendingObserve
+	local expire, isPendingObserve = T.MissionExpire
 	local function ObserveMissions()
 		isPendingObserve = nil
 		if not dt then return end
@@ -1135,13 +1129,16 @@ function api.ExtendFollowerTooltipMissionRewardXP(mi, fi)
 	end
 end
 
-function api.UpdateGroupEstimates(missions, useInactive)
-	local ft, fc, f = {}, 0, C_Garrison.GetFollowers()
+function api.UpdateGroupEstimates(missions, useInactive, yield)
+	local ft, nf, f = {}, 0, C_Garrison.GetFollowers()
 	for i=1,#f do
 		local fi = f[i]
 		if fi.isCollected and (useInactive or fi.status ~= GARRISON_FOLLOWER_INACTIVE) and not T.config.ignore[fi.followerID] then
-			local cn, tn, fid = 1, 1, fi.followerID
-			fi.counters, fi.traits, fi.traitMap, fc = {}, {}, {}, fc + 1
+			local cn, tn, fid, af = 1, 1, fi.followerID, T.Affinities[fi.garrFollowerID] or 0
+			fi.counters, fi.traits, fi.affinity, nf = {}, {}, af, nf + 1
+			if (af or 0) > 0 then
+				fi.traits[tn], tn = -af, tn + 1
+			end
 			for i=1,3 do
 				local a = C_Garrison.GetFollowerAbilityAtIndex(fid, i)
 				a = a and a > 0 and C_Garrison.GetFollowerAbilityCounterMechanicInfo(a)
@@ -1150,10 +1147,10 @@ function api.UpdateGroupEstimates(missions, useInactive)
 				end
 				a = C_Garrison.GetFollowerTraitAtIndex(fid, i)
 				if a and a > 0 then
-					fi.traits[tn], fi.traitMap[a], tn = a, i, tn + 1
+					fi.traits[tn], tn, fi.saffinity = a, tn + 1, a == af or fi.saffinity or nil
 				end
 			end
-			ft[fc], fi.active, fi.scavanger, fi.mount, fi.working = fi, fi.status ~= GARRISON_FOLLOWER_INACTIVE and 1 or 0, fi.traitMap[79] and 1 or 0, fi.traitMap[221] and 1 or 0, fi.status == GARRISON_FOLLOWER_WORKING and 1 or 0
+			ft[nf], fi.active, fi.working = fi, fi.status ~= GARRISON_FOLLOWER_INACTIVE and 1 or 0, fi.status == GARRISON_FOLLOWER_WORKING and 1 or 0
 		end
 	end
 	f = ft
@@ -1165,104 +1162,129 @@ function api.UpdateGroupEstimates(missions, useInactive)
 		t[#t+1], ms[sz], best[missions[i][1]] = missions[i], t, {-1}
 	end
 
-	local counters = {}
-	local m2, m3 = ms[2], ms[3]
-	local n2, n3, s1, s2 = #m2, #m3, 281474976710656, 1099511627776
-	for a=1,fc do
-		local co = f[a].counters
-		for i=1,#co do
-			local v = co[i]
-			counters[v] = (counters[v] or 0) + 1
+	local counters, traits, m2, m3 = {}, {[221]=0, [79]=0, [77]=0, [76]=0, [244]=0, [201]=0, [202]=0, [232]=0}, ms[2], ms[3]
+	local n2, n3, s1, s2, ec = #m2, #m3, 17592186044416, 68719476736, T.EnvironmentCounters
+	for a=1,nf do
+		local fa = f[a]
+		for i=1,2 do
+			local s, t = fa[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+			for i=1,#s do
+				local v = s[i]
+				t[v] = (t[v] or 0) + 1
+			end
 		end
-		local ns, na, nm, nw = f[a].scavanger, f[a].active, f[a].mount, f[a].working
+		local na, nw, nf2 = fa.active, fa.working, nf^2
 					
-		for b=a+1,fc do
-			local co = f[b].counters
-			for i=1,#co do
-				local v = co[i]
-				counters[v] = (counters[v] or 0) + 1
-			end
-			local ns, na, nm, nw = ns + f[b].scavanger, na + f[b].active, nm + f[b].mount, nw + f[b].working
+		for b=a+1,nf do
+			local fb = f[b]
+			local na, nw = na + fb.active, nw + fb.working
 			
-			for i=1, n2 do
-				local mi, nc, l = m2[i], 0
-				for i=6,#mi do
-					local c = mi[i]
-					nc, l = nc + ((counters[c] or 0) > (l == c and 1 or 0) and 1 or 0), c
-				end
-				local best, sc = best[mi[1]], nc * s1
-				if best[1] - sc < s1 then
-					local mlvl, la, lb = mi[2], f[a].iLevel + f[b].level*3, f[b].iLevel + f[b].level*3
-					mlvl = mlvl > 100 and (mlvl + 300) or (600 + mlvl * 3)
-					local gap = (mlvl > la and (mlvl - la) or 0) + (mlvl > lb and (mlvl - lb) or 0)
-					sc = sc + s2 * ((mi[5] > 0 and ns * 16 or 0) + na) + (32768-gap)*16 + nm*4 + (3-nw)
-					if best[1] < sc then
-						best[1], best[2], best[3] = sc, a, b
+			local mi, mic, c = m2, n2
+			repeat
+				local fc = f[c or b]
+				for i=1,2 do
+					local s, t = fc[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+					for i=1,#s do
+						local v = s[i]
+						t[v] = (t[v] or 0) + 1
 					end
 				end
-			end
-			
-			for c = b+1,fc do
-				local co = f[c].counters
-				for i=1,#co do
-					local v = co[i]
-					counters[v] = (counters[v] or 0) + 1
-				end
-				local ns, na, nm, nw = ns + f[c].scavanger, na + f[c].active, nm + f[c].mount, nw + f[c].working
+				local ns, na, nw, cid = traits[79], na + (c and fc.active or 0), 3 - nw - (c and fc.working or 0), (a - 1) + (b - 1)*nf + (c and (c-1)*nf2 or 0)
 				
-				for i=1, n3 do
-					local mi, nc, l = m3[i], 0
-					for i=6,#mi do
+				for i=1, mic do
+					local mi, l, lc = mi[i]
+					local etc, cap = ec[mi[6]], (#mi-6)*6
+					local nc, d = (etc ~= 0 and traits[etc] or 0) > 0 and (etc == 42 and 1 or 2) or (etc == 4 and traits[244] > 0 and 2) or 0, mi[4]*2^-traits[221]
+					for i=7,#mi do
 						local c = mi[i]
-						nc, l = nc + ((counters[c] or 0) > (l == c and 1 or 0) and 1 or 0), c
+						local need = (l == c and 1 or 0)
+						local cs = (counters[c] or 0) > need and 6 or 0
+						nc, l, lc = nc + cs + (c == 6 and cs == 0 and traits[232] > (need - (need == 1 and lc > 0 and 1 or 0)) and 3 or 0), c, cs
 					end
+					nc = nc + traits[(d >= 25200) and 76 or 77]*2 + traits[201]*2 + traits[202]*4
+					if nc < cap then
+						local ra, rb, rc = fa.affinity or 0, fb.affinity, c and fc.affinity
+						local sa, sb, sc = fa.saffinity, fb.saffinity, fc.saffinity
+						if ra == rc or rb == rc then rc, sc = nil end
+						if ra == rb or not rb then rb, sb, rc, sc = rc, sc end
+						repeat
+							local nt, nf = traits[ra] or 0, traits[-ra] or 0
+							if nt == 0 or ra == 0 or nf == 0 then
+							elseif nf > 1 then
+								nc = nc + nt*3
+							else
+								nc = nc + (nt - (sa and 1 or 0))*3
+							end
+							ra, rb, sa, sb, rc = rb, rc, sb, sc
+						until nc >= cap or not ra
+					end
+					nc = nc > cap and cap or nc
+					
 					local best, sc = best[mi[1]], nc * s1
 					if best[1] - sc < s1 then
-						local mlvl, la, lb, lc = mi[2], f[a].iLevel + f[b].level*3, f[b].iLevel + f[b].level*3, f[c].iLevel + f[c].level*3
+						local mlvl, la, lb, lc = mi[2], fa.iLevel + fb.level*3, fb.iLevel + fb.level*3, fc.iLevel + fc.level*3
 						mlvl = mlvl > 100 and (mlvl + 300) or (600 + mlvl * 3)
-						local gap = (mlvl > la and (mlvl - la) or 0) + (mlvl > lb and (mlvl - lb) or 0) + (mlvl > lc and (mlvl - lc) or 0)
-						sc = sc + s2 * ((mi[5] > 0 and ns * 16 or 0) + na) + (32768-gap)*16 + nm*4 + (3-nw)
-						if best[1] < sc then
-							best[1], best[2], best[3], best[4] = sc, a, b, c
+						local gap = (mlvl > la and (mlvl - la) or 0) + (mlvl > lb and (mlvl - lb) or 0) + (c and mlvl > lc and (mlvl - lc) or 0)
+						local hi, lo = sc + s2 * ((mi[5] > 0 and ns * 16 or 0) + na * 4 + nw), (32767-gap)*16 + traits[221]
+						local d = (best[1] - hi - lo)
+						if d < 0 then
+							best[1], best[2], best[3], best[4] = hi + lo, a, b, c
 						end
 					end
 				end
 				
-				for i=1,#co do
-					local v = co[i]
-					counters[v] = counters[v] - 1
+				for i=1,c and 2 or 0 do
+					local s, t = fc[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+					for i=1,#s do
+						local v = s[i]
+						t[v] = t[v] - 1
+					end
 				end
-			end
+				
+				c, mi, mic = (c or b) + 1, m3, n3
+			until c > nf
 
-			for i=1,#co do
-				local v = co[i]
-				counters[v] = counters[v] - 1
+			for i=1,2 do
+				local s, t = fb[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+				for i=1,#s do
+					local v = s[i]
+					t[v] = t[v] - 1
+				end
 			end
 		end
 		
-		for i=1,#co do
-			local v = co[i]
-			counters[v] = counters[v] - 1
+		for i=1,2 do
+			local s, t = fa[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+			for i=1,#s do
+				local v = s[i]
+				t[v] = t[v] - 1
+			end
 		end
+		if yield and yield(1, a, nf) then return end
 	end
 	
 	for i=1,#missions do
 		local best = best[missions[i][1]]
 		if best and best[1] > 0 then
-			wipe(counters)
-			local bt, mi, l, co = {[4]=0}, missions[i]
+			wipe(counters) wipe(traits)
+			local bt, mi, l, lc = {}, missions[i]
 			for i=1, mi[3] do
 				local fi = f[best[1+i]]
-				co, bt[i], bt[4] = fi.counters, fi.followerID, bt[4] + (fi.traitMap[79] and 1 or 0)
-				for i=1,#co do
-					local v = co[i]
-					counters[v] = (counters[v] or 0) + 1
+				bt[i] = fi.followerID
+				for i=1,2 do
+					local s, t = fi[i == 1 and "counters" or "traits"], i == 1 and counters or traits
+					for i=1,#s do
+						local v = s[i]
+						t[v] = (t[v] or 0) + 1
+					end
 				end
 			end
-			for i=6,#mi do
+			bt[4], bt[5], traits[232] = traits[79] or 0, (floor(best[1]/s1) + mi[3]*2)/((#mi-6)*6 + mi[3]*2), traits[232] or 0
+			for i=7,#mi do
 				local c = mi[i]
-				local v, d = counters[c] or 0, l == c and 2 or 1
-				bt[i], l = v > d and 2 or v == d, c
+				local need = (l == c and 1 or 0)
+				local cs = (counters[c] or 0) > need and 6 or 0
+				bt[i], l, lc = (cs == 6) or (c == 6 and cs == 0 and traits[232] > (need - (need == 1 and lc > 0 and 1 or 0)) and 0.5) or false, c, cs
 			end
 			missions[i].best = bt
 		else

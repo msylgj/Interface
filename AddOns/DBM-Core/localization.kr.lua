@@ -14,6 +14,7 @@ DBM_CORE_LOAD_GUI_ERROR				= "설정창을 불러올 수 없습니다: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "전투 중에는 설정창을 불러올 수 없습니다. 전투가 종료되면 설정창이 열릴 것입니다. 이후에는 전투 중이라도 설정창을 불러 올 수 있습니다."
 DBM_CORE_LOAD_SKIN_COMBAT			= "전투 도중 DBM 바 스킨 설정에 실패했습니다. 바가 정상 작동하지 않을 것이며 다수의 lua 오류가 발생할 수 있습니다. 이 오류는 DBM 바에 스킨을 적용하는 제3의 애드온이 있을 때 주로 발생합니다. 전투 종료 후 /reload 명령어를 입력하여 UI를 재시작 해주시기 바랍니다."
 DBM_CORE_BAD_LOAD					= "DBM이 현재 인스턴스의 경고를 완전히 불러오지 못한 것을 발견했습니다. 전투가 종료된 후에, /console reloadui 명령어를 입력하여 경고를 다시 불러오시기 바랍니다."
+DBM_CORE_LOAD_MOD_VER_MISMATCH		= "현재 사용중인 DBM 버전은 '%s' 경보에 필요한 기능이 없습니다. 새로운 DBM을 설치하셔야 이 경보를 불러올 수 있습니다."
 
 DBM_CORE_BLIZZ_BUGS					= "6.0 블리자드 애드온 변경사항 안내:\n1. 소리 설정에서 음향 효과가 설정되어 있을 경우, 전투 중에 애드온 소리가 나지 않을 수 있습니다. 이 현상은 6.0에서 애드온 소리 우선 순위가 낮게 설정되었기 때문에 나타납니다. DBM은 이 문제 해결을 위해 사운드 채널 수를 64로 강제로 설정합니다. 그래도 문제가 발생한다면 음향 효과를 꺼주시기 바랍니다."
 
@@ -52,6 +53,27 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s 전투가 %s 전에 시작되었습니다
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor 기록을 시작합니다."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor 기록을 중단합니다."
 
+DBM_CORE_PROFILE_CREATED			= "'%s' 프로필을 만들었습니다."
+DBM_CORE_PROFILE_CREATE_ERROR		= "프로필 생성 실패. 프로필 이름이 올바르지 않습니다."
+DBM_CORE_PROFILE_APPLIED			= "'%s' 프로필을 적용하였습니다."
+DBM_CORE_PROFILE_APPLY_ERROR		= "프로필 적용 실패. %s 프로필이 존재하지 않습니다."
+DBM_CORE_PROFILE_DELETED			= "'%s' 프로필을 삭제하였습니다. 'Default' 프로필이 적용됩니다."
+DBM_CORE_PROFILE_DELETE_ERROR		= "프로필 삭제 실패. '%s' 프로필이 존재하지 않습니다."
+DBM_CORE_PROFILE_CANNOT_DELETE		= "'Default' 프로필은 삭제할 수 없습니다."
+DBM_CORE_MPROFILE_COPY_SUCCESS		= "%s (전문화%d) 설정을 복사하였습니다."
+DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "자기 자신의 설정은 복사할 수 없습니다."
+DBM_CORE_MPROFILE_COPY_S_ERROR		= "복사할 원본 설정이 올바르지 않습니다. 설정이 복사되지 않거나 일부만 복사 됩니다. 복사에 실패했습니다."
+DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s (전문화%d) 소리 설정을 복사하였습니다."
+DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "자기 자신의 소리 설정은 복사할 수 없습니다."
+DBM_CORE_MPROFILE_COPYS_S_ERROR		= "복사할 원본 소리 설정이 올바르지 않습니다. 소리 설정이 복사되지 않거나 일부만 복사 됩니다. 복사에 실패했습니다."
+DBM_CORE_MPROFILE_DELETE_SUCCESS	= "%s (전문화%d) 설정을 삭제하였습니다."
+DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "현재 사용중인 설정은 삭제할 수 없습니다."
+DBM_CORE_MPROFILE_DELETE_S_ERROR	= "삭제할 설정이 없거나 올바르지 않습니다. 설정이 삭제되지 않았거나 일부만 삭제됩니다."
+
+DBM_CORE_ALLMOD_DEFAULT_LOADED		= "현재 경보의 기본 설정을 불러왔습니다."
+DBM_CORE_ALLMOD_STATS_RESETED		= "현재 경보의 통계가 초기화 됩니다."
+DBM_CORE_MOD_DEFAULT_LOADED			= "현재 전투의 기본 설정을 불러왔습니다."
+
 DBM_CORE_WORLDBOSS_ENGAGED			= "현재 서버의 %s 전투가 약 %s 퍼센트의 체력으로 시작된 것으로 보입니다. (%s|1이;가; 보냄)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "현재 서버의 %s 우두머리가 처치된 것으로 보입니다. (%s|1이;가; 보냄)"
 
@@ -75,6 +97,9 @@ DBM_CORE_OPTION_HEALTH_FRAME		= "우두머리 체력 바 보기"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "바"
 DBM_CORE_OPTION_CATEGORY_WARNINGS	= "알림"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_YOU	= "개인 알림"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_OTHER	= "대상 알림"
+DBM_CORE_OPTION_CATEGORY_WARNINGS_ROLE	= "역할 알림"
 DBM_CORE_OPTION_CATEGORY_SOUNDS		= "소리"
 
 DBM_CORE_AUTO_RESPONDED						= "전투중 받은 귓속말에 자동 응답합니다."
@@ -116,6 +141,7 @@ DBM_CORE_UPDATEREMINDER_HOTFIX			= "지금 사용하시는 DBM 버전은 이 전
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "경고: DBM 버전이 오래되어 현재 게임 버전에서는 작동하지 않을 것입니다. 당신 또는 같은 공격대원에게 잘못된 알림을 보내거나 게임이 느려지는 것을 막기 위함을 양해하여 주시기 바랍니다. 지금 당장 최신 버전으로 업데이트 하여 주시기 바랍니다. 만약 6.0 베타를 실행 중인데 이 메세지가 보인다면, http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing 에서 6.0 베타 버전을 받으세요."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "경고: 현재 게임 버전과 맞지 않는 DBM을 사용중입니다. 현재 게임 버전에 맞는 DBM을 다운로드 받아 다시 설치하시기 바랍니다."
 DBM_CORE_VEM							= "경고: 당신은 DBM과 VEM을 동시에 사용중입니다. 현재 설정에서는 DBM이 작동하지 않으므로 DBM을 불러오지 않습니다."
+DBM_CORE_3RDPROFILES					= "경고: DBM-Profiles는 이 버전의 DBM과 호환되지 않습니다. 충돌을 방지하기 위해 해당 애드온을 제거하셔야 DBM을 불러올 수 있습니다."
 
 DBM_CORE_MOVABLE_BAR				= "나를 움직이세요~_~"
 
@@ -176,6 +202,7 @@ DBM_CORE_LEFT						= "왼쪽"
 DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
 DBM_CORE_FRONT						= "앞쪽"
+DBM_CORE_INTERMISSION				= "사잇 단계"
 
 DBM_CORE_BREAK_START				= "쉬는 시간 시작 -- %s분 남았습니다! (%s|1이;가; 보냄)"
 DBM_CORE_BREAK_MIN					= "%s분 후 쉬는 시간이 끝납니다!"
@@ -228,6 +255,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon			= "곧 %s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn		= "%2$s 후 %1$s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s : >%%s< - 해제!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s : >%%s< - 차단!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s : >%%s< - 차단! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "당신에게 %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<에게 %1$s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<에게 %1$s - 도발!"
@@ -242,6 +270,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= ">%%s<에게 %1$s - 공격 중지!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count			= "%s! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "당신에게 %s (%%d 중첩)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - 대상 전환!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - 대상 전환! (%%d)"
 
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell		= "$spell:%s 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.ends		= "$spell:%s 종료 특수 경고 보기"
@@ -264,6 +293,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 	= "$spell:%s 공격 중지 특수 경�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count		= "$spell:%s 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "당신이 $spell:%2$s %1$d중첩 이상이 된 경우 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "$spell:%s 대상 전환 특수 경고 보기"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"

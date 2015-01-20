@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1262, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12426 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12443 $"):sub(12, -3))
 mod:SetCreatureID(83746)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -21,9 +21,9 @@ mod:RegisterEventsInCombat(
 --TODO, timers.
 --TODO, health percents feathers/glory happen at. Add warnings if cast detectable too.
 --TODO, add warnings for fixates birds do if they fixate.
-local warnPiercedArmor			= mod:NewStackAnnounce(167615, 3, nil, mod:IsTank())
-local warnSolarBreath			= mod:NewSpellAnnounce(167687, 3, nil, mod:IsTank())
-local warnSolarRadiation		= mod:NewSpellAnnounce(167710, 3, nil, mod:IsHealer())
+local warnPiercedArmor			= mod:NewStackAnnounce(167615, 3, nil, "Tank")
+local warnSolarBreath			= mod:NewSpellAnnounce(167687, 3, nil, "Tank")
+local warnSolarRadiation		= mod:NewSpellAnnounce(167710, 3, nil, "Healer")
 
 local specWarnLooseQuills		= mod:NewSpecialWarningSpell(167647, nil, nil, nil, 2)
 local specWarnSolarBreath		= mod:NewSpecialWarningSpell(167687, false)

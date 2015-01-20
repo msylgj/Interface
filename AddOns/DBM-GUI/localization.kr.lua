@@ -17,7 +17,7 @@ L.TabCategory_Options		= "기본 설정"
 L.TabCategory_PVP	 		= "PvP"
 L.TabCategory_OTHER			= "기타 우두머리 경보"
 
-L.BossModLoaded 			= "%s 공략 상황"
+L.BossModLoaded 			= "%s 통계"
 L.BossModLoad_now 			= [[이 우두머리 경보는 현재 비활성화 상태입니다. 
 불러오기 버튼을 클릭하여 우두머리 경보를 불러올 수 있습니다.
 ]]
@@ -30,7 +30,7 @@ L.Button_OK					= '확인'
 L.Button_Cancel				= '취소'
 L.Button_LoadMod			= '불러오기'
 L.Mod_Enabled				= "경보 사용"
-L.Mod_Reset					= "이 전투의 기본 설정 불러오기"
+L.Mod_Reset					= "이 전투의 설정 초기화"
 L.Reset						= "초기화"
 
 L.Enable					= "활성화"
@@ -38,10 +38,10 @@ L.Disable					= "비활성화"
 
 L.NoSound					= "끄기"
 
-L.IconsInUse				= "현재 전투에서 사용 되는 전술 목표 아이콘:"
+L.IconsInUse				= "사용되는 전술 목표 아이콘:"
 
 -- Tab: Boss Statistics
-L.BossStatistics			= "공략 상황"
+L.BossStatistics			= "통계"
 L.Statistic_Kills			= "승리:"
 L.Statistic_Wipes			= "전멸:"
 L.Statistic_Incompletes		= "미완료:"
@@ -262,6 +262,24 @@ L.PizzaTimer_Mins 			= "분"
 L.PizzaTimer_Secs 			= "초"
 L.PizzaTimer_ButtonStart 	= "바 시작"
 L.PizzaTimer_BroadCast		= "공격대에 알리기"
+
+L.Panel_Profile				= "프로필"
+L.Area_CreateProfile		= "프로필 생성"
+L.EnterProfileName			= "생성할 프로필 이름 입력"
+L.CreateProfile				= "DBM-Core 설정 프로필 생성"
+L.Area_ApplyProfile			= "프로필 적용"
+L.SelectProfileToApply		= "적용할 DBM-Core 설정 프로필 선택"
+L.Area_DeleteProfile		= "프로필 삭제"
+L.SelectProfileToDelete		= "삭제할 DBM-Core 설정 프로필 선택"
+L.Area_DualProfile			= "우두머리 경보 프로필 설정"
+L.DualProfile				= "각 전문화 별로 별도의 우두머리 설정 사용(전문화별 세부기능은 좌측 상단 우두머리 탭을 선택 후, 경보를 불러오고 나서 나타난 통계 화면에 있습니다.)"
+
+L.Area_ModProfile			= "다른 캐릭터 또는 그 캐릭터의 전문화별 설정을 복사/삭제"
+L.ModAllReset				= "이 경보의 모든 설정을 초기화"
+L.ModAllStatReset			= "이 경보의 통계를 초기화"
+L.SelectModProfileCopy		= "전체 설정 복사"
+L.SelectModProfileCopySound	= "소리 설정 복사"
+L.SelectModProfileDelete	= "설정 삭제"
 
 -- Misc
 L.FontHeight = 16

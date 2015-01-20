@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 12432 $"):sub(12, -3)
+local revision =("$Revision: 12509 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -126,12 +126,7 @@ do
 		panel.panelid = #self.panels
 		return setmetatable(obj, prottypemetatable)
 	end
-	
-	function PanelPrototype:Refresh()
-		self.frame:Hide()
-		self.frame:Show()
-	end
-	
+
 	-- This function don't realy destroy a window, it just hides it
 	function PanelPrototype:Destroy()
 		if self.frame.FrameTyp == 2 then
@@ -170,9 +165,9 @@ do
 
 		if autoplace then
 			if select('#', self.frame:GetChildren()) == 1 then
-				area:SetPoint('TOPLEFT', self.frame, 5, -17)
+				area:SetPoint('TOPLEFT', self.frame, 5, -20)
 			else
-				area:SetPoint('TOPLEFT', select(-2, self.frame:GetChildren()) or self.frame, "BOTTOMLEFT", 0, -17)
+				area:SetPoint('TOPLEFT', select(-2, self.frame:GetChildren()) or self.frame, "BOTTOMLEFT", 0, -20)
 			end
 		end
 
@@ -408,7 +403,7 @@ do
 
 	local function replaceJournalLinks(id)
 		local check = EJ_GetSectionInfo(tonumber(id))
-		if not check then 
+		if not check then
 			DBM:Debug("Journal ID does not exist: "..id)
 		end
 		local link = select(9, EJ_GetSectionInfo(tonumber(id))) or DBM_CORE_UNKNOWN
@@ -423,7 +418,7 @@ do
 		{ sound=true, text = "SW 4", value = 4 },
 	})
 
-	function PanelPrototype:CreateCheckButton(name, autoplace, textleft, dbmvar, dbtvar, soundVal, mod)
+	function PanelPrototype:CreateCheckButton(name, autoplace, textleft, dbmvar, dbtvar, mod, modvar, globalvar)
 		if not name then
 			return
 		end
@@ -445,20 +440,20 @@ do
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
 		local dropdown
-		if soundVal then
-			dropdown = self:CreateDropdown(nil,sounds,mod.Options[soundVal], function(value)
-				mod.Options[soundVal] = value
+		if modvar and modvar:find("SpecialWarningSound") then
+			dropdown = self:CreateDropdown(nil, sounds, nil, nil, function(value)
+				mod.Options[modvar] = value
 				DBM:PlaySpecialWarningSound(value)
-			end, 20, button)
+			end, 20, 25, button)
 			dropdown:SetScript("OnShow", function(self)
-				self:SetSelectedValue(mod.Options[soundVal])
+				self:SetSelectedValue(mod.Options[modvar])
 			end)
 		end
 		local textbeside = button
 		local textpad = 0
 		local html
 		if dropdown then
-			dropdown:SetPoint("LEFT", button, "RIGHT", -20, 0)
+			dropdown:SetPoint("LEFT", button, "RIGHT", -20, 2)
 			textbeside = dropdown
 			textpad = 35
 		end
@@ -505,9 +500,14 @@ do
 			button:SetScript("OnClick", function(self) DBM.Bars:SetOption(dbtvar, not DBM.Bars:GetOption(dbtvar)) end)
 		end
 
+		if globalvar and _G[globalvar] ~= nil then
+			button:SetScript("OnShow",  function(self) button:SetChecked( _G[globalvar] ) end)
+			button:SetScript("OnClick", function(self) _G[globalvar] = not _G[globalvar] end)
+		end
+
 		if autoplace then
 			local x = self:GetLastObj()
-			if x.mytype == "checkbutton" then
+			if x.mytype == "checkbutton" or x.mytype == "line" then
 				button:ClearAllPoints()
 				button:SetPoint('TOPLEFT', x, "TOPLEFT", 0, -x.myheight)
 			else
@@ -520,6 +520,37 @@ do
 		return button
 	end
 
+	function PanelPrototype:CreateLine(text)
+		local line = CreateFrame("Frame", FrameTitle..self:GetNewID(), self.frame)
+		line:SetSize(self.frame:GetWidth() - 20, 20)
+		line:SetPoint("TOPLEFT", 10, -12)
+		line.myheight = 20
+		line.mytype = "line"
+
+		local linetext = line:CreateFontString(line:GetName().."Text", "ARTWORK", "GameFontNormal")
+		linetext:SetPoint("TOPLEFT", line, "TOPLEFT", 0, 0)
+		linetext:SetJustifyH("LEFT")
+		linetext:SetHeight(18)
+		linetext:SetTextColor(0.67, 0.83, 0.48)
+		linetext:SetText(text or "")
+
+		local linebg = line:CreateTexture()
+		linebg:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+		linebg:SetSize(self.frame:GetWidth() - linetext:GetWidth() - 25, 2)
+		linebg:SetPoint("RIGHT", line, "RIGHT", 0, 0)
+
+		local x = self:GetLastObj()
+		if x.mytype == "checkbutton" or x.mytype == "line" then
+			line:ClearAllPoints()
+			line:SetPoint('TOPLEFT', x, "TOPLEFT", 0, -x.myheight)
+		else
+			line:ClearAllPoints()
+			line:SetPoint('TOPLEFT', 10, -12)
+		end
+
+		self:SetLastObj(line)
+		return line
+	end
 end
 
 do
@@ -602,6 +633,7 @@ do
 	function PanelPrototype:CreateSlider(text, low, high, step, framewidth)
 		local slider = CreateFrame('Slider', FrameTitle..self:GetNewID(), self.frame, 'OptionsSliderTemplate')
 		slider.mytype = "slider"
+		slider.myheight = 50
 		slider:SetMinMaxValues(low, high)
 		slider:SetValueStep(step)
 		slider:SetWidth(framewidth or 180)
@@ -728,7 +760,6 @@ function PanelPrototype:CreateText(text, width, autoplaced, style, justify)
 	return textblock
 end
 
-
 function PanelPrototype:CreateCreatureModelFrame(width, height, creatureid)
 	local ModelFrame = CreateFrame('PlayerModel', FrameTitle..self:GetNewID(), self.frame)
 	ModelFrame.mytype = "modelframe"
@@ -751,27 +782,27 @@ function PanelPrototype:AutoSetDimension()
 		if child.myheight and type(child.myheight) == "number" then
 			need_height = need_height + child.myheight
 		else
-			need_height = need_height + child:GetHeight() + 50
+			need_height = need_height + child:GetHeight()
 		end
 	end
 
-	self.frame.myheight = need_height + 25
+	self.frame.myheight = need_height + 20
 	self.frame:SetHeight(need_height)
 end
 
 function PanelPrototype:SetMyOwnHeight()
 	if not self.frame.mytype == "panel" then return end
 
-	local need_height = 30
+	local need_height = self.initheight or 20
 
 	local kids = { self.frame:GetChildren() }
 	for _, child in pairs(kids) do
 		if child.mytype == "area" and child.myheight then
 			need_height = need_height + child.myheight
 		elseif child.mytype == "area" then
-			need_height = need_height + child:GetHeight() + 30
+			need_height = need_height + child:GetHeight() + 20
 		elseif child.myheight then
-			need_height = need_height +  child.myheight
+			need_height = need_height + child.myheight
 		end
 	end
 	self.frame.actualHeight = need_height -- HACK: work-around for some strange bug, panels that are overriden (e.g. stats panels when the mod is loaded) are behaving strange since 4.1. GetHeight() will always return the height of the old panel and not of the new...
@@ -1266,6 +1297,7 @@ do
 		self:ClearSelection(_G[buttonName.."DBMOptions"], _G[buttonName.."DBMOptions"].buttons)
 		self:SelectButton(parent, button)
 
+		DBM_GUI.currentViewing = button.element
 		self:DisplayFrame(button.element)
 	end
 
@@ -1296,6 +1328,7 @@ do
 		container.displayedFrame = frame
 
 		DBM_GUI_OptionsFramePanelContainerHeaderText:SetText( frame.displayname )
+		DBM_GUI_DropDown:HideMenu()
 
 		local mymax = (frame.actualHeight or frame:GetHeight()) - container:GetHeight()
 
@@ -1323,7 +1356,7 @@ do
 		else
 			_G[frameName.."FOV"]:Hide()
 			frame:ClearAllPoints()
-			frame:SetPoint("TOPLEFT", container ,"TOPLEFT", 5, 0)
+			frame:SetPoint("TOPLEFT", container ,"TOPLEFT", 5, -5)
 			frame:SetPoint("BOTTOMRIGHT", container ,"BOTTOMRIGHT", 0, 0)
 
 			if not frame.isfixed then
@@ -1450,11 +1483,9 @@ local function CreateOptionsMenu()
 			{	text	= L.ChallengeTimerGuild,	value 	= "Guild"},
 			{	text	= L.ChallengeTimerRealm,	value 	= "Realm"},
 		}
-		local ChallengeTimerDropDown = generaltimeroptions:CreateDropdown(L.ChallengeTimerOptions, challengeTimers,
-		DBM.Options.ChallengeBest, function(value)
+		local ChallengeTimerDropDown = generaltimeroptions:CreateDropdown(L.ChallengeTimerOptions, challengeTimers, "DBM", "ChallengeBest", function(value)
 			DBM.Options.ChallengeBest = value
-		end
-		)
+		end)
 		ChallengeTimerDropDown:SetPoint("TOPLEFT", generaltimeroptions.frame, "TOPLEFT", 0, -85)
 
 		--Model viewer options
@@ -1468,11 +1499,9 @@ local function CreateOptionsMenu()
 			{	text	= L.ModelSoundShort,	value 	= "Short"},
 			{	text	= L.ModelSoundLong,		value 	= "Long"},
 		}
-		local ModelSoundDropDown = generaloptions:CreateDropdown(L.ModelSoundOptions, modelSounds,
-		DBM.Options.ModelSoundValue, function(value)
+		local ModelSoundDropDown = generaloptions:CreateDropdown(L.ModelSoundOptions, modelSounds, "DBM", "ModelSoundValue", function(value)
 			DBM.Options.ModelSoundValue = value
-		end
-		)
+		end)
 		ModelSoundDropDown:SetPoint("TOPLEFT", modelarea.frame, "TOPLEFT", 0, -50)
 
 		DBM_GUI_Frame:SetMyOwnHeight()
@@ -1527,11 +1556,9 @@ local function CreateOptionsMenu()
 			{	text	= "Ding",		value 	= "Sound\\interface\\AlarmClockWarning3.ogg", 	sound=true }
 		})
 
-		local RaidWarnSoundDropDown = raidwarnoptions:CreateDropdown(L.RaidWarnSound, Sounds,
-			DBM.Options.RaidWarningSound, function(value)
-				DBM.Options.RaidWarningSound = value
-			end
-		)
+		local RaidWarnSoundDropDown = raidwarnoptions:CreateDropdown(L.RaidWarnSound, Sounds, "DBM", "RaidWarningSound", function(value)
+			DBM.Options.RaidWarningSound = value
+		end)
 		RaidWarnSoundDropDown:SetPoint("TOPLEFT", WarningIconChat, "BOTTOMLEFT", 10, -10)
 
 		--Raid Warning Colors
@@ -1734,18 +1761,16 @@ local function CreateOptionsMenu()
 						  end)
 
 		local Textures = MixinSharedMedia3("statusbar", {
-			{	text	= "Default",	value 	= "Interface\\AddOns\\DBM-Core\\textures\\default.tga", 	texture	= "Interface\\AddOns\\DBM-Core\\textures\\default.tga"	},
+			{	text	= "Default",	value 	= "Interface\\AddOns\\DBM-DefaultSkin\\textures\\default.tga", 	texture	= "Interface\\AddOns\\DBM-DefaultSkin\\textures\\default.tga"	},
 			{	text	= "Blizzad",	value 	= "Interface\\PaperDollInfoFrame\\UI-Character-Skills-Bar", 	texture	= "Interface\\PaperDollInfoFrame\\UI-Character-Skills-Bar"	},
 			{	text	= "Glaze",	value 	= "Interface\\AddOns\\DBM-Core\\textures\\glaze.tga", 		texture	= "Interface\\AddOns\\DBM-Core\\textures\\glaze.tga"	},
 			{	text	= "Otravi",	value 	= "Interface\\AddOns\\DBM-Core\\textures\\otravi.tga", 		texture	= "Interface\\AddOns\\DBM-Core\\textures\\otravi.tga"	},
 			{	text	= "Smooth",	value 	= "Interface\\AddOns\\DBM-Core\\textures\\smooth.tga", 		texture	= "Interface\\AddOns\\DBM-Core\\textures\\smooth.tga"	}
 		})
 
-		local TextureDropDown = BarSetup:CreateDropdown(L.BarTexture, Textures,
-			DBM.Bars:GetOption("Texture"), function(value)
-				DBM.Bars:SetOption("Texture", value)
-			end
-		)
+		local TextureDropDown = BarSetup:CreateDropdown(L.BarTexture, Textures, "DBT", "Texture", function(value)
+			DBM.Bars:SetOption("Texture", value)
+		end)
 		TextureDropDown:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 210, -55)
 
 		local Styles = {
@@ -1753,11 +1778,9 @@ local function CreateOptionsMenu()
 			{	text	= L.BarBigWigs,			value 	= "BigWigs" }
 		}
 
-		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles,
-			DBM.Bars:GetOption("Style"), function(value)
-				DBM.Bars:SetOption("Style", value)
-			end
-		)
+		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "Style", function(value)
+			DBM.Bars:SetOption("Style", value)
+		end)
 		StyleDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
 
 		local Fonts = MixinSharedMedia3("font", {
@@ -1767,10 +1790,9 @@ local function CreateOptionsMenu()
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
 		})
 
-		local FontDropDown = BarSetup:CreateDropdown(L.Bar_Font, Fonts, DBM.Bars:GetOption("Font"),
-			function(value)
-				DBM.Bars:SetOption("Font", value)
-			end)
+		local FontDropDown = BarSetup:CreateDropdown(L.Bar_Font, Fonts, "DBT", "Font", function(value)
+			DBM.Bars:SetOption("Font", value)
+		end)
 		FontDropDown:SetPoint("TOPLEFT", StyleDropDown, "BOTTOMLEFT", 0, -10)
 
 		local iconleft = BarSetup:CreateCheckButton(L.BarIconLeft, nil, nil, nil, "IconLeft")
@@ -1807,7 +1829,7 @@ local function CreateOptionsMenu()
 					DBM.Bars:SetOption(option, self:GetValue())
 					self:SetValue(DBM.Bars:GetOption(option))
 				end
-				
+
 			end
 		end
 
@@ -1899,7 +1921,7 @@ local function CreateOptionsMenu()
 		HugeBarOffsetXSlider:SetScript("OnShow", createDBTOnShowHandler("HugeBarXOffset"))
 		HugeBarOffsetXSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("HugeBarXOffset"))
 
-		local HugeBarOffsetYSlider = BarSetupHuge:CreateSlider(L.Slider_BarOffSetY, -5, 25, 1)
+		local HugeBarOffsetYSlider = BarSetupHuge:CreateSlider(L.Slider_BarOffSetY, -5, 35, 1)
 		HugeBarOffsetYSlider:SetPoint("TOPLEFT", HugeBarOffsetXSlider, "BOTTOMLEFT", 0, -10)
 		HugeBarOffsetYSlider:SetScript("OnShow", createDBTOnShowHandler("HugeBarYOffset"))
 		HugeBarOffsetYSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("HugeBarYOffset"))
@@ -1957,7 +1979,7 @@ local function CreateOptionsMenu()
 					DBM:ShowTestSpecialWarning(nil, 1)
 			end)
 		end
-		
+
 		local Fonts = MixinSharedMedia3("font", {
 			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
 			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
@@ -1965,13 +1987,11 @@ local function CreateOptionsMenu()
 			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
 		})
 
-		local FontDropDown = specArea:CreateDropdown(L.SpecWarn_FontType, Fonts, DBM.Options.SpecialWarningFont,
-			function(value)
-				DBM.Options.SpecialWarningFont = value
-				DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 1)
-			end
-		)
+		local FontDropDown = specArea:CreateDropdown(L.SpecWarn_FontType, Fonts, "DBM", "SpecialWarningFont", function(value)
+			DBM.Options.SpecialWarningFont = value
+			DBM:UpdateSpecialWarningOptions()
+			DBM:ShowTestSpecialWarning(nil, 1)
+		end)
 		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -125)
 
 		local fontSizeSlider = specArea:CreateSlider(L.SpecWarn_FontSize, 16, 60, 1, 200)
@@ -2020,7 +2040,7 @@ local function CreateOptionsMenu()
 					DBM:ShowTestSpecialWarning(nil, 1)
 			end)
 		end
-		
+
 		local color2 = specArea:CreateColorSelect(64)
 		color2:SetPoint('TOPLEFT', color1, "TOPLEFT", 0, -105)
 		local color2text = specArea:CreateText(L.SpecWarn_FlashColor:format(2), 80)
@@ -2051,7 +2071,7 @@ local function CreateOptionsMenu()
 					DBM:ShowTestSpecialWarning(nil, 2)
 			end)
 		end
-		
+
 		local color3 = specArea:CreateColorSelect(64)
 		color3:SetPoint('TOPLEFT', color2, "TOPLEFT", 0, -105)
 		local color3text = specArea:CreateText(L.SpecWarn_FlashColor:format(3), 80)
@@ -2082,7 +2102,7 @@ local function CreateOptionsMenu()
 					DBM:ShowTestSpecialWarning(nil, 3)
 			end)
 		end
-		
+
 		local color4 = specArea:CreateColorSelect(64)
 		color4:SetPoint('TOPLEFT', color3, "TOPLEFT", 0, -105)
 		local color4text = specArea:CreateText(L.SpecWarn_FlashColor:format(4), 80)
@@ -2126,11 +2146,9 @@ local function CreateOptionsMenu()
 			{	text	= "NightElfBell",		value 	= "Sound\\Doodad\\BellTollNightElf.ogg", 	sound=true }
 		})
 
-		local SpecialWarnSoundDropDown = specArea:CreateDropdown(L.SpecialWarnSound, Sounds,
-			DBM.Options.SpecialWarningSound, function(value)
-				DBM.Options.SpecialWarningSound = value
-			end
-		)
+		local SpecialWarnSoundDropDown = specArea:CreateDropdown(L.SpecialWarnSound, Sounds, "DBM", "SpecialWarningSound", function(value)
+			DBM.Options.SpecialWarningSound = value
+		end)
 		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -230)
 
 		local flashdurSlider = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
@@ -2165,11 +2183,9 @@ local function CreateOptionsMenu()
 			end)
 		end
 
-		local SpecialWarnSoundDropDown2 = specArea:CreateDropdown(L.SpecialWarnSound2, Sounds,
-			DBM.Options.SpecialWarningSound2, function(value)
-				DBM.Options.SpecialWarningSound2 = value
-			end
-		)
+		local SpecialWarnSoundDropDown2 = specArea:CreateDropdown(L.SpecialWarnSound2, Sounds, "DBM", "SpecialWarningSound2", function(value)
+			DBM.Options.SpecialWarningSound2 = value
+		end)
 		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -335)
 
 		local flashdurSlider2 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
@@ -2204,11 +2220,9 @@ local function CreateOptionsMenu()
 			end)
 		end
 
-		local SpecialWarnSoundDropDown3 = specArea:CreateDropdown(L.SpecialWarnSound3, Sounds,
-			DBM.Options.SpecialWarningSound3, function(value)
-				DBM.Options.SpecialWarningSound3 = value
-			end
-		)
+		local SpecialWarnSoundDropDown3 = specArea:CreateDropdown(L.SpecialWarnSound3, Sounds, "DBM", "SpecialWarningSound3", function(value)
+			DBM.Options.SpecialWarningSound3 = value
+		end)
 		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -440)
 
 		local flashdurSlider3 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
@@ -2243,11 +2257,9 @@ local function CreateOptionsMenu()
 			end)
 		end
 
-		local SpecialWarnSoundDropDown4 = specArea:CreateDropdown(L.SpecialWarnSound4, Sounds,
-			DBM.Options.SpecialWarningSound4, function(value)
-				DBM.Options.SpecialWarningSound4 = value
-			end
-		)
+		local SpecialWarnSoundDropDown4 = specArea:CreateDropdown(L.SpecialWarnSound4, Sounds, "DBM", "SpecialWarningSound4", function(value)
+			DBM.Options.SpecialWarningSound4 = value
+		end)
 		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -545)
 
 		local flashdurSlider4 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
@@ -2336,43 +2348,35 @@ local function CreateOptionsMenu()
 		end)
 		specPanel:SetMyOwnHeight()
 	end
-	
+
 	do
 		local spokenAlertsPanel 	= DBM_GUI_Frame:CreateNewPanel(L.Panel_SpokenAlerts, "option")
 		local spokenGeneralArea		= spokenAlertsPanel:CreateArea(L.Area_VoiceSelection, nil, 110, true)
 
-		local CountSoundDropDown = spokenGeneralArea:CreateDropdown(L.CountdownVoice, DBM.Counts,
-		DBM.Options.CountdownVoice, function(value)
+		local CountSoundDropDown = spokenGeneralArea:CreateDropdown(L.CountdownVoice, DBM.Counts, "DBM", "CountdownVoice", function(value)
 			DBM.Options.CountdownVoice = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice)
-		end
-		)
+		end)
 		CountSoundDropDown:SetPoint("TOPLEFT", spokenGeneralArea.frame, "TOPLEFT", 0, -20)
 
-		local CountSoundDropDown2 = spokenGeneralArea:CreateDropdown(L.CountdownVoice2, DBM.Counts,
-		DBM.Options.CountdownVoice2, function(value)
+		local CountSoundDropDown2 = spokenGeneralArea:CreateDropdown(L.CountdownVoice2, DBM.Counts, "DBM", "CountdownVoice2", function(value)
 			DBM.Options.CountdownVoice2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice2)
-		end
-		)
+		end)
 		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
 
-		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts,
-		DBM.Options.CountdownVoice3, function(value)
+		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3", function(value)
 			DBM.Options.CountdownVoice3 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3)
-		end
-		)
-		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -40)
+		end)
+		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
-		local VoiceDropDown = spokenGeneralArea:CreateDropdown(L.VoicePackChoice, DBM.Voices,
-		DBM.Options.ChosenVoicePack, function(value)
+		local VoiceDropDown = spokenGeneralArea:CreateDropdown(L.VoicePackChoice, DBM.Voices, "DBM", "ChosenVoicePack", function(value)
 			DBM.Options.ChosenVoicePack = value
 			DBM:Debug("DBM.Options.ChosenVoicePack is set to "..DBM.Options.ChosenVoicePack)
 			DBM:CheckVoicePackVersion(value)
-		end
-		)
-		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -40)
+		end)
+		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -45)
 
 		local countdownOptionsArea	= spokenAlertsPanel:CreateArea(L.Area_CountdownOptions, nil, 100, true)
 		local ShowCountdownText 	= countdownOptionsArea:CreateCheckButton(L.ShowCountdownText,  true, nil, "ShowCountdownText")
@@ -2380,7 +2384,7 @@ local function CreateOptionsMenu()
 		local voiceFilterArea	= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 100, true)
 		local VPF1 				= voiceFilterArea:CreateCheckButton(L.SpecWarn_NoSoundsWVoice, true, nil, "VoiceOverSpecW")
 		local VPF2 				= voiceFilterArea:CreateCheckButton(L.SpecWarn_AlwaysVoice, true, nil, "AlwaysPlayVoice")
-		
+
 		--spokenGeneralArea:AutoSetDimension()
 		countdownOptionsArea:AutoSetDimension()
 		voiceFilterArea:AutoSetDimension()
@@ -2439,9 +2443,8 @@ local function CreateOptionsMenu()
 
 	do
 		local spamPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpamFilter, "option")
-		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 170, true)
+		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 150, true)
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
-		spamOutArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSendWhisper, true, nil, "DontSendBossWhispers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
@@ -2449,7 +2452,8 @@ local function CreateOptionsMenu()
 		spamOutArea:CreateCheckButton(L.SpamBlockNoHealthFrame, true, nil, "DontShowHealthFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
 
-		local spamArea = spamPanel:CreateArea(L.Area_SpamFilter, nil, 150, true)
+		local spamArea = spamPanel:CreateArea(L.Area_SpamFilter, nil, 170, true)
+		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
 		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
 		if BigBrother and type(BigBrother.ConsumableCheck) == "function" then
@@ -2466,12 +2470,12 @@ local function CreateOptionsMenu()
 		spamPTArea:CreateCheckButton(L.DontShowPTText, true, nil, "DontShowPTText")
 		spamPTArea:CreateCheckButton(L.DontPlayPTCountdown, true, nil, "DontPlayPTCountdown")
 		local SPTCDT = spamPTArea:CreateCheckButton(L.DontShowPTCountdownText, true, nil, "DontShowPTCountdownText")
-		
+
 		local PTSlider = spamPTArea:CreateSlider(L.PT_Threshold, 3, 30, 1, 300)   -- (text , min_value , max_value , step , width)
 		PTSlider:SetPoint('BOTTOMLEFT', SPTCDT, "BOTTOMLEFT", 80, -40)--Position based on slider, text anchored to slider. English has large text, so must move slider to middle :\
 		PTSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.PTCountThreshold)) end)
 		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = math.floor(self:GetValue()) end)
-		
+
 		spamPTArea:AutoSetDimension()
 		spamArea:AutoSetDimension()
 		spamSpecArea:AutoSetDimension()
@@ -2487,17 +2491,15 @@ local function CreateOptionsMenu()
 		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
 		local filterYell	= hideBlizzArea:CreateCheckButton(L.SpamBlockSayYell, true, nil, "FilterSayAndYell")
-		
+
 		local movieOptions = {
 			{	text	= L.Disable,	value 	= "Never"},
 			{	text	= L.AfterFirst,	value 	= "AfterFirst"},
 			{	text	= L.Always,		value 	= "Block"},
 		}
-		local blockMovieDropDown = hideBlizzArea:CreateDropdown(L.DisableCinematics, movieOptions,
-		DBM.Options.MovieFilter, function(value)
+		local blockMovieDropDown = hideBlizzArea:CreateDropdown(L.DisableCinematics, movieOptions, "DBM", "MovieFilter", function(value)
 			DBM.Options.MovieFilter = value
-		end
-		)
+		end)
 		blockMovieDropDown:SetPoint("TOPLEFT", filterYell, "TOPLEFT", 0, -40)
 
 		local pingFilterOptions = {
@@ -2505,17 +2507,15 @@ local function CreateOptionsMenu()
 			{	text	= L.HideApplicantAlertsFull,	value 	= 1},
 			{	text	= L.HideApplicantAlertsNotL,	value 	= 2},
 		}
-		local blockApplicantsDropDown = hideBlizzArea:CreateDropdown(L.HideApplicantAlerts, pingFilterOptions,
-		DBM.Options.HideApplicantAlerts, function(value)
+		local blockApplicantsDropDown = hideBlizzArea:CreateDropdown(L.HideApplicantAlerts, pingFilterOptions, "DBM", "HideApplicantAlerts", function(value)
 			DBM.Options.HideApplicantAlerts = value
-		end
-		)
-		blockApplicantsDropDown:SetPoint("TOPLEFT", blockMovieDropDown, "TOPLEFT", 0, -40)
-		
+		end)
+		blockApplicantsDropDown:SetPoint("TOPLEFT", blockMovieDropDown, "TOPLEFT", 0, -45)
+
 		--hideBlizzArea:AutoSetDimension()
 		hideBlizzPanel:SetMyOwnHeight()
 	end
-	
+
 	do
 		local extraFeaturesPanel 	= DBM_GUI_Frame:CreateNewPanel(L.Panel_ExtraFeatures, "option")
 		local chatAlertsArea		= extraFeaturesPanel:CreateArea(L.Area_ChatAlerts, nil, 100, true)
@@ -2539,7 +2539,7 @@ local function CreateOptionsMenu()
 		local inviteArea			= extraFeaturesPanel:CreateArea(L.Area_Invite, nil, 100, true)
 		local AutoAcceptFriendInvite= inviteArea:CreateCheckButton(L.AutoAcceptFriendInvite, true, nil, "AutoAcceptFriendInvite")
 		local AutoAcceptGuildInvite	= inviteArea:CreateCheckButton(L.AutoAcceptGuildInvite, true, nil, "AutoAcceptGuildInvite")
-		
+
 		local advancedArea			= extraFeaturesPanel:CreateArea(L.Area_Advanced, nil, 100, true)
 		local FakeBW				= advancedArea:CreateCheckButton(L.FakeBW, true, nil, "FakeBWVersion")
 
@@ -2591,6 +2591,80 @@ local function CreateOptionsMenu()
 		extraFeaturesPanel:SetMyOwnHeight()
 	end
 
+	do
+		local profileDropdown = {}
+
+		local profilePanel			= DBM_GUI_Frame:CreateNewPanel(L.Panel_Profile, "option")
+		local createProfileArea		= profilePanel:CreateArea(L.Area_CreateProfile, nil, 65, true)
+		local createTextbox			= createProfileArea:CreateEditBox(L.EnterProfileName, "", 175)
+		createTextbox:SetMaxLetters(17)
+		createTextbox:SetPoint('TOPLEFT', 30, -25)
+		createTextbox:SetScript("OnEnterPressed", function() DBM_GUI.dbm_profilePanel_create() end)
+
+		local createButton			= createProfileArea:CreateButton(L.CreateProfile)
+		createButton:SetPoint('LEFT', createTextbox, "RIGHT", 10, 0)
+		createButton:SetScript("OnClick", function() DBM_GUI.dbm_profilePanel_create() end)
+		createButton:SetScript("OnShow", function()
+			table.wipe(profileDropdown)
+			for name, tb in pairs(DBM_AllSavedOptions) do
+				local dropdown = { text = name, value = name }
+				table.insert(profileDropdown, dropdown)
+			end
+		end)
+
+		local applyProfileArea		= profilePanel:CreateArea(L.Area_ApplyProfile, nil, 65, true)
+		local applyProfile			= applyProfileArea:CreateDropdown(L.SelectProfileToApply, profileDropdown, nil, nil, function(value)
+			DBM_UsedProfile = value
+			DBM:ApplyProfile(value)
+			DBM_GUI:dbm_profilePanel_refresh()
+		end)
+		applyProfile:SetPoint("TOPLEFT", 0, -20)
+		applyProfile:SetScript("OnShow", function()
+			applyProfile:SetSelectedValue(DBM_UsedProfile)
+		end)
+
+		local deleteProfileArea		= profilePanel:CreateArea(L.Area_DeleteProfile, nil, 65, true)
+		local deleteProfile			= deleteProfileArea:CreateDropdown(L.SelectProfileToDelete, profileDropdown, nil, nil, function(value)
+			DBM:DeleteProfile(value)
+			C_Timer.After(0.05, DBM_GUI.dbm_profilePanel_refresh)
+		end)
+		deleteProfile:SetPoint("TOPLEFT", 0, -20)
+		deleteProfile:SetScript("OnShow", function()
+			deleteProfile.value = nil
+			deleteProfile.text = nil
+			_G[deleteProfile:GetName().."Text"]:SetText("")
+		end)
+
+		local dualProfileArea		= profilePanel:CreateArea(L.Area_DualProfile, nil, 50, true)
+		local dualProfile			= dualProfileArea:CreateCheckButton(L.DualProfile, true)
+		dualProfile:SetScript("OnClick", function()
+			DBM_UseDualProfile = not DBM_UseDualProfile
+			DBM:SpecChanged(true)
+		end)
+		dualProfile:SetScript("OnShow", function()
+			dualProfile:SetChecked(DBM_UseDualProfile)
+		end)
+
+		function DBM_GUI:dbm_profilePanel_create()
+			if createTextbox:GetText() then
+				local text = createTextbox:GetText()
+				text = text:gsub(" ", "")
+				if text ~= "" then
+					DBM:CreateProfile(createTextbox:GetText())
+					createTextbox:SetText("")
+					createTextbox:ClearFocus()
+					DBM_GUI:dbm_profilePanel_refresh()
+				end
+			end
+		end
+
+		function DBM_GUI:dbm_profilePanel_refresh()
+			createButton:GetScript("OnShow")()
+			applyProfile:GetScript("OnShow")()
+			deleteProfile:GetScript("OnShow")()
+		end
+	end
+
 	-- Set Revision // please don't translate this!
 	DBM_GUI_OptionsFrameRevision:SetText("Deadly Boss Mods "..DBM.DisplayVersion.." (r"..DBM.Revision..")")
 	if L.TranslationBy then
@@ -2605,8 +2679,10 @@ DBM:RegisterOnGuiLoadCallback(CreateOptionsMenu, 1)
 
 do
 	local mfloor = math.floor
-	local function OnShowGetStats(stats, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3)
+	local function OnShowGetStats(bossid, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3)
 		return function(self)
+			local mod = DBM:GetModByName(bossid)
+			local stats = mod.stats
 			top1value1:SetText( stats.normalKills )
 			top1value2:SetText( stats.normalPulls - stats.normalKills )
 			top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
@@ -2655,20 +2731,93 @@ do
 		if not panel then
 			error("Panel is nil", 2)
 		end
-		
+
+		local modProfileArea
+		if not subtab then
+			local modProfileDropdown = {}
+			modProfileArea = panel:CreateArea(L.Area_ModProfile, panel.frame:GetWidth() - 20, 105, true)
+			modProfileArea.frame:SetPoint("TOPLEFT", 10, -25)
+			local resetButton = modProfileArea:CreateButton(L.ModAllReset, 200, 20)
+			resetButton:SetPoint('TOPLEFT', 10, -14)
+			resetButton:SetScript("OnClick", function() DBM:LoadAllModDefaultOption(addon.modId) end)
+			resetButton:SetScript("OnShow", function()
+				table.wipe(modProfileDropdown)
+				local savedVarsName = addon.modId:gsub("-", "").."_AllSavedVars"
+				for charname, charTable in pairs(_G[savedVarsName]) do
+					for bossid, optionTable in pairs(charTable) do
+						for i = 0, 3 do
+							if optionTable[i] then
+								local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
+								local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
+								table.insert(modProfileDropdown, dropdown)
+							end
+						end
+						break
+					end
+				end
+			end)
+
+			local resetStatButton = modProfileArea:CreateButton(L.ModAllStatReset, 200, 20)
+			resetStatButton:SetPoint('LEFT', resetButton, "RIGHT", 40, 0)
+			resetStatButton:SetScript("OnClick", function() DBM:ClearAllStats(addon.modId) end)
+
+			local copyModProfile = modProfileArea:CreateDropdown(L.SelectModProfileCopy, modProfileDropdown, nil, nil, function(value)
+				local name, profile = strsplit("|", value)
+				DBM:CopyAllModOption(addon.modId, name, tonumber(profile))
+				C_Timer.After(0.05, DBM_GUI.dbm_modProfilePanel_refresh)
+			end, 100)
+			copyModProfile:SetPoint("TOPLEFT", -7, -54)
+			copyModProfile:SetScript("OnShow", function()
+				copyModProfile.value = nil
+				copyModProfile.text = nil
+				_G[copyModProfile:GetName().."Text"]:SetText("")
+			end)
+
+			local copyModSoundProfile = modProfileArea:CreateDropdown(L.SelectModProfileCopySound, modProfileDropdown, nil, nil, function(value)
+				local name, profile = strsplit("|", value)
+				DBM:CopyAllModSoundOption(addon.modId, name, tonumber(profile))
+				C_Timer.After(0.05, DBM_GUI.dbm_modProfilePanel_refresh)
+			end, 100)
+			copyModSoundProfile:SetPoint("LEFT", copyModProfile, "RIGHT", 27, 0)
+			copyModSoundProfile:SetScript("OnShow", function()
+				copyModSoundProfile.value = nil
+				copyModSoundProfile.text = nil
+				_G[copyModSoundProfile:GetName().."Text"]:SetText("")
+			end)
+
+			local deleteModProfile = modProfileArea:CreateDropdown(L.SelectModProfileDelete, modProfileDropdown, nil, nil, function(value)
+				local name, profile = strsplit("|", value)
+				DBM:DeleteAllModOption(addon.modId, name, tonumber(profile))
+				C_Timer.After(0.05, DBM_GUI.dbm_modProfilePanel_refresh)
+			end, 100)
+			deleteModProfile:SetPoint("LEFT", copyModSoundProfile, "RIGHT", 27, 0)
+			deleteModProfile:SetScript("OnShow", function()
+				deleteModProfile.value = nil
+				deleteModProfile.text = nil
+				_G[deleteModProfile:GetName().."Text"]:SetText("")
+			end)
+
+			function DBM_GUI:dbm_modProfilePanel_refresh()
+				resetButton:GetScript("OnShow")()
+				copyModProfile:GetScript("OnShow")()
+				copyModSoundProfile:GetScript("OnShow")()
+				deleteModProfile:GetScript("OnShow")()
+			end
+		end
+
 		if addon.noStatistics then return end
 
 		local ptext = panel:CreateText(L.BossModLoaded:format(subtab and addon.subTabs[subtab] or addon.name), nil, nil, GameFontNormal)
-		ptext:SetPoint('TOPLEFT', panel.frame, "TOPLEFT", 10, -10)
+		ptext:SetPoint('TOPLEFT', panel.frame, "TOPLEFT", 10, modProfileArea and -135 or -10)
 
 		local singleline = 0
 		local doubleline = 0
 		local area = panel:CreateArea(nil, panel.frame:GetWidth() - 20, 0)
-		area.frame:SetPoint("TOPLEFT", 10, -25)
+		area.frame:SetPoint("TOPLEFT", 10, modProfileArea and -150 or -25)
 		area.onshowcall = {}
 
 		for _, mod in ipairs(DBM.Mods) do
-			if mod.modId == addon.modId and (not subtab or subtab == mod.subTab) and not mod.isTrashMod then
+			if mod.modId == addon.modId and (not subtab or subtab == mod.subTab) and not mod.isTrashMod and not mod.noStatistics then
 				local statsType = 0
 				if not mod.stats then
 					mod.stats = { }
@@ -3095,11 +3244,11 @@ do
 					end
 				end
 
-				table.insert(area.onshowcall, OnShowGetStats(mod.stats, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
+				table.insert(area.onshowcall, OnShowGetStats(mod.id, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
 			end
 		end
 		area.frame:SetScript("OnShow", function(self)
-			for _,v in pairs(area.onshowcall) do
+			for _, v in pairs(area.onshowcall) do
 				v()
 			end
 		end)
@@ -3120,7 +3269,7 @@ do
 	local Categories = {}
 	local subTabId = 0
 	function DBM_GUI:UpdateModList()
-		for k,addon in ipairs(DBM.AddOns) do
+		for k, addon in ipairs(DBM.AddOns) do
 			if not Categories[addon.category] then
 				-- Create a Panel for "Wrath of the Lich King" "Burning Crusade" ...
 				local expLevel = GetExpansionLevel()
@@ -3172,7 +3321,6 @@ do
 				end
 			end
 
-
 			for _, mod in ipairs(DBM.Mods) do
 				if mod.modId == addon.modId then
 					if not mod.panel and (not addon.subTabs or (addon.subPanels and addon.subPanels[mod.subTab])) then
@@ -3199,16 +3347,17 @@ do
 			return false
 		end
 		local panel = mod.panel
+		panel.initheight = 35
 		local category
 
 		local iconstat = panel.frame:CreateFontString("DBM_GUI_Mod_Icons"..mod.localization.general.name, "ARTWORK")
-		iconstat:SetPoint("TOPRIGHT", panel.frame, "TOPRIGHT", -16, -24)
+		iconstat:SetPoint("TOPRIGHT", panel.frame, "TOPRIGHT", -168, -10)
 		iconstat:SetFontObject(GameFontNormal)
 		iconstat:SetText(L.IconsInUse)
 		for i=1, 8, 1 do
 			local icon = panel.frame:CreateTexture()
 			icon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons.blp")
-			icon:SetPoint("TOPRIGHT", panel.frame, "TOPRIGHT", 2-(i*18), -40)
+			icon:SetPoint("TOPRIGHT", panel.frame, "TOPRIGHT", -150-(i*18), -26)
 			icon:SetWidth(16)
 			icon:SetHeight(16)
 			if not mod.usedIcons or not mod.usedIcons[i] then		icon:SetAlpha(0.25)		end
@@ -3223,72 +3372,66 @@ do
 			end
 		end
 
-		local reset  = panel:CreateButton(L.Mod_Reset, 150, nil, nil, GameFontNormalSmall)
-		reset:SetPoint('TOPRIGHT', panel.frame, "TOPRIGHT", -14, -2)
+		local reset  = panel:CreateButton(L.Mod_Reset, 155, 30, nil, GameFontNormalSmall)
+		reset:SetPoint('TOPRIGHT', panel.frame, "TOPRIGHT", -6, -6)
 		reset:SetScript("OnClick", function(self)
-			local savedOptions = _G[mod.modId:gsub("-", "").."_SavedVars"][mod.id] or {}
-			table.wipe(savedOptions)
-			for i, v in ipairs(DBM.Mods) do
-				if v.id == mod.id then
-					for option, optionValue in pairs(v.DefaultOptions) do
-						savedOptions[option] = optionValue
-					end
-					v.Options = savedOptions or {}
-					break
-				end
-			end
-			panel:Refresh()
+			DBM:LoadModDefaultOption(mod)
 		end)
 		local button = panel:CreateCheckButton(L.Mod_Enabled, true)
 		button:SetScript("OnShow",  function(self) self:SetChecked(mod.Options.Enabled) end)
-		button:SetPoint('TOPLEFT', panel.frame, "TOPLEFT", 8, -24)
+		button:SetPoint('TOPLEFT', panel.frame, "TOPLEFT", 8, -14)
 		button:SetScript("OnClick", function(self) mod:Toggle()	end)
 
 		for _, catident in pairs(mod.categorySort) do
 			category = mod.optionCategories[catident]
-			local catpanel = panel:CreateArea(mod.localization.cats[catident], nil, nil, true)
-			local button, lastButton, addSpacer
-			for _,v in ipairs(category) do
-				if v == DBM_OPTION_SPACER then
-					addSpacer = true
-				elseif type(mod.Options[v]) == "boolean" then
-					lastButton = button
-					if mod.Options[v .. "SpecialWarningSound"] then
-						button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, v .. "SpecialWarningSound", mod)
-					else
-						button = catpanel:CreateCheckButton(mod.localization.options[v], true)
+			if category then
+				local catpanel = panel:CreateArea(mod.localization.cats[catident], nil, nil, true)
+				local button, lastButton, addSpacer
+				for _, v in ipairs(category) do
+					if v == DBM_OPTION_SPACER then
+						addSpacer = true
+					elseif v.line then
+						lastButton = button
+						button = catpanel:CreateLine(v.text)
+					elseif type(mod.Options[v]) == "boolean" then
+						lastButton = button
+						if mod.Options[v .. "SpecialWarningSound"] then
+							button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v .. "SpecialWarningSound")
+						else
+							button = catpanel:CreateCheckButton(mod.localization.options[v], true)
+						end
+						if addSpacer then
+							button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
+							addSpacer = false
+						end
+						button:SetScript("OnShow",  function(self)
+							self:SetChecked(mod.Options[v])
+						end)
+						button:SetScript("OnClick", function(self)
+							mod.Options[v] = not mod.Options[v]
+							if mod.optionFuncs and mod.optionFuncs[v] then mod.optionFuncs[v]() end
+						end)
+					elseif mod.dropdowns and mod.dropdowns[v] then
+						lastButton = button
+						local dropdownOptions = {}
+						for i, v in ipairs(mod.dropdowns[v]) do
+							dropdownOptions[#dropdownOptions + 1] = { text = mod.localization.options[v], value = v }
+						end
+						button = catpanel:CreateDropdown(mod.localization.options[v], dropdownOptions, mod, v, function(value) mod.Options[v] = value end)
+						if addSpacer then
+							button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
+							addSpacer = false
+						else
+							button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -10)
+						end
+						button:SetScript("OnShow", function(self)
+							self:SetSelectedValue(mod.Options[v])
+						end)
 					end
-					if addSpacer then
-						button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
-						addSpacer = false
-					end
-					button:SetScript("OnShow",  function(self)
-						self:SetChecked(mod.Options[v])
-					end)
-					button:SetScript("OnClick", function(self)
-						mod.Options[v] = not mod.Options[v]
-						if mod.optionFuncs and mod.optionFuncs[v] then mod.optionFuncs[v]() end
-					end)
-				elseif mod.dropdowns and mod.dropdowns[v] then
-					lastButton = button
-					local dropdownOptions = {}
-					for i, v in ipairs(mod.dropdowns[v]) do
-						dropdownOptions[#dropdownOptions + 1] = { text = mod.localization.options[v], value = v }
-					end
-					button = catpanel:CreateDropdown(mod.localization.options[v], dropdownOptions, mod.Options[v], function(value) mod.Options[v] = value end)
-					if addSpacer then
-						button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
-						addSpacer = false
-					else
-						button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -10)
-					end
-					button:SetScript("OnShow", function(self)
-						self:SetSelectedValue(mod.Options[v])
-					end)
 				end
+				catpanel:AutoSetDimension()
+				panel:SetMyOwnHeight()
 			end
-			catpanel:AutoSetDimension()
-			panel:SetMyOwnHeight()
 		end
 	end
 end

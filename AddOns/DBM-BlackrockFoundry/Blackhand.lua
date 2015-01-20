@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12426 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12472 $"):sub(12, -3))
 mod:SetCreatureID(77325)
 mod:SetEncounterID(1704)
 mod:SetZone()
@@ -40,10 +40,10 @@ local specWarnDemolition			= mod:NewSpecialWarningSpell(156425, nil, nil, nil, 2
 local specWarnMarkedforDeath		= mod:NewSpecialWarningYou(156096, nil, nil, nil, 3, nil, true)
 local yellMarkedforDeath			= mod:NewYell(156096)
 local specWarnThrowSlagBombs		= mod:NewSpecialWarningMove(156030, nil, nil, nil, nil, nil, true)
-local specWarnShatteringSmash		= mod:NewSpecialWarningSpell(155992, mod:IsMelee(), nil, nil, nil, nil, true)
+local specWarnShatteringSmash		= mod:NewSpecialWarningSpell(155992, "Melee", nil, nil, nil, nil, true)
 local specWarnMoltenSlag			= mod:NewSpecialWarningMove(156401)
 --Stage Two: Storage Warehouse
-local specWarnSiegemaker			= mod:NewSpecialWarningSwitch("ej9571", mod:IsDps(), nil, nil, nil, nil, true)
+local specWarnSiegemaker			= mod:NewSpecialWarningSwitch("ej9571", "Dps", nil, nil, nil, nil, true)
 --Stage Three: Iron Crucible
 local specWarnSlagEruption			= mod:NewSpecialWarningSpell(156928, nil, nil, nil, 2)
 local specWarnAttachSlagBombs		= mod:NewSpecialWarningYou(157000, nil, nil, nil, nil, nil, true)--May change to sound 3, but I don't want it confused with the even more threatening marked for death, so for now will try 1
@@ -51,22 +51,25 @@ local yellAttachSlagBombs			= mod:NewYell(157000, nil, false)
 local specWarnMassiveShatteringSmash= mod:NewSpecialWarningSpell(158054, nil, nil, nil, 2)
 
 --Stage One: The Blackrock Forge
+mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerDemolitionCD				= mod:NewNextTimer(45, 156425)
 local timerMarkedforDeathCD			= mod:NewNextTimer(15.5, 156096)
 local timerThrowSlagBombsCD			= mod:NewCDTimer(25, 156030)--It's a next timer, but sometimes delayed by Shattering Smash
 local timerShatteringSmashCD		= mod:NewCDTimer(30, 155992)--Next timer, but sometimes delayed by throw slag bombs.
 local timerImpalingThrow			= mod:NewCastTimer(5, 156111)--How long marked target has to aim throw at Debris Pile or Siegemaker
 --Stage Two: Storage Warehouse
+mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerSiegemakerCD				= mod:NewNextTimer(50, "ej9571", nil, nil, nil, 156667)
 --Stage Three: Iron Crucible
+mod:AddTimerLine(SCENARIO_STAGE:format(3))
 --local timerSlagEruptionCD			= mod:NewNextTimer(30, 156928)
 --local timerAttachSlagBombsCD		= mod:NewNextTimer(30, 157000)
 local timerSlagBomb					= mod:NewCastTimer(5, 157015)
 --local timerMassiveShatteringSmashCD	= mod:NewNextTimer(30, 158054)
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceSiegemaker				= mod:NewVoice("ej9571", mod:IsDps()) -- ej9571.ogg tank coming
-local voiceShatteringSmash			= mod:NewVoice(155992, mod:IsMelee()) --carefly
+local voiceSiegemaker				= mod:NewVoice("ej9571", "Dps") -- ej9571.ogg tank coming
+local voiceShatteringSmash			= mod:NewVoice(155992, "Melee") --carefly
 local voiceMarkedforDeath			= mod:NewVoice(156096) --target: findshelter; else: 156096.ogg marked for death
 local voiceDemolition				= mod:NewVoice(156425) --AOE
 local voiceThrowSlagBombs			= mod:NewVoice(156030) --bombsoon

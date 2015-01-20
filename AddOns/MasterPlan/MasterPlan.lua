@@ -1,5 +1,5 @@
 local api, addonName, T = {}, ...
-if T.Mark ~= 16 then
+if T.Mark ~= 23 then
 	local m = "You must restart World of Warcraft after installing this update."
 	if type(T.L) == "table" and type(T.L[m]) == "string" then m = T.L[m] end
 	return print("|cffffffff[Master Plan]: |cffff8000" .. m)
