@@ -3931,9 +3931,7 @@ Filger_Spells = {
 			-- 碾碎护甲
 			{spellID = 158553, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			
-			--[==[
-			
+					
 			-- 黑石铸造厂 988
 			-- 1	格鲁尔 [Gruul]
 			{spellID = 155326, unitID = "player", caster = "all", filter = "DEBUFF"},
@@ -3968,11 +3966,7 @@ Filger_Spells = {
 			
 			-- 10	黑手 [Blackhand]
 			{spellID = 156096, unitID = "player", caster = "all", filter = "DEBUFF"},
-			 
-			--]==]
-			
-			
-			
+
 			-- outdoor bosses -- 户外首领
 			-- Sha of Anger [怒之煞]
 			--Seethe

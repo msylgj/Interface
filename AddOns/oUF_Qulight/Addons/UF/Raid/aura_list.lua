@@ -18,9 +18,43 @@
 
 			-- 心智 [尤格萨隆]
 			SpellName(63050),
-
-
+			
 			----------------------------------WOD------------------------------------
+			-- 黑石要塞
+			-- 1	格鲁尔 [Gruul]
+			SpellName(155326,
+			
+			-- 2	奥尔高格 [Oregorger]
+			SpellName(156324),
+			
+			-- 3	兽王达玛克 [Beastlord Darmac]
+			SpellName(155365),
+			SpellName(155399),
+			SpellName(154989),
+			SpellName(155499),
+			
+			-- 4	缚火者卡格拉兹 [Flamebender Ka'graz]
+			SpellName(155277),
+			
+			-- 5	汉斯加尔与弗兰佐克 [Hans'gar and Franzok]
+			SpellName(157139),
+			
+			-- 6	主管索格尔 [Operator Thogar]
+			SpellName(155921),
+			
+			-- 7	爆裂熔炉 [The Blast Furnace]
+			SpellName(155240),
+			SpellName(155242),
+			
+			-- 8	克罗莫格 [Kromog]
+			SpellName(157060),
+			
+			-- 9	钢铁女武神 [The Iron Maidens]
+			SpellName(158315),
+			
+			-- 10	黑手 [Blackhand]
+			SpellName(156096),
+			
 			--  [970]  悬槌堡
 			-- 0   小怪
 			-- 污染之爪
