@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 12509 $"):sub(12, -3)
+local revision =("$Revision: 12763 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -1431,29 +1431,18 @@ local function CreateOptionsMenu()
 		end)
 		local UseMasterVolume			= generaloptions:CreateCheckButton(L.UseMasterVolume, true, nil, "UseMasterVolume")
 
-		local bmrange  = generaloptions:CreateButton(L.Button_RangeFrame)
+		local bmrange  = generaloptions:CreateButton(L.Button_RangeFrame, 120, 30)
 		bmrange:SetPoint('TOPLEFT', UseMasterVolume, "BOTTOMLEFT", 0, -5)
 		bmrange:SetScript("OnClick", function(self)
 			if DBM.RangeCheck:IsShown() then
-				DBM.RangeCheck:Hide()
+				DBM.RangeCheck:Hide(true)
 			else
 				DBM.RangeCheck:Show(nil, nil, true)
 			end
 		end)
 
-		local bmradar  = generaloptions:CreateButton(L.Button_RangeRadar)
-		bmradar:SetPoint('TOPLEFT', bmrange, "TOPRIGHT", 0, 0)
-		bmradar:SetScript("OnClick", function(self)
-			if DBMRangeCheckRadar and DBMRangeCheckRadar:IsShown() then
-				DBMRangeCheckRadar:Hide()
-			else
-				DBM.RangeCheck:Show(nil, nil, true)
-				DBMRangeCheckRadar:Show()
-			end
-		end)
-
-		local bminfo  = generaloptions:CreateButton(L.Button_InfoFrame)
-		bminfo:SetPoint('TOPLEFT', bmrange, "BOTTOMLEFT", 0, 0)
+		local bminfo  = generaloptions:CreateButton(L.Button_InfoFrame, 120, 30)
+		bminfo:SetPoint('LEFT', bmrange, "RIGHT", 2, 0)
 		bminfo:SetScript("OnClick", function(self)
 			if DBM.InfoFrame:IsShown() then
 				DBM.InfoFrame:Hide()
@@ -1462,12 +1451,12 @@ local function CreateOptionsMenu()
 			end
 		end)
 
-		local bmtestmode  = generaloptions:CreateButton(L.Button_TestBars)
-		bmtestmode:SetPoint('TOPLEFT', bminfo, "TOPRIGHT", 0, 0)
+		local bmtestmode  = generaloptions:CreateButton(L.Button_TestBars, 150, 30)
+		bmtestmode:SetPoint('LEFT', bminfo, "RIGHT", 2, 0)
 		bmtestmode:SetScript("OnClick", function(self) DBM:DemoMode() end)
 
 		local latencySlider = generaloptions:CreateSlider(L.Latency_Text, 50, 750, 5, 210)   -- (text , min_value , max_value , step , width)
-		latencySlider:SetPoint('BOTTOMLEFT', bminfo, "BOTTOMLEFT", 10, -35)
+		latencySlider:SetPoint('BOTTOMLEFT', bmrange, "BOTTOMLEFT", 10, -40)
 		latencySlider:HookScript("OnShow", function(self) self:SetValue(DBM.Options.LatencyThreshold) end)
 		latencySlider:HookScript("OnValueChanged", function(self) DBM.Options.LatencyThreshold = self:GetValue() end)
 		----
@@ -1540,13 +1529,53 @@ local function CreateOptionsMenu()
 		--            Raid Warning Colors            --
 		-----------------------------------------------
 		local RaidWarningPanel = DBM_GUI_Frame:CreateNewPanel(L.Tab_RaidWarning, "option")
-		local raidwarnoptions = RaidWarningPanel:CreateArea(L.RaidWarning_Header, nil, 190, true)
+		local raidwarnoptions = RaidWarningPanel:CreateArea(L.RaidWarning_Header, nil, 355, true)
 
 		local ShowWarningsInChat 	= raidwarnoptions:CreateCheckButton(L.ShowWarningsInChat, true, nil, "ShowWarningsInChat")
 		local ShowFakedRaidWarnings = raidwarnoptions:CreateCheckButton(L.ShowFakedRaidWarnings,  true, nil, "ShowFakedRaidWarnings")
 		local WarningIconLeft		= raidwarnoptions:CreateCheckButton(L.WarningIconLeft,  true, nil, "WarningIconLeft")
 		local WarningIconRight 		= raidwarnoptions:CreateCheckButton(L.WarningIconRight,  true, nil, "WarningIconRight")
 		local WarningIconChat 		= raidwarnoptions:CreateCheckButton(L.WarningIconChat,  true, nil, "WarningIconChat")
+
+		-- RaidWarn Font
+		local Fonts = MixinSharedMedia3("font", {
+			{	text	= "Default",		value 	= STANDARD_TEXT_FONT,			font = STANDARD_TEXT_FONT		},
+			{	text	= "Arial",			value 	= "Fonts\\ARIALN.TTF",			font = "Fonts\\ARIALN.TTF"		},
+			{	text	= "Skurri",			value 	= "Fonts\\skurri.ttf",			font = "Fonts\\skurri.ttf"		},
+			{	text	= "Morpheus",		value 	= "Fonts\\MORPHEUS.ttf",		font = "Fonts\\MORPHEUS.ttf"	}
+		})
+
+		local FontDropDown = raidwarnoptions:CreateDropdown(L.Warn_FontType, Fonts, "DBM", "WarningFont", function(value)
+			DBM.Options.WarningFont = value
+			DBM:UpdateWarningOptions()
+			DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
+		end)
+		FontDropDown:SetPoint("TOPLEFT", WarningIconChat, "BOTTOMLEFT", 0, -10)
+
+		-- RaidWarn Font Style
+		local FontStyles = {
+			{	text	= L.None,					value 	= "None"						},
+			{	text	= L.Outline,				value 	= "OUTLINE"						},
+			{	text	= L.ThickOutline,			value 	= "THICKOUTLINE"				},
+			{	text	= L.MonochromeOutline,		value 	= "MONOCHROME,OUTLINE"			},
+			{	text	= L.MonochromeThickOutline,	value 	= "MONOCHROME,THICKOUTLINE"		}
+		}
+
+		local FontStyleDropDown = raidwarnoptions:CreateDropdown(L.Warn_FontStyle, FontStyles, "DBM", "WarningFontStyle", function(value)
+			DBM.Options.WarningFontStyle = value
+			DBM:UpdateWarningOptions()
+			DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
+		end)
+		FontStyleDropDown:SetPoint("TOPLEFT", FontDropDown, "BOTTOMLEFT", 0, -10)
+
+		-- RaidWarn Font Shadow
+		local FontShadow = raidwarnoptions:CreateCheckButton(L.Warn_FontShadow, nil, nil, "WarningFontShadow")
+		FontShadow:SetScript("OnClick", function()
+			DBM.Options.WarningFontShadow = not DBM.Options.WarningFontShadow
+			DBM:UpdateWarningOptions()
+			DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
+		end)
+		FontShadow:SetPoint("LEFT", FontStyleDropDown, "RIGHT", 35, 0)
 
 		-- RaidWarn Sound
 		local Sounds = MixinSharedMedia3("sound", {
@@ -1559,7 +1588,41 @@ local function CreateOptionsMenu()
 		local RaidWarnSoundDropDown = raidwarnoptions:CreateDropdown(L.RaidWarnSound, Sounds, "DBM", "RaidWarningSound", function(value)
 			DBM.Options.RaidWarningSound = value
 		end)
-		RaidWarnSoundDropDown:SetPoint("TOPLEFT", WarningIconChat, "BOTTOMLEFT", 10, -10)
+		RaidWarnSoundDropDown:SetPoint("TOPLEFT", FontStyleDropDown, "BOTTOMLEFT", 0, -10)
+
+		-- RaidWarn Font Size
+		local fontSizeSlider = raidwarnoptions:CreateSlider(L.Warn_FontSize, 14, 60, 1, 200)
+		fontSizeSlider:SetPoint('TOPLEFT', FontDropDown, "TOPLEFT", 20, -130)
+		do
+			local firstshow = true
+			fontSizeSlider:SetScript("OnShow", function(self)
+				firstshow = true
+				self:SetValue(DBM.Options.WarningFontSize)
+			end)
+			fontSizeSlider:HookScript("OnValueChanged", function(self)
+				if firstshow then firstshow = false return end
+				DBM.Options.WarningFontSize = self:GetValue()
+				DBM:UpdateWarningOptions()
+				DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
+			end)
+		end
+
+		-- RaidWarn Font Size
+		local durationSlider = raidwarnoptions:CreateSlider(L.Warn_Duration, 3, 20, 1, 200)
+		durationSlider:SetPoint('TOPLEFT', FontDropDown, "TOPLEFT", 20, -170)
+		do
+			local firstshow = true
+			durationSlider:SetScript("OnShow", function(self)
+				firstshow = true
+				self:SetValue(DBM.Options.WarningDuration)
+			end)
+			durationSlider:HookScript("OnValueChanged", function(self)
+				if firstshow then firstshow = false return end
+				DBM.Options.WarningDuration = self:GetValue()
+				DBM:UpdateWarningOptions()
+				DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
+			end)
+		end
 
 		--Raid Warning Colors
 		local raidwarncolors = RaidWarningPanel:CreateArea(L.RaidWarnColors, nil, 150, true)
@@ -1619,62 +1682,7 @@ local function CreateOptionsMenu()
 		movemebutton:SetPoint('BOTTOMRIGHT', raidwarncolors.frame, "TOPRIGHT", 0, -1)
 		movemebutton:SetNormalFontObject(GameFontNormalSmall)
 		movemebutton:SetHighlightFontObject(GameFontNormalSmall)
-		do
-			local anchorFrame
-			local function hideme()
-				anchorFrame:Hide()
-			end
-			movemebutton:SetScript("OnClick", function(self)
-				DBM:Schedule(20, hideme)
-				DBM.Bars:CreateBar(20, L.BarWhileMove)
-				if not anchorFrame then
-					anchorFrame = CreateFrame("Frame", "DBM_GUI_RaidWarnAnchor", UIParent)
-					anchorFrame:SetWidth(32)
-					anchorFrame:SetHeight(32)
-					anchorFrame:EnableMouse(true)
-					anchorFrame:SetPoint("BOTTOM", RaidWarningFrame, "TOP", 0, 1)
-					anchorFrame.texture = anchorFrame:CreateTexture()
-					anchorFrame.texture:SetTexture("Interface\\Addons\\DBM-GUI\\textures\\dot.blp")
-					anchorFrame.texture:SetPoint("CENTER", anchorFrame, "CENTER", 0, 0)
-					anchorFrame.texture:SetWidth(32)
-					anchorFrame.texture:SetHeight(32)
-					anchorFrame:SetScript("OnMouseDown", function(self)
-						RaidWarningFrame:SetMovable(true)
-						RaidWarningFrame:StartMoving()
-						DBM:Unschedule(hideme)
-						DBM.Bars:CancelBar(L.BarWhileMove)
-					end)
-					anchorFrame:SetScript("OnMouseUp", function(self)
-						RaidWarningFrame:StopMovingOrSizing()
-						RaidWarningFrame:SetMovable(false)
-						local point, _, _, xOfs, yOfs = RaidWarningFrame:GetPoint(1)
-						DBM.Options.RaidWarningPosition.Point = point
-						DBM.Options.RaidWarningPosition.X = xOfs
-						DBM.Options.RaidWarningPosition.Y = yOfs
-						DBM:Schedule(15, hideme)
-						DBM.Bars:CreateBar(15, L.BarWhileMove)
-					end)
-					do
-						local elapsed = 10
-						anchorFrame:SetScript("OnUpdate", function(self, e)
-							elapsed = elapsed + e
-							if elapsed > 5 then
-								elapsed = 0
-								RaidNotice_AddMessage(RaidWarningFrame, L.RaidWarnMessage, ChatTypeInfo["RAID_WARNING"])
-							end
-						end)
-					end
-
-					anchorFrame:Show()
-				else
-					if anchorFrame:IsShown() then
-						anchorFrame:Hide()
-					else
-						anchorFrame:Show()
-					end
-				end
-			end)
-		end
+		movemebutton:SetScript("OnClick", function() DBM:MoveWarning() end)
 		RaidWarningPanel:SetMyOwnHeight()
 	end
 
@@ -1684,7 +1692,7 @@ local function CreateOptionsMenu()
 		--------------------------------------
 		local BarSetupPanel = DBM_GUI_Frame:CreateNewPanel(L.BarSetup, "option")
 
-		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 360, true)
+		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 400, true)
 
 		local movemebutton = BarSetup:CreateButton(L.MoveMe, 100, 16)
 		movemebutton:SetPoint('BOTTOMRIGHT', BarSetup.frame, "TOPRIGHT", 0, -1)
@@ -1810,6 +1818,9 @@ local function CreateOptionsMenu()
 		local ClickThrough = BarSetup:CreateCheckButton(L.ClickThrough, false, nil, nil, "ClickThrough")
 		ClickThrough:SetPoint("TOPLEFT", ExpandUpwards, "BOTTOMLEFT", 0, 0)
 
+		local SortBars = BarSetup:CreateCheckButton(L.BarSort, false, nil, nil, "Sort")
+		SortBars:SetPoint("TOPLEFT", ClickThrough, "BOTTOMLEFT", 0, 0)
+
 		-- Functions for bar setup
 		local function createDBTOnShowHandler(option)
 			return function(self)
@@ -1843,21 +1854,26 @@ local function CreateOptionsMenu()
 		BarHeightSlider:SetScript("OnShow", createDBTOnShowHandler("Height"))
 		BarHeightSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("Height"))
 
+		local DecimalSlider = BarSetup:CreateSlider(L.Bar_Decimal, 5, 60, 1)
+		DecimalSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -255)
+		DecimalSlider:SetScript("OnShow", createDBTOnShowHandler("Decimal"))
+		DecimalSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("Decimal"))
+
 		local descriptionText = BarSetup:CreateText(L.Bar_DBMOnly, 400, nil, nil, "LEFT")
-		descriptionText:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -252)
+		descriptionText:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -292)
 
 		local EnlargeTimeSlider = BarSetup:CreateSlider(L.Bar_EnlargeTime, 6, 30, 1)
-		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -285)
+		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -325)
 		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarsTime"))
 		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarsTime"))
 
 		local EnlargePerecntSlider = BarSetup:CreateSlider(L.Bar_EnlargePercent, 0, 50, 0.5)
-		EnlargePerecntSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -325)
+		EnlargePerecntSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -365)
 		EnlargePerecntSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarsPercent"))
 		EnlargePerecntSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarsPercent"))
 
 		local SparkBars = BarSetup:CreateCheckButton(L.BarSpark, false, nil, nil, "Spark")
-		SparkBars:SetPoint("TOPLEFT", ClickThrough, "BOTTOMLEFT", 0, -40)
+		SparkBars:SetPoint("TOPLEFT", ClickThrough, "BOTTOMLEFT", 0, -65)
 
 		local FlashBars = BarSetup:CreateCheckButton(L.BarFlash, false, nil, nil, "Flash")
 		FlashBars:SetPoint("TOPLEFT", SparkBars, "BOTTOMLEFT", 0, 0)
@@ -1934,8 +1950,13 @@ local function CreateOptionsMenu()
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
 		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 645, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_Enabled, true, nil, "ShowSpecialWarnings")
-		local check2 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
-		local check3 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
+		local check2 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
+		local check3 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
+
+		local flashSlider = specArea:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 3, 1, 100)
+		flashSlider:SetPoint('BOTTOMLEFT', check3, "BOTTOMLEFT", 330, 0)
+		flashSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.SpecialWarningFlashRepeatAmount)) end)
+		flashSlider:HookScript("OnValueChanged", function(self) DBM.Options.SpecialWarningFlashRepeatAmount = math.floor(self:GetValue()) end)
 
 		local showbutton = specArea:CreateButton(L.SpecWarn_DemoButton, 120, 16)
 		showbutton:SetPoint('TOPRIGHT', specArea.frame, "TOPRIGHT", -5, -5)
@@ -2150,6 +2171,8 @@ local function CreateOptionsMenu()
 			DBM.Options.SpecialWarningSound = value
 		end)
 		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -230)
+		local repeatCheck1 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat1")
+		repeatCheck1:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown, "BOTTOMLEFT", 240, 0)
 
 		local flashdurSlider = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider:SetPoint('TOPLEFT', SpecialWarnSoundDropDown, "TOPLEFT", 20, -45)
@@ -2187,6 +2210,8 @@ local function CreateOptionsMenu()
 			DBM.Options.SpecialWarningSound2 = value
 		end)
 		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -335)
+		local repeatCheck2 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat2")
+		repeatCheck2:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown2, "BOTTOMLEFT", 240, 0)
 
 		local flashdurSlider2 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider2:SetPoint('TOPLEFT', SpecialWarnSoundDropDown2, "TOPLEFT", 20, -45)
@@ -2224,6 +2249,8 @@ local function CreateOptionsMenu()
 			DBM.Options.SpecialWarningSound3 = value
 		end)
 		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -440)
+		local repeatCheck3 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat3")
+		repeatCheck3:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown3, "BOTTOMLEFT", 240, 0)
 
 		local flashdurSlider3 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider3:SetPoint('TOPLEFT', SpecialWarnSoundDropDown3, "TOPLEFT", 20, -45)
@@ -2261,6 +2288,8 @@ local function CreateOptionsMenu()
 			DBM.Options.SpecialWarningSound4 = value
 		end)
 		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 130, -545)
+		local repeatCheck4 = specArea:CreateCheckButton(L.SpecWarn_FlashRepeat, nil, nil, "SpecialWarningFlashRepeat4")
+		repeatCheck4:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown4, "BOTTOMLEFT", 240, 0)
 
 		local flashdurSlider4 = specArea:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider4:SetPoint('TOPLEFT', SpecialWarnSoundDropDown4, "TOPLEFT", 20, -45)
@@ -2381,13 +2410,20 @@ local function CreateOptionsMenu()
 		local countdownOptionsArea	= spokenAlertsPanel:CreateArea(L.Area_CountdownOptions, nil, 100, true)
 		local ShowCountdownText 	= countdownOptionsArea:CreateCheckButton(L.ShowCountdownText,  true, nil, "ShowCountdownText")
 
-		local voiceFilterArea	= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 100, true)
-		local VPF1 				= voiceFilterArea:CreateCheckButton(L.SpecWarn_NoSoundsWVoice, true, nil, "VoiceOverSpecW")
-		local VPF2 				= voiceFilterArea:CreateCheckButton(L.SpecWarn_AlwaysVoice, true, nil, "AlwaysPlayVoice")
+		local voiceFilterArea		= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 100, true)
+		local VPF1 					= voiceFilterArea:CreateCheckButton(L.SpecWarn_AlwaysVoice, true, nil, "AlwaysPlayVoice")
+		local voiceSWOptions = {
+			{	text	= L.SWFNever,		value 	= "None"},
+			{	text	= L.SWFDefaultOnly,	value 	= "DefaultOnly"},
+			{	text	= L.SWFAll,			value 	= "All"},
+		}
+		local SWFilterDropDown		= voiceFilterArea:CreateDropdown(L.SpecWarn_NoSoundsWVoice, voiceSWOptions, "DBM", "VoiceOverSpecW2", function(value)
+			DBM.Options.VoiceOverSpecW2 = value
+		end)
+		SWFilterDropDown:SetPoint("TOPLEFT", VPF1, "TOPLEFT", 0, -45)
 
 		--spokenGeneralArea:AutoSetDimension()
 		countdownOptionsArea:AutoSetDimension()
-		voiceFilterArea:AutoSetDimension()
 		spokenAlertsPanel:SetMyOwnHeight()
 	end
 
@@ -2447,7 +2483,9 @@ local function CreateOptionsMenu()
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSendWhisper, true, nil, "DontSendBossWhispers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeRestore, true, nil, "DontRestoreRange")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoInfoFrame, true, nil, "DontShowInfoFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoHealthFrame, true, nil, "DontShowHealthFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
@@ -2456,10 +2494,6 @@ local function CreateOptionsMenu()
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
 		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
-		if BigBrother and type(BigBrother.ConsumableCheck) == "function" then
-			spamArea:CreateCheckButton(L.ShowBBOnCombatStart, true, nil, "ShowBigBrotherOnCombatStart")
-			spamArea:CreateCheckButton(L.BigBrotherAnnounceToRaid, true, nil, "BigBrotherAnnounceToRaid")
-		end
 
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 40, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
@@ -2485,11 +2519,13 @@ local function CreateOptionsMenu()
 
 	do
 		local hideBlizzPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HideBlizzard, "option")
-		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 260, true)
+		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 305, true)
 		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
 		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonUpdates")
+		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
+		hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
 		local filterYell	= hideBlizzArea:CreateCheckButton(L.SpamBlockSayYell, true, nil, "FilterSayAndYell")
 
 		local movieOptions = {
@@ -2535,6 +2571,13 @@ local function CreateOptionsMenu()
 			AdvancedAutologBosses	= bossLoggingArea:CreateCheckButton(L.AdvancedAutologBosses, true, nil, "AdvancedAutologBosses")
 		end
 		local LogOnlyRaidBosses		= bossLoggingArea:CreateCheckButton(L.LogOnlyRaidBosses, true, nil, "LogOnlyRaidBosses")
+		
+		local thirdPartyArea
+		if BigBrother and type(BigBrother.ConsumableCheck) == "function" then
+			thirdPartyArea			= extraFeaturesPanel:CreateArea(L.Area_3rdParty, nil, 100, true)
+			thirdPartyArea:CreateCheckButton(L.ShowBBOnCombatStart, true, nil, "ShowBigBrotherOnCombatStart")
+			thirdPartyArea:CreateCheckButton(L.BigBrotherAnnounceToRaid, true, nil, "BigBrotherAnnounceToRaid")
+		end
 
 		local inviteArea			= extraFeaturesPanel:CreateArea(L.Area_Invite, nil, 100, true)
 		local AutoAcceptFriendInvite= inviteArea:CreateCheckButton(L.AutoAcceptFriendInvite, true, nil, "AutoAcceptFriendInvite")
@@ -2586,6 +2629,9 @@ local function CreateOptionsMenu()
 		chatAlertsArea:AutoSetDimension()
 		soundAlertsArea:AutoSetDimension()
 		bossLoggingArea:AutoSetDimension()
+		if thirdPartyArea then
+			thirdPartyArea:AutoSetDimension()
+		end
 		inviteArea:AutoSetDimension()
 		advancedArea:AutoSetDimension()
 		extraFeaturesPanel:SetMyOwnHeight()
@@ -2621,6 +2667,18 @@ local function CreateOptionsMenu()
 		applyProfile:SetPoint("TOPLEFT", 0, -20)
 		applyProfile:SetScript("OnShow", function()
 			applyProfile:SetSelectedValue(DBM_UsedProfile)
+		end)
+
+		local copyProfileArea		= profilePanel:CreateArea(L.Area_CopyProfile, nil, 65, true)
+		local copyProfile			= copyProfileArea:CreateDropdown(L.SelectProfileToCopy, profileDropdown, nil, nil, function(value)
+			DBM:CopyProfile(value)
+			C_Timer.After(0.05, DBM_GUI.dbm_profilePanel_refresh)
+		end)
+		copyProfile:SetPoint("TOPLEFT", 0, -20)
+		copyProfile:SetScript("OnShow", function()
+			copyProfile.value = nil
+			copyProfile.text = nil
+			_G[copyProfile:GetName().."Text"]:SetText("")
 		end)
 
 		local deleteProfileArea		= profilePanel:CreateArea(L.Area_DeleteProfile, nil, 65, true)
@@ -2661,8 +2719,10 @@ local function CreateOptionsMenu()
 		function DBM_GUI:dbm_profilePanel_refresh()
 			createButton:GetScript("OnShow")()
 			applyProfile:GetScript("OnShow")()
+			copyProfile:GetScript("OnShow")()
 			deleteProfile:GetScript("OnShow")()
 		end
+		profilePanel:SetMyOwnHeight()
 	end
 
 	-- Set Revision // please don't translate this!

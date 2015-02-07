@@ -1,0 +1,119 @@
+tag 6.0.15
+a757dc5ddcac1d8d641e92a006ed3facdf481146
+subversion <svn@deadlybossmods.com>
+2015-02-07 14:48:22 +0100
+
+Tagging as 6.0.15
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.0.15
+	- ultrashining via svn r12764: zhTW update
+	- Omega via svn r12763: Fix spacing on sliders to address text overlap issues on some locals (like russian)
+	- nbluewiz via svn r12762: # also fix decimal on prewarn.
+	- nbluewiz via svn r12761: # fix bad fix.
+	- nbluewiz via svn r12760: # fix pre spec warn args.
+	- nbluewiz via svn r12759: # fix missed args for Crippling Supplex. # fix decimal prewarn not option not showing in gui.
+	- nbluewiz via svn r12758: # fix bad option default for Crippling Supplex.
+	- Omega via svn r12757: change default to DefaultOnly.
+	- nbluewiz via svn r12756: # Rukhmar update.
+	- nbluewiz via svn r12755: # fix non-exists option load.
+	- Omega via svn r12754: Another tweak
+	- nbluewiz via svn r12753: # better health bar order.
+	- Omega via svn r12752: Blade dash tweak to be a little less useless
+	- Omega via svn r12751: More tweaks
+	- Omega via svn r12750: More fixes
+	- Omega via svn r12749: Forgot some things
+	- Omega via svn r12748: SetUsedIcons
+	- Omega via svn r12747: Auto icon marking for Thogar
+	- nbluewiz via svn r12746: # fix bug.
+	- nbluewiz via svn r12745: # fix bad first scheduler.
+	- nbluewiz via svn r12744: # fix train for koKR client.
+	- Omega via svn r12743: Shorten helper message some and mention voice packs as well
+	- Omega via svn r12742: Revert blackhand Id change. This is what happens when you make a blackhand mod using chinese logs, 68168 is not blackhand, its a script bunny
+	- Omega via svn r12741: Fix blackhand icon setting Add range frame to blackhand Update Thogar train data.
+	- nbluewiz via svn r12740: # schedule fakeyell on pull. (kr client seems different trigger, not works at all. also boss can forget first yell (even should rarely happen), backup with fakeyell.)
+	- Omega via svn r12739: Add engineer announce enable the timer/countdown fully now that i'm confident in the loop.
+	- Omega via svn r12738: Fix bad journal ID for timer
+	- Omega via svn r12737: Iron maidens updates
+	- nbluewiz via svn r12736: # fix false worldevents mod load.
+	- Omega via svn r12735: Blast furnace fixes
+	- Omega via svn r12734: Couple quick fixes. a lot more to do
+	- nbluewiz via svn r12733: # update health frame.
+	- Omega via svn r12732: Disable spammy rupture warning until a new way of detecting actual target can be found. Improve blackrock puddle warnings on oregorger
+	- Omega via svn r12731: Fix voice 26 too
+	- Omega via svn r12730: My head was up my ass when I made this mistake
+	- nbluewiz via svn r12729: # koKR update.
+	- Omega via svn r12728: Blackhand updates
+	- Omega via svn r12727: Shorten text slightly
+	- Omega via svn r12726: Fix error
+	- Omega via svn r12725: ##Core *If user has custom range frame up on pull, save range it's set to and any time a boss mod is done with range frame, instead of calling hide, it'll call show on users previous range setting. *Added options to disable range frame restore & icon restore functions #Thogar Fix another nil error.
+	- Omega via svn r12724: Small fixes
+	- Omega via svn r12723: Add cast bar for explosive shard
+	- Omega via svn r12722: CN update
+	- nbluewiz via svn r12721: # koKR update.
+	- nbluewiz via svn r12720: # # ugly hack, but this is only way to fix without anything broken.
+	- Omega via svn r12719: Fix lua error in lane check
+	- nbluewiz via svn r12718: # fix strip realm name.
+	- nbluewiz via svn r12717: # fix strip realm name.
+	- Omega via svn r12716: Prevent duplicate break timer recovery.
+	- Omega via svn r12715: #blast furnace Fix timer on normal/LFR #Darmac Fix missing used icons # kagraz Remove redundant warning #Oregorger Remove filter on specWarnAcidTorrent since this warning is different time and purpose from voiceAcidTorrent #Kromog Add stone breath warnings and timers Remove useless slam warning
+	- nbluewiz via svn r12714: # train wording fix. remove debug code.
+	- Omega via svn r12713: Fix bad time bug
+	- nbluewiz via svn r12712: # dodge train warning by map coords.
+	- nbluewiz via svn r12711: # fix sort.
+	- Omega via svn r12710: fix more shit
+	- nbluewiz via svn r12709: # fix hide infoframe.
+	- nbluewiz via svn r12708: # fix lua error.
+	- Omega via svn r12707: Filter non tanks on gruul debuff. also disable warning by default anyways since it's still not that useful. but someone might want to use it.
+	- nbluewiz via svn r12706: # fix sound bug.
+	- nbluewiz via svn r12705: # train info frame and info announce.
+	- Omega via svn r12704: Fix bug
+	- Omega via svn r12703: BW version
+	- Omega via svn r12702: More crippling supplex improvements
+	- ebmor via svn r12701: deDE update
+	- ebmor via svn r12700: deDE update
+	- Omega via svn r12699: Bw version
+	- ebmor via svn r12698: deDE update
+	- Omega via svn r12697: Disable defense for now. it's no longer as useful since the mob is no longer movable during defense (it was changed from beta. no longer dropped on ground but instead channeled with mob unbudging.
+	- ebmor via svn r12696: deDE update
+	- nbluewiz via svn r12695: # add future stuff for thogar.
+	- Omega via svn r12694: Few more fixes
+	- Omega via svn r12693: set 26 timer
+	- Omega via svn r12692: Fix specWarnManOArms as well
+	- Omega via svn r12691: More thogar fixes
+	- Omega via svn r12690: Update enkindle timer
+	- Omega via svn r12689: Revert hansgar and franzok back to UNIT_TARGETABLE_CHANGED
+	- Omega via svn r12688: More thogar fixes
+	- Omega via svn r12687: I'm sure more errors but i really need a transcriptor log to fix this mess
+	- nbluewiz via svn r12686: # allow duplicate timer for Thogar's train cooldown. # remove useless brf localization. # remove bad voice for Roltall.
+	- Omega via svn r12685: use countdown yell for kagraz torrent.
+	- Omega via svn r12684: Fix countdown bug on kromog
+	- nbluewiz via svn r12683: # class coloring for outdated users.
+	- Omega via svn r12682: Fix nil errors in thogar mod with voice warning.
+	- TOM_RUS via svn r12681: ruRU update
+	- Omega via svn r12680: Fix gruul bugs Update heroic timer for nerf. heroic is also 17 sec now
+	- TOM_RUS via svn r12679: ruRU update
+	- nbluewiz via svn r12678: # swfilter bug fix.
+	- Omega via svn r12677: Fix bug
+	- Omega via svn r12676: Instead of flat out disabling sound filter if voice pack is out of date, store version requirement in the hasvoice field, and only disable filter case by case so we don't disable filtering ALL special warning sounds because one sound was added and requires version 3. this is a better system that is less punishing to out of date voice packs.
+	- Omega via svn r12675: Small rukhmar update Also, fire a callback for DBMS RAID_BOSS_WHISPER snooping so it's logged by transcriptor. Now, dbm users running transcriptor will log RAID_BOSS_WHISPER for ALL other raid members also running dbm.
+	- Omega via svn r12674: Half awake when i did this
+	- Omega via svn r12673: French update Fix typo in en local
+	- ultrashining via svn r12672: zhTW update
+	- Omega via svn r12671: French Update
+	- nbluewiz via svn r12670: # fix clean install.
+	- Omega via svn r12669: BW version
+	- nbluewiz via svn r12668: # fix option is not saving.
+	- nbluewiz via svn r12667: # load 'Default' profile if bad DBM_UsedProfile found.
+	- Omega via svn r12666: still seeing users reporting no default profile. so add some code to make sure this never happens, as well as debug to figure out wtf
+	- Omega via svn r12665: Because. :)
+	- nbluewiz via svn r12664: # koKR update.
+	- Omega via svn r12663: Did much testing, i actually like 4 default better. 4+fadeout lasts about 6 seconds.
+	- Omega via svn r12662: Might as well add this timer too
+	- nbluewiz via svn r12661: # change warning frame behavior. if warning shows more than 3 at simultaneously, move prev text to upper frame.
+	- nbluewiz via svn r12660: # configurable warning duration.
+	- nbluewiz via svn r12659: # new announce frame. now configurable.
+	- tandanu via svn r12658: increment alpha version

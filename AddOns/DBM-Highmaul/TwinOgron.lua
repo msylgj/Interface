@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12467 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
@@ -28,16 +28,16 @@ local warnArcaneWound				= mod:NewStackAnnounce("OptionVersion2", 167200, 2, nil
 local warnPulverize					= mod:NewCountAnnounce(158385, 3)--158385 is primary activation with SPELL_CAST_SUCCESS, cast at start, followed by 3 channeled IDs using SPELL_CAST_START
 
 --Phemos
-local specWarnEnfeeblingRoar		= mod:NewSpecialWarningCount(158057, nil, nil, nil, nil, nil, true)
-local specWarnWhirlWind				= mod:NewSpecialWarningCount(157943, nil, nil, nil, 2, nil, true)
-local specWarnQuake					= mod:NewSpecialWarningCount(158200, nil, nil, nil, 2, nil, true)
-local specWarnBlaze					= mod:NewSpecialWarningMove(158241, nil, nil, nil, nil, nil, true)
-local specWarnArcaneVolatility		= mod:NewSpecialWarningMoveAway(163372, nil, nil, nil, nil, nil, true)--Mythic
+local specWarnEnfeeblingRoar		= mod:NewSpecialWarningCount(158057, nil, nil, nil, nil, nil, 2)
+local specWarnWhirlWind				= mod:NewSpecialWarningCount(157943, nil, nil, nil, 2, nil, 2)
+local specWarnQuake					= mod:NewSpecialWarningCount(158200, nil, nil, nil, 2, nil, 2)
+local specWarnBlaze					= mod:NewSpecialWarningMove(158241, nil, nil, nil, nil, nil, 2)
+local specWarnArcaneVolatility		= mod:NewSpecialWarningMoveAway(163372, nil, nil, nil, nil, nil, 2)--Mythic
 local yellArcaneVolatility			= mod:NewYell(163372)--Mythic
 --Pol
-local specWarnShieldCharge			= mod:NewSpecialWarningSpell(158134, nil, nil, nil, 2, nil, true)
+local specWarnShieldCharge			= mod:NewSpecialWarningSpell(158134, nil, nil, nil, 2, nil, 2)
 local specWarnInterruptingShout		= mod:NewSpecialWarningCast("OptionVersion2", 158093, "SpellCaster")
-local specWarnPulverize				= mod:NewSpecialWarningSpell(158385, nil, nil, nil, 2, nil, true)
+local specWarnPulverize				= mod:NewSpecialWarningSpell(158385, nil, nil, nil, 2, nil, 2)
 local specWarnArcaneCharge			= mod:NewSpecialWarningSpell(163336, nil, nil, nil, 2)
 
 --Phemos (100-106 second full rotation, 33-34 in between)
@@ -98,7 +98,7 @@ end
 
 local lines = {}
 
-local function sortInfoFrame(a, b)--is this even needed? no idea. 
+local function sortInfoFrame(a, b) 
 	local a = lines[a]
 	local b = lines[b]
 	if not tonumber(a) then a = -1 end
@@ -106,12 +106,6 @@ local function sortInfoFrame(a, b)--is this even needed? no idea.
 	if a > b then return true else return false end
 end
 
---Layout
---Boss 1 name - Power
---Boss 1 next ability
---Boss 2 name - Power
---Boss 2 next ability
---if mythic, ability will show if ability empowered or not to right with empowerment name and purple coloring
 local function updateInfoFrame()
 	table.wipe(lines)
 	local bossPower = 0

@@ -1,7 +1,0 @@
-subversion:
-	- nbluewiz via svn r12512: # fix lua error.
-	- nbluewiz via svn r12511: # fox voicepack related error.
-	- ultrashining via svn r12510: zhTW update
-	- nbluewiz via svn r12509: # fix one more bug. broken individual no - statistics.
-	- nbluewiz via svn r12508: # fix reset default option bug.
-	- Omega via svn r12507: increase alpha

@@ -29,7 +29,7 @@ Skada.windowdefaults = {
 	background = {margin=0, height=163, texture="Solid", bordertexture="None", borderthickness=0, color = {r=0,g=0,b=0.5,a=0}},
 
 	reversegrowth=false,
-	modeincombat="仇恨值",
+	modeincombat="伤害",
 	returnaftercombat=true,
 	wipemode="",
 

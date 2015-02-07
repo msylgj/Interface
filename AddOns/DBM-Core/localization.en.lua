@@ -52,10 +52,15 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s was engaged %s ago, recovering timers..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor logging started."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
+DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods> Your current profile is corrupted. DBM will load 'Default' profile."
 DBM_CORE_PROFILE_CREATED			= "'%s' profile created."
 DBM_CORE_PROFILE_CREATE_ERROR		= "Create profile failed. Invalid profile name."
+DBM_CORE_PROFILE_CREATE_ERROR_D		= "Create profile failed. '%s' profile already exists."
 DBM_CORE_PROFILE_APPLIED			= "'%s' profile applied."
 DBM_CORE_PROFILE_APPLY_ERROR		= "Apply profile failed. '%s' profile does not exist."
+DBM_CORE_PROFILE_COPIED				= "'%s' profile copied."
+DBM_CORE_PROFILE_COPY_ERROR			= "Copy profile failed. '%s' profile does not exist."
+DBM_CORE_PROFILE_COPY_ERROR_SELF	= "Cannot copy profile to itself."
 DBM_CORE_PROFILE_DELETED			= "'%s' profile deleted. 'Default' profile will be applied."
 DBM_CORE_PROFILE_DELETE_ERROR		= "Delete profile failed. '%s' profile does not exist."
 DBM_CORE_PROFILE_CANNOT_DELETE		= "Cannot delete 'Default' profile."
@@ -83,7 +88,7 @@ DBM_CORE_TIMER_FORMAT				= "%d |4minute:minutes; and %d |4second:seconds;"
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
 DBM_CORE_SEC						= "sec"
-DBM_CORE_SEC_FMT					= "%d sec"
+DBM_CORE_SEC_FMT					= "%s sec"
 
 DBM_CORE_GENERIC_WARNING_OTHERS		= "and one other"
 DBM_CORE_GENERIC_WARNING_OTHERS2	= "and %d others"
@@ -130,7 +135,7 @@ DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice pack that 
 DBM_BIG_WIGS						= "BigWigs"
 DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "Your version of Deadly Boss Mods is out-of-date.\n Version %s (r%d) is available for download here:"
+DBM_CORE_UPDATEREMINDER_HEADER			= "Your version of Deadly Boss Mods is out-of-date.\n Version %s (r%d) is available for download through Curse, WoWI, or from here:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users use the latest alpha or latest stable version. Out of date alphas can lead to poor or incomplete functionality."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
@@ -150,8 +155,9 @@ DBM_PIZZA_ERROR_USAGE				= "Usage: /dbm [broadcast] timer <time> <text>. <time> 
 DBM_CORE_MINIMAP_TOOLTIP_HEADER		= "Deadly Boss Mods"
 DBM_CORE_MINIMAP_TOOLTIP_FOOTER		= "Shift+click or right-click to move\nAlt+shift+click for free drag and drop"
 
-DBM_CORE_RANGECHECK_HEADER			= "Range Check (%d yd)"
+DBM_CORE_RANGECHECK_HEADER			= "Range Check (%dyd)"
 DBM_CORE_RANGECHECK_SETRANGE		= "Set range"
+DBM_CORE_RANGECHECK_SETTHRESHOLD	= "Set player threshold"
 DBM_CORE_RANGECHECK_SOUNDS			= "Sounds"
 DBM_CORE_RANGECHECK_SOUND_OPTION_1	= "Sound when one player is in range"
 DBM_CORE_RANGECHECK_SOUND_OPTION_2	= "Sound when more than one player is in range"
@@ -163,8 +169,9 @@ DBM_CORE_RANGECHECK_OPTION_FRAMES	= "Frames"
 DBM_CORE_RANGECHECK_OPTION_RADAR	= "Show radar frame"
 DBM_CORE_RANGECHECK_OPTION_TEXT		= "Show text frame"
 DBM_CORE_RANGECHECK_OPTION_BOTH		= "Show both frames"
-DBM_CORE_RANGERADAR_HEADER			= "Range Radar (%d yd)"
-DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d players in range"
+DBM_CORE_RANGERADAR_HEADER			= "Range:%d Players:%d"
+DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d in range (%dyd)"--Multi
+DBM_CORE_RANGERADAR_IN_RANGE_TEXTONE= "%s (%0.1fyd)"--One target
 
 DBM_CORE_INFOFRAME_SHOW_SELF		= "Always show your power"		-- Always show your own power value even if you are below the threshold
 
@@ -172,18 +179,17 @@ DBM_LFG_INVITE						= "LFG Invite"
 
 DBM_CORE_SLASHCMD_HELP				= {
 	"Available slash commands:",
+	"/range <number> or /distance <number>: Shows range frame. /rrange or /rdistance to reverse colors.",
 	"/dbm version: Performs a raid-wide version check (alias: ver).",
---	"/dbm version2: Performs a raid-wide version check and whispers members who are out of date (alias: ver2).",
 	"/dbm unlock: Shows a movable status bar timer (alias: move).",
-	"/dbm timer/ctimer/ltimer/cltimer <x> <text>: Starts a <x> second DBM Timer with the name <text>. See http://tinyurl.com/kwsfl59 for each timer type usage",
+	"/dbm timer/ctimer/ltimer/cltimer <x> <text>: Starts a <x> second DBM Timer with the name <text>.",
 	"/dbm broadcast timer/ctimer/ltimer/cltimer <x> <text>: Broadcasts a <x> second DBM Timer with the name <text> to the raid (requires leader/promoted status).",
 	"/dbm timer endloop: Stops any looping ltimer or cltimer.",
 	"/dbm break <min>: Starts a break timer for <min> minutes. Gives all raid members with DBM a break timer (requires leader/promoted status).",
 	"/dbm pull <sec>: Starts a pull timer for <sec> seconds. Gives all raid members with DBM a pull timer (requires leader/promoted status).",
 	"/dbm arrow: Shows the DBM arrow, see /dbm arrow help for details.",
 	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted status).",
-	"/dbm lag: Performs a raid-wide latency check.",
-	"/dbm help: Shows this message."
+	"/dbm lag: Performs a raid-wide latency check."
 }
 
 DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this."
@@ -279,7 +285,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	ends 		= "Show special warning when $spell:%s has ended",
 	fades 		= "Show special warning when $spell:%s has faded",
 	soon 		= "Show pre-special warning for $spell:%s",
-	prewarn 	= "Show pre-special warning %d seconds before $spell:%s",
+	prewarn 	= "Show pre-special warning %s seconds before $spell:%s",
 	dispel 		= "Show special warning to dispel/spellsteal $spell:%s",
 	interrupt	= "Show special warning to interrupt $spell:%s",
 	you 		= "Show special warning when you are affected by $spell:%s",
@@ -352,10 +358,14 @@ DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Yell when you are affected by $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s on " .. UnitName("player") .. "!"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Show range frame (%s) for $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Show range frame (%s)"--For when a range frame is just used for more than one thing
+DBM_CORE_AUTO_RRANGE_OPTION_TEXT		= "Show reverse range frame (%s) for $spell:%s"--Reverse range frame (green when players in range, red when not)
+DBM_CORE_AUTO_RRANGE_OPTION_TEXT_SHORT	= "Show reverse range frame (%s)"
 DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT	= "Show info frame for $spell:%s"
 DBM_CORE_AUTO_READY_CHECK_OPTION_TEXT	= "Play ready check sound when boss is pulled (even if it's not targeted)"
 
 -- New special warnings
+DBM_CORE_MOVE_WARNING_BAR			= "Announce movable"
+DBM_CORE_MOVE_WARNING_MESSAGE		= "Thanks for using Deadly Boss Mods"
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR	= "Special warning movable"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT	= "Special Warning"
 

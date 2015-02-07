@@ -25,7 +25,7 @@ cf.Config = {
 	["FilterAuctionMSG"] = true, --Filter the messages:"Auction created/cancelled."// 过滤“已开始拍卖/拍卖取消.”
 
 	["FilterAdvertising"] = true, --Filter the advertising messages. // 过滤广告信息
-	["AllowMatchs"] = 2, --How many words can be allowd to use. // 允许的关键字配对个数
+	["AllowMatchs"] = 1, --How many words can be allowd to use. // 允许的关键字配对个数
 	["IgnoreAdTimes"] = 30, --How many times shall we shield the advertising. // 屏蔽发广告的玩家多长时间(分钟)
 	["IgnoreMore"] = true, --When the ignorelist is full, you can still ignore players. // 当屏蔽列表满了后仍然可以屏蔽玩家
 
@@ -59,7 +59,6 @@ cf.Config = {
 		"下单",
 		"网游",
 		"速带",
-		"QQ",
 		"查店",
 		"平台",
 		"平臺",
@@ -150,7 +149,6 @@ cf.Config = {
 		"冲冠",
 		"热销",
 		"促销",
-		"qq",
 		"加q",
 		"企业q",
 		"咨询",
@@ -162,7 +160,6 @@ cf.Config = {
 		"叩叩",
 		"歪歪",
 		"丫丫",
-		"yy",
 		"大神带你打",
 		"高手帮忙打",
 		"竞技场大师",

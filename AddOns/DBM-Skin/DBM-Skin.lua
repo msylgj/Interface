@@ -291,11 +291,13 @@ end)
 	
 	
 local ForceOptions = function()
-	DBM_SavedOptions.Enabled=true
-		
-	DBT_PersistentOptions["DBM"].Scale = 1
-	DBT_PersistentOptions["DBM"].HugeScale = 1
-	DBT_PersistentOptions["DBM"].BarXOffset = 0
+	DBM.Options.Enabled=true
+	DBT_PersistentOptions["Scale"] = 1
+	DBT_PersistentOptions["HugeScale"] = 1.2
+	DBT_PersistentOptions["BarYOffset"] = 18
+	DBT_PersistentOptions["HugeBarYOffset"] = 22
+	DBT_PersistentOptions["ExpandUpwards"] = true
+	DBT_PersistentOptions["Height"] = 10
 end
 
 local loadOptions = CreateFrame("Frame")

@@ -6,11 +6,7 @@
 ## OptionalDeps: IDCard
 ## SavedVariables: FreebTipDB
 
-libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
-libs\LibInspect\LibInspect.lua
-libs\LibInspect\LibStub\LibStub.lua
-ilvl.lua
-spec.lua
 tip.lua
 anchor.lua
 FreebTip_Multi.xml
+CloudyUnitInfo.lua

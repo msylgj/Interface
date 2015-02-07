@@ -443,8 +443,9 @@ if hideotherchannelnames then
 	CHAT_SAY_GET = "[S] %s: "
 	CHAT_YELL_GET = "[Y] %s: "
 	CHAT_WHISPER_GET = "[F] %s: "
+	CHAT_BN_WHISPER_GET = "[F] %s: "
 	CHAT_WHISPER_INFORM_GET = "[T] %s: "
-
+	CHAT_BN_WHISPER_INFORM_GET = "[T] %s: "
 	CHAT_FLAG_AFK = "[AFK] "
 	CHAT_FLAG_DND = "[DND] "
 	CHAT_FLAG_GM = "[GM] "

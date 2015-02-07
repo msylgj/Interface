@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12443 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
 mod:SetCreatureID(81535)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -21,12 +21,12 @@ mod:RegisterEventsInCombat(
 --TODO, do dps siwtch to Untamed Mand, or just tanks.
 local warnSavageVines				= mod:NewTargetAnnounce(176004, 2)
 
-local specWarnColossalBlow			= mod:NewSpecialWarningDodge(175973, nil, nil, nil, 2, nil, true)
-local specWarnGenesis				= mod:NewSpecialWarningSpell(175979, nil, nil, nil, nil, nil, true)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
+local specWarnColossalBlow			= mod:NewSpecialWarningDodge(175973, nil, nil, nil, 2, nil, 2)
+local specWarnGenesis				= mod:NewSpecialWarningSpell(175979, nil, nil, nil, nil, nil, 2)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
 local specWarnSavageVines			= mod:NewSpecialWarningYou(176004)
 local yellSavageVines				= mod:NewYell(176004)
 local specWarnSavageVinesNear		= mod:NewSpecialWarningClose(176004)
-local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, "-Healer", nil, nil, nil, nil, true)
+local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, "-Healer", nil, nil, nil, nil, 2)
 local specWarnNoxiousSpit			= mod:NewSpecialWarningMove(176037)
 
 --local timerColossalBlowCD			= mod:NewNextTimer(60, 175973)

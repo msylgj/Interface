@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12472 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12676 $"):sub(12, -3))
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 mod:SetZone()
@@ -26,17 +26,17 @@ local warnLivingMushroom			= mod:NewCountAnnounce(160022, 1)--Good shroom! (mana
 local warnRejuvMushroom				= mod:NewCountAnnounce(160021, 1)--Other good shroom (healing)
 
 local specWarnCreepingMoss			= mod:NewSpecialWarningMove(163590, "Tank")
-local specWarnInfestingSpores		= mod:NewSpecialWarningCount(159996, nil, nil, nil, 2, nil, true)
-local specWarnDecay					= mod:NewSpecialWarningInterruptCount(160013, "-Healer", nil, nil, nil, nil, true)
+local specWarnInfestingSpores		= mod:NewSpecialWarningCount(159996, nil, nil, nil, 2, nil, 2)
+local specWarnDecay					= mod:NewSpecialWarningInterruptCount(160013, "-Healer", nil, nil, nil, nil, 2)
 local specWarnNecroticBreath		= mod:NewSpecialWarningSpell(159219, "Tank", nil, nil, 3)
 local specWarnRot					= mod:NewSpecialWarningStack(163241, nil, 3)
-local specWarnRotOther				= mod:NewSpecialWarningTaunt(163241, nil, nil, nil, nil, nil, true)
-local specWarnExplodingFungus		= mod:NewSpecialWarningDodge(163794, nil, nil, nil, 2, nil, true)--Change warning type/sound? need to know more about spawn.
-local specWarnWaves					= mod:NewSpecialWarningDodge(160425, nil, nil, nil, 2, nil, true)
+local specWarnRotOther				= mod:NewSpecialWarningTaunt(163241, nil, nil, nil, nil, nil, 2)
+local specWarnExplodingFungus		= mod:NewSpecialWarningDodge(163794, nil, nil, nil, 2, nil, 2)--Change warning type/sound? need to know more about spawn.
+local specWarnWaves					= mod:NewSpecialWarningDodge(160425, nil, nil, nil, 2, nil, 2)
 --Adds
-local specWarnSporeShooter			= mod:NewSpecialWarningSwitch("OptionVersion2", 163594, "RangedDps", nil, nil, nil, nil, true)
-local specWarnFungalFlesheater		= mod:NewSpecialWarningSwitch("ej9995", "-Healer", nil, nil, nil, nil, true)
-local specWarnMindFungus			= mod:NewSpecialWarningSwitch(163141, "Dps", nil, nil, nil, nil, true)
+local specWarnSporeShooter			= mod:NewSpecialWarningSwitch("OptionVersion2", 163594, "RangedDps", nil, nil, nil, nil, 2)
+local specWarnFungalFlesheater		= mod:NewSpecialWarningSwitch("ej9995", "-Healer", nil, nil, nil, nil, 2)
+local specWarnMindFungus			= mod:NewSpecialWarningSwitch(163141, "Dps", nil, nil, nil, nil, 2)
 
 local timerInfestingSporesCD		= mod:NewCDCountTimer(57, 159996)--57-63 variation
 local timerRotCD					= mod:NewCDTimer(10, 163241, nil, false)--it's a useful timer, but not mandatory and this fight has A LOT of timers so off by default for clutter reduction
@@ -47,7 +47,7 @@ local timerFungalFleshEaterCD		= mod:NewCDCountTimer(120, "ej9995", nil, "-Heale
 local timerDecayCD					= mod:NewCDTimer(9.5, 160013, nil, "Melee")
 local timerMindFungusCD				= mod:NewCDTimer(30, 163141, nil, "MeleeDps")
 local timerLivingMushroomCD			= mod:NewCDCountTimer(55.5, 160022, nil, "Healer")
-local timerRejuvMushroomCD			= mod:NewCDCountTimer(150, 160021, nil, "Healer")
+local timerRejuvMushroomCD			= mod:NewCDCountTimer(130, 160021, nil, "Healer")
 local berserkTimer					= mod:NewBerserkTimer(600)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerSpecialCD				= mod:NewCDSpecialTimer(20)--Mythic Specials. Shared cd, which special he uses is random. 20-25 second variation, unless delayed by spores. then 20-25+10
@@ -135,7 +135,6 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 159219 then
-		warnNecroticBreath:Show()
 		if self.Options.SpecWarn159219spell then--Special warning is enabled
 			specWarnNecroticBreath:Show()
 		else--Special warning isn't on, show regular one.
