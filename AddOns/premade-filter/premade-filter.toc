@@ -1,0 +1,23 @@
+﻿## Interface: 60000
+## Title: Premade Filter
+## Title-ruRU: Premade Filter
+## Version: 1.7.1
+## Author: PremadeFilter
+## Notes: Advanced premade filtering
+## Notes-ruRU: Расширенный фильтр премейдов
+## SavedVariables: PremadeFilter_Data
+## X-Curse-Packaged-Version: 1.7.1
+## X-Curse-Project-Name: Premade Filter
+## X-Curse-Project-ID: premade-filter
+## X-Curse-Repository-ID: wow/premade-filter/mainline
+
+localization\core.lua
+localization\ruRU.lua
+localization\esMX.lua
+localization\deDE.lua
+localization\ptBR.lua
+localization\zhCN.lua
+localization\zhTW.lua
+
+premade-filter.lua
+premade-filter.xml
