@@ -181,33 +181,39 @@
 			</Layer>
 			
 			<Layer level="OVERLAY">
-				<Texture parentKey="TankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="true">
+				<Texture parentKey="TankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="198" y="-275"/>
 					</Anchors>
 				</Texture>
-				<Texture parentKey="HealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="true">
+				<Texture parentKey="HealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="245" y="-275"/>
 					</Anchors>
 				</Texture>
-				<Texture parentKey="DamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="true">
+				<Texture parentKey="DamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="292" y="-275"/>
 					</Anchors>
 				</Texture>
 				
-				<Texture parentKey="PlayersTankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="true">
+				<Texture parentKey="PlayersTankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="428" y="-275"/>
 					</Anchors>
 				</Texture>
-				<Texture parentKey="PlayersHealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="true">
+				<Texture parentKey="PlayersHealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="478" y="-275"/>
 					</Anchors>
 				</Texture>
-				<Texture parentKey="PlayersDamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="true">
+				<Texture parentKey="PlayersDamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="false">
+					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPLEFT" x="528" y="-275"/>
 					</Anchors>
@@ -1506,17 +1512,20 @@
 					</Layer>
 					
 					<Layer level="OVERLAY">
-						<Texture parentKey="TankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="true">
+						<Texture parentKey="TankIcon" atlas="groupfinder-icon-role-large-tank" useAtlasSize="false">
+							<Size x="20" y="20"/>
 							<Anchors>
 								<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-147" y="-275"/>
 							</Anchors>
 						</Texture>
-						<Texture parentKey="HealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="true">
+						<Texture parentKey="HealerIcon" atlas="groupfinder-icon-role-large-heal" useAtlasSize="false">
+							<Size x="20" y="20"/>
 							<Anchors>
 								<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-99" y="-275"/>
 							</Anchors>
 						</Texture>
-						<Texture parentKey="DamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="true">
+						<Texture parentKey="DamagerIcon" atlas="groupfinder-icon-role-large-dps" useAtlasSize="false">
+							<Size x="20" y="20"/>
 							<Anchors>
 								<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-52" y="-275"/>
 							</Anchors>

@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12707 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13031 $"):sub(12, -3))
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetHotfixNoticeRev(12859)
 
 mod:RegisterCombat("combat")
 
@@ -15,6 +16,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 155323 155539 155078",
 	"SPELL_AURA_APPLIED_DOSE 155078",
 	"SPELL_AURA_REMOVED 155323 155539",
+	"SPELL_PERIODIC_DAMAGE 173192",
+	"SPELL_ABSORBED 173192",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -30,25 +33,29 @@ local specWarnInfernoSlice			= mod:NewSpecialWarningCount(155080, "Tank|Healer",
 local specWarnRampage				= mod:NewSpecialWarningSpell(155539, nil, nil, nil, 2)
 local specWarnRampageEnded			= mod:NewSpecialWarningEnd(155539)
 local specWarnOverheadSmash			= mod:NewSpecialWarningCount(155301, nil, nil, nil, 2, nil, 2)
+local specWarnCaveIn				= mod:NewSpecialWarningMove(173192)
 local specWarnPetrifyingSlam		= mod:NewSpecialWarningMoveAway(155326, nil, nil, nil, 3, nil, 2)
 
-local timerInfernoSliceCD			= mod:NewCDCountTimer(13, 155080)--Variable do to energy bugs (gruul not gain power consistently)
+local timerInfernoSliceCD			= mod:NewCDCountTimer(12, 155080)--Variable do to energy bugs (gruul not gain power consistently)
+local timerSpecialCD				= mod:NewCDSpecialTimer(20.5)
 local timerPetrifyingSlamCD			= mod:NewCDCountTimer(60, 155323)--60-70 variation
 local timerOverheadSmashCD			= mod:NewCDCountTimer(25, 155301)--25-42 variation
 local timerShatter					= mod:NewCastTimer(8, 155529)
 local timerRampage					= mod:NewBuffActiveTimer(30, 155539)
 local timerRampageCD				= mod:NewCDTimer(107, 155539)--Variable, may be even shorter
 
-local countdownInfernoSlice			= mod:NewCountdown(13, 155080, "Tank")
+local berserkTimer					= mod:NewBerserkTimer(360)
+
+local countdownInfernoSlice			= mod:NewCountdown(12, 155080, "Tank")
 
 local voiceInfernoSlice				= mod:NewVoice(155080) --gathershare. maybe change to "InfernoSlice".
 --local voiceCrumblingRoar			= mod:NewVoice(155730)
 local voiceOverheadSmash			= mod:NewVoice(155301) --shockwave
 local voiceShatter					= mod:NewVoice(155326)--Spread/Scatter
-
---local berserkTimer				= mod:NewBerserkTimer(360)--Said to be 6 minutes. Unconfirmed.
+local voiceCaveIn					= mod:NewVoice(173192)
 
 mod:AddRangeFrameOption(8, 155530)
+mod:AddHudMapOption("HudMapOnShatter", 155530, false)--Might be overwhelming. up to 8 targets on non mythic, and on mythic, 20 of them. So off by default
 
 mod.vb.smashCount = 0
 mod.vb.sliceCount = 0
@@ -64,15 +71,11 @@ do
 		end
 	end
 end
+local DBMHudMap = DBMHudMap
+local hudEnabled = false--Only to avoid calling self.Options.HudMapOnShatter 20x in under a second when shatter goes out (20x SPELL_AURA_APPLIED events)
 
 local function clearRampage(self)
 	self.vb.rampage = false
-end
-
-local function clearRangeFrame(self)
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
 end
 
 function mod:OnCombatStart(delay)
@@ -89,16 +92,28 @@ function mod:OnCombatStart(delay)
 		self:RegisterShortTermEvents(
 			"UNIT_POWER_FREQUENT boss1"
 			)
+		if self:IsDifficulty("mythic", "heroic") then
+			berserkTimer:Start(-delay)
+		elseif self:IsNormal() then
+			berserkTimer:Start(480-delay)
+		end
 	end
+	timerSpecialCD:Start(-delay)
 	timerRampageCD:Start(-delay)--Variable. But seen as low as 108 in LFR, normal, mythic
-	timerPetrifyingSlamCD:Start(20.5-delay, 1)
-	timerOverheadSmashCD:Start(-delay, 1)
+	if self.Options.HudMapOnShatter then
+		hudEnabled = true
+		DBMHudMap:Enable()
+	end
 end
 
 function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
+	end
+	if hudEnabled then
+		hudEnabled = false
+		DBMHudMap:Disable()
 	end
 end 
 
@@ -118,7 +133,9 @@ function mod:SPELL_CAST_START(args)
 			timerInfernoSliceCD:Start(nil, self.vb.sliceCount+1)
 			countdownInfernoSlice:Start()
 		end
-		voiceInfernoSlice:Play("gathershare")
+		if not UnitDebuff("player", GetSpellInfo(155323)) then
+			voiceInfernoSlice:Play("gathershare")
+		end
 	elseif spellId == 155301 then
 		self.vb.smashCount = self.vb.smashCount + 1
 		specWarnOverheadSmash:Show(self.vb.smashCount)
@@ -127,8 +144,7 @@ function mod:SPELL_CAST_START(args)
 			timerOverheadSmashCD:Start(nil, self.vb.smashCount+1)--First usually 25-32, second 33-40
 		end
 	elseif spellId == 155326 and self.Options.RangeFrame and not self:IsMythic() then--On mythic everyone gets debuff so no reason to ever show this radar first
-		DBM.RangeCheck:Show(8, debuffFilter)--Show filtered frame at first for all, then update to unfiltered for those affected.
-		self:Schedule(10, clearRangeFrame, self)
+		DBM.RangeCheck:Show(8, debuffFilter, nil, nil, nil, 10)--Show filtered frame at first for all, then update to unfiltered for those affected.
 	end
 end
 
@@ -156,6 +172,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			voiceShatter:Play("scatter")
 		end
+		if hudEnabled then
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "timer", args.destName, 8, 10, 0, 1, 0, 0.6):Appear():RegisterForAlerts():Rotate(360, 9.5)
+		end
 	elseif spellId == 155539 then
 		self.vb.rampage = true
 		self.vb.smashCount = 0
@@ -178,8 +197,13 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 155323 and args:IsPlayer() and self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
+	if spellId == 155323 then
+		if args:IsPlayer() and self.Options.RangeFrame then
+			DBM.RangeCheck:Hide()
+		end
+		if hudEnabled then
+			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		end
 	elseif spellId == 155539 then
 		specWarnRampageEnded:Show()
 		timerRampageCD:Start()
@@ -191,7 +215,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:Schedule(3, clearRampage, self)
 		timerPetrifyingSlamCD:Start(26, 1)--VERIFY
 --		timerOverheadSmashCD:Start(47, 1)--VERIFY
-		if self:IsDifficulty("normal", "lfr") then
+		if not self:IsMythic() then
 			timerInfernoSliceCD:Start(17.5, 1)
 			countdownInfernoSlice:Start(17.5)
 		else
@@ -212,6 +236,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	end
 end
 
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 173192 and destGUID == UnitGUID("player") and self:AntiSpam(2) then
+		specWarnCaveIn:Show()
+		voiceCaveIn:Play("runaway")
+	end
+end
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 do
 	local lastPower = 0
@@ -222,7 +253,7 @@ do
 			DBM:Debug("Massive power gain detected. Updating Inferno Slice timer.")
 			local timeElapsed = bossPower / 10 --Divide it by 10 (cause he gains 10 power per second and we need to know how many seconds to subtrack from CD)
 			local timeRemaining = 10-timeElapsed
-			timerInfernoSliceCD:Update(timeElapsed+3, 13, self.vb.sliceCount+1)--+3 because total time is 13, else, it's timeElapsed, 10
+			timerInfernoSliceCD:Update(timeElapsed+2, 12, self.vb.sliceCount+1)--+3 because total time is 13, else, it's timeElapsed, 10
 			countdownInfernoSlice:Cancel()
 			countdownInfernoSlice:Start(timeRemaining)
 		end

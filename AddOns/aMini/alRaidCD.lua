@@ -19,25 +19,48 @@ local show = {
 -- Config end
 
 local spells = {
-	[20484] = 600,	-- 复生
-	[61999] = 600,	-- 复活盟友
-	[20707] = 900,	-- 灵魂石复活
-	[29166] = 180,	-- 激活
+	--群疗
+	[740]    = 180,  -- 宁静
+	[115310] = 180,  -- 还魂
+	[64843]  = 180,  -- 神圣赞美诗
+	[108280] = 180,  -- 奶潮
+	[15286]  = 180,  -- 吸血鬼拥抱
+	
+	-- 群体减伤
+	[51052] = 120,  -- 反魔法领域
+	[31821] = 180,  -- 光环掌握
+	[62618] = 180,  -- 真言术: 障
+	[88611] = 180,  --烟雾弹
+	[98008] = 180,  -- 灵魂链接图腾
+	[97462] = 180,  -- 集结呐喊
+	[159916] = 120, -- 魔法增效
+	
+	-- 单体减伤
+	[116849] = 120, -- 泡泡(奶僧100)
+	[633] = 600, -- 圣疗
+	[6940] = 120, -- 牺牲(惩戒90)
+	[33206] = 180, -- 痛苦压制
+	[47788] = 180, -- 守护
+	[114030] = 120, -- 戒备守护
+	-- 战术技能
+	[172106] = 180,  --灵狐守护
+	[106898] = 120,  --豹奔
+	
+	-- 战复(特殊处理充能)
+	[20484] = true,	-- 复生
+	[61999] = true,	-- 复活盟友
+	[20707] = true,	-- 灵魂石复活
+	[126393] = true, -- 永恒守护者
+	
+	-- 其他
 	[32182] = 300,	-- 英勇
 	[2825] = 300,	-- 嗜血
 	[80353] = 300,	-- 时间扭曲
 	[90355] = 300,	-- 远古狂乱
-
-	--团队免伤技能	
-	[97462] = 180,  -- 集结呐喊
-	[98008] = 180,  -- 灵魂链接图腾
-	[62618] = 180,  -- 真言术: 障
-	[51052] = 120,  -- 反魔法领域
-	[31821] = 120,  -- 光环掌握
-	[64843] = 180,  -- 神圣赞美诗 *
-	[740]   = 180,  -- 宁静 *
+	[29166] = 180,	-- 激活
 	[16190] = 180,  --潮汐
 	[115213] = 180,	-- 慈悲庇护
+	
 }
 
 local cfg = {}
@@ -60,6 +83,14 @@ local anchorframe = CreateFrame("Frame", "RaidCD", UIParent)
 anchorframe:SetSize(width, height)
 anchorframe:SetPoint(anchor, x, y)
 if UIMovableFrames then tinsert(UIMovableFrames, anchorframe) end
+
+local function bossexists()
+	for i = 1, MAX_BOSS_FRAMES do
+		if UnitExists("boss"..i) then
+			return true
+		end
+	end
+end
 
 local FormatTime = function(time)
 	if time >= 60 then
@@ -172,11 +203,26 @@ local StartTimer = function(name, spellId)
 		end
 	end
 	local bar = CreateBar()
-	bar.endTime = GetTime() + spells[spellId]
+	local cooldown = spells[spellId]
+	local num = GetNumGroupMembers()
+	if cooldown == true then
+		if bossexists() then
+			if num>=10 and num<20 then
+				cooldown = 540
+			elseif num>=20 and num<30 then
+				cooldown = 270
+			else
+				cooldown = 180
+			end
+		else
+			cooldown = 600
+		end
+	end
+	bar.endTime = GetTime() + cooldown
 	bar.startTime = GetTime()
 	bar.left:SetText(name)
 	bar.name = name
-	bar.right:SetText(FormatTime(spells[spellId]))
+	bar.right:SetText(FormatTime(cooldown))
 	if icon and bar.icon then
 		bar.icon:SetNormalTexture(icon)
 		bar.icon:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
@@ -213,6 +259,13 @@ local OnEvent = function(self, event, ...)
 		for k, v in pairs(bars) do
 			StopTimer(v)
 		end
+	elseif event == "PLAYER_REGEN_ENABLED" then
+		for k, v in pairs(bars) do
+			local spellID = select(7, GetSpellInfo(v.spell))
+			if spells[spellID] == true then
+				StopTimer(v)
+			end
+		end	
 	end
 end
 
@@ -220,6 +273,7 @@ local addon = CreateFrame("frame")
 addon:SetScript('OnEvent', OnEvent)
 addon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+addon:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 SlashCmdList["RaidCD"] = function(msg) 
 	StartTimer(UnitName('player'), 20484)

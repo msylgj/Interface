@@ -85,7 +85,6 @@ DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"--One Boss mod
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM non installé"--Two Boss mods
 DBM_CORE_VERSIONCHECK_FOOTER		= "%d joueurs trouvés avec Deadly Boss Mods & %d joueurs avec BigWigs"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Votre version de Deadly Boss Mods est périmée. Veuillez vous rendre sur www.deadlybossmods.com pour obtenir la dernière version."
-DBM_CORE_OUTDATED_PVP_MODS                      = "Vos mods DBM-PvP sont périmés et devraient être désactivés s'ils ne sont pas utilisés, ou mis à jours séparément (PvP package). Ces mods ne sont plus inclus avec l'installation de DBM-Core. Les dernières versions des PvP mods peuvent être trouvés sur http://www.deadlybossmods.com"
 
 DBM_CORE_UPDATEREMINDER_HEADER		= "Votre version de Deadly Boss Mods est périmée.\nLa version %s (r%d) est disponible au téléchargement ici:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA    = "Votre version Alpha de DBM-alpha est périmée.\n Vous avez au moins %d versions de test de retard. Il est recommandé au utilisateurs d'utiliser la dernière version alpha ou la dernière version stable. Les versions alpha périmées peuvent mener à des fonctionnalités absentes ou cassées."
@@ -274,7 +273,7 @@ DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Compte à rebours sonore pour $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "Compte à rebours sonore pour lorsque $spell:%s se dissipe"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Compte à rebours sonore pour la durée de $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Cri quand vous subissez $spell:%s"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s sur " .. UnitName("player") .. " !"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell		= "%s sur " .. UnitName("player") .. " !"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT                 = "Afficher la fênetre des distances (%s) pour $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT   = "Afficher la fênetre des distances (%s)"--For when a range frame is just used for more than one thing
 DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT    = "Afficher la fênetre d'information pour $spell:%s" --What frame is this?

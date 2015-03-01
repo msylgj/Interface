@@ -160,8 +160,18 @@ C.themes["Blizzard_GarrisonUI"] = function()
 
 	local GarrisonCapacitiveDisplayFrame = GarrisonCapacitiveDisplayFrame
 
+	GarrisonCapacitiveDisplayFrameLeft:Hide()
+	GarrisonCapacitiveDisplayFrameMiddle:Hide()
+	GarrisonCapacitiveDisplayFrameRight:Hide()
+	F.CreateBD(GarrisonCapacitiveDisplayFrame.Count, .25)
+	GarrisonCapacitiveDisplayFrame.Count:SetWidth(38)
+	GarrisonCapacitiveDisplayFrame.Count:SetTextInsets(3, 0, 0, 0)
+
 	F.ReskinPortraitFrame(GarrisonCapacitiveDisplayFrame, true)
 	F.Reskin(GarrisonCapacitiveDisplayFrame.StartWorkOrderButton, true)
+	F.Reskin(GarrisonCapacitiveDisplayFrame.CreateAllWorkOrdersButton, true)
+	F.ReskinArrow(GarrisonCapacitiveDisplayFrame.DecrementButton, "left")
+	F.ReskinArrow(GarrisonCapacitiveDisplayFrame.IncrementButton, "right")
 
 	-- Capacitive display
 
@@ -446,12 +456,17 @@ C.themes["Blizzard_GarrisonUI"] = function()
 	for i = 1, 11 do
 		select(i, MissionPage:GetRegions()):Hide()
 	end
+	MissionPage.StartMissionButton.Flash:SetTexture("")
 
 	F.Reskin(MissionPage.StartMissionButton)
 	F.ReskinClose(MissionPage.CloseButton)
 
 	MissionPage.CloseButton:ClearAllPoints()
 	MissionPage.CloseButton:SetPoint("TOPRIGHT", -10, -5)
+
+	hooksecurefunc("GarrisonMissionPage_UpdateStartButton", function(missionPage)
+		missionPage.StartMissionButton.FlashAnim:Stop()
+	end)
 
 	for i = 4, 8 do
 		select(i, MissionPage.Stage:GetRegions()):Hide()
@@ -566,6 +581,15 @@ C.themes["Blizzard_GarrisonUI"] = function()
 
 		portraitFrame.squareBG:SetBackdropBorderColor(color.r, color.g, color.b)
 	end)
+
+	-- Mechanic tooltip
+
+	if AuroraConfig.tooltips then
+		GarrisonMissionMechanicTooltip:SetBackdrop(nil)
+		GarrisonMissionMechanicFollowerCounterTooltip:SetBackdrop(nil)
+		F.CreateBDFrame(GarrisonMissionMechanicTooltip, .6)
+		F.CreateBDFrame(GarrisonMissionMechanicFollowerCounterTooltip, .6)
+	end
 
 	-- [[ Recruiter frame ]]
 

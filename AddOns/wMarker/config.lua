@@ -19,59 +19,79 @@ local checkUpdate
 -- Default database values
 -------------------------------------------------------
 local wM_defaults = {
-    shown = true,
-    tooltips = true,
-    bgHide = true,
-    vertical = false,
-    locked = true,
-    iconSpace = 2,
-    partyShow = true,
-    detach = false,
-    alpha = 1,
-    clamped = true,
-    flipped = false,
-    x = 429,
-    relPt = "TOP",
-    y = 0,
-    scale = 0.68,
-    assistShow = true,
-    targetShow = true,
+	locked= true,
+	clamped = true,
+	shown = true,
+	flipped = false,
+	vertical = false,
+	partyShow = true,
+	targetShow = true,
+	assistShow = true,
+	bgHide = true,
+	tooltips = true,
+	detach = false,
+	scale = 0.68,
+	alpha = 1,
+	iconSpace = 2,
+	x = 430,
+	y = 0,
+	relPt = "TOP",
 }
 local wF_defaults = {
-    alpha = 1,
-    relPt = "TOP",
-    y = -10,
-    worldTex = 1,
-    shown = true,
-    x = -250,
-    icons = false,
-    clamped = true,
-    flipped = false,
-    vertical = false,
-    scale = 0.85,
-    tooltips = true,
-    locked = true,
-    bgHide = true,
-    assistShow = true,
-    partyShow = true,
+	locked = true,
+	clamped = true,
+	shown = true,
+	flipped = false,
+	vertical = false,
+	icons = true,
+	partyShow = true,
+	assistShow = true,
+	bgHide = true,
+	tooltips = true,
+	worldTex = 1,
+	scale = 0.85,
+	alpha = 1,
+	x= -250,
+	y = -10,
+	relPt = "TOP",
 }
 -------------------------------------------------------
--- Manipulation functions
+-- Manipulation functions (Oh so many of them.)
 -------------------------------------------------------
-local function visibility()
-	combatWait = false
+
+-- Based on Shadowed's Out of Combat function queue
+queuedFuncs = {};
+function wMarker:RegisterOOCFunc(self,func)
+	if (type(func)=="string") then
+		queuedFuncs[func] = self;		
+	else
+		queuedFuncs[self] = true;
+	end	
+end
+
+local worldMarks;
+function wMarker:visibility()
 	wMarker.main:Show()
 	if (wMarkerDB.shown==false) then wMarker.main:Hide() end
-	if (wMarkerDB.partyShow==true) then	if (GetNumSubgroupMembers()<1) or ((GetNumSubgroupMembers()<1) and (GetNumGroupMembers()<1)) then wMarker.main:Hide() end end
+	if (wMarkerDB.partyShow==true) then if (GetNumGroupMembers()==0) then wMarker.main:Hide() end end
 	if (wMarkerDB.targetShow==true) then if not (UnitExists("target")) then wMarker.main:Hide() end end
-	if (wMarkerDB.assistShow==true) then if (GetNumGroupMembers()>1) and (UnitIsGroupAssistant("player")==nil) then wMarker.main:Hide() end end
-	if not (UnitAffectingCombat("player")) then
-		wFlares.main:Show()
-		if (wFlaresDB.shown==false) then wFlares.main:Hide() end
-		if (wFlaresDB.partyShow==true) then if (GetNumSubgroupMembers()<1) or ((GetNumSubgroupMembers()<1) and (GetNumGroupMembers()<1)) then wFlares.main:Hide() end end
-		if (wFlaresDB.assistShow==true) then if (GetNumGroupMembers()>1) and (UnitIsGroupAssistant("player")==nil) then wFlares.main:Hide() end end
+	if (wMarkerDB.assistShow==true) then if (IsInRaid()) and (UnitIsGroupAssistant("player")==false) then wMarker.main:Hide() end end
+	worldMarks = true;
+	if (wFlaresDB.shown==false) then worldMarks = false end
+	if (wFlaresDB.partyShow==true) then if (GetNumGroupMembers()==0) then worldMarks = false end end
+	if (wFlaresDB.assistShow==true) then if (IsInRaid()==true) and (UnitIsGroupAssistant("player")==false) then worldMarks = false end end
+	if not (InCombatLockdown()) then
+		if (worldMarks==true) then
+			if not(wFlares.main:IsShown()) then 
+				wFlares.main:Show() 
+			end
+		else
+			if (wFlares.main:IsShown()) then
+				wFlares.main:Hide()
+			end
+		end
 	else
-		combatWait = true -- Need to wait for player to leave combat since wFlares has SecureActionButtons in it
+		wMarker:RegisterOOCFunc(self,"visibility");
 	end
 end
 
@@ -218,13 +238,13 @@ end
 
 function wFlares:frameFormat(orien)
 	if (orien=="horiz") then
-		wFlares.main:SetSize(135,30)
+		wFlares.main:SetSize(190,30)
 		wFlares.main.moverLeft:SetSize(20,30)
 		wFlares.main.moverRight:SetSize(20,30)
 		wFlares.main.moverLeft:SetPoint("RIGHT",wFlares.main,"LEFT")
 		wFlares.main.moverRight:SetPoint("LEFT",wFlares.main,"RIGHT")
 	elseif (orien=="vert") then
-		wFlares.main:SetSize(30,135)
+		wFlares.main:SetSize(30,190)
 		wFlares.main.moverLeft:SetSize(30,20)
 		wFlares.main.moverRight:SetSize(30,20)
 		wFlares.main.moverLeft:SetPoint("BOTTOM",wFlares.main,"TOP")
@@ -239,29 +259,28 @@ function wFlares:orienFormat(dir)
 	wFlares.main.moverRight:ClearAllPoints()
 	if (dir==1) then -- Normal
 		wFlares.flare["Square"]:SetPoint("LEFT", wFlares.main, "LEFT",5,0)
-		for i = 2,5 do wFlares.flare[i]:SetPoint("LEFT", wFlares.flare[i-1], "RIGHT") end
-		wFlares.flareClear:SetPoint("LEFT",wFlares.flare["Star"],"RIGHT",3,0)
+		for i = 2,8 do wFlares.flare[i]:SetPoint("LEFT", wFlares.flare[i-1], "RIGHT") end
+		wFlares.flareClear:SetPoint("LEFT",wFlares.flare["Skull"],"RIGHT",3,0)
 		wFlares:frameFormat("horiz")
 	elseif (dir==2) then -- Backwards
-		wFlares.flare["Star"]:SetPoint("LEFT",wFlares.main,"LEFT",5,0)
-		for i = 4,1,-1 do wFlares.flare[i]:SetPoint("LEFT",wFlares.flare[i+1],"RIGHT") end
+		wFlares.flare["Skull"]:SetPoint("LEFT",wFlares.main,"LEFT",5,0)
+		for i = 7,1,-1 do wFlares.flare[i]:SetPoint("LEFT",wFlares.flare[i+1],"RIGHT") end
 		wFlares.flareClear:SetPoint("LEFT",wFlares.flare["Square"],"RIGHT",3,0)
 		wFlares:frameFormat("horiz")
 	elseif (dir==3) then -- Normal vertical
 		wFlares.flare["Square"]:SetPoint("TOP", wFlares.main, "TOP",0,-5)
-		for i = 2,5 do wFlares.flare[i]:SetPoint("TOP",wFlares.flare[i-1], "BOTTOM") end
-		wFlares.flareClear:SetPoint("TOP",wFlares.flare["Star"],"BOTTOM",0,-3)
+		for i = 2,8 do wFlares.flare[i]:SetPoint("TOP",wFlares.flare[i-1], "BOTTOM") end
+		wFlares.flareClear:SetPoint("TOP",wFlares.flare["Skull"],"BOTTOM",0,-3)
 		wFlares:frameFormat("vert")
 	elseif (dir==4) then -- Backwards vertical
-		wFlares.flare["Star"]:SetPoint("TOP", wFlares.main, "TOP",0,-5)
-		for i = 4,1,-1 do wFlares.flare[i]:SetPoint("TOP", wFlares.flare[i+1], "BOTTOM") end
+		wFlares.flare["Skull"]:SetPoint("TOP", wFlares.main, "TOP",0,-5)
+		for i = 7,1,-1 do wFlares.flare[i]:SetPoint("TOP", wFlares.flare[i+1], "BOTTOM") end
 		wFlares.flareClear:SetPoint("TOP",wFlares.flare["Square"],"BOTTOM",0,-3)
 		wFlares:frameFormat("vert")
 	end
 end
 
 function wFlares:orien(dir)
-	combatWait = false
 	if not (UnitAffectingCombat("player")) then
 		if (wFlaresDB.flipped==false) and (wFlaresDB.vertical==false) then
 			wFlares:orienFormat(1)
@@ -273,7 +292,7 @@ function wFlares:orien(dir)
 			wFlares:orienFormat(4)
 		end
 	else
-		combatWait = true -- Need to wait for player to leave combat since wFlares has SecureActionButtons in it
+		wMarker:RegisterOOCFunc(self,"orien");
 	end
 end
 
@@ -337,6 +356,9 @@ function wFlares:retex(tex)
 		wFlares.flare["Diamond"]:GetNormalTexture():SetTexCoord(0,0.125,0.25,0.5)
 		wFlares.flare["Cross"]:GetNormalTexture():SetTexCoord(0.625,0.75,0,0.25)
 		wFlares.flare["Star"]:GetNormalTexture():SetTexCoord(0.375,0.5,0,0.25)
+		wFlares.flare["Circle"]:GetNormalTexture():SetTexCoord(0.25,0.375,0.25,0.5)
+		wFlares.flare["Moon"]:GetNormalTexture():SetTexCoord(0.875,1,0,0.25)
+		wFlares.flare["Skull"]:GetNormalTexture():SetTexCoord(0.5,0.625,0,0.25)
 	else
 		for k,v in pairs(wFlares.flare) do v:SetNormalTexture("interface\\targetingframe\\ui-raidtargetingicons") end
 		wFlares.flare["Square"]:GetNormalTexture():SetTexCoord(0.25,0.5,0.25,0.5)
@@ -344,6 +366,9 @@ function wFlares:retex(tex)
 		wFlares.flare["Diamond"]:GetNormalTexture():SetTexCoord(0.5,0.75,0,0.25)
 		wFlares.flare["Cross"]:GetNormalTexture():SetTexCoord(0.5,0.75,0.25,0.5)
 		wFlares.flare["Star"]:GetNormalTexture():SetTexCoord(0,0.25,0,0.25)
+		wFlares.flare["Circle"]:GetNormalTexture():SetTexCoord(0.25,0.5,0,0.25)
+		wFlares.flare["Moon"]:GetNormalTexture():SetTexCoord(0,0.25,0.25,0.5)
+		wFlares.flare["Skull"]:GetNormalTexture():SetTexCoord(0.75,1,0.25,0.5)
 	end
 end
 
@@ -373,7 +398,7 @@ end
 -------------------------------------------------------
 
 SLASH_WMARK1 = '/wmarker'
-SLASH_WMARK2 = '/wm'
+SLASH_WMARK2 = '/wma'
 function SlashCmdList.WMARK(msg, editbox)
 	if (msg=="lock") then
 		wMarker:lockToggle()
@@ -381,9 +406,9 @@ function SlashCmdList.WMARK(msg, editbox)
 	elseif (msg=="reset") then
 		reset()
 	elseif (msg=="show") then
-		wMarkerDB.shown=true; wFlaresDB.shown=true; visibility()
+		wMarkerDB.shown=true; wFlaresDB.shown=true; wMarker:visibility()
 	elseif (msg=="hide") then
-		wMarkerDB.shown=false; wFlaresDB.shown=false; visibility()
+		wMarkerDB.shown=false; wFlaresDB.shown=false; wMarker:visibility()
 	elseif (msg=="clamp") then
 		wMarker:clampToggle(); wFlares:clampToggle()
 	elseif (msg=="options") then
@@ -391,6 +416,29 @@ function SlashCmdList.WMARK(msg, editbox)
 	else
 		InterfaceOptionsFrame_OpenToCategory(wMarker.options)
 	end
+end
+
+SLASH_WMARKREADY1 = '/rc'
+function SlashCmdList.WMARKREADY(msg, editbox)
+	DoReadyCheck();
+end
+
+SLASH_WMARKROLE1 = '/roc'
+function SlashCmdList.WMARKROLE(msg, editbox)
+	InitiateRolePoll();
+end
+
+local credits; -- "Translation credits string created here to make usable in function below
+local lastTranslationCredit;
+local function createTransCredit(lang, contribs)
+	local f = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall");
+	if not lastTranslationCredit then 
+		f:SetPoint("TOPLEFT",credits,10,-20);
+	else
+		f:SetPoint("TOPLEFT",lastTranslationCredit,0,-20);
+	end
+	f:SetFormattedText("|cff69ccf0%s|r - %s",lang,contribs);	
+	lastTranslationCredit = f;
 end
 
 local b = "|cffffd200"
@@ -408,15 +456,29 @@ desc:SetFormattedText("%s%s:|r %s",b,L["About"],GetAddOnMetadata("wMarker", "Not
 local author = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall")
 author:SetPoint("TOPLEFT", desc,0,-20)
 author:SetFormattedText("%s%s:|r Waky - Azuremyst",b,L["Author"])
-local credits = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall")
+-- Translation Credits
+credits = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall")
 credits:SetPoint("TOPLEFT",author,0,-20)
 credits:SetFormattedText("%s%s:",b,L["Translation credits"])
-local german = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall")
-german:SetPoint("TOPLEFT",credits,10,-20)
-german:SetText("|cff69ccf0German-deDE|r - TheGeek/StormCalai,Zaephyr81, Fiveyoushi, Morwo, and Waky")
-local spanish = options:CreateFontString(nil, "OVERLAY", "ChatFontSmall")
-spanish:SetPoint("TOPLEFT",german,0,-20)
-spanish:SetText("|cff69ccf0Spanish-esES|r - Waky")
+createTransCredit("German-deDE", "TheGeek/StormCalai, Zaephyr81, Fiveyoushi, Morwo, Waky");
+createTransCredit("Spanish-esES", "Waky");
+createTransCredit("French-frFR", "Kromdhar, Argone");
+createTransCredit("Traditional Chinese-zhTW", "EKE");
+createTransCredit("Italian-itIT", "Fabsm");
+createTransCredit("Russian-ruRU", "katanaFAN, panzer48, RamyAlexis");
+createTransCredit("Simplified Chinese-zhCN", "zhTW, dll32");
+
+
+keyBinds = CreateFrame("Button","wMarkerKeyBindings",options,"GameMenuButtonTemplate");
+keyBinds:SetSize(100,20);
+keyBinds:SetText(L["Key bindings"]);
+keyBinds:SetPoint("BOTTOMRIGHT",options,-10,10);
+keyBinds:SetScript("OnClick",function(self)
+	KeyBindingFrame_LoadUI();
+	KeyBindingFrame.mode = 1;
+	ShowUIPanel(KeyBindingFrame);
+end);
+
 
 local lastCheckButton
 local function checkNew(parent,text,func)
@@ -439,14 +501,14 @@ InterfaceOptions_AddCategory(raid)
 local raidHeader = raid:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 raidHeader:SetPoint("TOPLEFT", raid, 20,-20)
 raidHeader:SetFormattedText("%s - %s",wM,L["Raid marker"])
-local raidShow = checkNew(raid,L["Show frame"],function() wMarkerDB.shown = not wMarkerDB.shown; visibility() end)
+local raidShow = checkNew(raid,L["Show frame"],function() wMarkerDB.shown = not wMarkerDB.shown; wMarker:visibility() end)
 local raidLock = checkNew(raid,L["Lock frame"],function() wMarker:lockToggle() end)
 local raidClamp = checkNew(raid,L["Clamp to screen"],function() wMarker:clampToggle() end)
 local raidFlip = checkNew(raid,L["Reverse icons"],function() wMarkerDB.flipped = not wMarkerDB.flipped; wMarker:orien() end)
 local raidVert = checkNew(raid,L["Display vertically"],function() wMarkerDB.vertical = not wMarkerDB.vertical; wMarker:orien() end)
-local raidParty = checkNew(raid,L["Hide when alone"],function() wMarkerDB.partyShow = not wMarkerDB.partyShow; visibility() end)
-local raidTarget = checkNew(raid,L["Show only with a target"],function() wMarkerDB.targetShow = not wMarkerDB.targetShow; visibility() end)
-local raidAssist = checkNew(raid,L["Hide without assist (in a raid)"],function() wMarkerDB.assistShow = not wMarkerDB.assistShow; visibility() end)
+local raidParty = checkNew(raid,L["Hide when alone"],function() wMarkerDB.partyShow = not wMarkerDB.partyShow; wMarker:visibility() end)
+local raidTarget = checkNew(raid,L["Show only with a target"],function() wMarkerDB.targetShow = not wMarkerDB.targetShow; wMarker:visibility() end)
+local raidAssist = checkNew(raid,L["Hide without assist (in a raid)"],function() wMarkerDB.assistShow = not wMarkerDB.assistShow; wMarker:visibility() end)
 local raidBG = checkNew(raid,L["Hide background"],function() wMarker:bgToggle() end)
 local raidTool = checkNew(raid,L["Enable tooltips"],function() wMarkerDB.tooltips = not wMarkerDB.tooltips end)
 local raidScale = CreateFrame("Slider","raidScale",raid,"OptionsSliderTemplate")
@@ -494,13 +556,13 @@ InterfaceOptions_AddCategory(world)
 local worldHeader = world:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 worldHeader:SetPoint("TOPLEFT", world, 20,-20)
 worldHeader:SetFormattedText("%s - %s",wM,L["World markers"])
-worldShow = checkNew(world,L["Show frame"],function() wFlaresDB.shown = not wFlaresDB.shown; visibility() end)
+worldShow = checkNew(world,L["Show frame"],function() wFlaresDB.shown = not wFlaresDB.shown; wMarker:visibility() end)
 local worldLock = checkNew(world,L["Lock frame"],function() wFlares:lockToggle() end)
 local worldClamp = checkNew(world,L["Clamp to screen"],function() wFlares:clampToggle() end)
 local worldFlip = checkNew(world,L["Reverse icons"],function() wFlaresDB.flipped = not wFlaresDB.flipped; wFlares:orien() end)
 local worldVert = checkNew(world,L["Display vertically"],function() wFlaresDB.vertical = not wFlaresDB.vertical; wFlares:orien() end)
-local worldParty = checkNew(world,L["Hide when alone"],function() wFlaresDB.partyShow = not wFlaresDB.partyShow; visibility() end)
-local worldAssist = checkNew(world,L["Hide without assist (in a raid)"],function() wFlares.assistShow = not wFlaresDB.assistShow; visibility() end)
+local worldParty = checkNew(world,L["Hide when alone"],function() wFlaresDB.partyShow = not wFlaresDB.partyShow; wMarker:visibility() end)
+local worldAssist = checkNew(world,L["Hide without assist (in a raid)"],function() wFlares.assistShow = not wFlaresDB.assistShow; wMarker:visibility() end)
 local worldBG = checkNew(world,L["Hide background"],function() wFlares:bgToggle() end)
 local worldTool = checkNew(world,L["Enable tooltips"],function() wFlaresDB.tooltips = not wFlaresDB.tooltips end)
 
@@ -553,7 +615,6 @@ UIDropDownMenu_SetButtonWidth(worldTex, 124)
 UIDropDownMenu_JustifyText(worldTex, "LEFT")
 UIDropDownMenu_SetSelectedValue(worldTex, wFlaresDB.worldTex)
 
-
 checkUpdate = function()
 	raidShow:SetChecked(wMarkerDB.shown)
 	raidLock:SetChecked(wMarkerDB.locked)
@@ -596,7 +657,7 @@ local function reset()
 	wFlares.main:SetPoint("CENTER", UIParent,0,50)
 	clamp()
 	backgroundVisibility()
-	visibility()
+	wMarker:visibility()
 	lock()
 	wMarker:orien()
 	checkUpdate()
@@ -607,8 +668,9 @@ wMarker.options.default = reset() -- Assigns the "Default" button in the options
 -- OnEvent
 -------------------------------------------------------
 
-local event = CreateFrame("Frame")
-event:RegisterEvent("ADDON_LOADED")
+local update = CreateFrame("Frame");
+local event = CreateFrame("Frame");
+event:RegisterEvent("ADDON_LOADED");
 event:SetScript("OnEvent", function(self,event,addon,...)
 	if (event=="ADDON_LOADED") then
 		if (addon=="wMarker") then
@@ -641,16 +703,43 @@ event:SetScript("OnEvent", function(self,event,addon,...)
 			
 			clamp()
 			backgroundVisibility()
-			visibility()
+			wMarker:visibility()
 			lock()
 			wMarker:orien()
 			wFlares:orien()
 			checkUpdate()
 		end
 	elseif (event=="PARTY_MEMBERS_CHANGED") or (event=="RAID_ROSTER_UPDATE") or (event=="PLAYER_TARGET_CHANGED") or (event=="PARTY_CONVERTED_TO_RAID") then
-		visibility()
+		wMarker:visibility()
 	elseif (event=="PLAYER_REGEN_ENABLED") then
-		if (combatWait==true) then visibility() wFlares:orien() end
+		
+		-- Based on Shadowed's Out of Combat function queue
+		for func, handler in pairs(queuedFuncs) do
+			if (type(handler)=="table") then
+				handler[func](hander);
+			elseif (type(func)=="string") then
+				_G[func]();
+			else
+				func();
+			end
+		end
+		
+		for func in pairs(queuedFuncs) do
+			queuedFuncs[func] = nil;
+		end
+	
+		if (combatWait==true) then
+			update:SetScript("OnUpdate",function(self,elap) 
+				update.e = update.e+elap;
+				if (update.e >= 0.5) then
+					if not InCombatLockdown() then		
+						wMarker:visibility();
+						wFlares:orien();
+					end
+					update.e = 0;
+				end
+			end)
+		end
 	end
 end)
 event:RegisterEvent("PARTY_MEMBERS_CHANGED")
@@ -658,3 +747,22 @@ event:RegisterEvent("RAID_ROSTER_UPDATE")
 event:RegisterEvent("PARTY_CONVERTED_TO_RAID")
 event:RegisterEvent("PLAYER_TARGET_CHANGED")
 event:RegisterEvent("PLAYER_REGEN_ENABLED")
+event:RegisterEvent("PLAYER_REGEN_DISABLED")
+event:RegisterEvent("UPDATE_BINDINGS")
+
+-------------------------------------------------------
+-- OnUpdate
+-------------------------------------------------------
+
+update.e = 0;
+update:SetScript("OnUpdate",function(self,elap) 
+	update.e = update.e+elap;
+	if (update.e >= 0.5) then
+		if not InCombatLockdown() then		
+			wMarker:visibility();
+			wFlares:orien();
+			self:SetScript("OnUpdate",nil);
+		end
+		update.e = 0;
+	end
+end)

@@ -1,5 +1,10 @@
-﻿-- English --
--------------
+﻿-- French --
+------------
+
+-- Translation credits: --
+-- Kromdhar --------------
+-- Argone ----------------
+--------------------------
 
 local Language = GetLocale()
 
@@ -10,51 +15,52 @@ wMarkerLocals = {}
 wMarkerLocals = {
 
 -- Icons
-["Skull"] = "Skull",
-["Cross"] = "Cross",
-["Square"] = "Square",
-["Moon"] = "Moon",
+["Skull"] = "Crâne",
+["Cross"] = "Croix",
+["Square"] = "Carré",
+["Moon"] = "Lune",
 ["Triangle"] = "Triangle",
-["Diamond"] = "Diamond",
-["Circle"] = "Circle",
-["Star"] = "Star",
-["Clear mark"] = "Clear mark",
-["Ready check"] = "Ready check",
+["Diamond"] = "Losange",
+["Circle"] = "Rond",
+["Star"] = "Etoile",
+["Clear mark"] = "Retirer les marqueurs",
+["Ready check"] = "Appel",
 
 -- World Markers (uses same names as icons above)
-["world marker"] = "world marker",
-["Display as"] = "Display as",
-["Clear all world markers"] = "Clear all world markers",
+["world marker"] = "Marqueurs mondiaux",
+["Display as"] = "Afficher comme",
+["Clear all world markers"] = "Retirer tous les marqueurs mondiaux",
 
 -- Options
 ["Version"] = "Version",
-["About"] = "About",
-["Author"] = "Author",
-["Raid marker"] = "Raid marker",
-["World markers"] = "World markers",
-["Key bindings"] = "Key bindings",
+["About"] = "A propos",
+["Author"] = "Auteur",
+["Raid marker"] = "Marqueur de raid",
+["World markers"] = "Marqueurs mondiaux",
+["Key bindings"] = "Raccourcis claviers",
 	-- Phrases
-["Translation credits"] = "Translation credits",
-["Clamp to screen"] = "Clamp to screen",
-["Display vertically"] = "Display vertically",
-["Enable tooltips"] = "Enable tooltips",
-["Reverse icons"] = "Reverse icons",
-["Hide background"] = "Hide background",
-["Hide when alone"] = "Hide when alone",
-["Hide without assist (in a raid)"] = "Hide without assist (in a raid)",
-["Icon spacing"] = "Icon spacing",
-["Lock frame"] = "Lock frame",
-["Raid Markers alpha"] = "Raid Markers alpha",
-["Raid Markers scale"] = "Raid Markers scale",
-["Show frame"] = "Show frame",
-["Show only with a target"] = "Show only with a target",
-["World Markers alpha"] = "World Markers alpha",
-["World Markers scale"] = "World Markers scale",
-["Blips"] = "Blips",
-["Icons"] = "Icons",
-["Compact mode"] = "Compact mode",
-["Detach control frame"] = "Detach control frame",
-["Not bound"] = "Not bound",
-["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Click on a button and then press the key combination to bind. Right click to remove a binding",
+["Translation credits"] = "Crédits de traduction",
+["Clamp to screen"] = "Attacher à l'écran",
+["Display vertically"] = "Affichage vertical",
+["Enable tooltips"] = "Activer les bulles d'aides",
+["Reverse icons"] = "Inverser les icônes",
+["Hide background"] = "Cacher le fond",
+["Hide when alone"] = "Cacher quand seul",
+["Hide without assist (in a raid)"] = "Cacher si pas assistant (en raid)",
+["Icon spacing"] = "Espace entre les icônes",
+["Lock frame"] = "Verrouiller la fenêtre",
+["Raid Markers alpha"] = "Transparence des marqueurs de raid",
+["Raid Markers scale"] = "Echelle des marqueurs de raid",
+["Show frame"] = "Montrer la fenêtre",
+["Show only with a target"] = "Montrer seulement avec une cible",
+["World Markers alpha"] = "Transparence des marqueurs mondiaux",
+["World Markers scale"] = "Echelle des marqueurs mondiaux",
+["Blips"] = "Spot",
+["Icons"] = "Icônes",
+["Compact mode"] = "Mode compact",
+["Detach control frame"] = "Détacher le fenêtre de contrôle",
+["Not bound"] = "Pas de raccourci",
+["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Cliquez sur un bouton et appuyez sur la touche voulue pour placer le raccourci. Clic droit pour enlever un raccourci.",
+["You cannot change your bindings in combat! Please wait!"] = "You cannot change your bindings in combat! Please wait!",
 }
 end

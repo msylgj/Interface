@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: DamageEx
 ## Notes: Shows the damage,target heal and the spell name.(Thanks:MagicDragoon and frankcg)
 ## Title-zhCN: |CFFFF8000战斗|R 增强伤害显示器(Dex)

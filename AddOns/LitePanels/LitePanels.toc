@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: Lite|cff44CCFFPanels|r
 ## Notes: Lightweight Panels of Awesomeness
 ## Author: Jon Crenshaw (revrii@gmail.com)

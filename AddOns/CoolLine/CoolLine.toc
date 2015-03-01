@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: CoolLine
 ## Notes: Shows cooldowns on a single bar.
 ## Author: TotalPackage

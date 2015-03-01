@@ -1,0 +1,42 @@
+tag 6.1.1
+03720d057313ddd47e392b0e6e2808f996898fd4
+subversion <svn@deadlybossmods.com>
+2015-02-26 12:50:00 +0100
+
+Tagging as 6.1.1
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.1.1
+	- Omega via svn r13132: subtrack extra 1 second for 4 second trains, so infoframe can update
+	- Omega via svn r13131: switch info frame 1 second before train hit to next trade, to avoid train 7 bug, as well as I think better. especially for 5 second apart trains, such as train 8, need to be moving toward train 7 position immediately after it pass.
+	- Omega via svn r13130: Change option default on Kagraz Fix countdown bug on Kromog bump BW version
+	- Omega via svn r13129: After careful video review. fix heroic blast furnace add timers. they were buffed to match mythic. Set hotfix notice for BF and tectus.
+	- nbluewiz via svn r13128: # Kagraz - This should ok if cleu is correct.
+	- Omega via svn r13127: Change back to 0.5, i?\226?\128?\153m confident nothing was wrong with original code, users in videos had old mods
+	- Omega via svn r13126: I think this should fix any fixate problem
+	- Omega via svn r13125: enable smart timer for everyone, works very good.
+	- nbluewiz via svn r13124: # FIXED : Kagraz - Add expire time check to new find stuff.
+	- nbluewiz via svn r13123: # koKR update.
+	- Omega via svn r13122: two minor fixes i can do while raiding
+	- Omega via svn r13121: Another fix, .wav is not supported by 6.1 at all, not even 3rd party. so any sound set to a wav file must be reset to defaults, period.
+	- Omega via svn r13120: Update libsharedmedia
+	- Omega via svn r13119: Tweak.
+	- Omega via svn r13118: Better fix. should definitely fix now
+	- Omega via svn r13117: Bump BW revision
+	- Omega via svn r13116: More 6.1 cleanup. A few more things but can only do what can be easily verified. margok chogal spawn will probably be some weeks before verifying. I?\226?\128?\153m sure event is there, but making sure timing matches up with current yell method is needed so as not to screw up all the timers.
+	- ultrashining via svn r13115: zhTW update
+	- ultrashining via svn r13114: zhTW update
+	- Omega via svn r13113: Attempt to fix bad user settings that may result in no sounds Add readycheck option many people requesting.
+	- Omega via svn r13112: Improve voice warnings for melt and rupture so they actually give some kind of warning when you get debuff as well, not just when standing in stuff on ground.
+	- Omega via svn r13111: Fix tank warning in LFR. extremely spammy if 4+ operators up
+	- Omega via svn r13110: Fix koragh antispam to avoid double special warn (target scanning change actually seemed much more solid, never reported UNNOWN) Also, Improved even further too, don?\226?\128?\153t show both reg warn and spec warn for tank
+	- Omega via svn r13109: Tectus fixes
+	- nbluewiz via svn r13108: # FIXED: Kagraz - Remove hudmap on debuff removes. # CHANGED: Kagraz - Change Fixate timer to personal debuff timer.
+	- nbluewiz via svn r13107: # CHANGED: Kagraz - Experimental "NEW" Fixate warning to find actual debuff targets.
+	- Omega via svn r13106: BW revision
+	- Omega via svn r13105: LFR kromog fixes
+	- Omega via svn r13104: Fuck how did I miss this bug, phase detection on hansgar and franzok busted because of a capitol letter :\
+	- tandanu via svn r13103: increment alpha version

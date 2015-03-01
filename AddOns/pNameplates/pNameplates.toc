@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Author: Crushbeers (Antonidas US), Sniffle (Firetree US)
 ## Version: 1.9.0
 ## Title: |cFF48D1CCp|rNameplates

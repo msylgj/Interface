@@ -1412,8 +1412,9 @@ function PremadeFilter_Frame_OnLoad(self)
 		end
 	);
 	
-	self.oldHyperlinkClick = DEFAULT_CHAT_FRAME:GetScript("OnHyperlinkClick");
-	DEFAULT_CHAT_FRAME:SetScript("OnHyperlinkClick", PremadeFilter_Hyperlink_OnClick);
+	--[[ REMOVED BECAUSE OF BLIZZARD TWITTER FEATURE BUG ]]--
+	--self.oldHyperlinkClick = DEFAULT_CHAT_FRAME:GetScript("OnHyperlinkClick");
+	--DEFAULT_CHAT_FRAME:SetScript("OnHyperlinkClick", PremadeFilter_Hyperlink_OnClick);
 	
 	self.oldHyperlinkEnter = DEFAULT_CHAT_FRAME:GetScript("OnHyperlinkEnter");
 	self.oldHyperlinkLeave = DEFAULT_CHAT_FRAME:GetScript("OnHyperlinkLeave");
@@ -1851,7 +1852,7 @@ function PremadeFilter_GetSelectedRealms()
 		if not info.isChapter then
 			totalRealms = totalRealms + 1;
 			if info.isChecked then
-				local name = info.name:gsub("[%s]+", "");
+				local name = info.name:gsub("[%s%']+", "");
 				table.insert(selectedRealms, name:lower());
 			end
 		end
@@ -2279,7 +2280,7 @@ function PremadeFilter_SetFilters(filters)
 				noneChecked = true;
 			else
 				local chapter	= PremadeFilter_Frame.realmList[i].chapterIndex;
-				local name		= PremadeFilter_Frame.realmList[i].name:gsub("[%s]+", "");
+				local name		= PremadeFilter_Frame.realmList[i].name:gsub("[%s%']+", "");
 				local checked	= (filters.realms:find("-"..name:lower(), 1, true) ~= nil);
 				
 				PremadeFilter_Frame.realmList[i].isChecked = checked;
@@ -2497,7 +2498,7 @@ function LFGListSearchPanel_UpdateResultList(self)
 				if matches and leaderName and extraFilters.realms then
 					local leaderRealm = leaderName:gmatch("-.+$")();
 					if not leaderRealm then
-						leaderRealm = "-"..PremadeFilter_Frame.realmName;
+						leaderRealm = "-"..PremadeFilter_Frame.realmName:gsub("[%s%']+", "");
 					end
 					matches = extraFilters.realms:find(leaderRealm:lower(), 1, true);
 				end
@@ -3292,8 +3293,8 @@ function PremadeFilter_Hyperlink_OnClick(self, linkData, link, button)
 				PremadeFilter_StopNotification();
 			end
 		end
-	elseif PremadeFilter_Frame.oldHyperlinkClick then
-		PremadeFilter_Frame.oldHyperlinkClick(self, linkData, link, button);
+	--elseif PremadeFilter_Frame.oldHyperlinkClick then
+	--	PremadeFilter_Frame.oldHyperlinkClick(self, linkData, link, button);
 	end
 end
 

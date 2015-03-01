@@ -75,15 +75,43 @@ local editBoxBackdrop = {
 local wM = "|cffe1a500w|cff69ccf0Marker|r"
 
 -------------------------------------------------------
+-- Binding Frame Strings
+-------------------------------------------------------
+BINDING_HEADER_WMARKER_RAID = string.format("|cffe1a500w|cff69ccf0Marker|r - %s",L["Raid marker"]);
+BINDING_HEADER_WMARKER_WORLD = string.format("|cffe1a500w|cff69ccf0Marker|r - %s",L["World markers"]);
+BINDING_NAME_WMARKER_SKULL = L["Skull"];
+BINDING_NAME_WMARKER_CROSS = L["Cross"];
+BINDING_NAME_WMARKER_SQUARE = L["Square"];
+BINDING_NAME_WMARKER_MOON = L["Moon"];
+BINDING_NAME_WMARKER_TRI = L["Triangle"];
+BINDING_NAME_WMARKER_DIA = L["Diamond"];
+BINDING_NAME_WMARKER_CIR = L["Circle"];
+BINDING_NAME_WMARKER_STAR = L["Star"];
+BINDING_NAME_WMARKER_CLEAR = L["Clear mark"];
+BINDING_NAME_WMARKER_READY = L["Ready check"];
+
+
+_G["BINDING_NAME_CLICK wMarkerSquareflare:LeftButton"] = L["Square"];
+_G["BINDING_NAME_CLICK wMarkerTriangleflare:LeftButton"] = L["Triangle"];
+_G["BINDING_NAME_CLICK wMarkerDiamondflare:LeftButton"] = L["Diamond"];
+_G["BINDING_NAME_CLICK wMarkerCrossflare:LeftButton"] = L["Cross"];
+_G["BINDING_NAME_CLICK wMarkerStarflare:LeftButton"] = L["Star"];
+_G["BINDING_NAME_CLICK wMarkerCircleflare:LeftButton"] = L["Circle"];
+_G["BINDING_NAME_CLICK wMarkerMoonflare:LeftButton"] = L["Moon"];
+_G["BINDING_NAME_CLICK wMarkerSkullflare:LeftButton"] = L["Skull"];
+_G["BINDING_NAME_CLICK wMarkerClearflares:LeftButton"] = L["Clear all world markers"];
+
+
+-------------------------------------------------------
 -- wMarker Main Frame
 -------------------------------------------------------
 
 wMarker = {}
-function wMarker:print(msg)
+function wMarker:print(self, msg)
 	DEFAULT_CHAT_FRAME:AddMessage(string.format("%s:%s",wM,msg))
 end
 wMarker.other = {}
-local main = CreateFrame("Frame", "wMarker.main", UIParent)
+local main = CreateFrame("Frame", "wMarkerMain", UIParent)
 main:SetBackdrop(borderlessBackdrop)
 main:SetBackdropColor(0,0,0,0)
 main:EnableMouse(true)
@@ -181,7 +209,7 @@ readyCheck:SetPoint("LEFT", clearIcon, "RIGHT")
 readyCheck:SetNormalTexture("interface\\raidframe\\readycheck-waiting")
 readyCheck:GetNormalTexture():SetTexCoord(0,1,0,1)
 readyCheck:EnableMouse(true)
-readyCheck:SetScript("OnClick", function(self) DoReadyCheck() end)
+readyCheck:SetScript("OnClick", function(self,btn) if (btn=="LeftButton") then DoReadyCheck() end end)
 readyCheck:SetScript("OnEnter", function(self) if (wMarkerDB.tooltips==true) then GameTooltip:SetOwner(self, "ANCHOR_CURSOR"); GameTooltip:ClearLines(); GameTooltip:AddLine(L["Ready check"]); GameTooltip:Show() end end)
 readyCheck:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 wMarker.other.readyCheck = readyCheck
@@ -191,13 +219,13 @@ wMarker.other.readyCheck = readyCheck
 -------------------------------------------------------
 
 wFlares = {}
-wFmain = CreateFrame("Frame", "wFlares.main", UIParent)
+wFmain = CreateFrame("Frame", "wFlaresMain", UIParent)
 wFmain:SetBackdrop(defaultBackdrop)
 wFmain:SetBackdropColor(0.1,0.1,0.1,0.7)
 wFmain:EnableMouse(true)
 wFmain:SetMovable(true)
 wFmain:SetUserPlaced(true)
-wFmain:SetSize(135,30)
+wFmain:SetSize(190,30)
 wFmain:SetPoint("CENTER", UIParent, "CENTER",0,40)
 wFmain:SetClampedToScreen(false)
 wFlares.main = wFmain
@@ -209,6 +237,8 @@ wFlares.main.moverRight = wF_moverRight
 -------------------------------------------------------
 -- The flares A.K.A. World markers
 -------------------------------------------------------
+
+-- New White (Skull 8), Red(Cross), Blue(Square), Silver (Moon 7), Green(Triangle), Purple (Diamond), Orange (Circle 6), Yellow (Star)
 wFlares.flare = {}
 local function flareNew(name, tex, num, xOff)
 	local f = CreateFrame("Button", string.format("wMarker%sflare",name), wFlares.main, "SecureActionButtonTemplate")
@@ -217,14 +247,12 @@ local function flareNew(name, tex, num, xOff)
 	f:SetNormalTexture("interface\\targetingframe\\ui-raidtargeting6icons") -- "interface\\minimap\\partyraidblips"
 	f:GetNormalTexture():SetTexCoord(tex[1],tex[2],tex[3],tex[4])
 	f:SetPoint("LEFT",lastFlare or wFlares.main,"RIGHT",xOff or 0,0)
-	--f:SetPoint(anch[1], anch[2], anch[3], anch[4], anch[5])
 	f:SetAttribute("type", "macro")
-	f:SetAttribute("macrotext1", string.format("/click CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton\n/click DropDownList1Button%d",num))
+	f:SetAttribute("macrotext1", string.format("/wm %d",num))
 	f:SetScript("OnEnter", function(self) if (wFlaresDB.tooltips==true) then GameTooltip:SetOwner(self, "ANCHOR_CURSOR"); GameTooltip:ClearLines(); GameTooltip:AddLine(string.format("%s %s",L[name],L["world marker"])); GameTooltip:Show() end end)
 	f:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 	lastFlare = f
 	wFlares.flare[name] = f
-	--return f
 	
 end
 flareNew("Square",{0.25,0.5,0.25,0.5},1,5)
@@ -232,14 +260,17 @@ flareNew("Triangle",{0.75,1,0,0.25},2)
 flareNew("Diamond",{0.5,0.75,0,0.25},3)
 flareNew("Cross",{0.5,0.75,0.25,0.5},4)
 flareNew("Star",{0,0.25,0,0.25},5)
+flareNew("Circle",{0.25,0.5,0,0.25},6);
+flareNew("Moon",{0,0.25,0.25,0.5},7);
+flareNew("Skull",{0.75,1,0.25,0.5},8);
 
 local flareClear = CreateFrame("Button", "wMarkerClearflares", wFlares.main, "SecureActionButtonTemplate") -- Clear
 flareClear:SetSize(15,15)
 flareClear:SetNormalTexture("interface\\glues\\loadingscreens\\dynamicelements")
 flareClear:GetNormalTexture():SetTexCoord(0,0.5,0,0.5)
-flareClear:SetPoint("LEFT", wFlares.flare["Star"], "RIGHT",3,0)
+flareClear:SetPoint("LEFT", wFlares.flare["Skull"], "RIGHT",3,0)
 flareClear:SetAttribute("type", "macro")
-flareClear:SetAttribute("macrotext1", "/click CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton\n/click DropDownList1Button6")
+flareClear:SetAttribute("macrotext1", "/cwm 0")
 flareClear:SetScript("OnEnter", function(self) if (wFlaresDB.tooltips==true) then GameTooltip:SetOwner(self, "ANCHOR_CURSOR"); GameTooltip:ClearLines(); GameTooltip:AddLine(L["Clear all world markers"]); GameTooltip:Show() end end)
 flareClear:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 wFlares.flareClear = flareClear

@@ -56,5 +56,6 @@ wMarkerLocals = {
 ["Detach control frame"] = "Detach control frame",
 ["Not bound"] = "Not bound",
 ["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Click on a button and then press the key combination to bind. Right click to remove a binding",
+["You cannot change your bindings in combat! Please wait!"] = "You cannot change your bindings in combat! Please wait!",
 }
 end

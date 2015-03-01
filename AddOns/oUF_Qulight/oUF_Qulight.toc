@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: |cff1784d1oUF_Qulight|r
 ## Notes: oUF_Qulight
 ## Credits to: Shestak, Haste, Roth, P3lim, Monolit, AlleyKat, Tukz.

@@ -1,5 +1,10 @@
-﻿-- English --
+﻿-- Russian --
 -------------
+
+-- Translation credits: --
+-- katanFAN --------------
+-- panzer48 --------------
+-- RamyAlexis ------------
 
 local Language = GetLocale()
 
@@ -10,51 +15,52 @@ wMarkerLocals = {}
 wMarkerLocals = {
 
 -- Icons
-["Skull"] = "Skull",
-["Cross"] = "Cross",
-["Square"] = "Square",
-["Moon"] = "Moon",
-["Triangle"] = "Triangle",
-["Diamond"] = "Diamond",
-["Circle"] = "Circle",
-["Star"] = "Star",
-["Clear mark"] = "Clear mark",
-["Ready check"] = "Ready check",
+["Skull"] = "Череп",
+["Cross"] = "Крест",
+["Square"] = "Квадрат",
+["Moon"] = "Луна",
+["Triangle"] = "Треугольник",
+["Diamond"] = "Ромб",
+["Circle"] = "Круг",
+["Star"] = "Звезда",
+["Clear mark"] = "Убрать метки",
+["Ready check"] = "Готовность рейда",
 
 -- World Markers (uses same names as icons above)
-["world marker"] = "world marker",
-["Display as"] = "Display as",
-["Clear all world markers"] = "Clear all world markers",
+["world marker"] = "метка 'на местности'",
+["Display as"] = "Отображать как",
+["Clear all world markers"] = "Убрать все метки 'на местности'",
 
 -- Options
-["Version"] = "Version",
-["About"] = "About",
-["Author"] = "Author",
-["Raid marker"] = "Raid marker",
-["World markers"] = "World markers",
-["Key bindings"] = "Key bindings",
+["Version"] = "Версия",
+["About"] = "Об аддоне",
+["Author"] = "Автор",
+["Raid marker"] = "Метка рейда",
+["World markers"] = "Метки 'на местность'",
+["Key bindings"] = "Назначения кнопок",
 	-- Phrases
-["Translation credits"] = "Translation credits",
-["Clamp to screen"] = "Clamp to screen",
-["Display vertically"] = "Display vertically",
-["Enable tooltips"] = "Enable tooltips",
-["Reverse icons"] = "Reverse icons",
-["Hide background"] = "Hide background",
-["Hide when alone"] = "Hide when alone",
-["Hide without assist (in a raid)"] = "Hide without assist (in a raid)",
-["Icon spacing"] = "Icon spacing",
-["Lock frame"] = "Lock frame",
-["Raid Markers alpha"] = "Raid Markers alpha",
-["Raid Markers scale"] = "Raid Markers scale",
-["Show frame"] = "Show frame",
-["Show only with a target"] = "Show only with a target",
-["World Markers alpha"] = "World Markers alpha",
-["World Markers scale"] = "World Markers scale",
-["Blips"] = "Blips",
-["Icons"] = "Icons",
-["Compact mode"] = "Compact mode",
-["Detach control frame"] = "Detach control frame",
+["Translation credits"] = "Автор перевода",
+["Clamp to screen"] = "Закрепить",
+["Display vertically"] = "Показать вертикально",
+["Enable tooltips"] = "Включить подсказки",
+["Reverse icons"] = "Поменять местами иконки",
+["Hide background"] = "Скрыть фон",
+["Hide when alone"] = "Скрыть когда один",
+["Hide without assist (in a raid)"] = "Скрывать без роли рейдового помощника",
+["Icon spacing"] = "IconРасстояние между иконками",
+["Lock frame"] = "Закрыть фрейм",
+["Raid Markers alpha"] = "Прозрачность рейдовых меток",
+["Raid Markers scale"] = "Масштаб рейдовых меток",
+["Show frame"] = "Показать фрейм",
+["Show only with a target"] = "Показывать только при наличии цели",
+["World Markers alpha"] = "Прозрачность меток 'на местности'",
+["World Markers scale"] = "Масштаб меток 'на местности'",
+["Blips"] = "Метка на мини-карте",
+["Icons"] = "Иконки",
+["Compact mode"] = "Компактный режим",
+["Detach control frame"] = "Иконки отдельно",
 ["Not bound"] = "Not bound",
 ["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Click on a button and then press the key combination to bind. Right click to remove a binding",
+["You cannot change your bindings in combat! Please wait!"] = "You cannot change your bindings in combat! Please wait!",
 }
 end

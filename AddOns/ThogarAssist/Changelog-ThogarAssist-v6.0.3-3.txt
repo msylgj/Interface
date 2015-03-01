@@ -1,0 +1,14 @@
+tag v6.0.3-3
+f2afdf2ecd770f7cc18d63459fedb3bcb31ed05c
+Elvador <>
+2015-02-04 14:10:00 +0100
+
+Tagging as v6.0.3-3
+
+
+--------------------
+
+Elvador:
+	- Add target icons on lanes
+	- Actually use localizations... ups :D
+	- Updated localization

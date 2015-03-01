@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Jan 31, 2015@12636
+-- Last update: Feb 22, 2015@13054
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -100,13 +100,17 @@ L.ShowFakedRaidWarnings 	= "以伪装团队警报信息的方式显示警报内�
 L.WarningIconLeft 			= "左侧显示图标"
 L.WarningIconRight 			= "右侧显示图标"
 L.WarningIconChat 			= "在聊天窗口中显示图标"
-L.RaidWarnMessage 			= "感谢您使用Deadly Boss Mods"
-L.BarWhileMove 				= "可移动团队警报"
+L.Warn_FontType				= "选择字体"
+L.Warn_FontStyle			= "选择样式"
+L.Warn_FontShadow			= "阴影"
+L.Warn_FontSize				= "字体大小: %d"
+L.Warn_Duration				= "警告持续时间: %d 秒"
+L.None						= "无"
+L.Outline					= "描边"
+L.ThickOutline				= "加粗描边"
+L.MonochromeOutline			= "单色描边"
+L.MonochromeThickOutline	= "单色加粗描边"
 L.RaidWarnSound				= "发出团队警报时播放声音"
-L.SpecialWarnSound			= "针对你发出特殊警报时播放的声音"
-L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音(默认:当心)"
-L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音(默认:毁灭)"
-L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages	 	= "综合信息"
@@ -175,6 +179,10 @@ L.SpecWarn_FlashAlpha		= "泛光透明度: %0.1f"
 L.SpecWarn_DemoButton		= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"
 L.SpecWarn_ResetMe			= "重置"
+L.SpecialWarnSound			= "针对你发出特殊警报时播放的声音"
+L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音(默认:当心)"
+L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音(默认:毁灭)"
+L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
@@ -205,13 +213,16 @@ L.BarWidth					= "计量条宽度: %d"
 L.Panel_SpamFilter			= "DBM全局及信息过滤"
 L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
-L.DontShowFarWarnings		= "不显示过远事件的通告和计时器"
-L.SpamBlockNoRunAway		= "不要播放'快跑啊，小姑娘'"
 L.SpamBlockNoSendWhisper	= "不发送悄悄话提示给其他玩家"
 L.SpamBlockNoSetIcon		= "不设定标记在目标上"
 L.SpamBlockNoRangeFrame		= "不显示距离监视器"
 L.SpamBlockNoInfoFrame		= "不显示信息监视器"
+L.SpamBlockNoHudMap			= "不显示HudMap"
+
 L.SpamBlockNoHealthFrame	= "不显示生命值监视器"
+L.SpamBlockNoCountdowns		= "不要播放倒数"
+L.SpamBlockNoIconRestore	= "当战斗结束后不保存团队标记状态(大饼 星星 月亮 方块这些)"
+L.SpamBlockNoRangeRestore	= "当boss暂时消失时不恢复距离指示器"
 
 -- Tab: Spam Filter
 L.Area_SpamFilter			= "信息过滤设置"
@@ -219,10 +230,11 @@ L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
 L.SpamBlockBossWhispers		= "战斗中过滤DBM密语警报"
 
-L.Area_SpecFilter			= "专精过滤选项"
+L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
---L.FilterHealerSpec		= "Filter warnings designated for Healer role when not Healer spec"--Not in use
---L.FilterDamagerSpec		= "Filter warnings designated for Damager role when not Damager spec"--Not in use
+L.FilterInterrupts			= "当目标没有被选中或设置为焦点时，过滤掉打断提示 (注意: 这对那些不打断就灭团的技能无效)"
+L.FilterDispels				= "当驱散技能在冷却时, 过滤掉驱散提示"
+L.FilterSelfHud				= "把自己从HudMap中过滤掉 (不包括和距离有关的功能)"
 
 L.Area_PullTimer			= "开怪倒计时过滤设置"
 L.DontShowPTNoID			= "不显示不同区域发送的倒计时"
@@ -251,7 +263,7 @@ L.Always					= "总是跳过"
 L.Panel_ExtraFeatures		= "其他功能"
 L.Area_ChatAlerts			= "文字提示警告选项"
 L.RoleSpecAlert				= "当进入团队时，如果拾取专精与当前角色专精不同，则显示警告。"
-L.CheckGear					= "当你身上的装备装等低于背包装等40点时显示警告。(可能没有装备某物品或装备了低等级的任务道具)"
+L.CheckGear					= "当你身上的装备装等低于背包装等40点时显示警告。(可能没有装备某物品或装备了低等级的任务道具或没有装备主武器)"
 L.WorldBossAlert			= "当世界Boss进入战斗后发送警告，这个信息可能是你的朋友或者同工会成员发送的。 (由于跨服，卡位面等因素，可能不准确)"
 L.Area_SoundAlerts			= "语音警告选项"
 L.LFDEnhance				= "当发起角色检查时，播放准备音效"

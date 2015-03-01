@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: aMail
 ## Notes: Get all mail in a single click
 ## Author: ALZA

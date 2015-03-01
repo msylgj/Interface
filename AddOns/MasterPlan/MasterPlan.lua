@@ -11,9 +11,12 @@ local defaults = {
 	batchMissions=true,
 	dropLessSalvage=true,
 	riskReward=1,
-	xpPerGold=0,
+	xpPerCopper=1e-5,
+	xpPerResource=1,
 	xpCapGrace=2000,
 	goldRewardThreshold=2000000,
+	levelDecay=0.9,
+	currencyWasteThreshold=0.25,
 	ignore={},
 	complete={},
 }

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12715 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13130 $"):sub(12, -3))
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod:SetZone()
+mod:SetHotfixNoticeRev(13105)
 
 mod:RegisterCombat("combat")
 
@@ -28,26 +29,27 @@ local specWarnSlam					= mod:NewSpecialWarningSpell(156704, "Tank")
 local specWarnWarpedArmor			= mod:NewSpecialWarningStack(156766, nil, 2)
 local specWarnWarpedArmorOther		= mod:NewSpecialWarningTaunt(156766)
 local specWarnTremblingEarth		= mod:NewSpecialWarningSpell(173917, nil, nil, nil, 2)
-local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3)
+local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, nil, 2)
 
-local timerGraspingEarthCD			= mod:NewCDTimer(115, 157060)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
+local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
 local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054)
-local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
+local timerRipplingSmashCD			= mod:NewCDTimer(24, 157592)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
 --local timerStoneGeyserCD			= mod:NewNextTimer(30, 158130)
-local timerStoneBreathCD			= mod:NewNextCountTimer(22.5, 156852)
+local timerStoneBreathCD			= mod:NewCDCountTimer(22.5, 156852)
 local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank")
 local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank")
-local timerTremblingEarthCD			= mod:NewNextTimer(30, 173917)
+local timerTremblingEarthCD			= mod:NewCDTimer(30, 173917)--30-36 CD now :\
 local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917)
 local timerCalloftheMountain		= mod:NewCastTimer(5, 158217)
 
-local berserkTimer					= mod:NewBerserkTimer(600)
+local berserkTimer					= mod:NewBerserkTimer(540)
 
 local countdownThunderingBlows		= mod:NewCountdown(12, 157054)
 local countdownTremblingEarth		= mod:NewCountdownFades("Alt25", 173917)
 
 local voiceGraspingEarth 			= mod:NewVoice(157060)--157060, safenow
 local voiceWarpedArmor				= mod:NewVoice(156766)
+local voiceCallofMountain			= mod:NewVoice(158217)--Findshelter
 
 mod.vb.mountainCast = 0
 mod.vb.stoneBreath = 0
@@ -57,9 +59,9 @@ function mod:OnCombatStart(delay)
 	self.vb.stoneBreath = 0
 	timerStoneBreathCD:Start(8-delay, 1)--8-10
 	timerWarpedArmorCD:Start(15-delay)
-	timerRipplingSmashCD:Start(20-delay)
 	timerSlamCD:Start(25-delay)--More data needed
-	timerGraspingEarthCD:Start(53-delay)
+	timerRipplingSmashCD:Start(23.5-delay)
+	timerGraspingEarthCD:Start(50-delay)--50-55 variable
 	berserkTimer:Start(-delay)
 end
 
@@ -68,20 +70,28 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 157060 then
 		self.vb.stoneBreath = 0
 		specWarnGraspingEarth:Show(RUNES)
-		timerThunderingBlowsCD:Start()
-		countdownThunderingBlows:Start()
+		if self:IsLFR() then
+			voiceGraspingEarth:Schedule(20.5, "safenow")
+			timerThunderingBlowsCD:Start(20.5)
+			countdownThunderingBlows:Start(20.5)
+			timerStoneBreathCD:Start(28, 1)
+		else
+			voiceGraspingEarth:Schedule(12, "safenow")
+			timerThunderingBlowsCD:Start()
+			countdownThunderingBlows:Start()
+			timerStoneBreathCD:Start(31, 1)--Verified it happens on mythic, if rune of trembling earth doesn't come first
+		end
 		timerSlamCD:Cancel()
 		timerStoneBreathCD:Cancel()
 		timerRipplingSmashCD:Cancel()
 		timerWarpedArmorCD:Cancel()
 		voiceGraspingEarth:Play("157060")
-		voiceGraspingEarth:Schedule(12, "safenow")
 		if self:IsMythic() then
 			timerTremblingEarthCD:Start()
-			timerGraspingEarthCD:Start(123)--TODO, see if normal is still 111 after last
+			timerGraspingEarthCD:Start(122)
 		else
 			timerGraspingEarthCD:Start()
-			timerStoneBreathCD:Start(31, 1)
+			timerRipplingSmashCD:Start(39)
 		end
 	elseif spellId == 157054 then
 		specWarnThunderingBlows:Show()
@@ -97,6 +107,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.mountainCast = self.vb.mountainCast + 1
 		specWarnCalloftheMountain:Show(self.vb.mountainCast)
 		timerCalloftheMountain:Start()
+		voiceCallofMountain:Play("findshelter")
+		if self.vb.mountainCast == 3 then--Start timers for resume normal phase
+			timerStoneBreathCD:Start(9, self.vb.stoneBreath+1)--Or 12
+			timerWarpedArmorCD:Start(14)--or 17
+			--Above 2 timers are always either 9 and 14 or 12 and 17. Haven't figured out case for the +3sec to both of them yet
+			--First slam and first rippling still too variable to start here.
+			--after that they get back into their consistency
+		end
 	end
 end
 
@@ -130,8 +148,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnTremblingEarth:Show()
 		timerTremblingEarth:Start()
 		countdownTremblingEarth:Start()
-		timerSlamCD:Cancel()--Can't cast slam during this
-		timerRipplingSmashCD:Cancel()--Or rippling
+		timerSlamCD:Cancel()
+		timerRipplingSmashCD:Cancel()
 		timerWarpedArmorCD:Cancel()
 		timerStoneBreathCD:Cancel()
 	elseif spellId == 156852 then

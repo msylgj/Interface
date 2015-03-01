@@ -929,12 +929,16 @@ Filger_Spells = {
 			{spellID = 79683, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Pyroblast!
 			{spellID = 48108, unitID = "player", caster = "player", filter = "BUFF"},
-
+			-- 2T17 奥
+			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4T17 火
+			{spellID = 166868, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Trinkets
 			-- General
 			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 173322, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- Darkmoon Cards (Proc)
 			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Health, Use)
@@ -979,8 +983,7 @@ Filger_Spells = {
 			-- Caster General
 			-- Jade Spirit (Intellect + Spirit)
 			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
 
 			-- 橙色多彩
 			-- 阴险之源钻 (暴击, 急速)
@@ -3831,7 +3834,7 @@ Filger_Spells = {
 			-- 悬槌堡 994
 			-- 1	卡加斯·刃拳 [Kargath Bladefist]
 			-- 穿刺 (T)
-			{spellID = 159113, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 159113, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- 迸裂创伤 (T) 1~2层
 			{spellID = 159178, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 烈焰喷射
@@ -3857,9 +3860,9 @@ Filger_Spells = {
 			-- 石化
 			{spellID = 162892, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 晶化弹幕 - 点名
-			{spellID = 162346, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 162346, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- 晶化弹幕 - 踩到火
-			{spellID = 162370, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 162370, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
 			-- 4	布兰肯斯波 [Brackenspore]
 			-- 溃烂 (T) 4~6层
@@ -3899,14 +3902,15 @@ Filger_Spells = {
 			{spellID = 162184, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 废灵璧垒
 			{spellID = 156803, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 172886, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 压制力场
 			{spellID = 161345, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 腐蚀能量
 			{spellID = 161242, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 魔能散射：邪能 - 点名
-			{spellID = 172895, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 172895, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- 魔能散射：邪能 - 踩到火
-			{spellID = 172917, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 172917, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
 			-- 7	元首马尔高克 [Imperator Mar'gok]
 			-- 混沌标记 (T) P1换T
@@ -3928,48 +3932,157 @@ Filger_Spells = {
 			-- 减速
 			{spellID = 157801, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 锁定
-			{spellID = 157763, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 157763, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- 毁灭共鸣
 			{spellID = 159200, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- 碾碎护甲
 			{spellID = 158553, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 悬槌堡 [结束]
 			
-					
+			
+			
+
 			-- 黑石铸造厂 988
 			-- 1	格鲁尔 [Gruul]
-			{spellID = 155326, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 炼狱打击 (T)
+			{spellID = 162322, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 压迫打击 (T)
+			{spellID = 155078, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 炼狱切割
+			{spellID = 155080, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 落石
+			{spellID = 173192, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 石化
+			{spellID = 155330, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
 			-- 2	奥尔高格 [Oregorger]
-			{spellID = 156324, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 酸液巨口 (T)
+			{spellID = 173471, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 酸液洪流
+			{spellID = 156297, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 呕吐黑石
+			{spellID = 156203, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 3	兽王达玛克 [Beastlord Darmac]
-			{spellID = 155365, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 狂乱撕扯-狼 (T) 层
+			{spellID = 155061, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 狂乱撕扯-BOSS (T) 层
+			{spellID = 162283, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 灼烧躯体 (T) 层
+			{spellID = 155030, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 碾碎护甲 (T) 层
+			{spellID = 155236, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 地动山摇
+			{spellID = 162276, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 爆燃
 			{spellID = 155399, unitID = "player", caster = "all", filter = "DEBUFF"},
-			{spellID = 154989, unitID = "player", caster = "all", filter = "DEBUFF"},
-			{spellID = 155499, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+
 			
 			-- 4	缚火者卡格拉兹 [Flamebender Ka'graz]
+			-- 焦灼吐息 (T) 1~5 层
+			{spellID = 155074, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 升腾烈焰 (T) 
+			{spellID = 163284, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 烧灼
+			{spellID = 155049, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 熔岩激流
+			{spellID = 154932, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 锁定
+			{spellID = 154952, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 炽热光辉
 			{spellID = 155277, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 5	汉斯加尔与弗兰佐克 [Hans'gar and Franzok]
+			-- 折脊碎椎
 			{spellID = 157139, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 灼热燃烧
+			{spellID = 155818, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 6	主管索格尔 [Operator Thogar]
+			-- 点燃 (T) 层
 			{spellID = 155921, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 实验型脉冲手雷
+			{spellID = 165195, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 燃烧
+			{spellID = 164380, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 7	爆裂熔炉 [The Blast Furnace]
-			{spellID = 155240, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 高热 (T) 层
 			{spellID = 155242, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 淬火 (T)
+			{spellID = 155240, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 崩裂
+			{spellID = 156932, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 炸弹
+			{spellID = 155192, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 防御
+			{spellID = 160379, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 不稳定的火焰
+			{spellID = 176121, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 锁定
+			{spellID = 155196, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 熔渣池
+			{spellID = 155743, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 熔化
+			{spellID = 155225, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 熔化
+			{spellID = 155223, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+
 			
 			-- 8	克罗莫格 [Kromog]
-			{spellID = 157060, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 扭曲护甲 (T) 4~5 层
+			{spellID = 156766, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 纠缠之地符文
+			{spellID = 157059, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 破碎大地符文
+			{spellID = 161923, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 9	钢铁女武神 [The Iron Maidens]
+			-- 急速射击
+			{spellID = 156631, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 穿透射击
+			{spellID = 164271, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 暗影猎杀
 			{spellID = 158315, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 浸血觅心者
+			{spellID = 158010, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 致命投掷
+			{spellID = 158692, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 锁定
+			{spellID = 158702, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 破甲
+			{spellID = 158686, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 堕落之血
+			{spellID = 158683, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			-- 10	黑手 [Blackhand]
+			-- 死亡标记
 			{spellID = 156096, unitID = "player", caster = "all", filter = "DEBUFF"},
-
+			-- 锁定-被坦克追
+			{spellID = 156653, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 炉渣冲击 156047/157018/157322
+			{spellID = 156047, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 穿刺 156743/175020
+			{spellID = 156743, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 巨力粉碎猛击
+			{spellID = 158054, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 燃烧
+			{spellID = 162490, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 熔火炉渣
+			{spellID = 156401, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 烧伤
+			{spellID = 156404, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 燃烧射击
+			{spellID = 156772, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 投掷炉渣炸弹
+			{spellID = 157000, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 投掷炉渣炸弹 (T)
+			{spellID = 159179, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			 
+			-- 黑石铸造厂 [结束]
+			
+			
 			-- outdoor bosses -- 户外首领
 			-- Sha of Anger [怒之煞]
 			--Seethe

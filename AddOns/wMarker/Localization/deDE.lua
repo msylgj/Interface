@@ -65,5 +65,6 @@ wMarkerLocals = {
 ["Detach control frame"] = "Lösen Sie Control-Frame",
 ["Not bound"] = "Nicht gebunden",
 ["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Klicken Sie auf eine Schaltfläche und drucken Sie dann die Tastenkombination. Rechter Mausklick löscht Tastenzuweisungen",
+["You cannot change your bindings in combat! Please wait!"] = "You cannot change your bindings in combat! Please wait!",
 }
 end

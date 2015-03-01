@@ -1,5 +1,5 @@
-﻿-- Spanish --
--------------
+﻿-- Latin American Spanish --
+----------------------------
 
 -- Translation credits: --
 -- Waky ------------------
@@ -60,5 +60,6 @@ wMarkerLocals = {
 ["Detach control frame"] = "Separar el marco de control",
 ["Not bound"] = "No enlazada",
 ["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Hacer clic en un boton y pulsar la combinación de teclas para enlazar. Hacer clic derechado para quitar la enlaza.",
+["You cannot change your bindings in combat! Please wait!"] = "No puede cambiar sus enlaces cuando está peleando! Espere por favor!",
 }
 end

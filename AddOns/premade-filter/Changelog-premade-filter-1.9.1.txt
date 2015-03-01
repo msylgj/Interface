@@ -1,0 +1,12 @@
+tag 1.9.1
+24da10478672a80de2335471ede67f9959b79644
+Eugene Khorev <ek@mindmeal.ru>
+2015-02-28 13:57:07 +0300
+
+Minor fixes
+
+
+--------------------
+
+Eugene Khorev:
+	- Minor fixes

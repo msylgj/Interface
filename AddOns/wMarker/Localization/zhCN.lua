@@ -1,5 +1,9 @@
-﻿-- English --
--------------
+﻿-- Simplified Chinese --
+------------------------
+
+-- Translation credits: --
+-- zhTW ------------------
+-- dll32 -----------------
 
 local Language = GetLocale()
 
@@ -10,51 +14,52 @@ wMarkerLocals = {}
 wMarkerLocals = {
 
 -- Icons
-["Skull"] = "Skull",
-["Cross"] = "Cross",
-["Square"] = "Square",
-["Moon"] = "Moon",
-["Triangle"] = "Triangle",
-["Diamond"] = "Diamond",
-["Circle"] = "Circle",
-["Star"] = "Star",
-["Clear mark"] = "Clear mark",
-["Ready check"] = "Ready check",
+["Skull"] = "骷髅",
+["Cross"] = "十字",
+["Square"] = "方块",
+["Moon"] = "月亮",
+["Triangle"] = "三角形",
+["Diamond"] = "菱形",
+["Circle"] = "圆饼",
+["Star"] = "星形",
+["Clear mark"] = "清除标记",
+["Ready check"] = "准备确认",
 
 -- World Markers (uses same names as icons above)
-["world marker"] = "world marker",
-["Display as"] = "Display as",
-["Clear all world markers"] = "Clear all world markers",
+["world marker"] = "世界标记",
+["Display as"] = "显示为",
+["Clear all world markers"] = "清除所有世界标记",
 
 -- Options
-["Version"] = "Version",
-["About"] = "About",
-["Author"] = "Author",
-["Raid marker"] = "Raid marker",
-["World markers"] = "World markers",
-["Key bindings"] = "Key bindings",
+["Version"] = "版本",
+["About"] = "关于",
+["Author"] = "作者",
+["Raid marker"] = "团队标记",
+["World markers"] = "世界标记",
+["Key bindings"] = "按键绑定",
 	-- Phrases
-["Translation credits"] = "Translation credits",
-["Clamp to screen"] = "Clamp to screen",
-["Display vertically"] = "Display vertically",
-["Enable tooltips"] = "Enable tooltips",
-["Reverse icons"] = "Reverse icons",
-["Hide background"] = "Hide background",
-["Hide when alone"] = "Hide when alone",
-["Hide without assist (in a raid)"] = "Hide without assist (in a raid)",
-["Icon spacing"] = "Icon spacing",
-["Lock frame"] = "Lock frame",
-["Raid Markers alpha"] = "Raid Markers alpha",
-["Raid Markers scale"] = "Raid Markers scale",
-["Show frame"] = "Show frame",
-["Show only with a target"] = "Show only with a target",
-["World Markers alpha"] = "World Markers alpha",
-["World Markers scale"] = "World Markers scale",
-["Blips"] = "Blips",
-["Icons"] = "Icons",
-["Compact mode"] = "Compact mode",
-["Detach control frame"] = "Detach control frame",
+["Translation credits"] = "翻译鸣谢",
+["Clamp to screen"] = "屏幕锁定",
+["Display vertically"] = "垂直显示",
+["Enable tooltips"] = "显示鼠标提示",
+["Reverse icons"] = "反向排列",
+["Hide background"] = "隐藏背景",
+["Hide when alone"] = "单独时隐藏",
+["Hide without assist (in a raid)"] = "没有权限时隐藏(团队中)",
+["Icon spacing"] = "图示间距",
+["Lock frame"] = "锁定框架",
+["Raid Markers alpha"] = "团队标记透明度",
+["Raid Markers scale"] = "团队标记缩放比例",
+["Show frame"] = "显示框架",
+["Show only with a target"] = "只在选定目标时显示",
+["World Markers alpha"] = "世界标记透明度",
+["World Markers scale"] = "世界标记比列",
+["Blips"] = "信号",
+["Icons"] = "图示",
+["Compact mode"] = "紧凑模式",
+["Detach control frame"] = "分离控制框架",
 ["Not bound"] = "Not bound",
 ["Click on a button and then press the key combination to bind. Right click to remove a binding"] = "Click on a button and then press the key combination to bind. Right click to remove a binding",
+["You cannot change your bindings in combat! Please wait!"] = "You cannot change your bindings in combat! Please wait!",
 }
 end
