@@ -10,9 +10,9 @@ Skada.windowdefaults = {
 	bartexture="Minimalist",
 	barfont="默认",
 	barfontflags="",
-	barfontsize=9,
+	barfontsize=8,
 	barheight=15,
-	barwidth=186,
+	barwidth=200,
 	barorientation=1,
 	barcolor = {r = 0.3, g = 0.3, b = 0.8, a=1},
 	barbgcolor = {r = 0.3, g = 0.3, b = 0.3, a = 0.6},
@@ -22,6 +22,7 @@ Skada.windowdefaults = {
 	classcolorbars = true,
 	classcolortext = false,
 	classicons = true,
+	roleicons = false,
 
 	buttons = {menu = true, reset = true, report = true, mode = true, segment = true},
 
@@ -43,7 +44,8 @@ Skada.windowdefaults = {
 	display = "bar",
 	snapto = true,
 	scale = 1,
-	x = -199,
+    version = 1,
+	x = -200,
 	y = 1.5,
 	point = "BOTTOMRIGHT",
 }
@@ -74,11 +76,20 @@ Skada.defaults = {
 		mergepets=true,
 		feed = "",
 		showtotals = false,
+        autostop = true,
 
-		modules = {},
+		modules = {
+			ccannounce = true,
+			ccignoremaintanks = true,
+		},
 		columns = {},
 		report = {mode = "Damage", set = "current", channel = "Say", chantype = "preset", number = 10},
 		modulesBlocked = {
+			["Debuffs"] = true,
+			["CC"] = false,
+			["Power"] = true,
+			["Threat"] = true,
+			["Avoidance and mitigation"] = true,
 		},
 
 		windows = {windefaultscopy},
@@ -439,6 +450,16 @@ Skada.options = {
 							get=function() return Skada.db.profile.tentativecombatstart end,
 							set=function() Skada.db.profile.tentativecombatstart = not Skada.db.profile.tentativecombatstart end,
 					},
+                
+					autostop = {
+							type="toggle",
+							name=L["Autostop"],
+							desc=L["Autostop description"],
+							order=10,
+							get=function() return Skada.db.profile.autostop end,
+							set=function() Skada.db.profile.autostop = not Skada.db.profile.autostop end,
+					},
+                
 				}
 			},
 			columns = {

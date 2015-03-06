@@ -405,3 +405,31 @@ L["All Skada functionality is now in 1 addon folder."] = true
 L["Skada will |cFFFF0000NOT|r function properly until you delete the following AddOns:"] = true
 L["Click below and configure your '|cFFFF0000Disabled Modules|r'."] = true
 
+L["Stop"] = "Stop/Resume"
+L["Autostop"] = "Stop early on wipe"
+L["Autostop description"] = "Automatically stops the current segment after a certain amount of raid members have died."
+
+L["Stop description"] = "Stops or resumes the current segment. Useful for discounting data after a wipe. Can also be set to automatically stop in the settings."
+L["Segment description"] = "Jump to a specific segment."
+L["Mode description"] = "Jump to a specific mode."
+L["Reset description"] = "Resets all fight data except those marked as kept."
+L["Report description"] = "Opens a dialog that lets you report your data to others in various ways."
+L["Configure description"] = "Lets you configure the active Skada window."
+
+L["Role icons"] = true
+L["Use role icons where applicable."] = true
+
+L["Overhealing spells"] = true
+
+L["Friendly Fire"] = "Friendly Fire"
+L["Ignore class abilities"] = "Ignore class abilities"
+L["Ignore damage from other class abilities, such as Unholy Frenzy"] = "Ignore damage from other class abilities, such as Unholy Frenzy"
+L["Ignore defensive damage"] = "Ignore defensive damage"
+L["Ignore delayed damage from defensive abilities, such as Monk Stagger"] = "Ignore delayed damage from defensive abilities, such as Monk Stagger"
+L["List of damaging spells"] = "List of damaging spells"
+L["List of players damaged"] = "List of players damaged"
+L["spells"] = "spells"
+L["targets"] = "targets"
+L["Average"] = "Average"
+L["Avoidance and mitigation"] = "Avoidance and mitigation"
+L["incoming attack breakdown"] = "incoming attack breakdown"

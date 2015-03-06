@@ -260,6 +260,7 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 					d.label = player.name
 				end
 				d.class = player.class
+				d.role = player.role
 				win.metadata.maxvalue = math.max(win.metadata.maxvalue, d.value)
 
 				nr = nr + 1
@@ -357,7 +358,7 @@ Skada:AddLoadableModule("Deaths", function(Skada, L)
 							d.valuetext = Skada:FormatValueText(
 								amt, #amt > 0,
 								Skada:FormatNumber(log.hp or 0), self.metadata.columns.Health,
-								string.format("%02.1f%%", (log.hp or 1) / (maxhp or 1) * 100), self.metadata.columns.Percent
+								string.format("%02.2f%%", (log.hp or 1) / (maxhp or 1) * 100), self.metadata.columns.Percent
 							)
 						end
 

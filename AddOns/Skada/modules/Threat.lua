@@ -119,7 +119,7 @@ Skada:AddLoadableModule("Threat", function(Skada, L)
 									if Skada.current and UnitExists("target") then
 										local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation("player", "target")
 										if threatpct then
-											return ("%02.1f%%"):format(threatpct)
+											return ("%02.2f%%"):format(threatpct)
 										end
 									end
 								end)
@@ -151,7 +151,9 @@ Skada:AddLoadableModule("Threat", function(Skada, L)
 					win.dataset[nr] = d
 					d.label = name
 					local _, class = UnitClass(name)
+                    local role = UnitGroupRolesAssigned(name)
 					d.class = class
+                    d.role = role
 					d.id = name
 					d.threat = threatvalue
 					d.isTanking = isTanking
@@ -173,7 +175,9 @@ Skada:AddLoadableModule("Threat", function(Skada, L)
 					win.dataset[nr] = d
 					d.label = name
 					local _, class = UnitClass(name)
+                    local role = UnitGroupRolesAssigned(name)
 					d.class = class
+                    d.role = role
 					d.id = name
 					d.value = threatpct
 					d.isTanking = isTanking
@@ -282,7 +286,7 @@ Skada:AddLoadableModule("Threat", function(Skada, L)
 						data.valuetext = Skada:FormatValueText(
 														format_threatvalue(data.threat), self.metadata.columns.Threat,
 														getTPS(data.threat), self.metadata.columns.TPS,
-														string.format("%02.1f%%", percent), self.metadata.columns.Percent
+														string.format("%02.2f%%", percent), self.metadata.columns.Percent
 													)
 					else
 						data.id = nil

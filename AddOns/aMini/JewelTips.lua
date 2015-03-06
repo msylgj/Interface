@@ -790,18 +790,71 @@ JewelTips.Jewels = {
 	[4875] = {GetSpellInfo(124551), 124551}, --毛皮衬垫 - 敏捷 永久性地为一副护腕附魔，使其获得敏捷+500的效果
 	[4878] = {GetSpellInfo(124553), 124553}, --毛皮衬垫 - 耐力  永久性地为一副护腕附魔，使其获得耐力+750的效果
 	[4877] = {GetSpellInfo(124552), 124552}, --毛皮衬垫 - 智力 永久性地为一副护腕附魔，使其获得智力+500的效果
-	--[[	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
-	[=] = {GetSpellInfo(=), =}, --
+	[5281] = {GetSpellInfo(158877), 158877}, --Enchant Cloak - Breath of Critical Strike
+	[5298] = {GetSpellInfo(158878), 158878}, --Enchant Cloak - Breath of Haste
+	[5300] = {GetSpellInfo(158879), 158879}, --Enchant Cloak - Breath of Mastery
+	[5302] = {GetSpellInfo(158880), 158880}, --Enchant Cloak - Breath of Multistrike
+	[5304] = {GetSpellInfo(158881), 158881}, --Enchant Cloak - Breath of Versatility
+	[5310] = {GetSpellInfo(158884), 158884}, --Enchant Cloak - Gift of Critical Strike
+	[5311] = {GetSpellInfo(158885), 158885}, --Enchant Cloak - Gift of Haste
+	[5312] = {GetSpellInfo(158886), 158886}, --Enchant Cloak - Gift of Mastery
+	[5313] = {GetSpellInfo(158887), 158887}, --Enchant Cloak - Gift of Multistrike
+	[5314] = {GetSpellInfo(158889), 158889}, --Enchant Cloak - Gift of Versatility
+	[5285] = {GetSpellInfo(158892), 158892}, --Enchant Neck - Breath of Critical Strike
+	[5292] = {GetSpellInfo(158893), 158893}, --Enchant Neck - Breath of Haste
+	[5293] = {GetSpellInfo(158894), 158894}, --Enchant Neck - Breath of Mastery
+	[5294] = {GetSpellInfo(158895), 158895}, --Enchant Neck - Breath of Multistrike
+	[5295] = {GetSpellInfo(158896), 158896}, --Enchant Neck - Breath of Versatility
+	[5317] = {GetSpellInfo(158899), 158899}, --Enchant Neck - Gift of Critical Strike
+	[5318] = {GetSpellInfo(158900), 158900}, --Enchant Neck - Gift of Haste
+	[5319] = {GetSpellInfo(158901), 158901}, --Enchant Neck - Gift of Mastery
+	[5320] = {GetSpellInfo(158902), 158902}, --Enchant Neck - Gift of Multistrike
+	[5321] = {GetSpellInfo(158903), 158903}, --Enchant Neck - Gift of Versatility
+	[5284] = {GetSpellInfo(158907), 158907}, --Enchant Ring - Breath of Critical Strike
+	[5297] = {GetSpellInfo(158908), 158908}, --Enchant Ring - Breath of Haste
+	[5299] = {GetSpellInfo(158909), 158909}, --Enchant Ring - Breath of Mastery
+	[5301] = {GetSpellInfo(158910), 158910}, --Enchant Ring - Breath of Multistrike
+	[5303] = {GetSpellInfo(158911), 158911}, --Enchant Ring - Breath of Versatility
+	[5324] = {GetSpellInfo(158914), 158914}, --Enchant Ring - Gift of Critical Strike
+	[5325] = {GetSpellInfo(158915), 158915}, --Enchant Ring - Gift of Haste
+	[5326] = {GetSpellInfo(158916), 158916}, --Enchant Ring - Gift of Mastery
+	[5327] = {GetSpellInfo(158917), 158917}, --Enchant Ring - Gift of Multistrike
+	[5328] = {GetSpellInfo(158918), 158918}, --Enchant Ring - Gift of Versatility
+	[5354] = {GetSpellInfo(170629), 170629}, --Enchant Weapon - Glory of the Blackrock
+	[5356] = {GetSpellInfo(170631), 170631}, --Enchant Weapon - Glory of the Frostwolf
+	[5353] = {GetSpellInfo(170628), 170628}, --Enchant Weapon - Glory of the Shadowmoon
+	[5352] = {GetSpellInfo(170627), 170627}, --Enchant Weapon - Glory of the Thunderlord
+	[5355] = {GetSpellInfo(170630), 170630}, --Enchant Weapon - Glory of the Warsong
+	[5336] = {GetSpellInfo(159674), 159674}, --Enchant Weapon - Mark of Blackrock
+	[5384] = {GetSpellInfo(173323), 173323}, --Enchant Weapon - Mark of Bleeding Hollow
+	[5335] = {GetSpellInfo(159673), 159673}, --Enchant Weapon - Mark of Shadowmoon
+	[5334] = {GetSpellInfo(159672), 159672}, --Enchant Weapon - Mark of the Frostwolf
+	[5331] = {GetSpellInfo(159236), 159236}, --Enchant Weapon - Mark of the Shattered Hand
+	[5330] = {GetSpellInfo(159235), 159235}, --Enchant Weapon - Mark of the Thunderlord
+	[5337] = {GetSpellInfo(159671), 159671}, --Enchant Weapon - Mark of Warsong
+	[5396] = {GetSpellInfo(178308), 178308}, --Enchanter's Illusion - Glorious Tyranny
+	[5397] = {GetSpellInfo(178309), 178309}, --Enchanter's Illusion - Primal Victory
+	[5394] = {GetSpellInfo(175165), 175165}, --Flames of Ragnaros
+	
+	[5383] = 118008, --Hemet's Heartseeker
+	[5276] = 109122, --Megawatt Filament
+	[5275] = 109120, --Oglethorpe's Missile Splitter
+--[[
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
+	[] = {GetSpellInfo(), }, --
 ]]
 	[7000] = 0
 }

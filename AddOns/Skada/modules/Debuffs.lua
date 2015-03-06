@@ -150,8 +150,9 @@ Skada:AddLoadableModule("Debuffs", function(Skada, L)
 				d.id = player.id
 				d.value = uptime
 				d.label = player.name
-				d.valuetext = ("%02.1f%% / %u"):format(uptime / maxtime * 100, auracount)
+				d.valuetext = ("%02.2f%% / %u"):format(uptime / maxtime * 100, auracount)
 				d.class = player.class
+				d.role = player.role
 
 				if uptime > max then
 					max = uptime
@@ -189,7 +190,7 @@ Skada:AddLoadableModule("Debuffs", function(Skada, L)
 					local _, _, icon = GetSpellInfo(spell.id)
 					d.icon = icon
 					d.spellid = spell.id
-					d.valuetext = ("%02.1f%%"):format(uptime / maxtime * 100)
+					d.valuetext = ("%02.2f%%"):format(uptime / maxtime * 100)
 
 					nr = nr + 1
 				end

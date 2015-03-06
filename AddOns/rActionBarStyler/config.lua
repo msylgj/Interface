@@ -120,7 +120,7 @@
     bar4 = {
       enable          = true, --enable module
       combineBar4AndBar5  = true, --by choosing true both bar 4 and 5 will react to the same hover effect, thus true/false at the same time, settings for bar5 will be ignored
-      scale           = 0.9,
+      scale           = 1,
       padding         = 2, --frame padding
       buttons         = {
         size            = 28,

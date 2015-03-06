@@ -39,8 +39,6 @@
 	
 	["Guild"] = "Guild",
 	["No Guild"] = "No Guild",
-	["Current"] = "Current",
-	["Daily"] = "Daily",
 	["Sorting"] = "Sorting",
 	["Sorting by:"] = "Sorting by:",
 	["Excessive"] = "Excessive !",

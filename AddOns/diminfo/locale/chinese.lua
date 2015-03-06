@@ -41,8 +41,6 @@ infoL = {
 	
 	["Guild"] = "公会",
 	["No Guild"] = "没人要",
-	["Current"] = "目前",
-	["Daily"] = "今天",
 	["Sorting"] = "排序",
 	["Sorting by:"] = "排序方式:",
 	["Excessive"] = "公会在线成员过多,仅显示部分",

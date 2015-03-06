@@ -41,8 +41,6 @@ infoL = {
 	
 	["Guild"] = "公會",
 	["No Guild"] = "沒人要",
-	["Current"] = "目前",
-	["Daily"] = "今天",
 	["Sorting"] = "排序",
 	["Sorting by:"] = "排序方式:",
 	["Excessive"] = "公會在線成員過多,僅顯示部分",

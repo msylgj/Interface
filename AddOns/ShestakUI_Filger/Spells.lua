@@ -933,6 +933,8 @@ Filger_Spells = {
 			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 4T17 »ð
 			{spellID = 166868, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4T17 °Â
+			{spellID = 166872, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Trinkets
 			-- General
 			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},

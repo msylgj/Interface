@@ -1054,13 +1054,6 @@ end
 
 oUF:Factory(function(self)
     ns:Colors()
-	CompactRaidFrameManager:UnregisterAllEvents()
-	CompactRaidFrameManager.Show = dummy
-	CompactRaidFrameManager:Hide()
-
-	CompactRaidFrameContainer:UnregisterAllEvents()
-	CompactRaidFrameContainer.Show = dummy
-	CompactRaidFrameContainer:Hide()
 	if Qulight["raidframes"].party then
 		self:SetActiveStyle"Party"
 		local party = oUF:SpawnHeader('oUF_Party', nil, 'custom [@raid6,exists] hide;show',
@@ -1079,6 +1072,13 @@ oUF:Factory(function(self)
 	end
 	
 	if Qulight["raidframes"].enable then
+		CompactRaidFrameManager:UnregisterAllEvents()
+		CompactRaidFrameManager.Show = dummy
+		CompactRaidFrameManager:Hide()
+
+		CompactRaidFrameContainer:UnregisterAllEvents()
+		CompactRaidFrameContainer.Show = dummy
+		CompactRaidFrameContainer:Hide()
 		self:SetActiveStyle"Freebgrid"
 		if Qulight["raidframes"].multi then
 			local raid = {}

@@ -1,19 +1,20 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-<Script file="modules\Damage.lua"/>
-<Script file="modules\Threat.lua"/>
-<Script file="modules\Healing.lua"/>
-<Script file="modules\Overhealing.lua"/>
-<Script file="modules\TotalHealing.lua"/>
-<Script file="modules\DamageTaken.lua"/>
-<Script file="modules\Deaths.lua"/>
-<Script file="modules\Debuffs.lua"/>
-<Script file="modules\Dispels.lua"/>
-<Script file="modules\Interrupts.lua"/>
-<Script file="modules\Enemies.lua"/>
-<Script file="modules\Power.lua"/>
-<Script file="modules\CC.lua"/>
+<Script file="modules\Damage.lua"/>											<!-- 伤害统计模块 -->
+<Script file="modules\Threat.lua"/>											<!-- 仇恨统计模块 -->
+<Script file="modules\Healing.lua"/>											<!-- 治疗统计模块 -->
+<Script file="modules\Overhealing.lua"/>									<!-- 过量治疗模块 -->
+<Script file="modules\TotalHealing.lua"/>									<!-- 总体治疗模块 -->
+<Script file="modules\DamageTaken.lua"/>								<!-- 承受伤害模块 -->
+<Script file="modules\Deaths.lua"/>											<!-- 死亡统计模块 -->
+<Script file="modules\Debuffs.lua"/>											<!-- 减益效果模块 -->
+<Script file="modules\Dispels.lua"/>											<!-- 驱散统计模块 -->
+<Script file="modules\Interrupts.lua"/>										<!-- 打断统计模块 -->
+<Script file="modules\Enemies.lua"/>										<!-- 敌方相关模块 -->
+<Script file="modules\Power.lua"/>											<!-- 法力获取模块 -->
+<Script file="modules\CC.lua"/>												<!-- 控场技能模块 -->
+<Script file="modules\FriendlyFire.lua"/>									<!-- 队友误伤模块 -->
+<Script file="modules\AvoidanceMitigation.lua"/>						<!-- 闪避和减伤模块 -->
 
 </Ui>
-

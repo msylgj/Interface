@@ -1,7 +1,6 @@
 local _, ns = ...
 local mediapath = "Interface\\AddOns\\media\\"
 
-
 local cfg = {
 	font = "Fonts\\ARKai_T.ttf",
 	fontsize = 14, -- I'd suggest adjusting the scale instead of the fontsize
@@ -486,3 +485,4 @@ GameTooltip:HookScript("OnUpdate", GT_OnUpdate)
 GameTooltipHeaderText:SetFont(cfg.font, cfg.fontsize+2, cfg.outline)
 GameTooltipText:SetFont(cfg.font, cfg.fontsize, cfg.outline)
 GameTooltipTextSmall:SetFont(cfg.font, cfg.fontsize-2, cfg.outline)
+hooksecurefunc("GameTooltip_Hide",function()GameTooltip:SetMinimumWidth(0, false)end)

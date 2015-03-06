@@ -16,7 +16,8 @@ Skada:AddLoadableModule("Enemies", function(Skada, L)
 		local player = mob.players[name]
 		if player then return player end
 		local _, playerClass = UnitClass(name)
-		player = {done = 0, taken = 0, class = playerClass}
+        local playerRole = UnitGroupRolesAssigned(name)
+		player = {done = 0, taken = 0, class = playerClass, role = playerRole}
 		mob.players[name] = player
 		return player
 	end
@@ -195,8 +196,9 @@ Skada:AddLoadableModule("Enemies", function(Skada, L)
 					d.id = name
 					d.label = name
 					d.value = player.done
-					d.valuetext = Skada:FormatNumber(player.done)..(" (%02.1f%%)"):format(player.done / mob.done * 100)
+					d.valuetext = Skada:FormatNumber(player.done)..(" (%02.2f%%)"):format(player.done / mob.done * 100)
 					d.class = player.class
+                    d.role = player.role
 
 					if player.done > max then
 						max = player.done
@@ -231,8 +233,9 @@ Skada:AddLoadableModule("Enemies", function(Skada, L)
 					d.id = name
 					d.label = name
 					d.value = player.taken
-					d.valuetext = Skada:FormatNumber(player.taken)..(" (%02.1f%%)"):format(player.taken / mob.taken * 100)
+					d.valuetext = Skada:FormatNumber(player.taken)..(" (%02.2f%%)"):format(player.taken / mob.taken * 100)
 					d.class = player.class
+                    d.role = player.role
 
 					if player.taken > max then
 						max = player.taken
@@ -277,7 +280,7 @@ Skada:AddLoadableModule("Enemies", function(Skada, L)
 					d.id = name
 					d.label = name
 					d.value = info.healing
-					d.valuetext = Skada:FormatNumber(info.healing)..(" (%02.1f%%)"):format(info.healing / mob.hdone * 100)
+					d.valuetext = Skada:FormatNumber(info.healing)..(" (%02.2f%%)"):format(info.healing / mob.hdone * 100)
 
 					if info.healing > max then
 						max = info.healing
@@ -306,8 +309,8 @@ Skada:AddLoadableModule("Enemies", function(Skada, L)
 									tooltip:AddDoubleLine(L["Maximum hit:"], Skada:FormatNumber(spell.max), 255,255,255,255,255,255)
 							end
 							tooltip:AddDoubleLine(L["Average hit:"], Skada:FormatNumber(spell.healing / spell.hits), 255,255,255,255,255,255)
-							tooltip:AddDoubleLine(L["Critical"]..":", ("%02.1f%%"):format(spell.crits / spell.hits * 100), 255,255,255,255,255,255)
-							tooltip:AddDoubleLine(L["Overhealing"]..":", ("%02.1f%%"):format(spell.overhealing / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
+							tooltip:AddDoubleLine(L["Critical"]..":", ("%02.2f%%"):format(spell.crits / spell.hits * 100), 255,255,255,255,255,255)
+							tooltip:AddDoubleLine(L["Overhealing"]..":", ("%02.2f%%"):format(spell.overhealing / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
 					end
 			end
 	end

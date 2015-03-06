@@ -15,6 +15,7 @@ local show = {
 	raid = true,
 	party = true,
 	arena = true,
+	--none = true,
 }
 -- Config end
 
@@ -60,6 +61,7 @@ local spells = {
 	[29166] = 180,	-- 激活
 	[16190] = 180,  --潮汐
 	[115213] = 180,	-- 慈悲庇护
+	--[133] = 180, --测试
 	
 }
 
@@ -199,10 +201,12 @@ local StartTimer = function(name, spellId)
 	local spell, rank, icon = GetSpellInfo(spellId)
 	for _, v in pairs(bars) do
 		if v.name == name and v.spell == spell then
-			return
+			--发现重复计时事件时重置计时条,适应充能
+			StopTimer(v)
 		end
 	end
 	local bar = CreateBar()
+	--判断战复充能冷却时间
 	local cooldown = spells[spellId]
 	local num = GetNumGroupMembers()
 	if cooldown == true then
@@ -255,17 +259,11 @@ local OnEvent = function(self, event, ...)
 				StartTimer(sourceName, spellId)
 			end
 		end
-	elseif event == "ZONE_CHANGED_NEW_AREA" and select(2, IsInInstance()) == "arena" then
+	--增加首领战时清空计时条,适应现在boss战重置CD机制
+	elseif (event == "ZONE_CHANGED_NEW_AREA" and select(2, IsInInstance()) == "arena") or (event == "PLAYER_REGEN_DISABLED" and bossexists()) then
 		for k, v in pairs(bars) do
 			StopTimer(v)
 		end
-	elseif event == "PLAYER_REGEN_ENABLED" then
-		for k, v in pairs(bars) do
-			local spellID = select(7, GetSpellInfo(v.spell))
-			if spells[spellID] == true then
-				StopTimer(v)
-			end
-		end	
 	end
 end
 
@@ -273,7 +271,7 @@ local addon = CreateFrame("frame")
 addon:SetScript('OnEvent', OnEvent)
 addon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-addon:RegisterEvent("PLAYER_REGEN_ENABLED")
+addon:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 SlashCmdList["RaidCD"] = function(msg) 
 	StartTimer(UnitName('player'), 20484)

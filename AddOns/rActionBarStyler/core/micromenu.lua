@@ -45,7 +45,7 @@
   for _, button in pairs(buttonList) do
     button:SetParent(frame)
   end
-  CharacterMicroButton:ClearAllPoints();
+  CharacterMicroButton:ClearAllPoints()
   CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)
 
   --disable reanchoring of the micro menu by the petbattle ui
