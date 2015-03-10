@@ -320,3 +320,19 @@ f:SetScript('OnEvent', function(self, event, addon)
 	end
 end)
 f:RegisterEvent('ADDON_LOADED')
+
+--自动存材料到材料银行 素年已逝分享
+local frame = CreateFrame("Frame")
+
+frame:RegisterEvent("BANKFRAME_OPENED")
+frame:SetScript("OnEvent", function(self, event, ...)
+   if not BankFrameItemButton_Update_OLD then
+      BankFrameItemButton_Update_OLD = BankFrameItemButton_Update
+      BankFrameItemButton_Update = function(button)
+         if button then
+            BankFrameItemButton_Update_OLD(button)
+         end
+      end      
+   end
+   DepositReagentBank()
+end)

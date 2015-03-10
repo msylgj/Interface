@@ -31,7 +31,6 @@
   button:SetSize(cfg.buttons.size, cfg.buttons.size)
   button:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
   button:RegisterForClicks("AnyUp")
-  button:SetScript("OnClick", VehicleExit)
 
   button:SetNormalTexture("INTERFACE\\PLAYERACTIONBARALT\\NATURAL")
   button:SetPushedTexture("INTERFACE\\PLAYERACTIONBARALT\\NATURAL")
@@ -45,10 +44,29 @@
   hi:SetBlendMode("ADD")
 
   --the button will spawn if a vehicle exists, but no vehicle ui is in place (the vehicle ui has its own exit button)
-  RegisterStateDriver(button, "visibility", "[petbattle] hide; [overridebar][vehicleui][possessbar][@vehicle,exists] show; hide")
+  --RegisterStateDriver(button, "visibility", "[petbattle] hide; [overridebar][vehicleui][possessbar][@vehicle,exists] show; hide")
   --frame is visibile when no vehicle ui is visible
-  RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
+  --RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
 
+hooksecurefunc("MainMenuBarVehicleLeaveButton_Update", function()
+	if ( CanExitVehicle() and ActionBarController_GetCurrentActionBarState() == LE_ACTIONBAR_STATE_MAIN ) then
+		if UnitOnTaxi("player") then
+			button:SetScript("OnClick", function(self)
+				TaxiRequestEarlyLanding()
+				self:LockHighlight()
+			end)
+		else
+			button:SetScript("OnClick", function(self)
+				VehicleExit()
+			end)
+		end
+		button:Show()
+		frame:Show()
+	else
+		button:Hide()
+		frame:Hide()
+	end
+end)
   --create drag frame and drag functionality
   if cfg.userplaced.enable then
     rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp

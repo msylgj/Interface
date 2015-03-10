@@ -11,6 +11,11 @@ WhisperPop.IGNORED_MESSAGES = { "<DBM>", "<BWS>", "<BigWigs>", "<BIGWIGS>", "LVB
 WhisperPop.db = { sound = 1, time = 1, help = 1 }
 WhisperPop.newNames = {}
 WhisperPop.filter = {
+	"宝搜",
+	"加Q",
+	"竞技",
+	"TB搜",
+	"兽团",
 	"信誉",
 	"下单",
 	"网游",
