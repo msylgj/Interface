@@ -8,6 +8,7 @@ Skada.windowdefaults = {
 
 	barspacing=0,
 	bartexture="Minimalist",
+
 	barfont="默认",
 	barfontflags="",
 	barfontsize=9,

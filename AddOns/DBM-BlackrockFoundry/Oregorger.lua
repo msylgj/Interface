@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1202, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13074 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13260 $"):sub(12, -3))
 mod:SetCreatureID(77182)
 mod:SetEncounterID(1696)
 mod:SetZone()
@@ -35,11 +35,11 @@ local specWarnExplosiveShard		= mod:NewSpecialWarningDodge("OptionVersion3", 156
 local specWarnHungerDrive			= mod:NewSpecialWarningSpell("ej9964", nil, nil, nil, 2)
 local specWarnHungerDriveEnded		= mod:NewSpecialWarningFades("ej9964")
 
-local timerBlackrockSpinesCD		= mod:NewCDTimer(20, 156834)--20-23 (cd for barrages themselves too inconsistent and useless. but CD for when he recharges his spines, quite consistent)
+local timerBlackrockSpinesCD		= mod:NewCDTimer(18.5, 156834)--20-23 (cd for barrages themselves too inconsistent and useless. but CD for when he recharges his spines, quite consistent)
 local timerAcidTorrentCD			= mod:NewCDCountTimer("OptionVersion2", 13, 156240, nil, "Tank|Healer")
 local timerExplosiveShardCD			= mod:NewCDTimer("OptionVersion3", 12, 156390, nil, "MeleeDps")--Every 12-20 seconds
 local timerExplosiveShard			= mod:NewCastTimer(3.5, 156390, nil, "MeleeDps")
-local timerRetchedBlackrockCD		= mod:NewCDTimer("OptionVersion2", 17, 156179, nil, "Ranged")--Every 17-23 seconds
+local timerRetchedBlackrockCD		= mod:NewCDTimer("OptionVersion2", 15.5, 156179, nil, "Ranged")
 
 local countdownAcidTorrent			= mod:NewCountdown(13, 156240, "Tank")
 
@@ -72,7 +72,7 @@ function mod:OnCombatStart(delay)
 	self.vb.torrentCount = 0
 	timerRetchedBlackrockCD:Start(5-delay)--5-7
 	timerExplosiveShardCD:Start(9.5-delay)
-	timerAcidTorrentCD:Start(12-delay, 1)--12-13
+	timerAcidTorrentCD:Start(11-delay, 1)
 	countdownAcidTorrent:Start(12-delay)
 	timerBlackrockSpinesCD:Start(13-delay)--13-16
 --	berserkTimer:Start(-delay)
@@ -111,8 +111,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerExplosiveShardCD:Start(7)--7-9
 		timerAcidTorrentCD:Start(11, 1)--11-12
 		countdownAcidTorrent:Start(11)
-		timerBlackrockSpinesCD:Start(15)
+		timerBlackrockSpinesCD:Start(14)
 	elseif spellId == 156834 then
+		local bossPower = UnitPower("boss1")
+		if bossPower == 0 then return end--Avoid announce bug caused by SPELL_AURA_REMOVED fired at 0 energy, before boss going into frenzy)
 		local amount = args.amount or 0--amount reported for all (SPELL_AURA_APPLIED_DOSE) but 0 (SPELL_AURA_REMOVED)
 		local kickCount = self:IsMythic() and (5 - amount) or (3 - amount)
 		specWarnBlackrockBarrage:Show(args.sourceName, kickCount)
@@ -152,6 +154,7 @@ mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 165127 then--Hunger Dive Phase
+		self.vb.feedingFrenzy = true
 		timerBlackrockSpinesCD:Cancel()
 		timerRetchedBlackrockCD:Cancel()
 		timerAcidTorrentCD:Cancel()

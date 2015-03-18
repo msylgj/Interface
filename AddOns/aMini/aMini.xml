@@ -19,6 +19,7 @@
 	<Script file="m_Settings.lua"/>
 	<Script file="MissionHush.lua"/>
 	<Script file="ncHoverBind.lua"/>
+	<Script file="QuickTalent.lua"/>
 	<Script file="SpellID.lua"/>
 	<Script file="StrataFix.lua"/>
 	<Script file="TradeTabs.lua"/>

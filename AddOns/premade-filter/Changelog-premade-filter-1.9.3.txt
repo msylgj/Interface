@@ -1,0 +1,14 @@
+tag 1.9.3
+25bdf7c70fd1555ff7d160603670fc52ef153978
+Eugene Khorev <ek@mindmeal.ru>
+2015-03-11 19:59:45 +0300
+
+Added Spanish translations
+
+
+--------------------
+
+Eugene Khorev:
+	- Added full Spanish translations
+	- Added some Spanish translations
+	- Added some Spanish translations

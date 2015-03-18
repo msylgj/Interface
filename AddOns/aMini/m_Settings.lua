@@ -1,8 +1,8 @@
 ﻿local SCREENSHOT_QUALITY = 7
 local ainvenabled = false
-local autorollgreens = false
+local autorollgreens = true
 local HideErrors = true
-local autoacceptDE = false
+local autoacceptDE = true
 
 ---------------- > Some slash commands
 SlashCmdList['RELOADUI'] = function() ReloadUI() end
@@ -336,3 +336,131 @@ frame:SetScript("OnEvent", function(self, event, ...)
    end
    DepositReagentBank()
 end)
+
+--一键收取邮件  jj89520分享
+local deletedelay, t = 0.5, 0 
+local takingOnlyCash = false 
+local button, button2, waitForMail, doNothing, openAll, openAllCash, openMail, lastopened, stopOpening, onEvent, needsToWait, copper_to_pretty_money, total_cash 
+local _G = _G 
+local baseInboxFrame_OnClick 
+function doNothing() end 
+
+function openAll() 
+   if GetInboxNumItems() == 0 then return end 
+   button:SetScript("OnClick", nil) 
+   button2:SetScript("OnClick", nil) 
+   baseInboxFrame_OnClick = InboxFrame_OnClick 
+   InboxFrame_OnClick = doNothing 
+   button:RegisterEvent("UI_ERROR_MESSAGE") 
+   openMail(GetInboxNumItems()) 
+end 
+function openAllCash() 
+   takingOnlyCash = true 
+   openAll() 
+end 
+function openMail(index) 
+   if not InboxFrame:IsVisible() then return stopOpening("Need a mailbox.") end 
+   if index == 0 then return stopOpening("Reached the end.", true) end 
+   local _, _, _, _, money, COD, _, numItems = GetInboxHeaderInfo(index) 
+   if not takingOnlyCash then 
+      if money > 0 or (numItems and numItems > 0) and COD <= 0 then 
+         AutoLootMailItem(index) 
+         needsToWait = true 
+      end 
+   elseif money > 0 then 
+      TakeInboxMoney(index) 
+      needsToWait = true 
+      if total_cash then total_cash = total_cash - money end 
+   end 
+   local items = GetInboxNumItems() 
+   if (numItems and numItems > 0) or (items > 1 and index <= items) then 
+      lastopened = index 
+      button:SetScript("OnUpdate", waitForMail) 
+   else 
+      stopOpening("All done.", true) 
+   end 
+end 
+function waitForMail(this, arg1) 
+   t = t + arg1 
+   if (not needsToWait) or (t > deletedelay) then 
+      if not InboxFrame:IsVisible() then return stopOpening("Need a mailbox.") end 
+      t = 0 
+      needsToWait = false 
+      button:SetScript("OnUpdate", nil) 
+       
+      local _, _, _, _, money, COD, _, numItems = GetInboxHeaderInfo(lastopened) 
+      if money > 0 or ((not takingOnlyCash) and COD <= 0 and numItems and (numItems > 0)) then 
+         --The lastopened index inbox item still contains stuff we want 
+         openMail(lastopened) 
+      else 
+         openMail(lastopened - 1) 
+      end 
+   end 
+end 
+function stopOpening(msg, hide_minimap_button, ...) 
+   button:SetScript("OnUpdate", nil) 
+   button:SetScript("OnClick", openAll) 
+   button2:SetScript("OnClick", openAllCash) 
+   if baseInboxFrame_OnClick then 
+      InboxFrame_OnClick = baseInboxFrame_OnClick 
+   end 
+   button:UnregisterEvent("UI_ERROR_MESSAGE") 
+   takingOnlyCash = false 
+   total_cash = nil 
+   needsToWait = false 
+   if hide_minimap_button then MiniMapMailFrame:Hide() end 
+   if msg then DEFAULT_CHAT_FRAME:AddMessage("OpenAll: "..msg, ...) end 
+end 
+function onEvent(frame, event, arg1, arg2, arg3, arg4) 
+   if event == "UI_ERROR_MESSAGE" then 
+      if arg1 == ERR_INV_FULL then 
+         stopOpening("Stopped, inventory is full.") 
+      end 
+   end 
+end 
+local function makeButton(id, text, w, h, x, y) 
+   local button = CreateFrame("Button", id, InboxFrame, "UIPanelButtonTemplate") 
+   button:SetWidth(w) 
+   button:SetHeight(h) 
+   button:SetPoint("CENTER", InboxFrame, "TOP", x, y) 
+   button:SetText(text) 
+   return button 
+end
+button = makeButton("TakeAllButton", "Take All", 80, 25, -60, -410) 
+button:SetScript("OnClick", openAll) 
+button:SetScript("OnEvent", onEvent) 
+button2 = makeButton("TakeCashButton", "Take Cash", 80, 25, 30, -410)
+button2:SetScript("OnClick", openAllCash) 
+
+button:SetScript("OnEnter", function() 
+   GameTooltip:SetOwner(button, "ANCHOR_RIGHT") 
+   GameTooltip:AddLine(string.format("%d messages", GetInboxNumItems()), 1, 1, 1) 
+   GameTooltip:Show() 
+end) 
+button:SetScript("OnLeave", function() GameTooltip:Hide() end) 
+
+function copper_to_pretty_money(c) 
+   if c > 10000 then 
+      return ("%d|cffffd700g|r%d|cffc7c7cfs|r%d|cffeda55fc|r"):format(c/10000, (c/100)%100, c%100) 
+   elseif c > 100 then 
+      return ("%d|cffc7c7cfs|r%d|cffeda55fc|r"):format((c/100)%100, c%100) 
+   else 
+      return ("%d|cffeda55fc|r"):format(c%100) 
+   end 
+end 
+button2:SetScript("OnEnter", function() 
+   if not total_cash then 
+      total_cash = 0 
+      for index=0, GetInboxNumItems() do 
+         total_cash = total_cash + select(5, GetInboxHeaderInfo(index)) 
+      end 
+   end 
+   GameTooltip:SetOwner(button, "ANCHOR_RIGHT") 
+   GameTooltip:AddLine(copper_to_pretty_money(total_cash), 1, 1, 1) 
+   GameTooltip:Show() 
+end) 
+button2:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+local F = unpack(Aurora)
+F.Reskin(button)
+F.Reskin(button2)

@@ -1,0 +1,152 @@
+﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!--<Script file="followerexport.lua" />-->
+	<Frame name="FollowExportFrame" parent="UIParent" toplevel="true" movable="true" enableMouse="true">
+		<Size>
+			<AbsDimension x="1000" y="600" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset x="0" y="0" />
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+		<Frames>
+			<Button name="Button1" inherits="UIPanelButtonTemplate" text="X">
+				<Size>
+					<AbsDimension x="22" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset x="0" y="0" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>FollowExportFrame:Hide()</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY">
+				<fontstring name="DisplayIDText" text="Ctrl+A全选，然后Ctrl+C复制进剪切板。找个文本文档复制下来吧。" inherits="GameFontNormal">
+					<Size>
+						<AbsDimension x="800" y="20" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="50" y="-50" />
+						</Anchor>
+					</Anchors>
+					<FontHeight>
+						<AbsValue val="20" />
+					</FontHeight>
+				</fontstring>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="parentEditBox" letters="0" multiline="true">
+				
+				<Anchors>
+					<Anchor point="TOPLEFT">
+					<Offset x="20" y="-100" />
+					</Anchor>
+					<Anchor point="TOPRIGHT">
+					<Offset x="-20" y="-20" />
+					</Anchor>
+					<Anchor point="BOTTOMLEFT">
+					<Offset x="20" y="20" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BORDER">
+						<Texture file="Interface\COMMON\ThinBorder-BottomLeft.png">
+							<Anchors>
+							<Anchor point="BOTTOMLEFT">
+								<Offset x="-10" y="-10" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-BottomLeft.png">
+							<Anchors>
+							<Anchor point="BOTTOMRIGHT">
+								<Offset x="9" y="-10" />
+							</Anchor>
+							</Anchors>
+							<TexCoords top="0" left="1.0" bottom="1.0" right="0"/>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-TopLeft.png">
+							<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="-10" y="10" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-TopRight.png">
+							<Anchors>
+							<Anchor point="TopRight">
+								<Offset x="10" y="10" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-Left.png">
+							<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="-10" y="-22" />
+							</Anchor>
+							<Anchor point="BOTTOMLEFT">
+								<Offset x="-10" y="22" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-Right.png">
+							<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset x="10" y="-22" />
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT">
+								<Offset x="10" y="22" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-Top.png">
+							<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="22" y="10" />
+							</Anchor>
+							<Anchor point="TOPRIGHT">
+								<Offset x="-22" y="10" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+						<Texture file="Interface\COMMON\ThinBorder-Bottom.png">
+							<Anchors>
+							<Anchor point="BOTTOMLEFT">
+								<Offset x="22" y="-10" />
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT">
+								<Offset x="-22" y="-10" />
+							</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<FontString inherits="ChatFontNormal" />
+			</EditBox>
+			
+		</Frames>
+		<Scripts>
+			<OnLoad>ExportFrame_OnLoad(self)</OnLoad>
+			<OnMouseUp>self:StopMovingOrSizing()</OnMouseUp>
+			<OnMouseDown>self:StartMoving()</OnMouseDown>
+		</Scripts>
+	</Frame>
+</Ui>

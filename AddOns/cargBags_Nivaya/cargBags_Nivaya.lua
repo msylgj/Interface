@@ -342,14 +342,14 @@ function cbNivaya:CreateAnchors()
 	-- Bag Anchors:
 	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.key, 			"Bottom")
 
-	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.bagItemSets, 	"Left")
-	CreateAnchorInfo(cB_Bags.bagItemSets, 	cB_Bags.armor, 			"Top")
+	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.bagItemSets,   "Left")
+	CreateAnchorInfo(cB_Bags.bagItemSets, 	cB_Bags.consumables, 	"Top")
+	CreateAnchorInfo(cB_Bags.consumables, 	cB_Bags.armor, 			"Top")
 	CreateAnchorInfo(cB_Bags.armor, 		cB_Bags.battlepet, 		"Top")
 	CreateAnchorInfo(cB_Bags.battlepet, 	cB_Bags.bagStuff, 		"Top")
 
 	CreateAnchorInfo(cB_Bags.main, 			cB_Bags.tradegoods, 	"Top")
-	CreateAnchorInfo(cB_Bags.tradegoods, 	cB_Bags.consumables, 	"Top")
-	CreateAnchorInfo(cB_Bags.consumables, 	cB_Bags.quest, 			"Top")
+	CreateAnchorInfo(cB_Bags.tradegoods, 	cB_Bags.quest, 	        "Top")
 	CreateAnchorInfo(cB_Bags.quest, 		cB_Bags.bagJunk, 		"Top")
 	CreateAnchorInfo(cB_Bags.bagJunk, 		cB_Bags.bagNew, 		"Top")
 	

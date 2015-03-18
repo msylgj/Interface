@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13130 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13273 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
@@ -21,21 +21,20 @@ mod:RegisterEventsInCombat(
 )
 
 --Pointless add fight starts with (need to keep alive for follower achievement
-local warnDevastatingSlam				= mod:NewSpellAnnounce(156018, 4)
-local warnDropHammer					= mod:NewSpellAnnounce(156040, 3)--Target scanning?
+local warnDevastatingSlam				= mod:NewSpellAnnounce("OptionVersion2", 156018, 4, nil, false)
+local warnDropHammer					= mod:NewSpellAnnounce("OptionVersion2", 156040, 3, nil, false)
 
 local warnLavaSlash						= mod:NewSpellAnnounce(155318, 2, nil, false)--Likely cast often & doesn't show in combat log anyways except for damage and not THAT important
-local warnSummonEnchantedArmaments		= mod:NewSpellAnnounce(156724, 3)
+local warnSummonEnchantedArmaments		= mod:NewSpellAnnounce("OptionVersion2", 156724, 3, nil, "Ranged")
 local warnMoltenTorrent					= mod:NewTargetAnnounce(154932, 3)
 local warnRekindle						= mod:NewCastAnnounce(155064, 4)
-local warnFixate						= mod:NewTargetAnnounce(154952, 3)
+local warnFixate						= mod:NewTargetAnnounce("OptionVersion2", 154952, 3, nil, false)--Even though it works better now, it's just too spammy and most tune it out. Dogs very often become desynced after player died, or bopped or Feigned, and it's not just 1 warning every 10 seconds, but a warning every 3-4sec
 local warnBlazingRadiance				= mod:NewTargetAnnounce(155277, 3)
 local warnRisingFlames					= mod:NewStackAnnounce(163284, 2, nil, "Tank")
 local warnCharringBreath				= mod:NewStackAnnounce(155074, 2, nil, "Tank")
 
 local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, nil, 2)
 local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, nil, 2)
-local specWarnMoltenTorrentOther		= mod:NewSpecialWarningMoveTo(154932, false)--Strat dependant. most strats i saw ran these into meleee instead of running to the meteor target.
 local yellMoltenTorrent					= mod:NewFadesYell(154932)
 local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, nil, 2)
 local specWarnOverheated				= mod:NewSpecialWarningSwitch(154950, "Tank")
@@ -44,16 +43,16 @@ local specWarnFixateEnded				= mod:NewSpecialWarningEnd(154952, false)
 local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, nil, 2)
 local yellBlazinRadiance				= mod:NewYell(155277, nil, false)
 local specWarnFireStorm					= mod:NewSpecialWarningSpell(155493, nil, nil, nil, 2, nil, 2)
-local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493)
-local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 10)--stack guessed
+local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, nil, 2)
+local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)--stack guessed
 local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, nil, 2)
-local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 3)--Assumed based on timing and casts, that you swap every breath.
+local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 2)--Assumed based on timing and casts, that you swap every breath.
 local specWarnCharringBreathOther		= mod:NewSpecialWarningTaunt(155074)
 --
 
 local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false)
-local timerMoltenTorrentCD				= mod:NewCDTimer(14, 154932)
-local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer(45, 156724)--45-47sec variation
+local timerMoltenTorrentCD				= mod:NewCDTimer("OptionVersion2", 14, 154932, nil, "Ranged")
+local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer("OptionVersion2", 45, 156724, nil, "Ranged")--45-47sec variation
 local timerSummonCinderWolvesCD			= mod:NewNextTimer(74, 155776)
 local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank")
 local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank")
@@ -76,7 +75,6 @@ local voiceFireStorm					= mod:NewVoice(155493) --aoe
 local voiceLavaSlash					= mod:NewVoice(155318) --runaway
 
 mod:AddRangeFrameOption("10/6")
-mod:AddArrowOption("TorrentArrow", 154932, false, true)--Depend strat arrow useful if ranged run to torrent person strat. arrow useless if run torrent into melee strat.
 mod:AddHudMapOption("HudMapOnFixate", 154952, false)
 
 local fixateTagets = {}
@@ -102,17 +100,11 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame and self:IsRanged() then
 		DBM.RangeCheck:Show(6)
 	end
-	if self.Options.HudMapOnFixate then
-		DBMHudMap:Enable()
-	end
 end
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
-	end
-	if self.Options.TorrentArrow then
-		DBM.Arrow:Hide()
 	end
 	if self.Options.HudMapOnFixate then
 		DBMHudMap:Disable()
@@ -138,6 +130,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnCinderWolves:Show()
 		timerBlazingRadianceCD:Start(34)
 		timerFireStormCD:Start()
+		voiceFireStorm:Schedule(56.5, "aesoon")
 		countdownFireStorm:Start()
 		voiceCinderWolves:Play("killmob")
 	elseif spellId == 155074 then
@@ -164,7 +157,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMoltenTorrentCD:Start(44)
 		timerSummonCinderWolvesCD:Start()
 		countdownCinderWolves:Start()
-		voiceFireStorm:Play("aesoon")--maybe gather?
+		voiceFireStorm:Play("gather")
 	elseif spellId == 154952 then
 		--Schedule, do to dogs changing mind bug
 		if not fixateTagets[args.destName] then
@@ -182,14 +175,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if amount % 3 == 0 then
 			warnRisingFlames:Show(args.destName, amount)
-		end
-		if amount % 3 == 0 and amount >= 10 then--Stack count unknown
-			if args:IsPlayer() then--At this point the other tank SHOULD be clear.
-				specWarnRisingFlames:Show(amount)
-			else--Taunt as soon as stacks are clear, regardless of stack count.
-				if not UnitDebuff("player", GetSpellInfo(163284)) and not UnitIsDeadOrGhost("player") then
-					specWarnRisingFlamesOther:Show(args.destName)
-					voiceRisingFlames:Play("changemt")
+			if amount >= 6 then
+				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
+					specWarnRisingFlames:Show(amount)
+				else--Taunt as soon as stacks are clear, regardless of stack count.
+					if not UnitDebuff("player", GetSpellInfo(163284)) and not UnitIsDeadOrGhost("player") then
+						specWarnRisingFlamesOther:Show(args.destName)
+						voiceRisingFlames:Play("changemt")
+					end
 				end
 			end
 		end
@@ -198,7 +191,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId, "boss1") or self:IsTanking(uId, "boss2") or self:IsTanking(uId, "boss3") or self:IsTanking(uId, "boss4") or self:IsTanking(uId, "boss5") then
 			local amount = args.amount or 1
 			warnCharringBreath:Show(args.destName, amount)
-			if amount >= 3 then
+			if amount >= 2 then
 				if args:IsPlayer() then
 					specWarnCharringBreath:Show(amount)
 				else--Taunt as soon as stacks are clear, regardless of stack count.
@@ -219,11 +212,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellMoltenTorrent:Schedule(3, 3)
 			yellMoltenTorrent:Schedule(2, 4)
 			yellMoltenTorrent:Schedule(1, 5)
-		else
-			specWarnMoltenTorrentOther:Show(args.destName)
-			if self.Options.TorrentArrow then
-				DBM.Arrow:ShowRunTo(args.destName, 3, 5)
-			end
 		end
 	elseif spellId == 154950 then
 		specWarnOverheated:Show()
@@ -245,11 +233,8 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		end
 	elseif spellId == 154932 then
-		if self.Options.TorrentArrow then
-			DBM.Arrow:Hide()
-		end
 		if args:IsPlayer() then
-			yellMoltenTorrent:Cancel()--In case player dieds
+			yellMoltenTorrent:Cancel()--In case player dies
 		end
 	elseif spellId == 154950 then
 		timerOverheated:Cancel(args.destName)
@@ -271,6 +256,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 155493 then
 		specWarnFireStormEnded:Show()
+		if self:IsMelee() then
+			voiceFireStorm:Play("safenow")
+		else
+			voiceFireStorm:Play("scatter")
+		end
 	end
 end
 

@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 13113 $"):sub(12, -3)
+local revision =("$Revision: 13277 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -440,7 +440,7 @@ do
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
 		local dropdown
-		if modvar and modvar:find("SpecialWarningSound") then
+		if modvar and modvar:find("SWSound") then
 			dropdown = self:CreateDropdown(nil, sounds, nil, nil, function(value)
 				mod.Options[modvar] = value
 				DBM:PlaySpecialWarningSound(value)
@@ -936,18 +936,10 @@ function UpdateAnimationFrame(mod)
 	DBM_BossPreview:ClearModel()
 	DBM_BossPreview:SetDisplayInfo(displayId or mod.modelId or 0)
 	DBM_BossPreview:SetSequence(4)
-	if DBM.Options.ModelSoundValue == "Short" then
-		if DBM.Options.UseMasterVolume then
-			PlaySoundFile(mod.modelSoundShort or 0, "Master")
-		else
-			PlaySoundFile(mod.modelSoundShort or 0)
-		end
-	elseif DBM.Options.ModelSoundValue == "Long" then
-		if DBM.Options.UseMasterVolume then
-			PlaySoundFile(mod.modelSoundLong or 0, "Master")
-		else
-			PlaySoundFile(mod.modelSoundLong or 0)
-		end
+	if mod.modelSoundShort and DBM.Options.ModelSoundValue == "Short" then
+		DBM:PlaySoundFile(mod.modelSoundShort)
+	elseif mod.modelSoundLong and DBM.Options.ModelSoundValue == "Long" then
+		DBM:PlaySoundFile(mod.modelSoundLong)
 	end
 end
 
@@ -1415,7 +1407,7 @@ local function CreateOptionsMenu()
 		----------------------------------------------
 		--             General Options              --
 		----------------------------------------------
-		local generaloptions = DBM_GUI_Frame:CreateArea(L.General, nil, 185, true)
+		local generaloptions = DBM_GUI_Frame:CreateArea(L.General, nil, 200, true)
 
 		local enabledbm = generaloptions:CreateCheckButton(L.EnableDBM, true)
 		enabledbm:SetScript("OnShow",  function() enabledbm:SetChecked(DBM:IsEnabled()) end)
@@ -1429,10 +1421,18 @@ local function CreateOptionsMenu()
 		MiniMapIcon:SetScript("OnShow", function(self)
 			self:SetChecked( DBM.Options.ShowMinimapButton )
 		end)
-		local UseMasterVolume			= generaloptions:CreateCheckButton(L.UseMasterVolume, true, nil, "UseMasterVolume")
+		local soundChannelsList = {
+			{	text	= L.UseMasterChannel,	value 	= "Master"},
+			{	text	= L.UseDialogChannel,	value 	= "Dialog"},
+			{	text	= L.UseSFXChannel,		value 	= "SFX"},
+		}
+		local SoundChannelDropdown = generaloptions:CreateDropdown(L.UseSoundChannel, soundChannelsList, "DBM", "UseSoundChannel", function(value)
+			DBM.Options.UseSoundChannel = value
+		end)
+		SoundChannelDropdown:SetPoint("TOPLEFT", generaloptions.frame, "TOPLEFT", 0, -75)
 
 		local bmrange  = generaloptions:CreateButton(L.Button_RangeFrame, 120, 30)
-		bmrange:SetPoint('TOPLEFT', UseMasterVolume, "BOTTOMLEFT", 0, -5)
+		bmrange:SetPoint('TOPLEFT', SoundChannelDropdown, "BOTTOMLEFT", 15, -5)
 		bmrange:SetScript("OnClick", function(self)
 			if DBM.RangeCheck:IsShown() then
 				DBM.RangeCheck:Hide(true)
@@ -1950,8 +1950,9 @@ local function CreateOptionsMenu()
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
 		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 645, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_Enabled, true, nil, "ShowSpecialWarnings")
-		local check2 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
-		local check3 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
+		local check2 = specArea:CreateCheckButton(L.SpecWarn_ClassColor, true, nil, "SWarnClassColor")
+		local check3 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
+		local check4 = specArea:CreateCheckButton(L.SpecWarn_FlashFrame, true, nil, "ShowFlashFrame")
 
 		local flashSlider = specArea:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 3, 1, 100)
 		flashSlider:SetPoint('BOTTOMLEFT', check3, "BOTTOMLEFT", 330, 0)
@@ -2373,6 +2374,7 @@ local function CreateOptionsMenu()
 				DBM.Options.SpecialWarningSound = DBM.DefaultOptions.SpecialWarningSound
 				DBM.Options.SpecialWarningSound2 = DBM.DefaultOptions.SpecialWarningSound2
 				DBM.Options.SpecialWarningSound3 = DBM.DefaultOptions.SpecialWarningSound3
+				DBM.Options.SpecialWarningSound4 = DBM.DefaultOptions.SpecialWarningSound4
 				DBM.Options.SpecialWarningFontSize = DBM.DefaultOptions.SpecialWarningFontSize
 				DBM.Options.SpecialWarningFlashCol1[1] = DBM.DefaultOptions.SpecialWarningFlashCol1[1]
 				DBM.Options.SpecialWarningFlashCol1[2] = DBM.DefaultOptions.SpecialWarningFlashCol1[2]
@@ -2398,6 +2400,7 @@ local function CreateOptionsMenu()
 				SpecialWarnSoundDropDown:SetSelectedValue(DBM.Options.SpecialWarningSound)
 				SpecialWarnSoundDropDown2:SetSelectedValue(DBM.Options.SpecialWarningSound2)
 				SpecialWarnSoundDropDown3:SetSelectedValue(DBM.Options.SpecialWarningSound3)
+				SpecialWarnSoundDropDown4:SetSelectedValue(DBM.Options.SpecialWarningSound4)
 				fontSizeSlider:SetValue(DBM.DefaultOptions.SpecialWarningFontSize)
 				color0:SetColorRGB(DBM.Options.SpecialWarningFontCol[1], DBM.Options.SpecialWarningFontCol[2], DBM.Options.SpecialWarningFontCol[3])
 				color1:SetColorRGB(DBM.Options.SpecialWarningFlashCol1[1], DBM.Options.SpecialWarningFlashCol1[2], DBM.Options.SpecialWarningFlashCol1[3])
@@ -2433,9 +2436,9 @@ local function CreateOptionsMenu()
 		end)
 		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
 
-		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3", function(value)
-			DBM.Options.CountdownVoice3 = value
-			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3)
+		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3v2", function(value)
+			DBM.Options.CountdownVoice3v2 = value
+			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3v2)
 		end)
 		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
@@ -2565,7 +2568,7 @@ local function CreateOptionsMenu()
 		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 305, true)
 		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
-		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonUpdates")
+		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonToasts")
 		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
 		hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
@@ -3499,8 +3502,8 @@ do
 						button = catpanel:CreateLine(v.text)
 					elseif type(mod.Options[v]) == "boolean" then
 						lastButton = button
-						if mod.Options[v .. "SpecialWarningSound"] then
-							button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v .. "SpecialWarningSound")
+						if mod.Options[v .. "SWSound"] then
+							button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v .. "SWSound")
 						else
 							button = catpanel:CreateCheckButton(mod.localization.options[v], true)
 						end

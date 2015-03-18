@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13127 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13295 $"):sub(12, -3))
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
@@ -23,8 +23,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"--Because boss numbering tends to get out of wack with things constantly joining/leaving fight. I've only seen boss1 and boss2 but for good measure.
 )
 
---TODO, see if call pack beasts change on normal affects LFR too. I'm assuming it does because they tend to stay synced.
---TODO, see if above change also has any effect on FIRST cast and update "updatebeasttimers" functions accordingly if it does
+--TODO, verify normal again to see if it works similar to LFR. heck, verify all modes to see if the failsafe exists in all modes and can further refine call of pack to lose that 1-2 second variation.
 --Boss basic attacks
 local warnPinDownTargets			= mod:NewTargetAnnounce(154960, 3)
 --Boss gained abilities (beast deaths grant boss new abilities)
@@ -40,8 +39,8 @@ local warnCrushArmor				= mod:NewStackAnnounce(155236, 2, nil, "Tank")
 local warnStampede					= mod:NewSpellAnnounce(155247, 3)
 
 --Boss basic attacks
-local specWarnCallthePack			= mod:NewSpecialWarningSwitch("OptionVersion2", 154975, "Tank", nil, nil, nil, nil, nil, 2)
-local specWarnPinDown				= mod:NewSpecialWarningSpell("OptionVersion2", 154960, "Ranged", nil, nil, nil, 2, nil, 2)
+local specWarnCallthePack			= mod:NewSpecialWarningSwitch("OptionVersion2", 154975, "Tank", nil, nil, nil, nil, 2)
+local specWarnPinDown				= mod:NewSpecialWarningSpell("OptionVersion3", 154960, "Ranged", nil, nil, 2, nil, 2)
 local yellPinDown					= mod:NewYell(154960)
 --Boss gained abilities (beast deaths grant boss new abilities)
 local specWarnRendandTear			= mod:NewSpecialWarningMove(155385, "Melee", nil, nil, nil, nil, 2)--Always returns to melee (tank)
@@ -63,20 +62,20 @@ local yellInfernoBreath				= mod:NewYell(154989)
 
 --Boss basic attacks
 mod:AddTimerLine(CORE_ABILITIES)--Core Abilities
-local timerPinDownCD				= mod:NewCDTimer("OptionVersion2", 20.5, 155365, nil, "Ranged")--Every 20 seconds unless delayed by other things. CD timer used for this reason
+local timerPinDownCD				= mod:NewCDTimer("OptionVersion2", 20, 155365, nil, "Ranged")--Every 20 seconds unless delayed by other things. CD timer used for this reason
 local timerCallthePackCD			= mod:NewCDTimer("OptionVersion2", 31.5, 154975, nil, "Tank")--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
 --Boss gained abilities (beast deaths grant boss new abilities)
 mod:AddTimerLine(SPELL_BUCKET_ABILITIES_UNLOCKED)--Abilities Unlocked
 local timerRendandTearCD			= mod:NewCDTimer(12, 155385)
 local timerSuperheatedShrapnelCD	= mod:NewCDTimer(15, 155499)--15-30sec variation observed.
-local timerTantrumCD				= mod:NewNextCountTimer(30, 162275)--No varation, ever. Always highest priority spell and always a next timer, now that all the update code is working 100%
+local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275)--No varation, ever. Always highest priority spell and always a next timer, now that all the update code is working 100%
 local timerEpicenterCD				= mod:NewCDCountTimer(20, 159043, nil, "Melee")
 --Beast abilities (living)
 mod:AddTimerLine(BATTLE_PET_DAMAGE_NAME_8)--Beast
 local timerSavageHowlCD				= mod:NewCDTimer("OptionVersion2", 25, 155198, nil, "Healer|Tank|RemoveEnrage")
 local timerConflagCD				= mod:NewCDTimer("OptionVersion2", 20, 155399, nil, "Healer")
 local timerStampedeCD				= mod:NewCDTimer(20, 155247)--20-30 as usual
-local timerInfernoBreathCD			= mod:NewNextTimer(20.5, 154989)
+local timerInfernoBreathCD			= mod:NewNextTimer(20, 154989)
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 
@@ -124,6 +123,7 @@ local function updateBeastTimers(self, all, spellId, adjust)
 	local dismountAdjust = 0--default of 0, so -0 doesn't affect timers unless mythic and UNIT_TARGETABLE is trigger
 	if adjust then dismountAdjust = 2 end--Dismount event is a little slow, fires 2 seconds after true dismount, so must adjust all timers for dismounts
 	if self.vb.WolfAbilities and (self:IsMythic() and spellId == 155458 or all) then--Cruelfang
+			timerRendandTearCD:Cancel()
 		if self.vb.RylakAbilities then--If he also has rylak abilities, first rend and tear is 12 seconds, not 6
 			timerRendandTearCD:Start(12-dismountAdjust)
 		else
@@ -131,16 +131,15 @@ local function updateBeastTimers(self, all, spellId, adjust)
 		end
 	end
 	if self.vb.RylakAbilities and (self:IsMythic() and spellId == 155459 or all) then--Dreadwing
-		timerSuperheatedShrapnelCD:Start(9-dismountAdjust)
+		timerSuperheatedShrapnelCD:Cancel()
+		timerSuperheatedShrapnelCD:Start(7.5-dismountAdjust)
 	end
 	if self.vb.ElekkAbilities and (self:IsMythic() and spellId == 163247 or all) then--Ironcrusher
-		if self.vb.RylakAbilities then--Only verified with all 3 on normal. Unknown of JUST elekk and rylak cuase +1 second without wolf
-			timerTantrumCD:Start(18-dismountAdjust, self.vb.tantrumCount+1)
-		else--Verified true for elekk alone, and elekk with wolf
-			timerTantrumCD:Start(17-dismountAdjust, self.vb.tantrumCount+1)
-		end
+		timerTantrumCD:Cancel()
+		timerTantrumCD:Start(17-dismountAdjust, self.vb.tantrumCount+1)
 	end
 	if self.vb.FaultlineAbilites and (self:IsMythic() and spellId == 155462 or all) then--Faultline
+		timerEpicenterCD:Cancel()
 		timerEpicenterCD:Start(24, self.vb.epicenterCount+1)
 		countdownEpicenter:Start(24)
 	end
@@ -148,26 +147,43 @@ local function updateBeastTimers(self, all, spellId, adjust)
 	if adjust then return end--adjust true means triggered by boss dismounted on mythic, this doesn't reset pin down or call of the pack
 	if self.vb.RylakAbilities then--Rylak delays call of the pack and pin down as well. (Well, that or whatever beast you do 3rd. Still need to determine if rylak, or third beast)
 		if self.vb.ElekkAbilities and self.vb.WolfAbilities then--Wolf, elekk AND rylak
-			timerCallthePackCD:Start(17)
-			countdownCallPack:Cancel()
-			countdownCallPack:Start(17)
-			timerPinDownCD:Start(24)
+			timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
+			timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
 			countdownPinDown:Cancel()
+			countdownCallPack:Cancel()
+			if self:IsDifficulty("lfr") then--Todo, see if normal also does this, since the 41 second timer is both normal and LFR
+				timerCallthePackCD:Start(26)--Verified twice over in LFR.
+				countdownCallPack:Start(26)
+			else
+				timerCallthePackCD:Start(17)
+				countdownCallPack:Start(17)
+			end
+			timerPinDownCD:Start(24)
 			countdownPinDown:Start(24)
 		else--TODO, i need data on rylak with wolf (2) or rylak with elekk (2).
-			timerCallthePackCD:Start(15)--rylak alone verified 15 seconds
+			timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
+			timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
 			countdownCallPack:Cancel()
+			countdownPinDown:Cancel()
+			--This can't actually happen in LFR so doesn't need anything special
+			timerCallthePackCD:Start(15)--rylak alone verified 15 seconds
 			countdownCallPack:Start(15)
 			timerPinDownCD:Start(13.5)
-			countdownPinDown:Cancel()
 			countdownPinDown:Start(13.5)
 		end
 	else--Elekk alone verified, wolf alone verified. Wolf AND Elekk together verified. These timers only alter once rylak abilities activated.
-		timerCallthePackCD:Start(11)
+		timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
+		timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
 		countdownCallPack:Cancel()
-		countdownCallPack:Start(11)
-		timerPinDownCD:Start(12)
 		countdownPinDown:Cancel()
+		if self:IsDifficulty("lfr") then--Todo, see if normal also does this, since the 41 second timer is both normal and LFR
+			timerCallthePackCD:Start(24)
+			countdownCallPack:Start(24)
+		else
+			timerCallthePackCD:Start(11)
+			countdownCallPack:Start(11)
+		end
+		timerPinDownCD:Start(12)
 		countdownPinDown:Start(12)
 	end
 end
@@ -180,7 +196,7 @@ function mod:BreathTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 8, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
 	end
 end
 
@@ -191,10 +207,16 @@ function mod:OnCombatStart(delay)
 	self.vb.FaultlineAbilites = false
 	self.vb.tantrumCount = 0
 	table.wipe(activeBossGUIDS)
-	timerCallthePackCD:Start(9.5-delay)--Time for cast finish, not cast start, because only cast finish is sure thing. cast start can be interrupted
-	countdownCallPack:Start(9.5-delay)
-	timerPinDownCD:Start(11-delay)
-	countdownPinDown:Start(11-delay)
+	timerPinDownCD:Start(9.5-delay)
+	countdownPinDown:Start(9.5-delay)
+	if self:IsLFR() then
+		--Now confirmed.
+		timerCallthePackCD:Start(20-delay)--Time for cast finish, not cast start, because only cast finish is sure thing. cast start can be interrupted
+		countdownCallPack:Start(20-delay)
+	else
+		timerCallthePackCD:Start(9.5-delay)--Time for cast finish, not cast start, because only cast finish is sure thing. cast start can be interrupted
+		countdownCallPack:Start(9.5-delay)
+	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3)
 	end
@@ -375,9 +397,6 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					--Cancel timers for abilities he can't use from other dead beasts
 					timerRendandTearCD:Cancel()
 					timerTantrumCD:Cancel()
-					if self.Options.HudMapOnBreath then--Only need hud during this phase
-						DBMHudMap:Enable()
-					end
 				elseif cid == 76945 then--Ironcrusher
 					timerStampedeCD:Start(15)
 					timerTantrumCD:Start(25, self.vb.tantrumCount+1)
@@ -393,6 +412,16 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 					timerRendandTearCD:Cancel()
 					timerSuperheatedShrapnelCD:Cancel()
 					timerTantrumCD:Cancel()
+				end
+				if self:IsDifficulty("lfr") then--ONLY LFR does this
+					local remaining = timerCallthePackCD:GetRemaining()
+					if remaining < 20 then--if less than 20, it's changed to 20, else, current timer finishes if > 20
+						DBM:Debug("Call timer less than 20 remaining, CD reset to 20 by blizzard failsafe")
+						countdownCallPack:Cancel()
+						timerCallthePackCD:Cancel()
+						timerCallthePackCD:Start(20)
+						countdownCallPack:Start(20)
+					end
 				end
 			end
 		end
@@ -416,14 +445,17 @@ function mod:UNIT_DIED(args)
 		--when one dies, don't want to cancel wrong timers
 		if cid == 76884 then
 			timerSavageHowlCD:Cancel()
+			timerRendandTearCD:Cancel()
 		elseif cid == 76874 then
 			timerConflagCD:Cancel()
 			timerInfernoBreathCD:Cancel()
 			if self.Options.HudMapOnBreath then
 				DBMHudMap:Disable()
 			end
+			self:BossTargetScannerAbort(76874, "BreathTarget")
 		elseif cid == 76945 then
 			timerStampedeCD:Cancel()
+			timerTantrumCD:Cancel()
 		elseif cid == 76946 then
 			timerEpicenterCD:Cancel()
 			countdownEpicenter:Cancel()
@@ -447,7 +479,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnTantrum:Show(self.vb.tantrumCount)
 		timerTantrumCD:Start(34, self.vb.tantrumCount+1)--This one may also be 30 seconds, but I saw 34 consistently
 		voiceTantrum:Play("aesoon")
-	elseif spellId == 155497 then--Superheated Shrapnel
+	elseif spellId == 155603 then--Face Random Non-Tank (boss version)
 		specWarnSuperheatedShrapnel:Show()
 		timerSuperheatedShrapnelCD:Start()
 	elseif spellId == 155385 or spellId == 155515 then--Both versions of spell(boss and beast), they seem to have same cooldown so combining is fine
@@ -458,10 +490,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnPinDown:Show()
 		timerPinDownCD:Start()
 		countdownPinDown:Start()
-	elseif spellId == 155423 then--Face Random Non-Tank
+		voicePinDown:Play("spear")
+	elseif spellId == 155423 then--Face Random Non-Tank (beast version)
 		specWarnInfernoBreath:Show()
 		timerInfernoBreathCD:Start()
 		voiceInfernoBreath:Play("breathsoon")
-		self:BossTargetScanner(76874, "BreathTarget", 0.05, 50, nil, nil, false)
+		self:BossTargetScanner(76874, "BreathTarget", 0.05, 80, nil, nil, false)
 	end
 end

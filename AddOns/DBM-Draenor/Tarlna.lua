@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13055 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13152 $"):sub(12, -3))
 mod:SetCreatureID(81535)
+mod:SetEncounterID(1770)
 mod:SetReCombatTime(20)
 mod:SetZone()
 mod:SetMinSyncRevision(11969)

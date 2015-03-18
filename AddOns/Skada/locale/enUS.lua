@@ -182,6 +182,7 @@ L["Switch to segment"] = "Switch to segment"
 L["Segment"] = "Segment"
 
 L["Whisper"] = "Whisper"
+L["Whisper Target"] = "Whisper Target"
 L["No mode or segment selected for report."] = "No mode or segment selected for report."
 L["Name of recipient"] = "Name of recipient"
 

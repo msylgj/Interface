@@ -1,0 +1,10 @@
+## Interface: 60000
+## Title: Tidy Plates: Neon Theme
+## Title-zhCN: [姓名版] |cff0080ffTidy Plates: Neon Theme|r
+## Notes: It toasts your Eggo waffles, and butters your bread.
+## Author: Binny
+## Dependencies: TidyPlates, TidyPlatesHub
+
+Neon.lua
+
+

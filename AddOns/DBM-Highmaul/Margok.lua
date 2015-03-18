@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13116 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 156238 156467 157349 163988 164075 156471 164299 164232 164301 163989 164076 164235 163990 164077 164240 164303 158605 164176 164178 164191 165243 165876 178607",
-	"SPELL_CAST_SUCCESS 158563 165102",
+	"SPELL_CAST_SUCCESS 158563 165102 181113",
 	"SPELL_AURA_APPLIED 157763 158553 156225 164004 164005 164006 158605 164176 164178 164191 157801 178468 165102 165595 176533",
 	"SPELL_AURA_APPLIED_DOSE 158553 178468 165595 159515",
 	"SPELL_AURA_REFRESH 157763",
@@ -116,7 +116,7 @@ local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, 
 mod:AddTimerLine(DBM_CORE_INTERMISSION)
 local timerTransition							= mod:NewPhaseTimer(74)
 local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank")
-local timerKickToFaceCD							= mod:NewNextTimer(20, 158563, nil, "Tank")
+local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank")
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerGaze									= mod:NewBuffFadesTimer(15, 165595)
@@ -280,6 +280,25 @@ local function delayedRangeUpdate(self)
 	updateRangeFrame(self)
 end
 
+local function stopP3Timers()
+	timerArcaneWrathCD:Cancel()
+	countdownArcaneWrath:Cancel()
+	timerDestructiveResonanceCD:Cancel()
+	timerSummonArcaneAberrationCD:Cancel()
+	timerMarkOfChaosCD:Cancel()
+	countdownMarkofChaos:Cancel()
+	timerForceNovaCD:Cancel()
+	voiceForceNova:Cancel()
+	countdownForceNova:Cancel()
+	timerForceNovaFortification:Cancel()
+	countdownForceNova:Cancel()
+	specWarnForceNova:Cancel()
+end
+local function NightTwisted(self)
+	timerNightTwistedCD:Start()
+	self:Schedule(30, NightTwisted, self)
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.markActive = false
 	self.vb.noTaunt = false
@@ -296,8 +315,8 @@ function mod:OnCombatStart(delay)
 	self.vb.madnessAdd = 0
 	self.vb.envelopingCount = 0
 	self.vb.mineCount = 0
-	timerArcaneWrathCD:Start(6-delay)
-	countdownArcaneWrath:Start(6-delay)
+	timerArcaneWrathCD:Start(5.5-delay)
+	countdownArcaneWrath:Start(5.5-delay)
 	timerDestructiveResonanceCD:Start(15-delay)
 	timerSummonArcaneAberrationCD:Start(25-delay, 1)
 	timerMarkOfChaosCD:Start(33.5-delay)
@@ -316,9 +335,6 @@ function mod:OnCombatStart(delay)
 		end
 	else
 		self:SetBossHPInfoToHighest(1)
-	end
-	if self.Options.HudMapOnMarkOfChaos or self.Options.HudMapOnBranded then
-		DBMHudMap:Enable()
 	end
 end
 
@@ -377,13 +393,13 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 157349 then
 		self.vb.forceCount = self.vb.forceCount + 1
 		specWarnForceNova:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5--Often 51, but 2x I did see 50.5 so 50.5 is safer
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5--Often 51, but 2x I did see 50.5 so 50.5 is safer
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
 	elseif spellId == 164232 then
 		self.vb.forceCount = self.vb.forceCount + 1
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -408,7 +424,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 164235 then
 		self.vb.forceCount = self.vb.forceCount + 1
 		specWarnForceNova:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -447,7 +463,7 @@ function mod:SPELL_CAST_START(args)
 		self:Schedule(3.5, updateRangeFrame, self)
 		self:Schedule(4, updateRangeFrame, self)
 		specWarnForceNovaRep:Show()
-		local novaTime = self.vb.forceCount == 1 and 46 or 50.5
+		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
 		countdownForceNova:Start(novaTime)
 		voiceForceNova:Schedule(novaTime-6.5, "157349")
@@ -566,6 +582,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 165102 then
 		timerInfiniteDarknessCD:Start()
+	elseif spellId == 181113 then--Encounter Spawn
+		timerTransition:Start(36.5)--Boss/any arcane adds still active during this, so do not cancel timers here, canceled on margok death
+		self:Schedule(13, stopP3Timers, self)--Terminate timers when King Prison activates.
+		self:Schedule(34, NightTwisted, self)
 	end
 end
 
@@ -689,7 +709,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.lastMarkedTank = args.destName
 		local uId = DBM:GetRaidUnitId(args.destName)
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff(uId, args.spellName)
+		if expires then
 		timerMarkOfChaos:Start(expires-GetTime(), args.destName)
+		end
 		if args:IsPlayer() then
 			self.vb.playerHasMark = true
 			if spellId == 164176 then 
@@ -883,9 +905,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				self.vb.phase = 3
 				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(3))
 				voicePhaseChange:Play("pthree")
-				self:RegisterShortTermEvents(
-					"CHAT_MSG_MONSTER_YELL"
-				)
 			else
 				self.vb.phase = 4
 				warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase:format(4))
@@ -947,37 +966,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(L.PlayerDebuffs)
 			DBM.InfoFrame:Show(5, "playerbaddebuff", 176537)
-		end
-	end
-end
-
---"<54.77 00:46:30> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#You know nothing of the power you meddle with, Mar'gok. (It calls to us. We know! Its power will be ours!)#Cho'gall
---"<64.00 00:46:40> [UNIT_SPELLCAST_SUCCEEDED] Cho'gall [[target:King Prison::0:178540]]", -- [19041]
-do
-	local function stopP3Timers()
-		timerArcaneWrathCD:Cancel()
-		countdownArcaneWrath:Cancel()
-		timerDestructiveResonanceCD:Cancel()
-		timerSummonArcaneAberrationCD:Cancel()
-		timerMarkOfChaosCD:Cancel()
-		countdownMarkofChaos:Cancel()
-		timerForceNovaCD:Cancel()
-		voiceForceNova:Cancel()
-		countdownForceNova:Cancel()
-		timerForceNovaFortification:Cancel()
-		countdownForceNova:Cancel()
-		specWarnForceNova:Cancel()
-	end
-	local function NightTwisted(self)
-		timerNightTwistedCD:Start()
-		self:Schedule(30, NightTwisted, self)
-	end
-	function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
-		if npc == chogallName then--Some creative shit right here. Screw localized text. This will trigger off first yell at start of 35 second RP Sender is 丘加利 (Cho'gall)
-			self:UnregisterShortTermEvents()--Unregister Yell
-			timerTransition:Start(34)--Boss/any arcane adds still active during this, so do not cancel timers here, canceled on margok death
-			self:Schedule(10, stopP3Timers, self)--Terminate timers when King Prison activates.
-			self:Schedule(31, NightTwisted, self)
 		end
 	end
 end

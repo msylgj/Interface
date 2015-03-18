@@ -1658,7 +1658,10 @@ function PremadeFilter_OnShow(self)
 	
 	if not self.VersionLabel:IsShown() then
 		if self.globalChannel > 1 then
-			SendAddonMessage("PREMADE_FILTER", "VER?", "GUILD");
+			local guildName = GetGuildInfo("player")
+			if guildName then
+				SendAddonMessage("PREMADE_FILTER", "VER?", "GUILD");
+			end
 		else
 			JoinPermanentChannel("PremadeFilter");
 			self.globalChannel = GetChannelName("PremadeFilter");

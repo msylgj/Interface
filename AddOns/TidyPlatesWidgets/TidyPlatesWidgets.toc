@@ -1,0 +1,8 @@
+## Interface: 60000
+## Title: Tidy Plates Widgets
+## Title-zhCN: [姓名版] |cff0080ffTidy Plates Widgets|r
+## Notes: Library of Widgets
+## Dependencies: TidyPlates
+## SavedVariables: TidyPlatesWidgetData
+
+Widgets.xml

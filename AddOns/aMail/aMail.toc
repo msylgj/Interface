@@ -1,7 +1,0 @@
-## Interface: 60100
-## Title: aMail
-## Notes: Get all mail in a single click
-## Author: ALZA
-## Version: 1.0
-
-aMail.lua

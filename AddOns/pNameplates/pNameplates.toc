@@ -1,9 +1,0 @@
-## Interface: 60100
-## Author: Crushbeers (Antonidas US), Sniffle (Firetree US)
-## Version: 1.9.0
-## Title: |cFF48D1CCp|rNameplates
-## Notes: Lightweight Nameplate mod - Health, Cast, Threat modifications.
-
-name.lua
-core.lua
-QuestPlates.lua

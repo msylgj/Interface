@@ -20,6 +20,7 @@ local callbacks = CallbackHandler:New(mod)
 local GetNumGroupMembers, GetNumSubgroupMembers = GetNumGroupMembers, GetNumSubgroupMembers
 local GetTime, UIParent = GetTime, UIParent
 local UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing = UnitExists, UnitIsUnit, UnitPosition, GetPlayerFacing
+local GetInstanceInfo = GetInstanceInfo
 
 local targetCanvasAlpha
 
@@ -256,7 +257,6 @@ function mod:Enable()
 	self.mainFrame:Show()
 	self.mainFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self.mainFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
---	updateFrame:SetScript("OnUpdate", onUpdate)
 	self.canvas:SetAlpha(1)
 	self:UpdateCanvasPosition()
 
@@ -273,7 +273,6 @@ end
 function mod:Disable()
 	if not self.HUDEnabled then return end
 	DBM:Debug("HudMap Deactivating", 2)
---	updateFrame:SetScript("OnUpdate", nil)
 	self:FreeEncounterMarkers()
 	--Anything else needed? maybe clear all marks, hide any frames, etc?
 	self.mainFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -1179,7 +1178,10 @@ end
 
 local encounterMarkers = {}
 function mod:RegisterEncounterMarker(spellid, name, marker)
-	if not self.HUDEnabled then return end
+	if DBM.Options.DontShowHudMap2 then return end
+	if not self.HUDEnabled then
+		self:Enable()
+	end
 	local key = spellid..name
 	encounterMarkers[key] = marker
 	marker.RegisterCallback(self, "Free", "FreeEncounterMarker", key)
@@ -1216,6 +1218,9 @@ end
 function mod:FreeEncounterMarker(key)
 	if not self.HUDEnabled then return end
 	encounterMarkers[key] = nil
+	if #encounterMarkers == 0 then--No markers left, disable hud
+		self:Disable()
+	end
 end
 
 -- should be called to manually free marker

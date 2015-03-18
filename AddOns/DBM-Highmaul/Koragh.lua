@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13110 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -58,10 +58,10 @@ local specWarnExpelMagicFelMove		= mod:NewSpecialWarningMove(172917)--Under you 
 local timerVulnerability			= mod:NewBuffActiveTimer(23, 160734)--more like 23-24 than 20
 local timerTrampleCD				= mod:NewCDTimer(16, 163101)
 local timerExpelMagicFire			= mod:NewBuffFadesTimer("OptionVersion2", 11.5, 162185, nil, false)--Has countdown, and fight has a lot of itmers now, i found this timer HIGHLY distracting when trying to process multiple important ability cds at once.
-local timerExpelMagicFireCD			= mod:NewCDTimer(60, 162185)--60-66 Variation
+local timerExpelMagicFireCD			= mod:NewCDTimer(58, 162185)--58-66 Variation
 local timerExpelMagicFrost			= mod:NewBuffActiveTimer("OptionVersion3", 20, 161411, nil, false)
 local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411)--60-63 variation
-local timerExpelMagicShadowCD		= mod:NewCDTimer(60, 162184, nil, "Tank|Healer")--60-63 variation
+local timerExpelMagicShadowCD		= mod:NewCDTimer(59, 162184, nil, "Tank|Healer")--60-63 variation
 local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
 local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank")--26-32
 local timerBallsCD					= mod:NewNextCountTimer(30, 161612)
@@ -153,9 +153,6 @@ function mod:OnCombatStart(delay)
 	self:Schedule(29.5-delay, ballsWarning, self)
 	if self:IsMythic() then
 		timerExpelMagicFelCD:Start(5-delay)
-		if self.Options.HudMapOnMC or self.Options.HudMapForFel then
-			DBMHudMap:Enable()
-		end
 	end
 	if DBM.BossHealth:IsShown() then--maybe need another option
 		DBM.BossHealth:AddBoss(function() return UnitPower("boss1", 10) end, barName)--Null Barrier health bar

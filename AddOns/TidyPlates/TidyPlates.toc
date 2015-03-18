@@ -1,0 +1,9 @@
+## Interface: 60000
+## Title: Tidy Plates
+## Title-zhCN: [姓名版] |cff0080ffTidy Plates|r
+## Notes: Enjoys long walks on Darkshore
+## Author: Binbwen and Friends
+## Version: 6.16.Beta9
+## SavedVariablesPerCharacter: TidyPlatesOptions
+
+TidyPlates.xml

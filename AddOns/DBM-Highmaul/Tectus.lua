@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13129 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13170 $"):sub(12, -3))
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetZone()
@@ -68,6 +68,8 @@ mod:AddSetIconOption("SetIconOnCrystal", 162370, false)--icons 1 and 2, no confl
 
 local UnitGUID, UnitExists = UnitGUID, UnitExists
 mod.vb.EarthwarperAlive = 0
+mod.vb.shardDeath = 0
+mod.vb.moteDeath = 0
 mod.vb.healthPhase = 0
 local earthDuders = {}
 
@@ -75,69 +77,77 @@ local tectusN = EJ_GetEncounterInfo(1195)
 local shardN = EJ_GetSectionInfo(10063)
 local moteN = EJ_GetSectionInfo(10064)
 local moteH = {}
+local tectusGUID
+local shardGUID = {}
 local ltectusH, lshardC, lshardT, lmoteC, lmoteT = 1, 1, 1, 1, 1 -- not need to sync.
 
 function mod:CustomHealthUpdate()
 	local tectusH, shardC, shardT, moteC, moteT = 0, 0, 0, 0, 0
-	if UnitExists("boss1") then
-		self.vb.healthPhase = 1
-		tectusH = UnitHealth("boss1") / UnitHealthMax("boss1") * 100
-		ltectusH = tectusH
-	end
-	if UnitExists("boss2") then
-		self.vb.healthPhase = 2
-		shardC = shardC + 1
-		shardT = shardT + (UnitHealth("boss2") / UnitHealthMax("boss2") * 100)
-		lshardC = shardC
-		lshardT = shardT
-	end
-	if UnitExists("boss3") then
-		self.vb.healthPhase = 2
-		shardC = shardC + 1
-		shardT = shardT + (UnitHealth("boss3") / UnitHealthMax("boss3") * 100)
-		lshardC = shardC
-		lshardT = shardT
+	local moteGUID = {}
+	for i = 1, 5 do
+		local unitID = "boss"..i
+		local guid = UnitGUID(unitID)
+		if UnitExists(unitID) then
+			local cid = self:GetCIDFromGUID(guid)
+			if cid == 78948 then
+				tectusH = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
+				tectusGUID = guid
+				ltectusH = tectusH
+			elseif cid == 80551 then
+				shardC = shardC + 1
+				shardT = shardT + (UnitHealth(unitID) / UnitHealthMax(unitID) * 100)
+				shardGUID[guid] = true
+				lshardC = shardC
+				lshardT = shardT
+			elseif cid == 80557 then
+				local health = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
+				moteC = moteC + 1
+				moteT = moteT + health
+				moteGUID[guid] = true
+				lmoteC = moteC
+				lmoteT = moteH
+				moteH[guid] = health
+			end
+		end
 	end
 	for guid, health in pairs(moteH) do
-		local newhealth = self:GetBossHPByGUID(guid) or health
-		if newhealth >= 1 then
-			self.vb.healthPhase = 3
-			moteC = moteC + 1
-			moteT = moteT + newhealth
-			lmoteC = moteC
-			lmoteT = moteH
-			moteH[guid] = newhealth
+		if not moteGUID[guid] then
+			local newhealth = self:GetBossHPByGUID(guid) or health
+			if newhealth >= 1 then
+				self.vb.healthPhase = 3
+				moteC = moteC + 1
+				moteT = moteT + newhealth
+				moteGUID[guid] = true
+				lmoteC = moteC
+				lmoteT = moteH
+				moteH[guid] = newhealth
+			end
 		end
 	end
 	if DBM.BossHealth:IsShown() then
-		if UnitExists("boss1") then
-			if DBM.BossHealth:HasBoss(78948) then
-				DBM.BossHealth:RemoveBoss(78948)
-			end
-			if not DBM.BossHealth:HasBoss("boss1") then
-				DBM.BossHealth:AddBoss("boss1", tectusN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss1") then
-				DBM.BossHealth:RemoveBoss("boss1")
+		if DBM.BossHealth:HasBoss(78948) then
+			DBM.BossHealth:RemoveBoss(78948)
+		end
+		if tectusGUID then
+			if tectusH > 0 then
+				if not DBM.BossHealth:HasBoss(tectusGUID) then
+					DBM.BossHealth:AddBoss(tectusGUID, tectusN)
+				end
+			else
+				if DBM.BossHealth:HasBoss(tectusGUID) then
+					DBM.BossHealth:RemoveBoss(tectusGUID)
+				end
 			end
 		end
-		if UnitExists("boss2") then
-			if not DBM.BossHealth:HasBoss("boss2") then
-				DBM.BossHealth:AddBoss("boss2", shardN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss2") then
-				DBM.BossHealth:RemoveBoss("boss2")
-			end
-		end
-		if UnitExists("boss3") then
-			if not DBM.BossHealth:HasBoss("boss3") then
-				DBM.BossHealth:AddBoss("boss3", shardN)
-			end
-		else
-			if DBM.BossHealth:HasBoss("boss3") then
-				DBM.BossHealth:RemoveBoss("boss3")
+		for guid, value in pairs(shardGUID) do
+			if shardT > 0 then
+				if not DBM.BossHealth:HasBoss(guid) then
+					DBM.BossHealth:AddBoss(guid, shardN)
+				end
+			else
+				if DBM.BossHealth:HasBoss(guid) then
+					DBM.BossHealth:RemoveBoss(guid)
+				end
 			end
 		end
 		for guid, health in pairs(moteH) do
@@ -159,6 +169,8 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(earthDuders)
 	self.vb.EarthwarperAlive = 0
+	self.vb.moteDeath = 0
+	self.vb.shardDeath = 0
 	self.vb.healthPhase = 1
 	table.wipe(moteH)
 	timerEarthwarperCD:Start(8-delay)
@@ -173,7 +185,6 @@ function mod:OnCombatStart(delay)
 	end
 	if DBM.BossHealth:IsShown() then
 		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss("boss1", tectusN)
 	end
 end
 
@@ -273,10 +284,26 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnBerserker:Show()
 			timerBerserkerCD:Start()
 		end
-	elseif spellId == 181089 and not self:IsMythic() then--Encounter Event
-		timerEarthwarperCD:Cancel()
-		countdownEarthwarper:Cancel()
-		timerBerserkerCD:Cancel()
+	elseif spellId == 181089 then--Encounter Event
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 78948 then
+			self.vb.healthPhase = 2
+			if not self:IsMythic() then
+				timerEarthwarperCD:Cancel()
+				countdownEarthwarper:Cancel()
+				timerBerserkerCD:Cancel()
+			end
+		elseif cid == 80551 then
+			self.vb.shardDeath = self.vb.shardDeath + 1
+			if self.vb.shardDeath == 2 then
+				self.vb.healthPhase = 3
+			end
+		elseif cid == 80557 then--Mote of Tectus
+			self.vb.moteDeath = self.vb.moteDeath + 1
+			if self.vb.moteDeath == 8 then
+				DBM:EndCombat(self)
+			end
+		end
 	end
 end
 

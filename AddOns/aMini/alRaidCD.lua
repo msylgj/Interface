@@ -208,19 +208,23 @@ local StartTimer = function(name, spellId)
 	local bar = CreateBar()
 	--判断战复充能冷却时间
 	local cooldown = spells[spellId]
-	local num = GetNumGroupMembers()
+	local _, _, difficulty, _, maxPlayers, _, _, _, instanceGroupSize = GetInstanceInfo()
 	if cooldown == true then
-		if bossexists() then
-			if num>=10 and num<20 then
-				cooldown = 540
-			elseif num>=20 and num<30 then
-				cooldown = 270
-			else
-				cooldown = 180
-			end
-		else
-			cooldown = 600
-		end
+	   if bossexists() then
+		  if difficulty == 14 or difficulty == 15 or difficulty == 17 then  --彈性模式
+			 cooldown = (90/instanceGroupSize)*60
+		  elseif difficulty == 3 or difficulty == 5 then
+			 cooldown = 540
+		  elseif difficulty == 16 then
+			 cooldown = 270
+		  elseif difficulty == 4 or difficulty == 6 then
+			 cooldown = 216
+		  else
+			 cooldown = 180
+		  end
+	   else
+		  cooldown = 600
+	   end
 	end
 	bar.endTime = GetTime() + cooldown
 	bar.startTime = GetTime()
