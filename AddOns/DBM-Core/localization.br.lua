@@ -255,7 +255,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS.achievement	= "Exibir cronógrafo para %s"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s em >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) em >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) em >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.adds			= "%s restantes: %%d"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast			= "Lançando %s: %.1f seg"
@@ -263,7 +263,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "%s em breve"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%s em %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "Fase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "Fase %s em breve"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= "%s em >%%s< (%%d)"
 
 local prewarnOption = "Exibir aviso antecipado para $spell:%s"

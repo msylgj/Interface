@@ -154,7 +154,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Matar rapido"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target		= "%s en >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) en >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) en >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell		= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends 		= "%s terminó"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.fades		= "%s se disipa"
@@ -164,7 +164,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon		= "%s pronto"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%s en %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase		= "Fase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase	= "Fase %s pronto"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack		= "%s en >%%s< (%%d)"
 
 local prewarnOption = "Mostrar pre-aviso para $spell:%s"

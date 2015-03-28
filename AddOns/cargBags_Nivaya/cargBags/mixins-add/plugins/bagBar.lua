@@ -186,7 +186,7 @@ end
 BagButton.OnReceiveDrag = BagButton.OnClick
 
 function BagButton:OnDragStart()
-	PickupBagFromSlot(self.invID)
+	PickupBagFromSlot((self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
 end
 
 -- Updating the icons

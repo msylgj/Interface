@@ -1524,6 +1524,7 @@ local function CreatePlayerStyle(self, unit, isSingle)
 	self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 	self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", UpdateThreat)
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", UpdateThreat)
 end
 local function CreateTargetStyle(self, unit, isSingle)
 	self.mystyle = "target"

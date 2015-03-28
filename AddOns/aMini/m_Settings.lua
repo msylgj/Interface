@@ -85,13 +85,6 @@ SlashCmdList["SPEC"] = function()
 end
 SLASH_SPEC1 = "/ss"
 
----------------- > Proper Ready Check sound
-local ShowReadyCheckHook = function(self, initiator, timeLeft)
-	if initiator ~= "player" then PlaySound("ReadyCheck") end
-end
-hooksecurefunc("ShowReadyCheck", ShowReadyCheckHook)
-
-
 -- UI缩放修正 --
 SlashCmdList["AutoSet"] = function()
 	if not InCombatLockdown() then
@@ -464,3 +457,25 @@ button2:SetScript("OnLeave", function() GameTooltip:Hide() end)
 local F = unpack(Aurora)
 F.Reskin(button)
 F.Reskin(button2)
+
+--大地图坐标
+WorldMapButton:HookScript("OnUpdate", function(self)
+   if not self.coordText then
+      self.coordText = WorldMapFrameCloseButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+      self.coordText:SetPoint("BOTTOM", self, "BOTTOM", 0, 6)
+   end
+   local px, py = GetPlayerMapPosition("player")
+   local x, y = GetCursorPosition()
+   local width, height, scale = self:GetWidth(), self:GetHeight(), self:GetEffectiveScale()
+   local centerX, centerY = self:GetCenter()
+   x, y = (x/scale - (centerX - (width/2))) / width, (centerY + (height/2) - y/scale) / height
+   if px == 0 and py == 0 and (x > 1 or y > 1 or x < 0 or y < 0) then
+      self.coordText:SetText("")
+   elseif px == 0 and py == 0 then
+      self.coordText:SetText(format("当前: %d, %d", x*100, y*100))
+   elseif x > 1 or y > 1 or x < 0 or y < 0 then
+      self.coordText:SetText(format("玩家: %d, %d", px*100, py*100))
+   else
+      self.coordText:SetText(format("玩家: %d, %d 当前: %d, %d", px*100, py*100, x*100, y*100))
+   end
+end) 

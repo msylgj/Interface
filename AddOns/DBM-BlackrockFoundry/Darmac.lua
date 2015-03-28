@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13295 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13427 $"):sub(12, -3))
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
@@ -16,14 +16,14 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 154960 155458 155459 155460 154981 155030 155236 155462 163247",
 	"SPELL_AURA_APPLIED_DOSE 155030 155236",
 	"SPELL_AURA_REMOVED 154960",
-	"SPELL_PERIODIC_DAMAGE 159044 162277 156824 155657",
-	"SPELL_ABSORBED 159044 162277 156824 155657",
+	"SPELL_PERIODIC_DAMAGE 159044 162277 156823 156824 155657",
+	"SPELL_ABSORBED 159044 162277 156823 156824 155657",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"--Because boss numbering tends to get out of wack with things constantly joining/leaving fight. I've only seen boss1 and boss2 but for good measure.
 )
 
---TODO, verify normal again to see if it works similar to LFR. heck, verify all modes to see if the failsafe exists in all modes and can further refine call of pack to lose that 1-2 second variation.
+--TODO, maybe combine the 4 beast ability target warnings into one option
 --Boss basic attacks
 local warnPinDownTargets			= mod:NewTargetAnnounce(154960, 3)
 --Boss gained abilities (beast deaths grant boss new abilities)
@@ -44,10 +44,11 @@ local specWarnPinDown				= mod:NewSpecialWarningSpell("OptionVersion3", 154960, 
 local yellPinDown					= mod:NewYell(154960)
 --Boss gained abilities (beast deaths grant boss new abilities)
 local specWarnRendandTear			= mod:NewSpecialWarningMove(155385, "Melee", nil, nil, nil, nil, 2)--Always returns to melee (tank)
-local specWarnSuperheatedShrapnel	= mod:NewSpecialWarningSpell(155499, nil, nil, nil, 2)--Still iffy on it
+local specWarnSuperheatedShrapnel	= mod:NewSpecialWarningDodge(155499, nil, nil, nil, 2)
 local specWarnFlameInfusion			= mod:NewSpecialWarningMove(155657)
 local specWarnTantrum				= mod:NewSpecialWarningCount(162275, nil, nil, nil, 2, nil, 2)
 local specWarnEpicenter				= mod:NewSpecialWarningMove(159043)
+local specWarnSuperheatedScrap		= mod:NewSpecialWarningMove(156823)
 --Beast abilities (living)
 local specWarnSavageHowl			= mod:NewSpecialWarningTarget(155198, "Tank|Healer")
 local specWarnSavageHowlDispel		= mod:NewSpecialWarningDispel("OptionVersion2", 155198, "RemoveEnrage", nil, nil, nil, nil, 2)
@@ -57,19 +58,19 @@ local specWarnSearingFangsOther		= mod:NewSpecialWarningTaunt(155030)--No eviden
 local specWarnInfernoPyre			= mod:NewSpecialWarningMove(156824)
 local specWarnCrushArmor			= mod:NewSpecialWarningStack(155236, nil, 3)--6-9 second cd, 15 second duration, 3 is smallest safe swap, sometimes 2 when favorable RNG
 local specWarnCrushArmorOther		= mod:NewSpecialWarningTaunt(155236)
-local specWarnInfernoBreath			= mod:NewSpecialWarningSpell(154989, nil, nil, nil, 2, nil, 2)
+local specWarnInfernoBreath			= mod:NewSpecialWarningDodge(154989, nil, nil, nil, 2, nil, 2)
 local yellInfernoBreath				= mod:NewYell(154989)
 
 --Boss basic attacks
 mod:AddTimerLine(CORE_ABILITIES)--Core Abilities
-local timerPinDownCD				= mod:NewCDTimer("OptionVersion2", 20, 155365, nil, "Ranged")--Every 20 seconds unless delayed by other things. CD timer used for this reason
+local timerPinDownCD				= mod:NewCDTimer("OptionVersion2", 19.7, 155365, nil, "Ranged")--Every 19.7 seconds unless delayed by other things. CD timer used for this reason
 local timerCallthePackCD			= mod:NewCDTimer("OptionVersion2", 31.5, 154975, nil, "Tank")--almost always 31, but cd resets to 11 whenever boss dismounts a beast (causing some calls to be less or greater than 31 seconds apart. In rare cases, boss still interrupts his own cast/delays cast even when not caused by gaining beast buff
 --Boss gained abilities (beast deaths grant boss new abilities)
 mod:AddTimerLine(SPELL_BUCKET_ABILITIES_UNLOCKED)--Abilities Unlocked
 local timerRendandTearCD			= mod:NewCDTimer(12, 155385)
-local timerSuperheatedShrapnelCD	= mod:NewCDTimer(15, 155499)--15-30sec variation observed.
-local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275)--No varation, ever. Always highest priority spell and always a next timer, now that all the update code is working 100%
-local timerEpicenterCD				= mod:NewCDCountTimer(20, 159043, nil, "Melee")
+local timerSuperheatedShrapnelCD	= mod:NewCDTimer(14.2, 155499)
+local timerTantrumCD				= mod:NewNextCountTimer(29.5, 162275)
+local timerEpicenterCD				= mod:NewCDCountTimer(19.5, 159043, nil, "Melee")
 --Beast abilities (living)
 mod:AddTimerLine(BATTLE_PET_DAMAGE_NAME_8)--Beast
 local timerSavageHowlCD				= mod:NewCDTimer("OptionVersion2", 25, 155198, nil, "Healer|Tank|RemoveEnrage")
@@ -79,7 +80,7 @@ local timerInfernoBreathCD			= mod:NewNextTimer(20, 154989)
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 
-local countdownPinDown				= mod:NewCountdown(20.5, 154960, "Ranged")
+local countdownPinDown				= mod:NewCountdown(19.7, 154960, "Ranged")
 local countdownCallPack				= mod:NewCountdown("Alt31", 154975, "Tank")
 local countdownEpicenter			= mod:NewCountdown("AltTwo20", 159043, "Melee")
 
@@ -132,7 +133,7 @@ local function updateBeastTimers(self, all, spellId, adjust)
 	end
 	if self.vb.RylakAbilities and (self:IsMythic() and spellId == 155459 or all) then--Dreadwing
 		timerSuperheatedShrapnelCD:Cancel()
-		timerSuperheatedShrapnelCD:Start(7.5-dismountAdjust)
+		timerSuperheatedShrapnelCD:Start(7.3-dismountAdjust)
 	end
 	if self.vb.ElekkAbilities and (self:IsMythic() and spellId == 163247 or all) then--Ironcrusher
 		timerTantrumCD:Cancel()
@@ -158,8 +159,8 @@ local function updateBeastTimers(self, all, spellId, adjust)
 				timerCallthePackCD:Start(17)
 				countdownCallPack:Start(17)
 			end
-			timerPinDownCD:Start(24)
-			countdownPinDown:Start(24)
+			timerPinDownCD:Start(23)
+			countdownPinDown:Start(23)
 		else--TODO, i need data on rylak with wolf (2) or rylak with elekk (2).
 			timerCallthePackCD:Cancel()--Just to not repeatedly see timer update before expires
 			timerPinDownCD:Cancel()--Just to not repeatedly see timer update before expires
@@ -247,7 +248,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnSavageHowl:Schedule(1.5, args.sourceName)
 		end
 		timerSavageHowlCD:Start()
-		voiceSavageHowl:Play("trannow")
+		voiceSavageHowl:Schedule(1.5, "trannow")
 	elseif spellId == 159043 or spellId == 159045 then--Beast version/Boss version
 		self.vb.epicenterCount = self.vb.epicenterCount + 1
 		if self:IsMelee() and self:AntiSpam(3, 2) then
@@ -361,8 +362,10 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnEpicenter:Show()
 	elseif spellId == 156824 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
 		specWarnInfernoPyre:Show()
-	elseif spellId == 155657 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
+	elseif spellId == 155657 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnFlameInfusion:Show()
+	elseif spellId == 156823 and destGUID == UnitGUID("player") and self:AntiSpam(2, 5) then
+		specWarnSuperheatedScrap:Show()
 	end
 end
 mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
@@ -449,9 +452,6 @@ function mod:UNIT_DIED(args)
 		elseif cid == 76874 then
 			timerConflagCD:Cancel()
 			timerInfernoBreathCD:Cancel()
-			if self.Options.HudMapOnBreath then
-				DBMHudMap:Disable()
-			end
 			self:BossTargetScannerAbort(76874, "BreathTarget")
 		elseif cid == 76945 then
 			timerStampedeCD:Cancel()
@@ -477,7 +477,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	elseif spellId == 155520 then--Beastlord Darmac Tantrum
 		self.vb.tantrumCount = self.vb.tantrumCount + 1
 		specWarnTantrum:Show(self.vb.tantrumCount)
-		timerTantrumCD:Start(34, self.vb.tantrumCount+1)--This one may also be 30 seconds, but I saw 34 consistently
+		timerTantrumCD:Start(33, self.vb.tantrumCount+1)--This one may also be 30 seconds, but I saw 33 consistently
 		voiceTantrum:Play("aesoon")
 	elseif spellId == 155603 then--Face Random Non-Tank (boss version)
 		specWarnSuperheatedShrapnel:Show()
@@ -495,6 +495,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnInfernoBreath:Show()
 		timerInfernoBreathCD:Start()
 		voiceInfernoBreath:Play("breathsoon")
-		self:BossTargetScanner(76874, "BreathTarget", 0.05, 80, nil, nil, false)
+		self:BossTargetScanner(76874, "BreathTarget", 0.05, 80)
 	end
 end

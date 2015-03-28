@@ -929,12 +929,15 @@ Filger_Spells = {
 			{spellID = 79683, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Pyroblast!
 			{spellID = 48108, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 戒指
+			{spellID = 177159, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 2T17 奥
 			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 4T17 火
 			{spellID = 166868, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 4T17 奥
 			{spellID = 166872, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- Trinkets
 			-- General
 			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
@@ -985,8 +988,10 @@ Filger_Spells = {
 			-- Caster General
 			-- Jade Spirit (Intellect + Spirit)
 			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 血环之印
 			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
-
+			-- 雷神之印
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
 			-- 橙色多彩
 			-- 阴险之源钻 (暴击, 急速)
 			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},

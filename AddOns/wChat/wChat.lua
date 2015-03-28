@@ -10,7 +10,7 @@ local tscol = "64C2F5"		-- Timestamp coloring
 local chatfadehide = false  --隐藏窗口标签
 local chatbackgroundhide = true  --隐藏窗口背景
 local flashtabfade = true  --隐藏聊天标签闪烁
-local uinoticetrue = false --插件信息提示?
+local uinoticetrue = true --信息提示
 local csounds = true --消息声音
 local altclickinvite = true  --alt+点击邀请
 local eboxbottom = false  --false:输入框在底部 true:输入框在顶部
@@ -421,7 +421,7 @@ if friendshide then
 else
 	FriendsMicroButton:SetAlpha(.6)
 	FriendsMicroButton:ClearAllPoints()
-	FriendsMicroButton:SetPoint('TOPRIGHT', ChatFrame1)
+	FriendsMicroButton:SetPoint('TOPRIGHT', ChatFrame1, 0, 30)
 	FriendsMicroButton:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 	FriendsMicroButton:SetScript('OnClick', function(self, button)
 		if button == 'RightButton' then

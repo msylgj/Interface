@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13280 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13434 $"):sub(12, -3))
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
@@ -12,20 +12,16 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 160140 163753 159481",
-	"SPELL_CAST_SUCCESS 155864",
-	"SPELL_AURA_APPLIED 155921 165195",
-	"SPELL_AURA_APPLIED_DOSE 155921",
+	"SPELL_CAST_SUCCESS 155864 159481",
+	"SPELL_AURA_APPLIED 155921 165195 164380 160140",
+	"SPELL_AURA_APPLIED_DOSE 155921 164380",
 	"SPELL_AURA_REFRESH 155921",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
---TODO, maybe range finder for when Man-at_arms is out (reckless Charge)
---TODO, train timers, as well as what mobs get off with each train.
---TODO, mythic "move out of fire" warnings and maybe cast warnings too
---TODO, add audio countdown for trains when the train timers are proven good and support whole fight.
 --Operator Thogar
-local warnProtoGrenade				= mod:NewSpellAnnounce(155864, 3)
+local warnProtoGrenade				= mod:NewTargetAnnounce(155864, 3)
 local warnEnkindle					= mod:NewStackAnnounce(155921, 2, nil, "Tank")
 local warnTrain						= mod:NewTargetCountAnnounce(176312, 4)
 --Adds
@@ -33,17 +29,21 @@ local warnDelayedSiegeBomb			= mod:NewTargetAnnounce(159481, 3)
 
 --Operator Thogar
 local specWarnProtoGrenade			= mod:NewSpecialWarningMove(165195, nil, nil, nil, nil, nil, 2)
+local specWarnProtoGrenadeNear		= mod:NewSpecialWarningClose(165195)
+local yellProtoGrenade				= mod:NewYell(165195)
 local specWarnEnkindle				= mod:NewSpecialWarningStack(155921, nil, 2)--Maybe need 3 for new cd?
 local specWarnEnkindleOther			= mod:NewSpecialWarningTaunt(155921)
 local specWarnTrain					= mod:NewSpecialWarningDodge(176312, nil, nil, nil, 3)
 local specWarnSplitSoon				= mod:NewSpecialWarning("specWarnSplitSoon")--TODO, maybe include types in the split?
 --Adds
 local specWarnCauterizingBolt		= mod:NewSpecialWarningInterrupt("OptionVersion2", 160140, "-Healer")
+local specWarnCauterizingBoltDispel	= mod:NewSpecialWarningDispel(160140, "MagicDispeller")
 local specWarnIronbellow			= mod:NewSpecialWarningSpell(163753, nil, nil, nil, 2)
-local specWarnDelayedSiegeBomb		= mod:NewSpecialWarningYou(159481)
-local yellDelayedSiegeBomb			= mod:NewYell(159481)
+local specWarnDelayedSiegeBomb		= mod:NewSpecialWarningYou(159481, nil, nil, nil, nil, nil, 2)
+local specWarnDelayedSiegeBombMove	= mod:NewSpecialWarningMove(159481)
+local yellDelayedSiegeBomb			= mod:NewCountYell(159481)
 local specWarnManOArms				= mod:NewSpecialWarningSwitch("ej9549", "-Healer")
---local specWarnObliteration		= mod:NewSpecialWarningMove(156494)--Debuff doesn't show in combat log, and dot persists after moving out of it so warning is pretty useless right now. TODO, see if UNIT_AURA player type check can work.
+local specWarnBurning				= mod:NewSpecialWarningStack(164380, nil, 2)--Mythic
 
 --Operator Thogar
 local timerProtoGrenadeCD			= mod:NewCDTimer(11, 155864)
@@ -52,21 +52,25 @@ local timerTrainCD					= mod:NewNextCountTimer("d15", 176312)
 --Adds
 --local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140)
 local timerIronbellowCD				= mod:NewCDTimer(8.5, 163753)
+local timerDelayedSiegeBomb			= mod:NewNextCountTimer(6, 159481)
 
 local berserkTimer					= mod:NewBerserkTimer(492)
 
-local countdownTrain				= mod:NewCountdown(5, 176312)
+local countdownTrain				= mod:NewCountdown(4.5, 176312)
 
 local voiceTrain					= mod:NewVoice(176312) --see mythicVoice{} otherVoice{} tables for more details
 local voiceProtoGrenade				= mod:NewVoice(165195) --runaway
+local voiceDelayedSiegeBomb			= mod:NewVoice(159481)
 
 mod:AddInfoFrameOption(176312)
 mod:AddSetIconOption("SetIconOnAdds", "ej9549", false, true)
+mod:AddHudMapOption("HudMapForTrain", 176312, false)
 mod:AddDropdownOption("InfoFrameSpeed", {"Immediately", "Delayed"}, "Delayed", "misc")
 
 mod.vb.trainCount = 0
 mod.vb.infoCount = 0
 local GetTime, UnitPosition = GetTime, UnitPosition
+local UnitDebuff = UnitDebuff
 local MovingTrain = GetSpellInfo(176312)
 local Train = GetSpellInfo(174806)
 local Cannon = GetSpellInfo(62357)
@@ -74,6 +78,7 @@ local Reinforcements = EJ_GetSectionInfo(9537)
 local ManOArms = EJ_GetSectionInfo(9549)
 local Deforester = EJ_GetSectionInfo(10329)
 local fakeYellTime = 0
+local bombFrom = nil
 
 --Note, all trains spawn 5 second after yell for that train
 --this means that for 5 second cd trains you may see a yell for NEXT train as previous train is showing up. Do not confuse this!
@@ -118,8 +123,6 @@ local mythicTrains = {
 	[36] = { [1] = Train, [2] = Train, [3] = Train, [4] = Train },--+15 after 35.(08:07)--berserk.
 }
 
---https://www.youtube.com/watch?v=yUgrmvksk7g
---https://www.youtube.com/watch?v=Gny-suQV8to
 local otherTrains = {
 	[1] = { [4] = Train },--+12 after pull (0:12)
 	[2] = { [2] = Train },--+10 after 1 (0:22)
@@ -423,6 +426,58 @@ local function updateInfoFrame()
 	return lines
 end
 
+--Work In Progress
+--Timing may need tweaks. more Moves need adding.
+--Positions based on https://www.youtube.com/watch?v=0QC7BOEv2iE
+local function showHud(self, train, center)
+	if self.Options.HudMapForTrain then
+		DBMHudMap:FreeEncounterMarkerByTarget(176312, "TrainHelper")--Clear any current icon, before showing next move
+		--Regular Lane movements
+		local specialPosition = self:IsMelee() and 3328 or 3300--Melee west, ranged east, unless center is passed then center
+		if train == 9 then--Move to Circle (1)
+			if center then
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "circle", 590, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			else
+				--East (where adds jump down, everyone goes west on this move)
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "circle", 590, 3300, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			end
+		elseif train == 8 or train == 11 or train == 19.25 or train == 32 then--Move to diamond (2)
+			if center then
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			else
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			end
+		elseif train == 1 or train == 7 or train == 15 or train == 21 or train == 23 or train == 26 or train == 28.5 then--Move to triangle (3)
+			if center then
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 544, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			else
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 542, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			end
+		elseif train == 20 or train == 22 then--Move to Moon (4)
+			if center then
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "moon", 517, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			else
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "moon", 517, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			end
+		--Special lane movements (usually corners)
+		elseif train == 2 or train == 28 then--Move to Cross (2 special corner)
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "cross", 566, 3277, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+		elseif train == 14 then--Move to skull (4 special corner)
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "skull", 517, 3353, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+		elseif train == 17 then--Ranged and melee go to different lanes to avoid fire in on melee/adds in diamond while ranged kill cannon at triangle
+			if self:IsMelee() then--Move to diamond for man at arms train
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, 3332, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			else--Move to triangle for Cannon
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 544, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			end
+		elseif train == 19 then-- (1 special corner)
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "square", 590, 3352, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+		elseif train == 19.5 then----Move to star, also during train count 19, but later
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "star", 590, 3272, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+		end
+	end
+end
+
 local function showInfoFrame(self)
 	if self.Options.InfoFrame then
 		self.vb.infoCount = self.vb.trainCount + 1
@@ -439,21 +494,48 @@ function mod:test(num)
 	showInfoFrame(self)
 end
 
-function mod:BombTarget(targetname, uId)
+function mod:BombTarget(targetname, uId, bossuId)
 	if not targetname then return end
 	warnDelayedSiegeBomb:CombinedShow(0.5, targetname)
 	if targetname == UnitName("player") then
 		specWarnDelayedSiegeBomb:Show()
-		yellDelayedSiegeBomb:Yell()
+		voiceDelayedSiegeBomb:Play("bombrun")
+		local _, _, _, _, startTime, endTime = UnitCastingInfo(bossuId)
+		local time = ((endTime or 0) - (startTime or 0)) / 1000
+		if time then
+			specWarnDelayedSiegeBombMove:Schedule(time - 0.5, 1)
+			timerDelayedSiegeBomb:Start(time, 1)
+		else
+			specWarnDelayedSiegeBombMove:Schedule(4.4, 1)
+			timerDelayedSiegeBomb:Start(4.9, 1)
+		end
+	end
+end
+
+function mod:GrenadeTarget(targetname, uId)
+	if not targetname then
+		warnProtoGrenade:Show(DBM_CORE_UNKNOWN)
+		return
+	end
+	if targetname == UnitName("player") then
+		yellProtoGrenade:Yell()
+		if self:AntiSpam(1.5, 5) then
+			specWarnProtoGrenade:Show()
+			voiceProtoGrenade:Play("runaway")
+		end
+	elseif self:CheckNearby(5, targetname) then
+		specWarnProtoGrenadeNear:Show(targetname)
+	else
+		warnProtoGrenade:Show(targetname)
 	end
 end
 
 function mod:OnCombatStart(delay)
 	fakeYellTime = 0
+	bombFrom = nil
 	self.vb.trainCount = 0
 	self.vb.infoCount = 0
 	timerProtoGrenadeCD:Start(6-delay)
-	timerEnkindleCD:Start(15-delay)
 	if not self.Options.ShowedThogarMessage then
 		DBM:AddMsg(L.helperMessage)
 		self.Options.ShowedThogarMessage = true
@@ -462,6 +544,7 @@ function mod:OnCombatStart(delay)
 		self:Schedule(9.5, fakeTrainYell, self)
 		timerTrainCD:Start(12-delay, 1)
 		berserkTimer:Start()
+		showHud(self, 1)
 	else
 		self:Schedule(14.5, fakeTrainYell, self)
 		timerTrainCD:Start(17-delay, 1)
@@ -478,8 +561,19 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 155864 and self:AntiSpam(2, 4) then
-		warnProtoGrenade:Show()
+		self:BossTargetScanner(76906, "GrenadeTarget", 0.02, 50, true, nil, nil, nil, true)
 		timerProtoGrenadeCD:Start()
+	elseif spellId == 159481 and args:IsPlayer() then
+		bombFrom = args.sourceGUID
+		voiceDelayedSiegeBomb:Play("keepmoving")
+		yellDelayedSiegeBomb:Yell(1)
+		specWarnDelayedSiegeBombMove:Show()
+		timerDelayedSiegeBomb:Start(3, 2)
+		yellDelayedSiegeBomb:Schedule(3, 2)
+		specWarnDelayedSiegeBombMove:Schedule(2.5)
+		timerDelayedSiegeBomb:Schedule(3, 3, 3)
+		yellDelayedSiegeBomb:Schedule(6, 3)
+		specWarnDelayedSiegeBombMove:Schedule(5.5)
 	end
 end
 
@@ -507,16 +601,27 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnEnkindle:Show(amount)
 			else--Taunt as soon as stacks are clear, regardless of stack count.
-				if not UnitDebuff("player", GetSpellInfo(155921)) and not UnitIsDeadOrGhost("player") then
+				local _, _, _, _, _, duration, expires = UnitDebuff("player", args.spellName)
+				local debuffTime = 0
+				if expires then
+					debuffTime = expires - GetTime()
+				end
+				if debuffTime < 12 and not UnitIsDeadOrGhost("player") then--No debuff, or debuff will expire before next cast.
 					specWarnEnkindleOther:Show(args.destName)
 				end
 			end
 		end
-	elseif spellId == 165195 and args:IsPlayer() then
+	elseif spellId == 165195 and args:IsPlayer() and self:AntiSpam(1.5, 5) then
 		specWarnProtoGrenade:Show()
 		voiceProtoGrenade:Play("runaway")
---[[	elseif spellId == 156494 and args:IsPlayer() and self:AntiSpam(3, 2) then
-		specWarnObliteration:Show()--]]
+	--Applied debuffs, not damage. Damage occurs for 15 seconds even when player moves out of it, but player gains stack of debuff every second standing in fire.
+	elseif spellId == 164380 and args:IsPlayer() and self:AntiSpam(2, 3) then
+		local amount = args.amount or 1
+		if amount >= 2 then
+			specWarnBurning:Show(amount)
+		end
+	elseif spellId == 160140 and (args:GetDestCreatureID() == 80791 or args:GetDestCreatureID() == 77487) then--Mender or Man at arms. Filter the rest
+		specWarnCauterizingBoltDispel:CombinedShow(0.3, args.destName)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -526,6 +631,11 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 80791 then
 		timerIronbellowCD:Cancel(args.destGUID)
+	elseif bombFrom and args.destGUID == bombFrom then
+		yellDelayedSiegeBomb:Cancel()
+		specWarnDelayedSiegeBombMove:Cancel()
+		timerDelayedSiegeBomb:Cancel()
+		timerDelayedSiegeBomb:Unschedule()
 	end
 end
 
@@ -533,13 +643,15 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 	local trainLimit = self:IsMythic() and 36 or 35
 	if target == L.Train and self.vb.trainCount <= trainLimit then
 		local adjusted = (GetTime() - fakeYellTime) < 2-- yell followed by fakeyell within 2 sec. this should realyell of scheduled fakeyell. so do not increase count and only do adjust.
+		local fakeAdjust = 0
 		self:Unschedule(fakeTrainYell)--Always unschedule
 		if not adjusted then--do not adjust visible warn to prevent confusing. (although fakeyell worked early, maximum 3.5 sec. this is no matter. only adjust scheduled things.)
 			self.vb.trainCount = self.vb.trainCount + 1
 			showTrainWarning(self)
 			if msg == "Fake" then
-				countdownTrain:Start(3.5)
+				countdownTrain:Start(3.0)
 				laneCheck(self)
+				fakeAdjust = 1.5
 			else
 				countdownTrain:Start()
 				self:Schedule(1.5, laneCheck, self)
@@ -554,22 +666,56 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 			end
 			if count == 1 or count == 2 or count == 11 or count == 12 or count == 13 or count == 25 or count == 26 or count == 31 then
 				expectedTime = 5
-			elseif count == 6 or count == 14 or count == 22 or count == 30 or count == 32 then
+				if count == 11 or count == 26 then
+					showHud(self, count)
+				elseif count == 2 then
+					self:Schedule(14-fakeAdjust, showHud, self, count)
+				end
+			elseif count == 6 or count == 14 or count == 22 or count == 30 or count == 32 or count == 34 then
 				expectedTime = 10
-			elseif count == 3 or count == 5 or count == 7 or count == 8 or count == 16 or count == 17 or count == 20 or count == 23 or count == 24 or count == 29 or count == 33 or count == 34 then
+				if count == 14 then
+					self:Schedule(10-fakeAdjust, showHud, self, count)
+				elseif count == 22 then
+					self:Schedule(8-fakeAdjust, showHud, self, count)
+				elseif count == 30 then
+					showHud(self, count)
+				elseif count == 32 then
+					self:Schedule(4-fakeAdjust, showHud, self, count)
+				end
+			elseif count == 3 or count == 5 or count == 7 or count == 8 or count == 16 or count == 17 or count == 20 or count == 23 or count == 24 or count == 29 or count == 33 then
 				expectedTime = 15
-				if count == 20 then
+				if count == 7 then
+					showHud(self, count)
+				elseif count == 8 then
+					self:Schedule(12-fakeAdjust, showHud, self, count)
+				elseif count == 17 or count == 23 then
+					self:Schedule(10-fakeAdjust, showHud, self, count)
+				elseif count == 20 then
 					specWarnSplitSoon:Cancel()
-					specWarnSplitSoon:Schedule(5)
+					specWarnSplitSoon:Schedule(5-fakeAdjust)
+					self:Schedule(8, showHud, self, count)
 				end
 			elseif count == 4 or count == 15 or count == 18 or count == 19  or count == 21 or count == 27 or count == 28 then
 				expectedTime = 20
+				if count == 15 then
+					self:Schedule(12-fakeAdjust, showHud, self, count)
+				elseif count == 19 then
+					showHud(self, count)
+					self:Schedule(12, showHud, self, 19.25, true)--Group up center for deforester movement, after square.
+					self:Schedule(20, showHud, self, 19.5)
+				elseif count == 21 then
+					self:Schedule(17, showHud, self, count)
+				elseif count == 28 then
+					showHud(self, count)
+					self:Schedule(19, showHud, self, 28.5)
+				end
 			elseif count == 10 then
 				expectedTime = 25
 			elseif count == 9 then
 				expectedTime = 35
 				specWarnSplitSoon:Cancel()
 				specWarnSplitSoon:Schedule(25)--10 is a split, pre warn 10 seconds before 10
+				self:Schedule(30-fakeAdjust, showHud, self, count)--hud marker 5 seconds before split. later you move the better the bomb placements.
 			end
 			if expectedTime then
 				if msg == "Fake" then

@@ -29,6 +29,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnRegulators		= "Announce how many Heat Regulator remain",
 	warnBlastFrequency	= "Announce when $spell:155209 frequency increased",
+	InfoFrame			= "Show info frame for $spell:155192 and $spell:155196",
 	VFYellType			= "Set yell type for Volatile Fire (Mythic difficulty only)",
 	Countdown			= "Countdown until expires",
 	Apply				= "Only applied"
@@ -62,7 +63,7 @@ L= DBM:GetModLocalization(1123)
 L= DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "ExRT rune position assignent received. Your position: %s"
+	ExRTNotice		= "%s sent ExRT rune position assignents. Your position: %s"
 })
 
 --------------------------
@@ -102,11 +103,13 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(1203)
 
 L:SetWarningLocalization({
-	specWarnReturnBase	= "Return to dock NOW!"
+	specWarnReturnBase	= "Return to dock!"
 })
 
 L:SetOptionLocalization({
-	specWarnReturnBase	= "Show special warning when boat player can safely return to dock"
+	specWarnReturnBase	= "Show special warning when boat player can safely return to dock",
+	filterBladeDash3	= "Do not show special warning for $spell:155794 when affected by $spell:170395",
+	filterBloodRitual3	= "Do not show special warning for $spell:158078 when affected by $spell:170405"
 })
 
 L:SetMiscLocalization({
@@ -117,6 +120,19 @@ L:SetMiscLocalization({
 -- Blackhand --
 --------------------------
 L= DBM:GetModLocalization(959)
+
+L:SetWarningLocalization({
+	specWarnMFDPosition		= "Marked Position: %s",
+	specWarnSlagPosition	= "Bomb Position: %s"
+})
+
+L:SetMiscLocalization({
+	customMFDSay	= "Marked %s on %s",
+	customSlagSay	= "Bomb %s on %s",
+	left			= "left",
+	middle			= "middle",
+	right			= "right"
+})
 
 -------------
 --  Trash  --

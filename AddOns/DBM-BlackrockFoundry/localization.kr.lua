@@ -30,6 +30,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnRegulators		= "열기 조절 장치 남은숫자 알림 보기",
 	warnBlastFrequency	= "$spell:155209 시전 빈도 증가시 알림 보기",
+	InfoFrame			= "$spell:155192 와 $spell:155196 정보를 정보 창으로 보기",
 	VFYellType			= "변덕스러운 불 대화 알림 방식 선택(신화 난이도)",
 	Countdown			= "남은시간 초세기",
 	Apply				= "받을때만 알리기"
@@ -63,7 +64,7 @@ L= DBM:GetModLocalization(1123)
 L= DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "ExRT 애드온으로 부터 위치 받음. 당신의 위치: %s"
+	ExRTNotice		= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치: %s"
 })
 
 --------------------------
@@ -110,7 +111,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnReturnBase	= "무쌍호에서 안전하게 본진으로 복귀할 수 있을때 특수 경고 보기"
+	specWarnReturnBase	= "무쌍호에서 안전하게 본진으로 복귀할 수 있을때 특수 경고 보기",
+	filterBladeDash3	= "$spell:170395 효과가 있을 경우 $spell:155794 특수 경고를 보이지 않기",
+	filterBloodRitual3	= "$spell:170405 효과가 있을 경우 $spell:158078 특수 경고를 보이지 않기"
 })
 
 L:SetMiscLocalization({
@@ -121,6 +124,19 @@ L:SetMiscLocalization({
 -- Blackhand --
 --------------------------
 L= DBM:GetModLocalization(959)
+
+L:SetWarningLocalization({
+	specWarnMFDPosition		= "표적 피할 위치: %s",
+	specWarnSlagPosition	= "폭탄 피할 위치: %s"
+})
+
+L:SetMiscLocalization({
+	customMFDSay	= "%2$s에게 죽음의 표적! (%1$s)",
+	customSlagSay	= "%2$s에게 잿가루 폭탄 부착! (%1$s)",
+	left			= "왼쪽",
+	middle			= "가운데",
+	right			= "오른쪽"
+})
 
 -------------
 --  Trash  --

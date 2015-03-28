@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13278 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13422 $"):sub(12, -3))
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetZone()
@@ -11,7 +11,7 @@ mod:SetHotfixNoticeRev(13129)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 160379 155186 156937 177756",
+	"SPELL_CAST_START 155186 156937 177756",
 	"SPELL_CAST_SUCCESS 155179 174726",
 	"SPELL_AURA_APPLIED 155192 174716 155196 158345 155242 155181 176121 155225 156934 155173",
 	"SPELL_AURA_APPLIED_DOSE 155242",
@@ -33,7 +33,7 @@ local warnPhase2				= mod:NewPhaseAnnounce(2)
 local warnElementalists			= mod:NewAddsLeftAnnounce("ej9655", 2, 91751)
 local warnFixate				= mod:NewTargetAnnounce(155196, 4)
 local warnVolatileFire			= mod:NewTargetAnnounce("OptionVersion2", 176121, 4, nil, false)--Spam. disable by default.
-local warnFireCaller			= mod:NewSpellAnnounce("ej9659", 3, 156937, "Tank")
+local warnFireCaller			= mod:NewCountAnnounce("ej9659", 3, 156937, "Tank")
 local warnSecurityGuard			= mod:NewSpellAnnounce("ej9648", 2, 160379, "Tank")
 --Phase 3
 local warnPhase3				= mod:NewPhaseAnnounce(3)
@@ -43,7 +43,6 @@ local warnHeat					= mod:NewStackAnnounce(155242, 2, nil, "Tank")
 local specWarnBomb				= mod:NewSpecialWarningMoveTo(155192, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(155192), nil, 3, nil, 2)
 local specWarnBellowsOperator	= mod:NewSpecialWarningSwitch("OptionVersion2", "ej9650", "-Healer", nil, nil, nil, nil, 2)
 local specWarnDeafeningRoar		= mod:NewSpecialWarningDodge("OptionVersion2", 177756, "Tank", nil, nil, 3)
-local specWarnDefense			= mod:NewSpecialWarningMove("OptionVersion2", 160379, false, nil, nil, nil, nil, true)--Doesn't work until 6.1. The CAST event doesn't exixst in 6.0
 local specWarnRepair			= mod:NewSpecialWarningInterrupt(155179, "-Healer", nil, nil, nil, nil, 2)
 local specWarnRuptureOn			= mod:NewSpecialWarningYou(156932)
 local specWarnRupture			= mod:NewSpecialWarningMove(156932, nil, nil, nil, nil, nil, 2)
@@ -54,7 +53,7 @@ local specWarnMeltYou			= mod:NewSpecialWarningYou(155225)
 local specWarnMeltNear			= mod:NewSpecialWarningClose(155225, false)
 local specWarnMelt				= mod:NewSpecialWarningMove(155223, nil, nil, nil, nil, nil, 2)
 local yellMelt					= mod:NewYell(155223)
-local specWarnCauterizeWounds	= mod:NewSpecialWarningInterrupt(155186, "-Healer")--if spammy, will switch to target/focus type only
+local specWarnCauterizeWounds	= mod:NewSpecialWarningInterrupt(155186, "-Healer")
 local specWarnPyroclasm			= mod:NewSpecialWarningInterrupt(156937, false)
 local specVolatileFire			= mod:NewSpecialWarningMoveAway(176121)
 local yellVolatileFire			= mod:NewYell(176121)
@@ -94,7 +93,6 @@ local countdownVolatileFire		= mod:NewCountdownFades(8, 176121)
 local voicePhaseChange			= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceRepair				= mod:NewVoice(155179, "-Healer") --int
 local voiceBomb 				= mod:NewVoice(155192) --bombyou.ogg, bomb on you
-local voiceDefense 				= mod:NewVoice("OptionVersion2", 160379, false) --taunt mobout
 local voiceBellowsOperator 		= mod:NewVoice("ej9650", "-Healer")
 local voiceRupture				= mod:NewVoice(156932) --runaway
 local voiceMelt					= mod:NewVoice(155223) --runaway
@@ -106,6 +104,7 @@ local voiceFireCaller			= mod:NewVoice("ej9659", "Tank")
 local voiceSecurityGuard		= mod:NewVoice("ej9648", "Tank")
 
 mod:AddRangeFrameOption(8)
+mod:AddBoolOption("InfoFrame")
 mod:AddSetIconOption("SetIconOnFixate", 155196, false)
 mod:AddHudMapOption("HudMapOnBomb", 155192, false)
 mod:AddDropdownOption("VFYellType", {"Countdown", "Apply"}, "Countdown", "misc")
@@ -117,13 +116,14 @@ mod.vb.shieldDown = 0
 mod.vb.lastTotal = 29
 mod.vb.phase = 1
 mod.vb.slagCount = 0
+mod.vb.fireCaller = 0
 mod.vb.lastSlagIcon = 0
 mod.vb.secondSlagSpawned = false
 local activeSlagGUIDS = {}
 local activePrimalGUIDS = {}
 local activePrimal = 0 -- health report variable. no sync
 local prevHealth = 100
-local yellVolatileFire2
+local yellVolatileFire2 = mod:NewFadesYell(176121, nil, true, false)
 local UnitDebuff = UnitDebuff
 
 local BombFilter, VolatileFilter
@@ -166,9 +166,10 @@ local function SecurityGuard(self)
 end
 
 local function FireCaller(self)
-	warnFireCaller:Show()
+	self.vb.fireCaller = self.vb.fireCaller + 1
+	warnFireCaller:Show(self.vb.fireCaller)
 	voiceFireCaller:Play("ej9659")
-	timerFireCaller:Start(45)
+	timerFireCaller:Start(45, self.vb.fireCaller+1)
 	self:Schedule(45, FireCaller, self)
 end
 
@@ -236,6 +237,7 @@ function mod:OnCombatStart(delay)
 	self.vb.shieldDown = 0
 	self.vb.phase = 1
 	self.vb.slagCount = 0
+	self.vb.fireCaller = 0
 	self.vb.lastSlagIcon = 0
 	local firstTimer = self:IsMythic() and 40 or self:IsHeroic() and 55.5 or 60
 	if self:AntiSpam(10, 0) then--Need to ignore loading on the pull
@@ -282,6 +284,9 @@ function mod:OnCombatEnd()
 	if self.Options.HudMapOnBomb then
 		DBMHudMap:Disable()
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 	self:UnregisterShortTermEvents()
 end
 
@@ -293,9 +298,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnPyroclasm:Show(args.sourceName)
 	elseif spellId == 177756 and self:CheckTankDistance(args.sourceGUID, 40) and self:AntiSpam(3.5, 7) then
 		specWarnDeafeningRoar:Show()
-	elseif spellId == 160379 and self:CheckTankDistance(args.sourceGUID, 40) then--Requires 6.1. The events on live don't work for this
-		specWarnDefense:Show()
-		voiceDefense:Play("mobout")
 	end
 end
 
@@ -313,7 +315,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if args:IsSpellID(155192, 174716) then
 		local uId = DBM:GetRaidUnitId(args.destName)
-		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff(uId, args.spellName)
+		local _, _, _, _, _, duration, expires = UnitDebuff(uId, args.spellName)
 		local debuffTime = expires - GetTime()
 		if self:CheckTankDistance(args.sourceGUID, 40) and self.vb.phase == 1 then--Filter Works very poorly, probably because mob not a BOSS id. usually see ALL warnings and all HUDs :\
 			warnBomb:CombinedShow(1, args.destName)
@@ -334,6 +336,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.RangeFrame and not UnitDebuff("player", args.spellName) then
 			DBM.RangeCheck:Show(8, BombFilter, nil, nil, nil, debuffTime + 0.5)
 		end
+		if self.vb.phase == 1 and self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(5, "playerbaddebuff", 155192)
+		end
 	elseif spellId == 155196 then
 		if not activeSlagGUIDS[args.sourceGUID] then
 			activeSlagGUIDS[args.sourceGUID] = true
@@ -351,20 +357,28 @@ function mod:SPELL_AURA_APPLIED(args)
 				self:Schedule(40, checkSecondSlag, self)
 			elseif self.vb.slagCount == 2 then
 				self.vb.secondSlagSpawned = true
+			else
+				timerSlagElemental:Start(nil, self.vb.slagCount+1)
 			end
 			voiceSlagElemental:Play("ej9657")
 		end
-		warnFixate:CombinedShow(1, args.destName)
-		if args:IsPlayer() then
-			specWarnFixate:Show()
-		end
-		--Update icon number even if option not enabled, so recoveryable in case person with option DCs
-		if self.vb.lastSlagIcon == 6 then--1-6 should be more than enough before reset. Do not want to use skull or x since probably set on kill targets
-			self.vb.lastSlagIcon = 0
-		end
-		self.vb.lastSlagIcon = self.vb.lastSlagIcon + 1
-		if self.Options.SetIconOnFixate then
-			self:SetIcon(args.destName, self.vb.lastSlagIcon)
+		if self.vb.phase == 2 then
+			warnFixate:CombinedShow(0.5, args.destName)
+			if args:IsPlayer() then
+				specWarnFixate:Show()
+			end
+			--Update icon number even if option not enabled, so recoveryable in case person with option DCs
+			if self.vb.lastSlagIcon == 6 then--1-6 should be more than enough before reset. Do not want to use skull or x since probably set on kill targets
+				self.vb.lastSlagIcon = 0
+			end
+			self.vb.lastSlagIcon = self.vb.lastSlagIcon + 1
+			if self.Options.SetIconOnFixate then
+				self:SetIcon(args.destName, self.vb.lastSlagIcon)
+			end
+			if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:SetHeader(args.spellName)
+				DBM.InfoFrame:Show(5, "playerbaddebuff", 155196)
+			end
 		end
 	elseif spellId == 158345 and self:AntiSpam(10, 3) then--Might be SPELL_CAST_SUCCESS instead.
 		self.vb.shieldDown = self.vb.shieldDown + 1
@@ -504,6 +518,9 @@ function mod:UNIT_DIED(args)
 				DBM.BossHealth:Clear()
 				DBM.BossHealth:AddBoss(76806)
 			end
+			if self.Options.InfoFrame then
+				DBM.InfoFrame:Hide()
+			end
 		end
 	elseif cid == 76808 then--Regulators
 		self.vb.machinesDead = self.vb.machinesDead + 1
@@ -536,6 +553,9 @@ function mod:UNIT_DIED(args)
 			)
 			if self.Options.HudMapOnBomb then
 				DBMHudMap:Disable()
+			end
+			if self.Options.InfoFrame then
+				DBM.InfoFrame:Hide()
 			end
 		else--Only announce 1 remaining. 0 remaining not needed, because have phase2 warn. double warn no good
 			warnRegulators:Show(2 - self.vb.machinesDead)
@@ -590,9 +610,11 @@ do
 			end
 		else
 			local bossPower = UnitPower("boss1") --Get Boss Power
-			if bossPower >= 85 and not self.vb.blastWarned and totalTime > 10 then
+			if bossPower >= 85 and not self.vb.blastWarned then
 				self.vb.blastWarned = true
-				specWarnBlast:Show()
+				if totalTime > 10 then
+					specWarnBlast:Show()
+				end
 			elseif bossPower < 5 and self.vb.blastWarned then--Should catch 0, if not, at least 1-4 will fire it but then timer may be a second or so off
 				self.vb.blastWarned = false
 				timerBlastCD:Start(totalTime)

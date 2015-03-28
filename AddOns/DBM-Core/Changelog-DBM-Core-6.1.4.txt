@@ -1,0 +1,28 @@
+tag 6.1.4
+3a832016da7c96a419be4d90bb4acda83c3afbe5
+subversion <svn@deadlybossmods.com>
+2015-03-26 10:16:44 +0100
+
+Tagging as 6.1.4
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.1.4
+	- nbluewiz via svn r13435: # correct blackhand yell fix.
+	- Omega via svn r13434: adjust some thogar coords, fix split triangle movements and combined them into one. Split ranged and melee to greatly improve pulse grenade drops. It?\226?\128?\153s common strat to split into two clumps, so make the hud be smart about this. It?\226?\128?\153s most common for ranged east and melee west. Unless specific move requires moving as unison to center for something such as a deforester.
+	- Omega via svn r13433: Well, except when tweak makes it worse, fix tweak
+	- Omega via svn r13432: Tweak, not taking any changes
+	- Omega via svn r13431: Bump rev for that too
+	- Omega via svn r13430: And fix a lua error in Iron Maidens. No matter how many checks I do before a tag, always more stuff missed.
+	- Omega via svn r13429: Bump HFRevision
+	- Omega via svn r13428: Improvements to Thogar helper. Icons slightly larger. Icons remain longer now, but auto hide when new icon is called. Fix some missing moves
+	- Omega via svn r13427: Fix some serious blackhand yell bugs Fix bug with darmac calling hide on hud when that?\226?\128?\153s no longer needed, all this does is breaks custom hud during fights.
+	- Omega via svn r13426: Prevent sending excessive timer requests when more than one mod is loaded in a short period of time, or when reloading ui inside an instance (cause player entering world also has 3 requests). I saw dbm send 9 timer requests on a reload inside a zone that had two mods. now it?\226?\128?\153ll only send 3
+	- Omega via svn r13425: speed up firestorm warning on Kragraz
+	- ebmor via svn r13424: deDE update
+	- Omega via svn r13423: *Count firestorms on Flamebender *Don?\226?\128?\153t show molten torrent target warning if you are the target on Flamebender *Count Trembling Earth on Kromog
+	- Omega via svn r13422: *Remove useless not working warning from Blast Furnace. Although that cast was visible on ptr, it didn?\226?\128?\153t make it to live. *tweak breath warnings on darmac to be dodge warnings *Count jumps on Hansgar #Iron Maidens Update *Fixed bug where icons wouldn?\226?\128?\153t work if icon setter went to a boat. *Made rapid fire, penetrating shot, convulsive shadows, dark hunt, bloadsoaked heartseeker all count warnings/timers *Removed savedabilities table, forgot to kill that in last update. *Added new optional special warning for penetrating shot on other, something paladins want for hand of protection strat.
+	- nbluewiz via svn r13421: # koKR update.
+	- tandanu via svn r13420: increment version number for alpha builds

@@ -222,7 +222,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Достижение"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target 		= "%s на |3-5(>%%s<)"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) на |3-5(>%%s<)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) на |3-5(>%%s<)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell 			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends			= "%s заканчивается"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget		= "%s заканчивается: >%%s<"
@@ -233,7 +233,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon 			= "Скоро %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn 		= "%s через %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase 			= "Фаза %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase 		= "Скоро фаза %s"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count 			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count 			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack 			= "%s на |3-5(>%%s<) (%%d)"
 
 local prewarnOption = "Предупреждать заранее о $spell:%s"

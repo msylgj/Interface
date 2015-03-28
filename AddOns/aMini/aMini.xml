@@ -14,7 +14,6 @@
 	<Script file="Focuser.lua"/>
 	<Script file="Foglight.lua"/>
 	<Script file="InspectFix.lua"/>
-	<Script file="idQuestAutomation.lua"/>
 	<Script file="JewelTips.lua"/>
 	<Script file="m_Settings.lua"/>
 	<Script file="MissionHush.lua"/>

@@ -1,0 +1,24 @@
+## Interface: 60100
+## Title: Enhanced Chat Filter MOD
+## Notes: 基于黑名单的聊天过滤器，包含了密语过滤.
+## Version: 1.60.01.26
+## SavedVariables: ecfDB
+## OptionalDeps: LibStub
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+#@end-no-lib-strip@
+
+## UTF-8字符串处理模块
+libs\utf8.lua
+## 主过滤模块
+EnhancedChatFilter.lua

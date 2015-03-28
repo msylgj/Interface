@@ -1,6 +1,6 @@
 ﻿-- Mini Dragon(projecteurs@gmail.com)
 -- Yike Xia
--- Last update: Mar 5, 2015@13217
+-- Last update: Mar 22, 2015@13396
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -58,6 +58,13 @@ L= DBM:GetModLocalization(1123)
 --------------------
 L= DBM:GetModLocalization(1162)
 
+L:SetMiscLocalization({
+	ExRTNotice		= "%s 向你指派了ExRT的符文的站立位置。你的位置: %s"
+ })
+
+
+
+
 --------------------------
 -- Beastlord Darmac --
 --------------------------
@@ -74,9 +81,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnSplitSoon	= "特殊警报：当团队需要在10秒后分轨时",
-	InfoFrameSpeed		= "Set when InfoFrame shows next train information",
-	Immediately			= "As soon as doors open for current train",
-	Delayed				= "After current train has come out" 
+	InfoFrameSpeed		= "设置显示下一班列车信息窗的时间",
+	Immediately			= "当门打开时",
+	Delayed				= "当列车出现时" 
 })
 
 L:SetMiscLocalization({
@@ -98,7 +105,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnReturnBase	= "特殊警报：当上船的玩家可以安全地返回码头时"
+	specWarnReturnBase	= "特殊警报：当上船的玩家可以安全地返回码头时",
+	filterBladeDash3	= "当受到$spell:170395的影响时不显示$spell:155794的特殊警报",
+	filterBloodRitual3	= "当受到$spell:170405的影响时不显示$spell:158078的特殊警报"
 })
 
 L:SetMiscLocalization({
@@ -109,6 +118,19 @@ L:SetMiscLocalization({
 -- Blackhand --
 --------------------------
 L= DBM:GetModLocalization(959)
+
+L:SetWarningLocalization({
+	specWarnMFDPosition		= "死亡标记站位：%s",
+	specWarnSlagPosition	= "炉渣炸弹站位：%s"
+})
+
+L:SetMiscLocalization({
+	customMFDSay	= "%2$s 中了 死亡标记(%1$s)!",
+	customSlagSay	= "%2$s 中了 炉渣炸弹(%1$s)!",
+	left			= "左",
+	middle			= "中",
+	right			= "右"
+})
 
 -------------
 --  Trash  --

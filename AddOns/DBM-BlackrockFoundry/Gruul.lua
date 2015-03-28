@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13252 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13382 $"):sub(12, -3))
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 mod:SetZone()
@@ -84,6 +84,9 @@ local mythicSoakOrder3Group = {
 	[7] = 1,
 	[8] = 2,
 	[9] = 3,
+	[10] = 1,
+	[11] = 2,
+	[12] = 3,
 }
 local mythicSoakOrder2Group = {
 	[1] = 1,
@@ -95,6 +98,9 @@ local mythicSoakOrder2Group = {
 	[7] = 2,
 	[8] = 2,
 	[9] = 1,
+	[10] = 1,
+	[11] = 2,
+	[12] = 2,
 }
 --Normal/heroic always best strat is 2 groups 1 stack each, repeating.
 local otherSoakOrder = {
@@ -155,25 +161,37 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 155080 then--Inferno Slice Cast Start
 		self.vb.sliceCount = self.vb.sliceCount + 1
-		if self.Options.SpecWarn155080count then--if special warning is enabled, do not show regular warning.
-			if self:IsMythic() then
-				if self.Options.MythicSoakBehavior == "ThreeGroup" then
-					specWarnInfernoSlice:Show(self.vb.sliceCount.."-"..mythicSoakOrder3Group[self.vb.sliceCount])
-				else
-					specWarnInfernoSlice:Show(self.vb.sliceCount.."-"..mythicSoakOrder2Group[self.vb.sliceCount])
-				end
-			else
-				specWarnInfernoSlice:Show(self.vb.sliceCount.."-"..otherSoakOrder[self.vb.sliceCount])
-			end
-		else
-			warnInfernoSlice:Show(self.vb.sliceCount)
-		end
 		if not self:IsMythic() then
 			timerInfernoSliceCD:Start(17, self.vb.sliceCount+1)
 			countdownInfernoSlice:Start(17)
+			if self.Options.SpecWarn155080count then
+				specWarnInfernoSlice:Show(self.vb.sliceCount.."-"..otherSoakOrder[self.vb.sliceCount])
+			else
+				warnInfernoSlice:Show(self.vb.sliceCount.."-"..otherSoakOrder[self.vb.sliceCount])
+			end
 		else
 			timerInfernoSliceCD:Start(nil, self.vb.sliceCount+1)
 			countdownInfernoSlice:Start()
+			local countFormat = self.vb.sliceCount
+			if self.Options.MythicSoakBehavior == "ThreeGroup" then
+				if mythicSoakOrder3Group[self.vb.sliceCount] then
+					countFormat = self.vb.sliceCount.."-"..mythicSoakOrder3Group[self.vb.sliceCount]
+				end
+				if self.Options.SpecWarn155080count then
+					specWarnInfernoSlice:Show(countFormat)
+				else
+					warnInfernoSlice:Show(countFormat)
+				end
+			else
+				if mythicSoakOrder2Group[self.vb.sliceCount] then
+					countFormat = self.vb.sliceCount.."-"..mythicSoakOrder2Group[self.vb.sliceCount]
+				end
+				if self.Options.SpecWarn155080count then
+					specWarnInfernoSlice:Show(countFormat)
+				else
+					warnInfernoSlice:Show(countFormat)
+				end
+			end
 		end
 		if not UnitDebuff("player", GetSpellInfo(155323)) then
 			voiceInfernoSlice:Play("gathershare")

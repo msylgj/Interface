@@ -159,7 +159,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Victoire rapide"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target		= "%s sur >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) sur >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) sur >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell		= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends		= "%s s'est terminé"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget	= "%s s'est terminé: >%%s<"
@@ -170,7 +170,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon		= "%s imminent"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarna	= "%s de %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase		= "Phase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase	= "Phase %s imminente"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack		= "%s sur >%%s< (%%d)"
 
 local prewarnOption = "Alerte préventive concernant $spell:%s"

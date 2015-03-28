@@ -14,6 +14,7 @@ core[2] = {} -- C, constants/config
 Aurora = core
 
 AuroraConfig = {}
+
 local F, C = unpack(select(2, ...))
 
 -- [[ Constants and settings ]]
@@ -46,8 +47,9 @@ C.media = {
 
 C.defaults = {
 	["acknowledgedSplashScreen"] = false,
+
 	["alpha"] = 0.5,
-	["bags"] = false,
+	["bags"] = true,
 	["buttonGradientColour"] = {.3, .3, .3, .3},
 	["buttonSolidColour"] = {.2, .2, .2, 1},
 	["useButtonGradientColour"] = true,

@@ -89,25 +89,26 @@ elseif gl == "zhTW" then
 		["cBniv_NewItems"]		= "新增",
 	}
 elseif gl == "zhCN" then
-	cBnivL.Search = "Search.."
+	cBnivL.Search = "搜索.."
 	cBnivL.Armor = "护甲"
 	cBnivL.Weapon = "武器"
 	cBnivL.Gem = "珠宝"
 	cBnivL.Trades = "商品"
 	cBnivL.Consumables = "消耗品"
 	cBnivL.Quest = "任务"
+	cBnivL.Hint = "Ctrl+Alt+右键点击设置物品类型"
 	cBnivL.MarkAsNew = "Mark as New"
 	cBnivL.MarkAsKnown = "Mark as Known"
 	cBnivL.bagCaptions = {
 		["cBniv_Bank"]			= "银行",
-		["cBniv_BankReagent"]	= "Reagents",
+		["cBniv_BankReagent"]	= "材料银行",
 		["cBniv_BankSets"]		= "套装",
 		["cBniv_BankArmor"]		= "装备",
 		["cBniv_BankQuest"]		= "任务物品",
 		["cBniv_BankTrade"]		= "商品",
 		["cBniv_BankCons"]		= "消耗品",
 		["cBniv_Stuff"]			= "施法材料",
-		["cBniv_Junk"]			= "Junk",
+		["cBniv_Junk"]			= "垃圾",
 		["cBniv_ItemSets"]		= "套装",
 		["cBniv_Armor"]			= "装备",
 		["cBniv_Quest"]			= "任务物品",
@@ -241,6 +242,7 @@ else
 	cBnivL.Trades = "Trade Goods"
 	cBnivL.Consumables = "Consumable"
 	cBnivL.Quest = "Quest"
+	cBnivL.Hint = "Ctrl+Alt+Right Click item to assign category"
 	cBnivL.MarkAsNew = "Mark as New"
 	cBnivL.MarkAsKnown = "Mark as Known"
 	cBnivL.bagCaptions = {

@@ -41,11 +41,6 @@ pu:SetTexCoord(0.001953125,0.08398438,0.359375,0.4414063)
 hi:SetTexCoord(0.6152344,0.6972656,0.359375,0.4414063)
 hi:SetBlendMode("ADD")
 
---the button will spawn if a vehicle exists, but no vehicle ui is in place (the vehicle ui has its own exit button)
---RegisterStateDriver(button, "visibility", "[petbattle] hide; [overridebar][vehicleui][possessbar][@vehicle,exists] show; hide")
---frame is visibile when no vehicle ui is visible
---RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
-
 hooksecurefunc("MainMenuBarVehicleLeaveButton_Update", function()
 	if CanExitVehicle() then
 		if UnitOnTaxi("player") then

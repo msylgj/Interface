@@ -53,9 +53,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 13295 $"):sub(12, -3)),
-	DisplayVersion = "6.1.2", -- the string that is shown as version
-	ReleaseRevision = 13295 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 13435 $"):sub(12, -3)),
+	DisplayVersion = "6.1.4", -- the string that is shown as version
+	ReleaseRevision = 13435 -- the revision of the latest stable version that is available
 }
 
 -- support for git svn which doesn't support svn keyword expansion
@@ -234,8 +234,8 @@ DBM.DefaultOptions = {
 	PGMessageShown = false,
 	MCMessageShown = false,
 	AlwaysShowSpeedKillTimer = true,
-	CRT_Enabled = true,
-	HelpMessageShown3 = false,
+	CRT_Enabled = false,
+	HelpMessageShown3 = true,
 	BugMessageShown = 1,
 	MoviesSeen = {},
 	MovieFilter = "AfterFirst",
@@ -346,7 +346,7 @@ local iconSetRevision = {}
 local iconSetPerson = {}
 local addsGUIDs = {}
 
-local fakeBWRevision = 12950
+local fakeBWRevision = 12989
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 local guiRequested = false
@@ -1311,6 +1311,24 @@ do
 		end
 	end
 	
+	
+	local wrappers = {}
+	local function range(max, cur, ...)
+		cur = cur or 1
+		if cur > max then
+			return ...
+		end
+		return cur, range(max, cur + 1, select(2, ...))
+	end
+	local function getWrapper(n)
+		wrappers[n] = wrappers[n] or loadstring(([[
+			return function(func, tbl)
+				return func(]] .. ("tbl[%s], "):rep(n):sub(0, -3) .. [[)
+			end
+		]]):format(range(n)))()
+		return wrappers[n]
+	end
+
 	local nextModSyncSpamUpdate = 0
 	mainFrame:SetScript("OnUpdate", function(self, elapsed)
 		local time = GetTime()
@@ -1319,7 +1337,15 @@ do
 		local nextTask = getMin()
 		while nextTask and nextTask.func and nextTask.time <= time do
 			deleteMin()
-			nextTask.func(unpack(nextTask))
+			local n = nextTask.n
+			if n == #nextTask then
+				nextTask.func(unpack(nextTask))
+			else
+				-- too many nil values (or a trailing nil)
+				-- this is bad because unpack will not work properly
+				-- TODO: is there a better solution?
+				getWrapper(n)(nextTask.func, nextTask)
+			end
 			pushCachedTable(nextTask)
 			nextTask = getMin()
 		end
@@ -1358,11 +1384,16 @@ do
 			v.time = GetTime() + t
 			v.func = f
 			v.mod = mod
-			for i = 1, select("#", ...) do
+			v.n = select("#", ...)
+			for i = 1, v.n do
 				v[i] = select(i, ...)
 			end
+			-- clear slots if necessary
+			for i = v.n + 1, 4 do
+				v[i] = nil
+			end
 		else -- create a new table
-			v = {time = GetTime() + t, func = f, mod = mod, ...}
+			v = {time = GetTime() + t, func = f, mod = mod, n = select("#", ...), ...}
 		end
 		insert(v)
 	end
@@ -1664,6 +1695,84 @@ SlashCmdList["DEADLYBOSSMODS"] = function(msg)
 		sendSync("L")
 		DBM:AddMsg(DBM_CORE_LAG_CHECKING)
 		DBM:Schedule(5, function() DBM:ShowLag() end)
+	elseif cmd:sub(1, 3) == "hud" then
+		local hudType, target, duration = string.split(" ", msg:sub(4):trim())
+		if hudType == "" then
+			for i, v in ipairs(DBM_CORE_HUD_USAGE) do
+				DBM:AddMsg(v)
+			end
+			return
+		end
+		local hudDuration = tonumber(duration) or 1200--if no duration defined. 20 minutes to cover even longest of fights
+		local success = false
+		if type(hudType) == "string" and hudType:trim() ~= "" then
+			if hudType:upper() == "HIDE" then
+				DBMHudMap:Disable()
+				return
+			end
+			if not target then
+				DBM:AddMsg(DBM_CORE_HUD_INVALID_TARGET)
+				return
+			end
+			local uId
+			if target:upper() == "TARGET" and UnitExists("target") then
+				uId = "target"
+			elseif target:upper() == "FOCUS" and UnitExists("focus") then
+				uId = "focus"
+			else--Try to use it as player name
+				uId = DBM:GetRaidUnitId(target)
+			end
+			if not uId then
+				DBM:AddMsg(DBM_CORE_HUD_INVALID_TARGET)
+				return
+			end
+			if UnitIsUnit("player", uId) and not DBM.Options.DebugMode then--Don't allow hud to self, except if debug mode is enabled, then hud to self useful for testing
+				DBM:AddMsg(DBM_CORE_HUD_INVALID_SELF)
+				return
+			end
+			if hudType:upper() == "GREEN" then
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "highlight", UnitName(uId), 3.5, hudDuration, 0, 1, 0, 0.5, nil, false):Pulse(0.5, 0.5)
+				success = true
+			elseif hudType:upper() == "RED" then
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "highlight", UnitName(uId), 3.5, hudDuration, 1, 0, 0, 0.5, nil, false):Pulse(0.5, 0.5)
+				success = true
+			elseif hudType:upper() == "YELLOW" then
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "highlight", UnitName(uId), 3.5, hudDuration, 1, 1, 0, 0.5, nil, false):Pulse(0.5, 0.5)
+				success = true
+			elseif hudType:upper() == "BLUE" then
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "highlight", UnitName(uId), 3.5, hudDuration, 0, 0, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				success = true
+			elseif hudType:upper() == "ICON" then
+				local icon = GetRaidTargetIndex(uId)
+				if not icon then
+					DBM:AddMsg(DBM_CORE_HUD_INVALID_ICON)
+					return
+				end
+				if icon == 8 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "skull", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 7 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "cross", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 6 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "square", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 5 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "moon", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 4 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "triangle", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 3 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "diamond", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 2 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "circle", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				elseif icon == 1 then
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(12345, "star", UnitName(uId), 3.5, hudDuration, 1, 1, 1, 0.5, nil, false):Pulse(0.5, 0.5)
+				end
+				success = true
+			else
+				DBM:AddMsg(DBM_CORE_HUD_INVALID_TYPE)
+			end
+		end
+		if success then
+			DBM:AddMsg(DBM_CORE_HUD_SUCCESS:format(strFromTime(hudDuration)))
+		end
 	elseif cmd:sub(1, 5) == "arrow" then
 		local x, y, z = string.split(" ", msg:sub(6):trim())
 		local xNum, yNum, zNum = tonumber(x or ""), tonumber(y or ""), tonumber(z or "")
@@ -3283,6 +3392,7 @@ function DBM:LoadMod(mod, force)
 		if instanceType ~= "pvp" and #inCombat == 0 and IsInGroup() then--do timer recovery only mod load
 			timerRequestInProgress = true
 			-- Request timer to 3 person to prevent failure.
+			self.Unschedule(self.RequestTimers)--Unschedule the 3 requests done on dbm first load, so 6 requests aren't sent when reloading inside an instance
 			self:Schedule(8, self.RequestTimers, self, 3)
 			self:Schedule(10, self.RequestTimers, self, 2)
 			self:Schedule(12, self.RequestTimers, self, 1)
@@ -6438,7 +6548,7 @@ do
 		DBM:Debug("Boss target scan for "..cidOrGuid.." should be aborting.", 3)
 	end
 
-	function bossModPrototype:BossTargetScanner(cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, includeTank, isFinalScan, targetFilter)
+	function bossModPrototype:BossTargetScanner(cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, isFinalScan, targetFilter, tankFilter)
 		--Increase scan count
 		local cidOrGuid = cidOrGuid or self.creatureId
 		if not cidOrGuid then return end
@@ -6452,22 +6562,21 @@ do
 		--Do scan
 		if targetname and targetname ~= DBM_CORE_UNKNOWN and (not targetFilter or (targetFilter and targetFilter ~= targetname)) then
 			if not IsInGroup() then scanTimes = 1 end--Solo, no reason to keep scanning, give faster warning. But only if first scan is actually a valid target, which is why i have this check HERE
-			if (isEnemyScan and UnitIsFriend("player", targetuid) or self:IsTanking(targetuid, bossuid)) and not isFinalScan and not includeTank then--On player scan, ignore tanks. On enemy scan, ignore friendly player.
+			if (isEnemyScan and UnitIsFriend("player", targetuid) or self:IsTanking(targetuid, bossuid)) and not isFinalScan then--On player scan, ignore tanks. On enemy scan, ignore friendly player.
 				if targetScanCount[cidOrGuid] < scanTimes then--Make sure no infinite loop.
-					self:ScheduleMethod(scanInterval, "BossTargetScanner", cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, includeTank, nil, targetFilter)--Scan multiple times to be sure it's not on something other then tank (or friend on enemy scan).
+					self:ScheduleMethod(scanInterval, "BossTargetScanner", cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, nil, targetFilter, tankFilter)--Scan multiple times to be sure it's not on something other then tank (or friend on enemy scan).
 				else--Go final scan.
-					self:BossTargetScanner(cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, includeTank, true, targetFilter)
+					self:BossTargetScanner(cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, true, targetFilter, tankFilter)
 				end
 			else--Scan success. (or failed to detect right target.) But some spells can be used on tanks, anyway warns tank if player scan. (enemy scan block it)
 				targetScanCount[cidOrGuid] = nil--Reset count for later use.
 				self:UnscheduleMethod("BossTargetScanner", cidOrGuid, returnFunc)--Unschedule all checks just to be sure none are running, we are done.
-				if not (isEnemyScan and isFinalScan) then--If enemy scan, player target is always bad. So do not warn anything. Also, must filter nil value on returnFunc.
-					self[returnFunc](self, targetname, targetuid, bossuid)--Return results to warning function with all variables.
-				end
+				if (tankFilter and self:IsTanking(targetuid, bossuid)) or (isFinalScan and isEnemyScan) then return end--If enemyScan and playerDetected, return nothing
+				self[returnFunc](self, targetname, targetuid, bossuid)--Return results to warning function with all variables.
 			end
 		else--target was nil, lets schedule a rescan here too.
 			if targetScanCount[cidOrGuid] < scanTimes then--Make sure not to infinite loop here as well.
-				self:ScheduleMethod(scanInterval, "BossTargetScanner", cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, includeTank, nil, targetFilter)
+				self:ScheduleMethod(scanInterval, "BossTargetScanner", cidOrGuid, returnFunc, scanInterval, scanTimes, scanOnlyBoss, isEnemyScan, nil, targetFilter, tankFilter)
 			else
 				targetScanCount[cidOrGuid] = nil--Reset count for later use.
 				self:UnscheduleMethod("BossTargetScanner", cidOrGuid, returnFunc)--Unschedule all checks just to be sure none are running, we are done.
@@ -7063,7 +7172,10 @@ function bossModPrototype:IsHealer()
 end
 
 function bossModPrototype:IsTanking(unit, boss)
-	if not unit then return false end
+	if not unit then
+		DBM:Debug("IsTanking passed with invalid unit", 2)
+		return false
+	end
 	--Prefer threat target first
 	if boss and UnitExists(boss) then--Only checking one bossID as requested
 		local tanking, status = UnitDetailedThreatSituation(unit, boss)
@@ -8442,7 +8554,7 @@ do
 		if obj.option then
 			local catType = "announce"--Default to General announce
 			--Directly affects another target (boss or player) that you need to know about
-			if announceType == "target" or announceType == "close" or announceType == "reflect" or announceType == "switch" or announceType == "switchcount" then
+			if announceType == "target" or announceType == "targetcount" or announceType == "close" or announceType == "reflect" or announceType == "switch" or announceType == "switchcount" then
 				catType = "announceother"
 			--Directly affects you
 			elseif announceType == "you" or announceType == "move" or announceType == "dodge" or announceType == "moveaway" or announceType == "run" or announceType == "stack" or announceType == "moveto" then
@@ -8492,6 +8604,10 @@ do
 
 	function bossModPrototype:NewSpecialWarningTarget(text, optionDefault, ...)
 		return newSpecialWarning(self, "target", text, nil, optionDefault, ...)
+	end
+	
+	function bossModPrototype:NewSpecialWarningTargetCount(text, optionDefault, ...)
+		return newSpecialWarning(self, "targetcount", text, nil, optionDefault, ...)
 	end
 	
 	function bossModPrototype:NewSpecialWarningTaunt(text, optionDefault, ...)
@@ -8646,7 +8762,7 @@ do
 		local activeVP = self.Options.ChosenVoicePack
 		--Check if voice pack out of date
 		if activeVP ~= "None" and activeVP == value then
-			if self.VoiceVersions[value] < 3 then--Version will be bumped when new voice packs released that contain new voices.
+			if self.VoiceVersions[value] < 4 then--Version will be bumped when new voice packs released that contain new voices.
 				self:AddMsg(DBM_CORE_VOICE_PACK_OUTDATED)
 				SWFilterDisabed = self.VoiceVersions[value]--Set disable to version on current voice pack
 			else

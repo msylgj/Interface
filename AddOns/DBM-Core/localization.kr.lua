@@ -197,7 +197,8 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm pull <숫자>: <숫자>초 후 전투 예정 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm arrow: DBM 화살표 도움말을 봄",
 	"/dbm lockout: 현재 공격대원에게 공격대 귀속 정보를 요청(승급 권한 필요)",
-	"/dbm lag: 공격대원의 지연시간을 확인함"
+	"/dbm lag: 공격대원의 지연시간을 확인함",
+	"/dbm hud: DBM 범위표시 도움말을 봄"
 }
 
 DBM_ERROR_NO_PERMISSION				= "해당 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
@@ -227,7 +228,7 @@ DBM_CORE_GEAR_FISHING_POLE			= "낚싯대"
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Speed Kill(업적)"--BATTLE_PET_SOURCE_6
 
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s: >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d): >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s): >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.ends			= "%s 종료"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.endtarget		= "%s 종료: >%%s<"
@@ -238,7 +239,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "곧 %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%2$s 후 %1$s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "%s 단계"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "곧 %s 단계"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= "%s: >%%s< (%%d)"
 
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target		= "$spell:%s 대상 알림 보기"
@@ -267,6 +268,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s: >%%s< - 차단!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount= "%s: >%%s< - 차단! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "당신에게 %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<에게 %1$s!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetcount	= ">%%2$s<에게 %1$s! (%%1$s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<에게 %1$s - 도발!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close			= "가까운 곳에 %s (>%%s<)!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move			= "%s - 바닥 피하세요!"
@@ -304,6 +306,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "당신이 $spell:%2$s %1$d중첩 이�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "$spell:%s 대상 전환 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount	= "$spell:%s 대상 특수 경고 보기"
 
 DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
@@ -365,6 +368,20 @@ DBM_CORE_MOVE_WARNING_BAR				= "알림 이동 가능"
 DBM_CORE_MOVE_WARNING_MESSAGE			= "<Deadly Boss Mods>를 사용해 주셔셔 감사합니다."
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR		= "특수 경고 이동 가능"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT		= "특수 경고"
+
+DBM_CORE_HUD_INVALID_TYPE			= "범위정보 형식이 잘못 되었습니다."
+DBM_CORE_HUD_INVALID_TARGET			= "범위정보 대상이 잘못 되었습니다."
+DBM_CORE_HUD_INVALID_SELF			= "자신을 범위 정보 대상으로 설정할 수 없습니다."
+DBM_CORE_HUD_INVALID_ICON			= "대상에게 전술 목표 아이콘이 설정되어 있지 않으면 아이콘 범위정보 기능을 사용할 수 없습니다."
+DBM_CORE_HUD_SUCCESS				= "범위정보를 %s동안 표시합니다. '/dbm hud hide'를 입력하시면 즉시 숨길 수 있습니다."
+DBM_CORE_HUD_USAGE	= {
+	"DBM 범위정보 사용법:",
+	"/dbm hud <형식> <대상> <지속시간> 지정된 형식으로 지정된 대상을 가리키는 범위정보를 만듭니다. <지속시간>초 동안 지속됩니다.",
+	"유효한 형식: red, blue, green, yellow, icon (대상에게 전술 목표 아이콘이 설정되어 있어야 합니다.)",
+	"유효한 대상: target, focus, <대상이름>",
+	"유효한 시간: 아무 숫자(초단위). 빈칸일 경우, 20분이 사용됩니다.",
+	"/dbm hud hide  범위정보를 숨기고 비활성화 합니다."
+}
 
 DBM_ARROW_MOVABLE						= "화살표 움직이기"
 DBM_ARROW_ERROR_USAGE	= {

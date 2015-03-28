@@ -128,7 +128,7 @@ DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: No boss mod installed"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Found %d player(s) with DBM & %d player(s) with Bigwigs"
 DBM_CORE_VERSIONCHECK_OUTDATED		= "Following %d player(s) have outdated boss mod version: %s"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Your version of Deadly Boss Mods is out-of-date. Please visit http://www.deadlybossmods.com to get the latest version."
-DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Special warning sound filter has been disabled. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
+DBM_CORE_VOICE_PACK_OUTDATED		= "Your DBM voice pack may be missing sounds supported by this version of DBM. Some special warning sounds will not be supressed for alerts using voices not supported by your voice pack version. Please download a newer version of voice pack or contact author for an update that contains missing audio files"
 DBM_CORE_VOICE_MISSING				= "You had a DBM voice pack selected that could not be found. Your selection has been reset to 'None'. If this is an error, make sure your voice pack is properly installed and enabled in addons."
 DBM_CORE_VOICE_COUNT_MISSING		= "Countdown voice %d is set to a voice/count pack that could not be found. It has be reset to default settings."
 DBM_BIG_WIGS						= "BigWigs"
@@ -187,9 +187,10 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm timer endloop: Stops any looping ltimer or cltimer.",
 	"/dbm break <min>: Starts a break timer for <min> minutes. Gives all raid members with DBM a break timer (requires leader/promoted status).",
 	"/dbm pull <sec>: Starts a pull timer for <sec> seconds. Gives all raid members with DBM a pull timer (requires leader/promoted status).",
-	"/dbm arrow: Shows the DBM arrow, see /dbm arrow help for details.",
+	"/dbm arrow: Shows the DBM arrow, see '/dbm arrow help' for details.",
 	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires leader/promoted status).",
-	"/dbm lag: Performs a raid-wide latency check."
+	"/dbm lag: Performs a raid-wide latency check.",
+	"/dbm hud: Shows the DBM hud, see '/dbm hud' for details."
 }
 
 DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this."
@@ -221,7 +222,7 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Achievement"--BATTLE_PET_SOURCE_6
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	target		= "%s on >%%s<",
-	targetcount	= "%s (%%d) on >%%s<",
+	targetcount	= "%s (%%s) on >%%s<",
 	spell		= "%s",
 	ends 		= "%s ended",
 	endtarget	= "%s ended: >%%s<",
@@ -232,7 +233,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	prewarn		= "%s in %s",
 	phase		= "Phase %s",
 	prephase	= "Phase %s soon",
-	count		= "%s (%%d)",
+	count		= "%s (%%s)",
 	stack		= "%s on >%%s< (%%d)"
 }
 
@@ -266,6 +267,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	interruptcount	= "%s - interrupt >%%s<! (%%d)",
 	you				= "%s on you",
 	target			= "%s on >%%s<",
+	targetcount		= "%s (%%s) on >%%s< ",
 	taunt			= "%s on >%%s< - taunt now",
 	close			= "%s on >%%s< near you",
 	move			= "%s - move away",
@@ -307,6 +309,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 }
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {
@@ -376,6 +379,20 @@ DBM_CORE_MOVE_WARNING_BAR			= "Announce movable"
 DBM_CORE_MOVE_WARNING_MESSAGE		= "Thanks for using Deadly Boss Mods"
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR	= "Special warning movable"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT	= "Special Warning"
+
+DBM_CORE_HUD_INVALID_TYPE			= "Invalid HUD type defined"
+DBM_CORE_HUD_INVALID_TARGET			= "No valid target given for HUD"
+DBM_CORE_HUD_INVALID_SELF			= "Cannot use self as target for HUD"
+DBM_CORE_HUD_INVALID_ICON			= "Cannot use icon method for HUD on a target with no icon"
+DBM_CORE_HUD_SUCCESS				= "HUD successful started with your parameters. This will cancel after %s, or by calling '/dbm hud hide'."
+DBM_CORE_HUD_USAGE	= {
+	"DBM-HudMap usage:",
+	"/dbm hud <type> <target> <duration> creates a HUD that points to a player for the desired duration",
+	"Valid types: red, blue, green, yellow, icon (requires a target with raid icon)",
+	"Valid targets: target, focus, <playername>",
+	"Valid durations: any number (in seconds). If left blank, 20min will be used.",
+	"/dbm hud hide  disables and hides the HUD"
+}
 
 DBM_ARROW_MOVABLE					= "Arrow movable"
 DBM_ARROW_ERROR_USAGE	= {
