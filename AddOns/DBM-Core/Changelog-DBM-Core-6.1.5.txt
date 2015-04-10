@@ -1,0 +1,62 @@
+tag 6.1.5
+64aaf836fcc1b733db7fa9e8616c716548b27ba1
+subversion <svn@deadlybossmods.com>
+2015-04-01 01:27:38 +0200
+
+Tagging as 6.1.5
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.1.5
+	- tandanu via svn r13486: init DBM.HighestRelease with DBM.ReleaseRevision
+	- Omega via svn r13485: Fix error in trash
+	- Omega via svn r13484: CN update
+	- nbluewiz via svn r13483: # koKR update.
+	- Omega via svn r13482: Change other message back to 33%. the hotfix messages will be pretty spammy on their own to show users what fights have the most imperative fixes.
+	- Omega via svn r13481: More message tweak, and activate code needed to support it.
+	- Omega via svn r13480: Fix a bug where timer never started for 3rd slag elemental, only 1st, 2nd 4th+ Fix a bug caused by my voice addition where I was screwing up slag timer instead of actually playing a voice Fix a blackhand timer that was a little too long.
+	- Omega via svn r13479: Fix error in slag yells. Fix refactored slag yell mythic code running on normal/heroic
+	- Omega via svn r13478: fix error
+	- Omega via svn r13477: Fix a voice option default
+	- Omega via svn r13476: Abort hansgar scanner when he leaves.
+	- Omega via svn r13475: NOte
+	- Omega via svn r13474: Timer tweak
+	- Omega via svn r13473: Tweak messages
+	- Omega via svn r13472: Bump these for the bug fixes
+	- Omega via svn r13471: #Blackhand Update *Warn slag and marked for death faster, including yells. (Can be as much as 0.4 sec faster than before) *Made attach slag bombs a count warning/timer *Clean up on MFD scheduling and functions. Combined two functions into 1 since 2 wasn?\226?\128?\153t needed in this case. (slag still needs 2, don?\226?\128?\153t touch)
+	- Omega via svn r13470: Some fixes, this seems done. testing shows my other todo isn?\226?\128?\153t a todo cause it already works like that.
+	- Omega via svn r13469: Add notice to GUI Example: http://mysticalos.com/images/DBM/DBM_GUI_New_Version.jpg
+	- Omega via svn r13468: Remove option to disable popup again, and instead, just remove popup entirely and increase chat msg %. Also re-enabled message in BGs now that it?\226?\128?\153s not a popup. Other changes planned and added to the TODO list. Some annoyance is still intended, but done in a better way.
+	- Omega via svn r13467: #Blast Furnace Update *Made engineer, operator, firecaller and security timers all count timers. *Added vocal counts to the voice warnings for all of them as well. *Changed how the count works on security guard and engineer to count the ones on pull as 1 and first spawn during fight as 2, since that?\226?\128?\153s the more consistent behavior everyone expects.
+	- nbluewiz via svn r13466: # koKR update.
+	- nbluewiz via svn r13465: # revision keyword for brf trash.
+	- Omega via svn r13464: Small cd tweak
+	- Omega via svn r13463: Forgot this
+	- Omega via svn r13462: Count security guards and engineers
+	- Omega via svn r13461: Sync time won?\226?\128?\153t work on trash mods, so this just isn?\226?\128?\153t syncable. add antispam, and warning will only work if you target mob. Hide stupid raid boss emote frame during this trash pull, cause it completely covers dbm regular warnings.
+	- Omega via svn r13460: *If a block enable was forced, disable accessing GUI so users can?\226?\128?\153t complain the enable checkbox doesn?\226?\128?\153t work. now they won?\226?\128?\153t be able to get to it and instead continue seeing the ?\226?\128?\156update or else?\226?\128?\157 message instead. *Remove revision from that message, since that kind of revision info doesn?\226?\128?\153t matter much to end user.
+	- Omega via svn r13459: Add engineer voice
+	- nbluewiz via svn r13458: # molten torrent cd adjust after fire storm.
+	- Omega via svn r13457: Faster phase change warning on oregorger. Often people waiting for dbm alert and are too slow to get back into position. but boss stops rolling at 100 energy so this faster warn should be reliable to return correct position.
+	- Omega via svn r13456: Some cleanup and improvement to last
+	- Omega via svn r13455: More TR changes. This time. It should still request highest version first, do slower checks for other 2, and unschedule/abort those checks once successful with someone. I really don?\226?\128?\153t want it replacing timers 3 times. or cluttering up addon coms the way it is now. I think this is good solution. 3 requests, more spread, and once any of them answer, stop the other requests immediately
+	- Omega via svn r13454: Tweak it to ensure it only runs on clean pulls, and so it does work on non world bosses too. i?\226?\128?\153ve seen it on oregorger. reloadui, mod loads. boss pulled 2 seconds later, timer recovery runs and replaces all timers, three times, on a boss that was a clean pull and didn?\226?\128?\153t even need recovery. Now this should never happen.
+	- Omega via svn r13453: Fix CRT showing on world bosses since my change to show in all difficulties. Fix timer recovery running multiple times for no reason on world bosses that are clean pulls that are done after mod loaded, but before timer recoveries run.
+	- nbluewiz via svn r13452: # cd fix.
+	- nbluewiz via svn r13451: # koKR update.
+	- nbluewiz via svn r13450: # Iron Maidens - announce ship targets. # Kagraz - fix fire storm cd.
+	- nbluewiz via svn r13449: # koKR update.
+	- Omega via svn r13448: Tweak message a little down to 33%
+	- Omega via svn r13447: Support showing combat rez timer in all difficulties. since i had to add hack for mythic anyways, that same hack gives accurate timer for all modes so might as well show it in all modes now
+	- Omega via svn r13446: Add Trash warning for Reaping Whirl Add warnings for mythic version of Blast Wave (Blast Waves)
+	- nbluewiz via svn r13445: # kagraz : fix broken firestorm warning.
+	- nbluewiz via svn r13444: # koKR update.
+	- Omega via svn r13443: better wording
+	- Omega via svn r13442: *Fix lua error if world boss is engaged that doesn?\226?\128?\153t have a numeric modId, by a battle.net friend. i fixed this a while back for guild but forgot to do it on battle.net syncs. *Readd ability to disable update popup but with a catch. Ever time you wipe to a boss (that isn?\226?\128?\153t raid finder), DBM will remind you that you are out of date and could improve your chances of downing fight if you?\226?\128?\153re mod was up to date.
+	- Omega via svn r13441: Fix in last
+	- Omega via svn r13440: Fix a bug where blackhand mod turned yell options back on every single pull. Dummy yells must be used as changing main yell mid pull results in option default being reset every pull. Remove useless code on blast furnace. No reason to nil out a dummy yell that never changes. Also make dummy yells still honor main yell option, so if a user turns them off, they are actually off.
+	- Omega via svn r13439: Fix rapid fire warning showing ?\226?\128?\156unknown unknown?\226?\128?\157
+	- Omega via svn r13438: Add conflag marking option to darmac, increase wait time on warning because sometimes it goes a little over 2 seconds before all 3 targets applied.
+	- tandanu via svn r13437: increment alpha version

@@ -53,10 +53,12 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 13435 $"):sub(12, -3)),
-	DisplayVersion = "6.1.4", -- the string that is shown as version
-	ReleaseRevision = 13435 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 13486 $"):sub(12, -3)),
+	DisplayVersion = "6.1.5", -- the string that is shown as version
+	ReleaseRevision = 13486 -- the revision of the latest stable version that is available
 }
+
+DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
 -- support for git svn which doesn't support svn keyword expansion
 if not DBM.Revision then
@@ -122,6 +124,7 @@ DBM.DefaultOptions = {
 	HideBossEmoteFrame = true,
 	SpamBlockBossWhispers = true,
 	ShowMinimapButton = false,
+--	BlockVersionUpdateNotice2 = false,
 	ShowSpecialWarnings = true,
 	ShowFlashFrame = true,
 	CustomSounds = 0,
@@ -333,6 +336,7 @@ local lastBossDefeat = {}
 local bossuIdFound = false
 local timerRequestInProgress = false
 local updateNotificationDisplayed = 0
+local showConstantReminder = false
 local tooltipsHidden = false
 local SWFilterDisabed = 3
 local currentSpecGroup = GetActiveSpecGroup()
@@ -1143,9 +1147,9 @@ do
 				healthCombatInitialized = true
 			end)
 			if IsInGroup() then
-				self:Schedule(15, self.RequestTimers, self, 3)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
-				self:Schedule(16.5, self.RequestTimers, self, 2)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
-				self:Schedule(18, self.RequestTimers, self, 1)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
+				self:Schedule(15, self.RequestTimers, self, 1)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
+				self:Schedule(20, self.RequestTimers, self, 2)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
+				self:Schedule(25, self.RequestTimers, self, 3)--Break timer recovery doesn't work if outside the zone when reloadui or relogging (no loadmod). Need request timer here.
 			end
 		end
 	end
@@ -2160,11 +2164,17 @@ do
 		if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
 			self:AddMsg(DBM_CORE_VEM)
 			dbmIsEnabled = false
+			blockEnable = true
 			return
 		end
 		if GetAddOnEnableState(playerName, "DBM-Profiles") >= 1 then
 			self:AddMsg(DBM_CORE_3RDPROFILES)
 			dbmIsEnabled = false
+			blockEnable = true
+			return
+		end
+		if blockEnable then
+			DBM:AddMsg(DBM_CORE_UPDATEREMINDER_DISABLE)
 			return
 		end
 		if not IsAddOnLoaded("DBM-GUI") then
@@ -2449,6 +2459,27 @@ do
 	function DBM:INSTANCE_GROUP_SIZE_CHANGED()
 		local _, _, _, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
 		LastGroupSize = instanceGroupSize
+	end
+	
+	function DBM:GetNumRealPlayersInZone()
+		if not IsInGroup() then return 1 end
+		local total = 0
+		local currentMapId = select(4, UnitPosition("player"))
+		if IsInRaid() then
+			for i = 1, GetNumGroupMembers() do
+				if select(4, UnitPosition("raid"..i)) == currentMapId then
+					total = total + 1
+				end
+			end
+		else
+			total = 1--add player/self for "party" count
+			for i = 1, GetNumSubgroupMembers() do
+				if select(4, UnitPosition("party"..i)) == currentMapId then
+					total = total + 1
+				end
+			end
+		end
+		return total
 	end
 
 	function DBM:GetRaidRank(name)
@@ -3392,11 +3423,11 @@ function DBM:LoadMod(mod, force)
 		if instanceType ~= "pvp" and #inCombat == 0 and IsInGroup() then--do timer recovery only mod load
 			timerRequestInProgress = true
 			-- Request timer to 3 person to prevent failure.
-			self.Unschedule(self.RequestTimers)--Unschedule the 3 requests done on dbm first load, so 6 requests aren't sent when reloading inside an instance
-			self:Schedule(8, self.RequestTimers, self, 3)
-			self:Schedule(10, self.RequestTimers, self, 2)
-			self:Schedule(12, self.RequestTimers, self, 1)
-			self:Schedule(12.5, function() timerRequestInProgress = false end)
+			self.Unschedule(self.RequestTimers)--Unschedule the requests done on dbm first load or if two mods loaded at same time (or if user manually loaded a bunch of mods at once)
+			self:Schedule(8, self.RequestTimers, self, 1)
+			self:Schedule(13, self.RequestTimers, self, 2)
+			self:Schedule(18, self.RequestTimers, self, 3)
+			self:Schedule(18.5, function() timerRequestInProgress = false end)
 		end
 		if not InCombatLockdown() then--We loaded in combat because a raid boss was in process, but lets at least delay the garbage collect so at least load mod is half as bad, to do our best to avoid "script ran too long"
 			collectgarbage("collect")
@@ -3521,7 +3552,11 @@ do
 		if mod and (mod.revision < modRevision) then
 			--TODO, maybe require at least 2 senders? this doesn't disable mod or make a popup though, just warn in chat that mod may have invalid timers/warnings do to a blizzard hotfix
 			if DBM:AntiSpam(3, "HOTFIX") then
-				DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HOTFIX)
+				if DBM.HighestRelease < modRevision then--There is a newer RELEASE version of DBM out that has this mods fixes
+					DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HOTFIX)
+				else--This mods fixes are in an alpha version
+					DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA)
+				end
 			end
 		end
 	end
@@ -3680,6 +3715,7 @@ do
 	end
 	
 	whisperSyncHandlers["BTR2"] = function(sender, timer)
+		DBM.Unschedule(DBM.RequestTimers)--IF we got BTR2 sync, then we know immediately RequestTimers was successful, so abort others
 		if #inCombat >= 1 then return end
 		if DBM.Bars:GetBar(DBM_CORE_TIMER_BREAK) then return end--Already recovered. Prevent duplicate recovery
 		timer = tonumber(timer or 0)
@@ -3759,24 +3795,42 @@ do
 			raid[sender].locale = locale
 			raid[sender].enabledIcons = iconEnabled or "false"
 			DBM:Debug("Received version info from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
-			if version > DBM.ReleaseRevision and LastInstanceType ~= "pvp" then -- Update reminder
+			if version > DBM.ReleaseRevision then -- Update reminder
 				if not checkEntry(newerVersionPerson, sender) then
 					newerVersionPerson[#newerVersionPerson + 1] = sender
 					DBM:Debug("Newer version detected from "..sender.." : Rev - "..revision..", Ver - "..version..", Rev Diff - "..(revision - DBM.Revision), 3)
 				end
 				if #newerVersionPerson < 4 then
 					if #newerVersionPerson == 2 and updateNotificationDisplayed < 2 then--Only requires 2 for update notification.
+						if DBM.HighestRelease < version then
+							DBM.HighestRelease = version
+						end
+						DBM.NewerVersion = displayVersion
+						--UGLY hack to get release version number instead of alpha one
+						if DBM.NewerVersion:find("alpha") then
+							local temp1, temp2 = string.split(" ", DBM.NewerVersion)--Strip down to just version, no alpha
+							local temp3, temp4, temp5 = string.split(".", temp1)--Strip version down to 3 numbers
+							if temp5 then
+								temp5 = tonumber(temp5)
+								temp5 = temp5 - 1
+								temp5 = tostring(temp5)
+								DBM.NewerVersion = temp3.."."..temp4.."."..temp5
+							end
+						end
 						--Find min revision.
 						updateNotificationDisplayed = 2
-						DBM:ShowUpdateReminder(displayVersion, version)
+						DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
+						DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
+						DBM:AddMsg(("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
+						showConstantReminder = true
 					elseif #newerVersionPerson == 3 then--Requires 3 for force disable.
 						--Find min revision.
 						local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
-						--The following code requires at least THREE people to send that higher revision (I just upped it from 2). That should be more than adaquate, especially since there is also a display version validator now too (that had to be writen when bigwigs was sending bad revisions few versions back)
+						--The following code requires at least THREE people to send that higher revision (I just upped it from 2). That should be more than adaquate.
 						if revDifference > 250 then--WTF? Sorry but your DBM is being turned off until you update. Grossly out of date mods cause fps loss, freezes, lua error spam, or just very bad information, if mod is not up to date with latest changes. All around undesirable experience to put yourself or other raid mates through
 							if updateNotificationDisplayed < 3 then
 								updateNotificationDisplayed = 3
-								DBM:AddMsg(DBM_CORE_UPDATEREMINDER_DISABLE:format(revDifference))
+								DBM:AddMsg(DBM_CORE_UPDATEREMINDER_DISABLE)
 								DBM:Disable(true)
 							end
 						end
@@ -4021,7 +4075,8 @@ do
 			lastBossEngage[modId..realm] = GetTime()
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				local _, toonName = BNGetToonInfo(sender)
-				local bossName = EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_ENGAGED:format(bossName, floor(health), toonName))
 			end
 		end
@@ -4032,7 +4087,8 @@ do
 			lastBossDefeat[modId..realm] = GetTime()
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				local _, toonName = BNGetToonInfo(sender)
-				local bossName = EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_DEFEATED:format(bossName, toonName))
 			end
 		end
@@ -4864,6 +4920,11 @@ do
 				end
 			else--Reset ignoreBestkill after wipe
 				mod.ignoreBestkill = false
+				--It was a clean pull, so cancel any RequestTimers which might fire after boss was pulled if boss was pulled right after mod load
+				--Only want timer recovery on in progress bosses, not clean pulls
+				if startHp > 98 and (savedDifficulty == "worldboss" or event == "IEEU") or event == "ENCOUNTER_START" then
+					self.Unschedule(self.RequestTimers)
+				end
 			end
 			--show health frame
 			if not mod.inScenario then
@@ -4945,10 +5006,19 @@ do
 						speedTimer:Start()
 					end
 				end
-				if self.Options.CRT_Enabled and difficultyIndex >= 14 and difficultyIndex < 18 then--14-17 difficulties. Normal, Heroic, Mythic, LFR
-					local time = 90/LastGroupSize
-					time = time * 60
-					loopCRTimer(time, mod)
+				if self.Options.CRT_Enabled and savedDifficulty ~= "worldboss" then
+					if difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 17 then--Flexible difficulties
+						local time = 90/LastGroupSize
+						time = time * 60
+						loopCRTimer(time, mod)
+					else--Fixed difficulties (LastGroupSize cannot be trusted, this INCLUDES mythic. If you underman mythic then it is NOT 90/20)
+						local realGroupSize = self:GetNumRealPlayersInZone()
+						if realGroupSize > 1 then
+							local time = 90/realGroupSize
+							time = time * 60
+							loopCRTimer(time, mod)
+						end
+					end
 				end
 				--update boss left
 				if mod.numBoss then
@@ -5153,7 +5223,14 @@ do
 						end
 					end
 				end
-
+				if showConstantReminder and IsInGroup() and savedDifficulty ~= "lfr" and savedDifficulty ~= "lfr25" then
+					--Show message about 33% of time, when you wipe, while in a group that isn't LFR if you chose to disable update notification popup. I've seen far too many wipes caused by out of date mod versions
+					--These people need to know the wipe could very well be their fault.
+					local RNG = math.random(1, 3)
+					if RNG == 3 then
+						self:AddMsg(DBM_CORE_OUT_OF_DATE_NAG)
+					end
+				end
 				local msg
 				for k, v in pairs(autoRespondSpam) do
 					if self.Options.WhisperStats then
@@ -5604,6 +5681,8 @@ do
 	function DBM:ReceiveCombatInfo(sender, mod, time)
 		if sender == requestedFrom and (GetTime() - requestTime) < 5 and #inCombat == 0 then
 			self:StartCombat(mod, time, "TIMER_RECOVERY")
+			--Recovery successful, someone sent info, abort other recovery requests
+			self.Unschedule(self.RequestTimers)
 		end
 	end
 
@@ -7940,7 +8019,7 @@ do
 	end
 
 	--If no file at path, it should silenty fail. However, I want to try to only add NewVoice to mods for files that already exist.
-	function soundPrototype2:Play(name)
+	function soundPrototype2:Play(name, customPath)
 		local voice = DBM.Options.ChosenVoicePack
 		local always = DBM.Options.AlwaysPlayVoice
 		if voice == "None" then return end
@@ -7948,7 +8027,7 @@ do
 		--But still allow AlwaysPlayVoice to play as well.
 		if (name == "changemt" or name == "tauntboss") and DBM.Options.FilterTankSpec and not self.mod:IsTank() and not always then return end
 		if not self.option or self.mod.Options[self.option] or always then
-			local path = "Interface\\AddOns\\DBM-VP"..voice.."\\"..name..".ogg"
+			local path = customPath or "Interface\\AddOns\\DBM-VP"..voice.."\\"..name..".ogg"
 			--Example "Interface\\AddOns\\DBM-VPHenry\\dispelnow.ogg"
 			--Usage: voiceBerserkerRush:Play("dispelnow")
 			DBM:PlaySoundFile(path)

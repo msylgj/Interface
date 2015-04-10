@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13431 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13477 $"):sub(12, -3))
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(5, 4, 3, 2, 1)
 mod:SetModelSound("sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg", "sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg")
-mod:SetHotfixNoticeRev(13430)
+mod:SetHotfixNoticeRev(13439)
 
 mod:RegisterCombat("combat")
 
@@ -35,7 +35,7 @@ local Garan = EJ_GetSectionInfo(10025)
 
 --Ship
 local warnPhase2						= mod:NewPhaseAnnounce(2)
-local warnShip							= mod:NewSpellAnnounce("ej10019", 3, 76204)
+local warnShip							= mod:NewTargetAnnounce("ej10019", 3, 76204)
 local warnBombardmentAlpha				= mod:NewCountAnnounce(157854, 3)--From ship, but affects NON ship.
 ----Blackrock Deckhand
 local warnProtectiveEarth				= mod:NewSpellAnnounce("OptionVersion2", 158707, 3, nil, false)--Could not verify
@@ -121,7 +121,7 @@ local voiceBloodRitual					= mod:NewVoice("OptionVersion2", 158078, "MeleeDps") 
 local voiceHeartSeeker					= mod:NewVoice(158010) --spread
 local voiceShip							= mod:NewVoice("ej10019") --1695uktar, 1695gorak, 1695ukurogg
 local voiceEarthenbarrier				= mod:NewVoice(158708)  --int
-local voiceDeployTurret					= mod:NewVoice(158599, "Dps") --158599.ogg attack turret
+local voiceDeployTurret					= mod:NewVoice("OptionVersion2", 158599, "RangedDps") --158599.ogg attack turret
 local voiceConvulsiveShadows			= mod:NewVoice(156214) --runaway, target
 local voiceDarkHunt						= mod:NewVoice(158315) --defensive, target
 local voicePenetratingShot				= mod:NewVoice(164271) --stack
@@ -199,7 +199,7 @@ local function checkBoatPlayer(self, npc)
 	countdownBladeDash:Cancel()
 	countdownBladeDash:Start(5)
 	timerBloodRitualCD:Cancel()
-	timerBloodRitualCD:Start(9.7, 1)
+	timerBloodRitualCD:Start(8.5, 1)--Variation on this may be same as penetrating shot variation. when it's marak returning from boat may be when it's 9.7
 	--These are altered by boar ending, even though boss continues casting it during boat phases.
 	timerRapidFireCD:Cancel()
 	timerRapidFireCD:Start(13, self.vb.rapidfire+1)
@@ -465,7 +465,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if self:CheckNearby(5, args.destName) and self.Options.SpecWarn156631close then
 					specWarnRapidFireNear:Show(args.destName)
 				else
-					warnRapidFire:Show(args.destName)
+					warnRapidFire:Show(self.vb.rapidfire, args.destName)
 				end
 				if self.Options.HudMapOnRapidFire then
 					DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 9, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
@@ -545,7 +545,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 		boatMissionDone = false
 		self.vb.ship = self.vb.ship + 1
 		self.vb.alphaOmega = 1
-		warnShip:Show()
+		warnShip:Show(npc)
 		if self.vb.ship < 3 then
 			timerShipCD:Start(nil, self.vb.ship+1)
 			countdownShip:Start()
@@ -608,7 +608,7 @@ function mod:OnSync(msg, guid)
 			if self:CheckNearby(5, targetName) and self.Options.SpecWarn156631close then
 				specWarnRapidFireNear:Show(targetName)
 			else
-				warnRapidFire:Show(targetName)
+				warnRapidFire:Show(self.vb.rapidfire, targetName)
 			end
 			if self.Options.HudMapOnRapidFire then
 				DBMHudMap:RegisterRangeMarkerOnPartyMember(156631, "highlight", targetName, 5, 12, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)

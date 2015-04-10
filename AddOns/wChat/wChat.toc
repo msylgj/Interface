@@ -1,8 +1,9 @@
 ## Interface: 60100
-## Title: |cff3399FFw|rChat|r
+## Title: |cff3399FFw|rChat|r with Neavo_ChatBar
 ## Version: 7.0
 ## Author: Weasoug
 ## Notes: Chat Mods!
 ## X-WoWI-ID: 17838
 
 wChat.lua
+ChatBar.lua

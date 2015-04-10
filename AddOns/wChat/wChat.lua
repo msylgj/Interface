@@ -1,5 +1,5 @@
 ﻿--Setchat parameters. Those parameters will apply to ChatFrame1 when you use /setchat
-local def_position = {"BOTTOMLEFT",UIParent,"BOTTOMLEFT",0,17}  --聊天框位置
+local def_position = {"BOTTOMLEFT",UIParent,"BOTTOMLEFT",13,17}  --聊天框位置
 local chat_height = 175  --聊天框高度
 local chat_width = 320   --聊天框宽度
 local font = "Fonts\\ARKai_T.ttf"   --字体
@@ -345,8 +345,8 @@ for i = 1, 10 do
 	if eboxbottom then
 		local el  = _G[format("%s%d%s", "ChatFrame", i, "EditBoxLanguage")]
 		eb:ClearAllPoints()
-		eb:SetPoint("TOPLEFT",  cfs, "BOTTOMLEFT",  -5, 0)
-		eb:SetPoint("TOPRIGHT", cfs, "BOTTOMRIGHT", 5, 0)
+		eb:SetPoint("TOPLEFT",  cfs, "BOTTOMLEFT",  -15, 0)
+		eb:SetPoint("TOPRIGHT", cfs, "BOTTOMRIGHT", -5, 0)
 		el:ClearAllPoints()
 		el:SetPoint('BOTTOMLEFT', eb, 'BOTTOMRIGHT', -18, 0)
 		el:SetPoint('TOPRIGHT', eb, 'TOPRIGHT', -18, 0)
@@ -354,8 +354,8 @@ for i = 1, 10 do
 	else
 		local el  = _G[format("%s%d%s", "ChatFrame", i, "EditBoxLanguage")]
 		eb:ClearAllPoints()
-		eb:SetPoint("BOTTOMLEFT",  cfs, "TOPLEFT",  -5, 0)
-		eb:SetPoint("BOTTOMRIGHT", cfs, "TOPRIGHT", 5, 0)
+		eb:SetPoint("BOTTOMLEFT",  cfs, "TOPLEFT",  -15, 0)
+		eb:SetPoint("BOTTOMRIGHT", cfs, "TOPRIGHT", -5, 0)
 		el:ClearAllPoints()
 		el:SetPoint('BOTTOMLEFT', eb, 'BOTTOMRIGHT', -18, 0)
 		el:SetPoint('TOPRIGHT', eb, 'TOPRIGHT', -18, 0)

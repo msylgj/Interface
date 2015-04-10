@@ -1,8 +1,9 @@
 ## Interface: 60100
-## Title: CoolLine
+## Title: |cffff00ffCoolLine 中文版|r
 ## Notes: Shows cooldowns on a single bar.
-## Author: TotalPackage
-## Version: 5.3.002
+## Notes-zhCN: 在一个独立bar上以流水线的方式显示冷却时间
+## Author: TotalPackage/司马清源
+## Version: 6.0.004
 
 ## SavedVariables: CoolLineDB
 ## SavedVariablesPerCharacter: CoolLineCharDB
@@ -12,5 +13,8 @@
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Always: delayed
 
-embeds.xml
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+
 core.lua

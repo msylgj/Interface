@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13382 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13452 $"):sub(12, -3))
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 mod:SetZone()
@@ -125,8 +125,8 @@ function mod:OnCombatStart(delay)
 	self.vb.rampage = false
 	self.vb.firstWarned = false
 	if not self:IsMythic() then
-		timerInfernoSliceCD:Start(14-delay, 1)
-		countdownInfernoSlice:Start(14-delay)
+		timerInfernoSliceCD:Start(12.5-delay, 1)
+		countdownInfernoSlice:Start(12.5-delay)
 	else
 		timerInfernoSliceCD:Start(11-delay, 1)
 		countdownInfernoSlice:Start(11-delay)

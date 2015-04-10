@@ -1,0 +1,9 @@
+﻿## Interface: 60000
+## Title: Wormhole Centrifuge
+## Version: 1.4
+## Author: Resike
+## Notes: Wormhole Centrifuge Helper!
+## DefaultState: Enabled
+
+Localizations.lua
+WormholeCentrifuge.lua

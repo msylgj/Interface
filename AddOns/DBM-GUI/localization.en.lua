@@ -64,7 +64,7 @@ L.Latency_Text				= "Set max latency sync threshold: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "General DBM Timer Options"
 L.SKT_Enabled				= "Always show record victory timer (Overrides boss-specific option)"
-L.CRT_Enabled				= "Show timer for next combat ressurection charge (6.x difficulties only)"
+L.CRT_Enabled				= "Show timer for next combat ressurection charge"
 L.ChallengeTimerOptions		= "Set option for challenge mode best clear timer"
 L.ChallengeTimerPersonal	= "Personal"
 L.ChallengeTimerGuild		= GUILD
@@ -227,6 +227,7 @@ L.Area_SpamFilter			= "Spam Filter Options"
 L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
 L.StripServerName			= "Strip realm name in warnings and timers"
 L.SpamBlockBossWhispers		= "Filter &lt;DBM&gt; warning whispers while fighting"
+L.BlockVersionUpdateNotice	= "Show more frequent 'out of date' notifications in chat frame instead of a popup."
 
 L.Area_SpecFilter			= "Role Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec. (Note: Disabling this is not recommended for most users as 'taunt' warnings are now all on by default.)"

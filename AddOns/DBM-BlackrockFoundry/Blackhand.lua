@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13435 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13482 $"):sub(12, -3))
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
 mod:SetUsedIcons(3, 2, 1)
-mod:SetHotfixNoticeRev(13427)
+mod:SetHotfixNoticeRev(13480)
 
 mod:RegisterCombat("combat")
 
@@ -29,7 +29,7 @@ local warnMarkedforDeath			= mod:NewTargetCountAnnounce(156096, 4)--If not in co
 local warnSiegemaker				= mod:NewCountAnnounce("ej9571", 3, 156667)
 local warnFixate					= mod:NewTargetAnnounce(156653, 4)
 --Stage Three: Iron Crucible
-local warnAttachSlagBombs			= mod:NewTargetAnnounce(157000, 4)
+local warnAttachSlagBombs			= mod:NewTargetCountAnnounce(157000, 4)
 
 --Stage One: The Blackrock Forge
 local specWarnDemolition			= mod:NewSpecialWarningCount(156425, nil, nil, nil, 2, nil, 2)
@@ -71,7 +71,7 @@ local timerMassiveExplosion			= mod:NewCastTimer(5, 163008)
 --Stage Three: Iron Crucible
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerSlagEruptionCD			= mod:NewCDCountTimer(32.5, 156928)
-local timerAttachSlagBombsCD		= mod:NewCDTimer(25.5, 157000)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
+local timerAttachSlagBombsCD		= mod:NewCDCountTimer(25.5, 157000)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
 local timerSlagBomb					= mod:NewCastTimer(5, 157015)
 local timerFallingDebris			= mod:NewCastTimer(6, 162585)--Mythic
 local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585)--Mythic
@@ -102,11 +102,18 @@ mod.vb.markCount = 0
 mod.vb.markCount2 = 0
 mod.vb.siegemaker = 0
 mod.vb.deprisCount = 0
+mod.vb.slagCastCount = 0
+local slagPlayerCount = 0--Doesn't seem to be any value in syncing this, this value is always 0 except for 0.2-2 seconds at most, recovery wouldn't give an accurate count.
 local smashTank = nil
 local UnitDebuff, UnitName, UnitClass, UnitPowerMax = UnitDebuff, UnitName, UnitClass, UnitPowerMax
 local markTargets = {}
+local slagTargets = {}
 local DBMHudMap = DBMHudMap
 local tankFilter
+local yellMFD2 = mod:NewYell(156096, L.customMFDSay, true, false)
+local yellSlag2 = mod:NewYell(157000, L.customSlagSay, true, false)
+local mfdDebuff = GetSpellInfo(156096)
+local playerName = UnitName("player")
 do
 	tankFilter = function(uId)
 		if UnitName(uId) == smashTank then
@@ -134,10 +141,134 @@ local function warnMarked(self)
 		warnMarkedforDeath:Show(countFormat, text)
 	end
 	table.wipe(markTargets)
+	--Begin Check Marked function
+	if not UnitDebuff("player", mfdDebuff) then
+		voiceMarkedforDeath:Play("156096")
+	end
+	--Sort by raidid since combat log order may diff person to person
+	--Order changed from left middle right to left right middle to match BW to prevent conflict in dual mod raids.
+	--This feature was suggested and started before that mod appeared, but since it exists, focus is on ensuring they work well together
+	--Feature disabled until phase 3
+	if self:IsLFR() or self.vb.phase ~= 3 then return end
+	local mfdFound = 0
+	local numGroupMembers = DBM:GetNumGroupMembers()
+	local expectedTotal = self:IsMythic() and 3 or 2
+	if numGroupMembers < 3 then return end--Future proofing solo raid. can't assign 3 positions if less than 3 people
+	for i = 1, numGroupMembers do
+		if UnitDebuff("raid"..i, mfdDebuff) then
+			mfdFound = mfdFound + 1
+			if UnitName("raid"..i) == playerName then
+				if mfdFound == 1 then
+					if self.Options.SpecWarn156096you then
+						specWarnMFDPosition:Show(L.left)
+					end
+					if self.Options.Yell156096 then
+						yellMFD2:Yell(L.left, playerName)
+					end
+					voiceMarkedforDeath:Schedule(0.7, "left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+				elseif mfdFound == 2 then
+					if self.Options.SpecWarn156096you then
+						specWarnMFDPosition:Show(L.right)
+					end
+					if self.Options.Yell156096 then
+						yellMFD2:Yell(L.right, playerName)
+					end
+					voiceMarkedforDeath:Schedule(0.7, "right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+				elseif mfdFound == 3 then
+					if self.Options.SpecWarn156096you then
+						specWarnMFDPosition:Show(L.middle)
+					end
+					if self.Options.Yell156096 then
+						yellMFD2:Yell(L.middle, playerName)
+					end
+					voiceMarkedforDeath:Schedule(0.7, "center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+				end
+			end
+			if mfdFound == expectedTotal then break end
+		end
+	end
+end
+
+local function meleeCheck(uId)
+	if UnitGroupRolesAssigned(uId) == "HEALER" then
+		return false
+	end
+	local _, class = UnitClass(uId)
+	--Because healers filtered out already, paladin and monk can only be melee if not "healer"
+	if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "MONK" then
+		return true
+	end
+	--Inspect throttle exists, so have to do it this way
+	if class == "DRUID" or class == "SHAMAN" then
+		if UnitPowerMax(uId) < 35000 then
+			return true
+		end
+	end
+	return false
+end
+
+local slagDebuff = GetSpellInfo(156096)
+local function checkSlag(self)
+	local numGroupMembers = DBM:GetNumGroupMembers()
+	if numGroupMembers < 2 then return end--Future proofing solo raid. can't assign 2 positions if less than 2 people
+	--Was originally going to also do this as 3 positions, but changed to match BW for compatability, for users who want to run DBM in BW dominant raids.
+	--Looks like BW helper fixed melee check to not be broken. Now we have to match it to prevent mod conflict.
+	local slagFound = 0
+	local totalMelee = 0
+	local tempTable = {}
+	for i = 1, numGroupMembers do
+		local unitID = "raid"..i
+		if UnitDebuff(unitID, slagDebuff) then--Tank excluded on purpose to match BW helper
+			slagFound = slagFound + 1
+			if meleeCheck(unitID) then
+				totalMelee = totalMelee + 1
+			end
+			tempTable[slagFound] = UnitName(unitID)
+			if slagFound == 2 then break end
+		end
+	end
+	if totalMelee == 1 then--Melee count exactly 1
+		--Assign melee to middle and ranged to back
+		local playerIsMelee = meleeCheck("player")
+		if playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
+			if self.Options.SpecWarn157000you then
+				specWarnSlagPosition:Show(L.middle)
+				if self.Options.Yell1570002 then
+					yellSlag2:Yell(L.middle, playerName)
+				end
+			end
+		elseif not playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
+			if self.Options.SpecWarn157000you then
+				specWarnSlagPosition:Show(BACK)
+				if self.Options.Yell1570002 then
+					yellSlag2:Yell(BACK, playerName)
+				end
+			end
+		end	
+	else--Just use roster order
+		if tempTable[1] == playerName then
+			if self.Options.SpecWarn157000you then
+				specWarnSlagPosition:Show(L.middle)
+				yellSlag2:Yell(L.middle, playerName)
+			end
+		elseif tempTable[2] == playerName then
+			if self.Options.SpecWarn157000you then
+				specWarnSlagPosition:Show(BACK)
+				yellSlag2:Yell(BACK, playerName)
+			end
+		end	
+	end
+end
+
+--Do not combine slag functions. warnSlag includes tank, checkSlag does NOT include tank.
+local function warnSlag(self)
+	warnAttachSlagBombs:Show(self.vb.slagCastCount, table.concat(slagTargets, "<, >"))
+	table.wipe(slagTargets)
 end
 
 function mod:OnCombatStart(delay)
 	table.wipe(markTargets)
+	table.wipe(slagTargets)
 	self.vb.phase = 1
 	self.vb.demolitionCount = 0
 	self.vb.SlagEruption = 0
@@ -152,12 +283,6 @@ function mod:OnCombatStart(delay)
 	end
 	timerMarkedforDeathCD:Start(36-delay, 1)
 	countdownMarkedforDeath:Start(36-delay)
-	yellMarkedforDeath	= self:NewYell(156096)
-	if self:IsMythic() then
-		yellAttachSlagBombs	= self:NewYell("OptionVersion2", 157000, L.customSlagSay)
-	else--In case do mythic first, heroic after, reset to non custom on pull
-		yellAttachSlagBombs	= self:NewYell("OptionVersion2", 157000)
-	end
 end
 
 function mod:OnCombatEnd()
@@ -221,117 +346,6 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-local mfdDebuff = GetSpellInfo(156096)
-local playerName = UnitName("player")
-local function checkMarked(self)
-	if not UnitDebuff("player", mfdDebuff) then
-		voiceMarkedforDeath:Play("156096")
-	end
-	--Sort by raidid since combat log order may diff person to person
-	--Order changed from left middle right to left right middle to match BW to prevent conflict in dual mod raids.
-	--This feature was suggested and started before that mod appeared, but since it exists, focus is on ensuring they work well together
-	--Feature disabled until phase 3
-	if self:IsLFR() or self.vb.phase ~= 3 then return end
-	local mfdFound = 0
-	local numGroupMembers = DBM:GetNumGroupMembers()
-	local expectedTotal = self:IsMythic() and 3 or 2
-	if numGroupMembers < 3 then return end--Future proofing solo raid. can't assign 3 positions if less than 3 people
-	for i = 1, numGroupMembers do
-		if UnitDebuff("raid"..i, mfdDebuff) then
-			mfdFound = mfdFound + 1
-			if UnitName("raid"..i) == playerName then
-				if mfdFound == 1 then
-					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(L.left)
-					end
-					yellMarkedforDeath:Yell(L.left, playerName)
-					voiceMarkedforDeath:Schedule(0.7, "left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
-				elseif mfdFound == 2 then
-					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(L.right)
-					end
-					yellMarkedforDeath:Yell(L.right, playerName)
-					voiceMarkedforDeath:Schedule(0.7, "right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
-				elseif mfdFound == 3 then
-					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(L.middle)
-					end
-					yellMarkedforDeath:Yell(L.middle, playerName)
-					voiceMarkedforDeath:Schedule(0.7, "center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
-				end
-			end
-			if mfdFound == expectedTotal then break end
-		end
-	end
-end
-
-local function meleeCheck(uId)
-	if UnitGroupRolesAssigned(uId) == "HEALER" then
-		return false
-	end
-	local _, class = UnitClass(uId)
-	--Because healers filtered out already, paladin and monk can only be melee if not "healer"
-	if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "MONK" then
-		return true
-	end
-	--Inspect throttle exists, so have to do it this way
-	if class == "DRUID" or class == "SHAMAN" then
-		if UnitPowerMax(uId) < 35000 then
-			return true
-		end
-	end
-	return false
-end
-
-local slagDebuff = GetSpellInfo(156096)
-local function checkSlag(self)
-	local numGroupMembers = DBM:GetNumGroupMembers()
-	if numGroupMembers < 2 then return end--Future proofing solo raid. can't assign 2 positions if less than 2 people
-	--Was originally going to also do this as 3 positions, but changed to match BW for compatability, for users who want to run DBM in BW dominant raids.
-	--Looks like BW helper fixed melee check to not be broken. Now we have to match it to prevent mod conflict.
-	local slagFound = 0
-	local totalMelee = 0
-	local tempTable = {}
-	for i = 1, numGroupMembers do
-		local unitID = "raid"..i
-		if UnitDebuff(unitID, slagDebuff) then--Tank excluded on purpose to match BW helper
-			slagFound = slagFound + 1
-			if meleeCheck(unitID) then
-				totalMelee = totalMelee + 1
-			end
-			table.insert(tempTable[slagFound], UnitName(unitID))
-			if slagFound == 2 then break end
-		end
-	end
-	if totalMelee == 1 then--Melee count exactly 1
-		--Assign melee to middle and ranged to back
-		local playerIsMelee = meleeCheck("player")
-		if playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
-			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(L.middle)
-				yellAttachSlagBombs:Yell(L.middle, playerName)
-			end
-		elseif not playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
-			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(BACK)
-				yellAttachSlagBombs:Yell(BACK, playerName)
-			end
-		end	
-	else--Just use roster order
-		if tempTable[1] == playerName then
-			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(L.middle)
-				yellAttachSlagBombs:Yell(L.middle, playerName)
-			end
-		elseif tempTable[2] == playerName then
-			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(BACK)
-				yellAttachSlagBombs:Yell(BACK, playerName)
-			end
-		end	
-	end
-end
-
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 162579 then
@@ -345,7 +359,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156096 then
-		if self:AntiSpam(2, 3) then
+		if self:AntiSpam(5, 3) then
 			self.vb.markCount = self.vb.markCount + 1
 			if self.vb.phase == 2 then
 				self.vb.markCount2 = self.vb.markCount2 + 1
@@ -357,7 +371,6 @@ function mod:SPELL_AURA_APPLIED(args)
 				timer = 15.5
 			end
 			timerImpalingThrow:Start()
-			self:Schedule(0.5, checkMarked, self)
 			timerMarkedforDeathCD:Start(timer, self.vb.markCount+1)
 			countdownMarkedforDeath:Start(timer)
 			DBM:Debug("Running experimental timerShatteringSmashCD adjust because debugmode is enabled", 2)
@@ -374,7 +387,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		markTargets[#markTargets + 1] = args.destName
 		self:Unschedule(warnMarked)
-		self:Schedule(0.5, warnMarked, self)
+		if (self:IsMythic() and #markTargets == 3) or #markTargets == 2 then--Have all targets, warn immediately
+			warnMarked(self)
+		else
+			self:Schedule(0.5, warnMarked, self)
+		end
 		if args:IsPlayer() then
 			specWarnMarkedforDeath:Show()
 			voiceMarkedforDeath:Play("findshelter")
@@ -393,18 +410,28 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.HudMapOnMFD then
 			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 5, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
 		end
-	elseif spellId == 157000 or spellId == 159179 then--Combine tank version with non tank version
-		warnAttachSlagBombs:CombinedShow(0.5, args.destName)
-		if self:AntiSpam(2, 4) then
-			timerAttachSlagBombsCD:Start()
+	elseif spellId == 157000 then--Non Tank Version
+		if self:AntiSpam(5, 4) then
+			slagPlayerCount = 0--Reset to 0, once
+			self.vb.slagCastCount = self.vb.slagCastCount + 1
+			timerAttachSlagBombsCD:Start(nil, self.vb.slagCastCount+1)
 			countdownSlagBombs:Start(26)
+		end
+		slagPlayerCount = slagPlayerCount + 1--Add counter (not in antispam on purpose)
+		slagTargets[#slagTargets + 1] = args.destName
+		self:Unschedule(warnSlag)
+		if #slagTargets == 3 then--Have all 3 targets (including tank), warn immediately
+			warnSlag(self)
+		else
+			self:Schedule(2, warnSlag, self)
+		end
+		if self:IsMythic() and slagPlayerCount == 2 then--Counter 2, do checkSlag immediately, this of course means function has to run for everyone instead of just player, but that's harmless
+			checkSlag(self)
 		end
 		if args:IsPlayer() then
 			specWarnAttachSlagBombs:Show()
-			if self:IsTank() or not self:IsMythic() then
+			if not self:IsMythic() then
 				yellAttachSlagBombs:Yell()
-			else
-				self:Schedule(0.5, checkSlag, self)
 			end
 			timerSlagBomb:Start()
 			voiceAttachSlagBombs:Play("runout")
@@ -412,13 +439,24 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(10)
 			end
 		end
-		--Tank stuff
-		if spellId == 159179 then--tank version
-			if not args:IsPlayer() then
-				specWarnAttachSlagBombsOther:Show(args.destName)
-			end
-			voiceAttachSlagBombs:Play("changemt")
+	elseif spellId == 159179 then--Tank version
+		slagTargets[#slagTargets + 1] = args.destName
+		self:Unschedule(warnSlag)
+		if #slagTargets == 3 then--Have all targets, warn immediately
+			warnSlag(self)
+		else
+			self:Schedule(2, warnSlag, self)
 		end
+		if args:IsPlayer() then
+			specWarnAttachSlagBombs:Show()
+			yellAttachSlagBombs:Yell()
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Show(10)
+			end
+		else
+			specWarnAttachSlagBombsOther:Show(args.destName)
+		end
+		voiceAttachSlagBombs:Play("changemt")
 	elseif spellId == 156667 then
 		self.vb.markCount2 = 0
 		self.vb.siegemaker = self.vb.siegemaker + 1
@@ -528,7 +566,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownSlagBombs:Start(11)
 		timerThrowSlagBombsCD:Cancel()
 		timerThrowSlagBombsCD:Start(11)--11-12.5
-		timerSiegemakerCD:Start(16, 1)
+		timerSiegemakerCD:Start(15, 1)
 		countdownShatteringSmash:Cancel()
 		timerShatteringSmashCD:Cancel()
 		if self:IsMythic() then--Boss gain power faster on mythic phase 2
@@ -552,13 +590,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		self.vb.phase = 3
 		self.vb.smashCount = 0
 		self.vb.markCount = 0
+		self.vb.slagCount = 0
 		timerSiegemakerCD:Cancel()
 		timerThrowSlagBombsCD:Cancel()
 		countdownSlagBombs:Cancel()
 		if self:IsMythic() then
 			timerFallingDebrisCD:Start(11, 1)
 		end
-		timerAttachSlagBombsCD:Start(11)
+		timerAttachSlagBombsCD:Start(11, 1)
 		countdownSlagBombs:Start(11)
 		countdownShatteringSmash:Cancel()
 		countdownShatteringSmash:Start(26)
@@ -577,9 +616,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		voicePhaseChange:Play("pthree")
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
-		end
-		if not self:IsLFR() then
-			yellMarkedforDeath	= self:NewYell(156096, L.customMFDSay)
 		end
 	end
 end

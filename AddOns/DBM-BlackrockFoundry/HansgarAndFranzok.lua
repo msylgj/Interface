@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1155, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13422 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13476 $"):sub(12, -3))
 mod:SetCreatureID(76974, 76973)
 mod:SetEncounterID(1693)
 mod:SetZone()
@@ -134,6 +134,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			timerDisruptingRoarCD:Cancel()
 			timerSkullcrackerCD:Cancel()
 		elseif cid == 76973 then--Hans
+			self:BossTargetScannerAbort(76973, "JumpTarget")
 			timerJumpSlamCD:Cancel()
 		end
 		--The triggers are these percentages for sure but there is a delay before they do it so it always appears later, but the trigger has been triggered
