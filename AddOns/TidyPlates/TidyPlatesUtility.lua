@@ -89,11 +89,20 @@ local function updatetable(original, added)
 end
 
 local function valueToString(value)
-    if value ~= nil then
-        if value >= 1000000 then return format('%.1fm', value / 1000000)
-        elseif value >= 1000 then return format('%.1fk', value / 1000)
-        else return value end
-    end
+	if GetLocale() == "zhCN" then
+		if value ~= nil then
+			if value >= 100000000 then return format('%.1f亿', value / 100000000)
+			elseif value >= 10000 then return format('%.1f万', value / 10000)
+			elseif value >= 1000 then return format('%.1f千', value / 1000)
+			else return value end
+		end
+	else
+		if value ~= nil then
+			if value >= 1000000 then return format('%.1fm', value / 1000000)
+			elseif value >= 1000 then return format('%.1fk', value / 1000)
+			else return value end
+		end
+	end
 end
 
 TidyPlatesUtility.abbrevNumber = valueToString

@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13452 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13563 $"):sub(12, -3))
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
 mod:SetHotfixNoticeRev(12859)
+--mod:SetRespawnTime(20)--Need to verify. def a lot higher than 10. Not sure if 20 or 30
 
 mod:RegisterCombat("combat")
 

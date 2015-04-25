@@ -44,7 +44,7 @@
 
 
 
-local revision =("$Revision: 13469 $"):sub(12, -3)
+local revision =("$Revision: 13616 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -59,8 +59,9 @@ local soundsRegistered = false
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
 --------------------------------------------------------
-local GetSpellInfo = GetSpellInfo
-local EJ_GetSectionInfo = EJ_GetSectionInfo
+local GetSpellInfo, EJ_GetSectionInfo = GetSpellInfo, EJ_GetSectionInfo
+local tinsert, tremove, tsort, twipe = table.insert, table.remove, table.sort, table.wipe
+local mfloor, mmax = math.floor, math.max
 
 function DBM_GUI:ShowHide(forceshow)
 	if forceshow == true then
@@ -121,7 +122,7 @@ do
 
 		self:SetLastObj(panel)
 		self.panels = self.panels or {}
-		table.insert(self.panels, {frame = panel, parent = self, framename = FrameTitle..self:GetCurrentID()})
+		tinsert(self.panels, {frame = panel, parent = self, framename = FrameTitle..self:GetCurrentID()})
 		local obj = self.panels[#self.panels]
 		panel.panelid = #self.panels
 		return setmetatable(obj, prottypemetatable)
@@ -130,11 +131,11 @@ do
 	-- This function don't realy destroy a window, it just hides it
 	function PanelPrototype:Destroy()
 		if self.frame.FrameTyp == 2 then
-			table.remove(DBM_GUI_Options.Buttons, self.frame.categoryid)
+			tremove(DBM_GUI_Options.Buttons, self.frame.categoryid)
 		else
-			table.remove(DBM_GUI_Bosses.Buttons, self.frame.categoryid)
+			tremove(DBM_GUI_Bosses.Buttons, self.frame.categoryid)
 		end
-		table.remove(self.parent.panels, self.frame.panelid)
+		tremove(self.parent.panels, self.frame.panelid)
 		self.frame:Hide()
 	end
 
@@ -173,7 +174,7 @@ do
 
 		self:SetLastObj(area)
 		self.areas = self.areas or {}
-		table.insert(self.areas, {frame = area, parent = self, framename = FrameTitle..self:GetCurrentID()})
+		tinsert(self.areas, {frame = area, parent = self, framename = FrameTitle..self:GetCurrentID()})
 		return setmetatable(self.areas[#self.areas], prottypemetatable)
 	end
 
@@ -195,7 +196,7 @@ end
 do
 	local FrameNames = {}
 	function DBM_GUI:AddFrame(FrameName)
-		table.insert(FrameNames, FrameName)
+		tinsert(FrameNames, FrameName)
 	end
 	function DBM_GUI:IsPresent(FrameName)
 		for k,v in ipairs(FrameNames) do
@@ -267,9 +268,9 @@ local function MixinSharedMedia3(mediatype, mediatable)
 	-- sort LibSharedMedia keys alphabetically (case-insensitive)
 	local keytable = {}
 	for k in next, LibStub("LibSharedMedia-3.0", true):HashTable(mediatype) do
-		table.insert(keytable, k)
+		tinsert(keytable, k)
 	end
-	table.sort(keytable, function (a, b) return a:lower() < b:lower() end);
+	tsort(keytable, function (a, b) return a:lower() < b:lower() end);
 	-- DBM values (mediatable) first, LibSharedMedia values (sorted alphabetically) afterwards
 	local result = mediatable
 	for i=1,#keytable do
@@ -288,11 +289,11 @@ local function MixinSharedMedia3(mediatype, mediatable)
 			end
 			if insertme then
 				if mediatype == "sound" then
-					table.insert(result, {text=k, value=v, sound=true})
+					tinsert(result, {text=k, value=v, sound=true})
 				elseif mediatype == "statusbar" then
-					table.insert(result, {text=k, value=v, texture=v})
+					tinsert(result, {text=k, value=v, texture=v})
 				elseif mediatype == "font" then
-					table.insert(result, {text=k, value=v, font=v})
+					tinsert(result, {text=k, value=v, font=v})
 				end
 			end
 		end
@@ -487,7 +488,7 @@ do
 			html:ClearAllPoints()
 			html:SetPoint("TOPLEFT", textbeside, "TOPRIGHT", textpad, -4)
 			html:SetHeight(ht)
-			button.myheight = math.max(ht+12,button.myheight)
+			button.myheight = mmax(ht+12,button.myheight)
 		end
 
 		if dbmvar and DBM.Options[dbmvar] ~= nil then
@@ -836,7 +837,7 @@ function ListFrameButtonsPrototype:CreateCategory(frame, parent)
 
 	self:SetParentHasChilds(parent)
 
-	table.insert(self.Buttons, {
+	tinsert(self.Buttons, {
 		frame = frame,
 		parent = parent
 	})
@@ -879,10 +880,10 @@ end
 do
 	local mytable = {}
 	function ListFrameButtonsPrototype:GetVisibleTabs()
-		table.wipe(mytable)
+		twipe(mytable)
 		for k,v in ipairs(self.Buttons) do
 			if v.parent == nil then
-				table.insert(mytable, v)
+				tinsert(mytable, v)
 
 				if v.frame.showsub then
 					self:GetVisibleSubTabs(v.frame.name, mytable)
@@ -896,7 +897,7 @@ end
 function ListFrameButtonsPrototype:GetVisibleSubTabs(parent, t)
 	for i, v in ipairs(self.Buttons) do
 		if v.parent == parent then
-			table.insert(t, v)
+			tinsert(t, v)
 			if v.frame.showsub then
 				self:GetVisibleSubTabs(v.frame.name, t)
 			end
@@ -1151,7 +1152,7 @@ do
 		end
 
 		for i, element in ipairs(TABLE) do
-			table.insert(displayedElements, element.frame)
+			tinsert(displayedElements, element.frame)
 		end
 
 
@@ -1267,13 +1268,13 @@ do
 		local button = CreateFrame("BUTTON", name.."Button1", frame, "DBM_GUI_FrameButtonTemplate")
 		button:SetPoint("TOPLEFT", frame, 0, -8)
 		frame.buttonHeight = button:GetHeight()
-		table.insert(buttons, button)
+		tinsert(buttons, button)
 
 		local maxButtons = (frame:GetHeight() - 8) / frame.buttonHeight
 		for i = 2, maxButtons do
 			button = CreateFrame("BUTTON", name.."Button"..i, frame, "DBM_GUI_FrameButtonTemplate")
 			button:SetPoint("TOPLEFT", buttons[#buttons], "BOTTOMLEFT")
-			table.insert(buttons, button)
+			tinsert(buttons, button)
 		end
 		frame.buttons = buttons
 	end
@@ -1518,6 +1519,7 @@ local function CreateOptionsMenu()
 		generalWhispersArea:CreateCheckButton(L.AutoRespond, true, nil, "AutoRespond")
 		generalWhispersArea:CreateCheckButton(L.EnableStatus, true, nil, "StatusEnabled")
 		generalWhispersArea:CreateCheckButton(L.WhisperStats, true, nil, "WhisperStats")
+		generalWhispersArea:CreateCheckButton(L.DisableStatusWhisper, true, nil, "DisableStatusWhisper")
 		generalCoreArea:AutoSetDimension()
 		generalMessagesArea:AutoSetDimension()
 		generalWhispersArea:AutoSetDimension()
@@ -1956,8 +1958,8 @@ local function CreateOptionsMenu()
 
 		local flashSlider = specArea:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 3, 1, 100)
 		flashSlider:SetPoint('BOTTOMLEFT', check3, "BOTTOMLEFT", 330, 0)
-		flashSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.SpecialWarningFlashRepeatAmount)) end)
-		flashSlider:HookScript("OnValueChanged", function(self) DBM.Options.SpecialWarningFlashRepeatAmount = math.floor(self:GetValue()) end)
+		flashSlider:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashRepeatAmount)) end)
+		flashSlider:HookScript("OnValueChanged", function(self) DBM.Options.SpecialWarningFlashRepeatAmount = mfloor(self:GetValue()) end)
 
 		local showbutton = specArea:CreateButton(L.SpecWarn_DemoButton, 120, 16)
 		showbutton:SetPoint('TOPRIGHT', specArea.frame, "TOPRIGHT", -5, -5)
@@ -2537,7 +2539,6 @@ local function CreateOptionsMenu()
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
 		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
-		--spamArea:CreateCheckButton(L.BlockVersionUpdateNotice, true, nil, "BlockVersionUpdateNotice2")
 
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
@@ -2554,8 +2555,8 @@ local function CreateOptionsMenu()
 
 		local PTSlider = spamPTArea:CreateSlider(L.PT_Threshold, 3, 30, 1, 300)   -- (text , min_value , max_value , step , width)
 		PTSlider:SetPoint('BOTTOMLEFT', SPTCDT, "BOTTOMLEFT", 80, -40)--Position based on slider, text anchored to slider. English has large text, so must move slider to middle :\
-		PTSlider:HookScript("OnShow", function(self) self:SetValue(math.floor(DBM.Options.PTCountThreshold)) end)
-		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = math.floor(self:GetValue()) end)
+		PTSlider:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.PTCountThreshold)) end)
+		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = mfloor(self:GetValue()) end)
 
 		spamPTArea:AutoSetDimension()
 		spamArea:AutoSetDimension()
@@ -2699,10 +2700,10 @@ local function CreateOptionsMenu()
 		createButton:SetPoint('LEFT', createTextbox, "RIGHT", 10, 0)
 		createButton:SetScript("OnClick", function() DBM_GUI.dbm_profilePanel_create() end)
 		createButton:SetScript("OnShow", function()
-			table.wipe(profileDropdown)
+			twipe(profileDropdown)
 			for name, tb in pairs(DBM_AllSavedOptions) do
 				local dropdown = { text = name, value = name }
-				table.insert(profileDropdown, dropdown)
+				tinsert(profileDropdown, dropdown)
 			end
 		end)
 
@@ -2790,7 +2791,6 @@ end
 DBM:RegisterOnGuiLoadCallback(CreateOptionsMenu, 1)
 
 do
-	local mfloor = math.floor
 	local function OnShowGetStats(bossid, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3)
 		return function(self)
 			local mod = DBM:GetModByName(bossid)
@@ -2799,6 +2799,7 @@ do
 			top1value2:SetText( stats.normalPulls - stats.normalKills )
 			top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
 			if statsType == 1 then--Party instance
+				--Top1 already set at top
 				top2value1:SetText( stats.heroicKills )
 				top2value2:SetText( stats.heroicPulls-stats.heroicKills )
 				top2value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
@@ -2822,7 +2823,74 @@ do
 				bottom2value1:SetText( stats.mythicKills )
 				bottom2value2:SetText( stats.mythicPulls-stats.mythicKills )
 				bottom2value3:SetText( stats.mythicBestTime and ("%d:%02d"):format(mfloor(stats.mythicBestTime / 60), stats.mythicBestTime % 60) or "-" )
+			elseif statsType == 4 then--Wod mythic Party instance
+				--Top1 already set at top
+				top2value1:SetText( stats.heroicKills )
+				top2value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top2value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				bottom1value1:SetText( stats.challengeKills )
+				bottom1value2:SetText( stats.challengePulls-stats.challengeKills )
+				bottom1value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-" )
+				bottom2value1:SetText( stats.mythicKills )
+				bottom2value2:SetText( stats.mythicPulls-stats.mythicKills )
+				bottom2value3:SetText( stats.mythicBestTime and ("%d:%02d"):format(mfloor(stats.mythicBestTime / 60), stats.mythicBestTime % 60) or "-" )
+			elseif statsType == 5 then--Normal, TimeWalker Party instance (some normal only dungeons with timewalker such as classic)
+				--Top1 already set at top
+				top2value1:SetText( stats.timewalkerKills )
+				top2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				top2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
+			elseif statsType == 6 then--Heroic, TimeWalker Party instance (some heroic only dungeons with timewalker)
+				top1value1:SetText( stats.heroicKills )
+				top1value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top1value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				top2value1:SetText( stats.timewalkerKills )
+				top2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				top2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
+			elseif statsType == 7 then--Normal, Heroic, TimeWalker Party instance (most wrath and cata dungeons)
+				--Top1 already set at top
+				top2value1:SetText( stats.heroicKills )
+				top2value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top2value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				top3value1:SetText( stats.timewalkerKills )
+				top3value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				top3value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
+			elseif statsType == 8 then--Normal, Heroic, Challenge, TimeWalker Party instance (Mop Dungeons. I realize CM is technically gone, but we still retain stats for users)
+				--Top1 already set at top
+				top2value1:SetText( stats.heroicKills )
+				top2value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top2value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				bottom1value1:SetText( stats.challengeKills )
+				bottom1value2:SetText( stats.challengePulls-stats.challengeKills )
+				bottom1value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-" )
+				bottom2value1:SetText( stats.timewalkerKills )
+				bottom2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				bottom2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
+			elseif statsType == 9 then--Heroic, Challenge, TimeWalker Party instance (Special heroic only Mop or WoD bosses)
+				top1value1:SetText( stats.heroicKills )
+				top1value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top1value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				top2value1:SetText( stats.challengeKills )
+				top2value2:SetText( stats.challengePulls-stats.challengeKills )
+				top2value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-" )
+				top3value1:SetText( stats.timewalkerKills )
+				top3value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				top3value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
+			elseif statsType == 10 then--Normal, Heroic, Challenge, Mythic, TimeWalker Party instance (such a dungeon doesn't exist yet, but 7.x future proofing)
+				--Top1 already set at top
+				top2value1:SetText( stats.heroicKills )
+				top2value2:SetText( stats.heroicPulls-stats.heroicKills )
+				top2value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
+				top3value1:SetText( stats.challengeKills )
+				top3value2:SetText( stats.challengePulls-stats.challengeKills )
+				top3value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-" )
+				bottom1value1:SetText( stats.mythicKills )
+				bottom1value2:SetText( stats.mythicPulls-stats.mythicKills )
+				bottom1value3:SetText( stats.mythicBestTime and ("%d:%02d"):format(mfloor(stats.mythicBestTime / 60), stats.mythicBestTime % 60) or "-" )
+				bottom2value1:SetText( stats.timewalkerKills )
+				bottom2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				bottom2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )		
 			else
+				--Top1 already set at top
 				top2value1:SetText( stats.normal25Kills )
 				top2value2:SetText( stats.normal25Pulls - stats.normal25Kills )
 				top2value3:SetText( stats.normal25BestTime and ("%d:%02d"):format(mfloor(stats.normal25BestTime / 60), stats.normal25BestTime % 60) or "-" )
@@ -2853,7 +2921,7 @@ do
 			resetButton:SetPoint('TOPLEFT', 10, -14)
 			resetButton:SetScript("OnClick", function() DBM:LoadAllModDefaultOption(addon.modId) end)
 			resetButton:SetScript("OnShow", function()
-				table.wipe(modProfileDropdown)
+				twipe(modProfileDropdown)
 				local savedVarsName = addon.modId:gsub("-", "").."_AllSavedVars"
 				for charname, charTable in pairs(_G[savedVarsName]) do
 					for bossid, optionTable in pairs(charTable) do
@@ -2861,7 +2929,7 @@ do
 							if optionTable[i] then
 								local displayText = (i == 0 and charname.." ("..ALL..")") or charname.." ("..SPECIALIZATION..i.."-"..(charTable["talent"..i] or "")..")"
 								local dropdown = { text = displayText, value = charname.."|"..tostring(i) }
-								table.insert(modProfileDropdown, dropdown)
+								tinsert(modProfileDropdown, dropdown)
 							end
 						end
 						break
@@ -2943,6 +3011,8 @@ do
 				stats.challengePulls = stats.challengePulls or 0
 				stats.mythicKills = stats.mythicKills or 0
 				stats.mythicPulls = stats.mythicPulls or 0
+				stats.timewalkerKills = stats.timewalkerKills or 0
+				stats.timewalkerPulls = stats.timewalkerPulls or 0
 				stats.normal25Kills = stats.normal25Kills or 0
 				stats.normal25Pulls = stats.normal25Pulls or 0
 				stats.heroic25Kills = stats.heroic25Kills or 0
@@ -3012,25 +3082,215 @@ do
 					singleline = singleline + 1
 				elseif mod.addon.type == "PARTY" or mod.addon.type == "SCENARIO" then--If party or scenario instance have no heroic, we should use oneFormat.
 					statsType = 1
-					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
-					if mod.addon.hasChallenge then
+					if mod.addon.hasChallenge then--Should never have an "Only normal" type
+						--Set header text.
+						top1header:SetText(PLAYER_DIFFICULTY1)
+						top2header:SetText(PLAYER_DIFFICULTY2)
 						if mod.onlyHeroic then
-							--Use top1 and top2 area.
-							top2header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-							top2text1:SetPoint("TOPLEFT", top2header, "BOTTOMLEFT", 20, -5)
-							top2text2:SetPoint("TOPLEFT", top2text1, "BOTTOMLEFT", 0, -5)
-							top2text3:SetPoint("TOPLEFT", top2text2, "BOTTOMLEFT", 0, -5)
-							top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
-							top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
-							top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
-							top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
-							top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
-							top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
-							top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
-							top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
-							top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
-							top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
-						elseif mod.onlyNormal then
+							if mod.addon.hasTimeWalker then
+								statsType = 9
+								--Use top1 and top2 and top3 area. (Heroic, Challenge, Timewalker)
+								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+								top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+								top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+								top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+								top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+								top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+								top2header:SetPoint("LEFT", top1header, "LEFT", 150, 0)
+								top2text1:SetPoint("LEFT", top1text1, "LEFT", 150, 0)
+								top2text2:SetPoint("LEFT", top1text2, "LEFT", 150, 0)
+								top2text3:SetPoint("LEFT", top1text3, "LEFT", 150, 0)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
+								top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
+								top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
+								top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
+								top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
+								top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
+								top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+								top1header:SetText(PLAYER_DIFFICULTY2)
+								top2header:SetText(CHALLENGE_MODE)
+								top3header:SetText("TimeWalker")
+							else
+								--Use top1 and top2 area. (Heroic, Challenge)
+								top2header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top2text1:SetPoint("TOPLEFT", top2header, "BOTTOMLEFT", 20, -5)
+								top2text2:SetPoint("TOPLEFT", top2text1, "BOTTOMLEFT", 0, -5)
+								top2text3:SetPoint("TOPLEFT", top2text2, "BOTTOMLEFT", 0, -5)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
+								top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
+								top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
+								top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
+								top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
+								top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
+								top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
+								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
+								singleline = singleline + 1
+							end
+						elseif mod.addon.hasMythic then--Wod dungeons with mythic mode (6.2+)
+							if mod.addon.hasTimeWalker then
+								statsType = 10--(Normal, Heroic, Challenge, Mythic, Timewalker) (Wod 5 man dungeons, after 7.0, if timewalker is added to them)						--Use top1, top2, top3, bottom1 and bottom2 area.
+								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+								top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+								top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+								top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+								top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+								top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+								top2header:SetPoint("LEFT", top1header, "LEFT", 150, 0)
+								top2text1:SetPoint("LEFT", top1text1, "LEFT", 150, 0)
+								top2text2:SetPoint("LEFT", top1text2, "LEFT", 150, 0)
+								top2text3:SetPoint("LEFT", top1text3, "LEFT", 150, 0)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
+								top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
+								top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
+								top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
+								top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
+								top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
+								top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+								bottom1header:SetPoint("TOPLEFT", top1text3, "BOTTOMLEFT", -20, -5)
+								bottom1text1:SetPoint("TOPLEFT", bottom1header, "BOTTOMLEFT", 20, -5)
+								bottom1text2:SetPoint("TOPLEFT", bottom1text1, "BOTTOMLEFT", 0, -5)
+								bottom1text3:SetPoint("TOPLEFT", bottom1text2, "BOTTOMLEFT", 0, -5)
+								bottom1value1:SetPoint("TOPLEFT", bottom1text1, "TOPLEFT", 80, 0)
+								bottom1value2:SetPoint("TOPLEFT", bottom1text2, "TOPLEFT", 80, 0)
+								bottom1value3:SetPoint("TOPLEFT", bottom1text3, "TOPLEFT", 80, 0)
+								bottom2header:SetPoint("LEFT", bottom1header, "LEFT", 150, 0)
+								bottom2text1:SetPoint("LEFT", bottom1text1, "LEFT", 150, 0)
+								bottom2text2:SetPoint("LEFT", bottom1text2, "LEFT", 150, 0)
+								bottom2text3:SetPoint("LEFT", bottom1text3, "LEFT", 150, 0)
+								bottom2value1:SetPoint("TOPLEFT", bottom2text1, "TOPLEFT", 80, 0)
+								bottom2value2:SetPoint("TOPLEFT", bottom2text2, "TOPLEFT", 80, 0)
+								bottom2value3:SetPoint("TOPLEFT", bottom2text3, "TOPLEFT", 80, 0)
+								top3header:SetText(CHALLENGE_MODE)
+								bottom1header:SetText(PLAYER_DIFFICULTY6)
+								bottom1header:SetFontObject(GameFontDisableSmall)
+								bottom2header:SetText("TimeWalker")
+								bottom2header:SetFontObject(GameFontDisableSmall)
+								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*10 )
+								doubleline = doubleline + 1
+							else
+								statsType = 4-- (Normal, Heroic, CHallenge, Mythic)
+								--Use top1, top2, bottom1, bottom2 area.
+								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+								top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+								top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+								top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+								top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+								top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+								top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+								top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+								top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+								top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								bottom1header:SetPoint("TOPLEFT", top1text3, "BOTTOMLEFT", -20, -5)
+								bottom1text1:SetPoint("TOPLEFT", bottom1header, "BOTTOMLEFT", 20, -5)
+								bottom1text2:SetPoint("TOPLEFT", bottom1text1, "BOTTOMLEFT", 0, -5)
+								bottom1text3:SetPoint("TOPLEFT", bottom1text2, "BOTTOMLEFT", 0, -5)
+								bottom1value1:SetPoint("TOPLEFT", bottom1text1, "TOPLEFT", 80, 0)
+								bottom1value2:SetPoint("TOPLEFT", bottom1text2, "TOPLEFT", 80, 0)
+								bottom1value3:SetPoint("TOPLEFT", bottom1text3, "TOPLEFT", 80, 0)
+								bottom2header:SetPoint("LEFT", bottom1header, "LEFT", 220, 0)
+								bottom2text1:SetPoint("LEFT", bottom1text1, "LEFT", 220, 0)
+								bottom2text2:SetPoint("LEFT", bottom1text2, "LEFT", 220, 0)
+								bottom2text3:SetPoint("LEFT", bottom1text3, "LEFT", 220, 0)
+								bottom2value1:SetPoint("TOPLEFT", bottom2text1, "TOPLEFT", 80, 0)
+								bottom2value2:SetPoint("TOPLEFT", bottom2text2, "TOPLEFT", 80, 0)
+								bottom2value3:SetPoint("TOPLEFT", bottom2text3, "TOPLEFT", 80, 0)
+								--Set header text.
+								bottom1header:SetText(CHALLENGE_MODE)
+								bottom1header:SetFontObject(GameFontDisableSmall)
+								bottom2header:SetText(PLAYER_DIFFICULTY6)
+								bottom2header:SetFontObject(GameFontDisableSmall)
+								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline)-(L.FontHeight*10*doubleline))
+								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*10 )
+								doubleline = doubleline + 1
+							end
+						else
+							if mod.addon.hasTimeWalker then
+								statsType = 8--Mop dungeons (Normal, Heroic, Challenge, TimeWalker)
+								--Use top1, top2, bottom1, bottom2 area.
+								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+								top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+								top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+								top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+								top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+								top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+								top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+								top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+								top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+								top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								bottom1header:SetPoint("TOPLEFT", top1text3, "BOTTOMLEFT", -20, -5)
+								bottom1text1:SetPoint("TOPLEFT", bottom1header, "BOTTOMLEFT", 20, -5)
+								bottom1text2:SetPoint("TOPLEFT", bottom1text1, "BOTTOMLEFT", 0, -5)
+								bottom1text3:SetPoint("TOPLEFT", bottom1text2, "BOTTOMLEFT", 0, -5)
+								bottom1value1:SetPoint("TOPLEFT", bottom1text1, "TOPLEFT", 80, 0)
+								bottom1value2:SetPoint("TOPLEFT", bottom1text2, "TOPLEFT", 80, 0)
+								bottom1value3:SetPoint("TOPLEFT", bottom1text3, "TOPLEFT", 80, 0)
+								bottom2header:SetPoint("LEFT", bottom1header, "LEFT", 220, 0)
+								bottom2text1:SetPoint("LEFT", bottom1text1, "LEFT", 220, 0)
+								bottom2text2:SetPoint("LEFT", bottom1text2, "LEFT", 220, 0)
+								bottom2text3:SetPoint("LEFT", bottom1text3, "LEFT", 220, 0)
+								bottom2value1:SetPoint("TOPLEFT", bottom2text1, "TOPLEFT", 80, 0)
+								bottom2value2:SetPoint("TOPLEFT", bottom2text2, "TOPLEFT", 80, 0)
+								bottom2value3:SetPoint("TOPLEFT", bottom2text3, "TOPLEFT", 80, 0)
+								--Set header text.
+								bottom1header:SetText(CHALLENGE_MODE)
+								bottom1header:SetFontObject(GameFontDisableSmall)
+								bottom2header:SetText("TimeWalker")
+								bottom2header:SetFontObject(GameFontDisableSmall)
+								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline)-(L.FontHeight*10*doubleline))
+								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*10 )
+								doubleline = doubleline + 1
+							else
+								--Use top1, top2 and top3 area. (Normal, Heroic, Challenge)
+								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+								top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+								top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+								top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+								top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+								top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+								top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+								top2header:SetPoint("LEFT", top1header, "LEFT", 150, 0)
+								top2text1:SetPoint("LEFT", top1text1, "LEFT", 150, 0)
+								top2text2:SetPoint("LEFT", top1text2, "LEFT", 150, 0)
+								top2text3:SetPoint("LEFT", top1text3, "LEFT", 150, 0)
+								top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+								top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+								top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+								top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
+								top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
+								top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
+								top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
+								top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
+								top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
+								top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+								top3header:SetText(CHALLENGE_MODE)
+								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
+								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
+								singleline = singleline + 1
+							end
+						end
+					elseif mod.onlyNormal then--Classic Dungeons
+						if mod.addon.hasTimeWalker then
+							statsType = 5--Normal, TimeWalker
 							--Use top1 and top2 area.
 							top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
 							top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
@@ -3039,15 +3299,71 @@ do
 							top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
 							top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
 							top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
-							top3header:SetPoint("LEFT", top1header, "LEFT", 150, 0)
-							top3text1:SetPoint("LEFT", top1text1, "LEFT", 150, 0)
-							top3text2:SetPoint("LEFT", top1text2, "LEFT", 150, 0)
-							top3text3:SetPoint("LEFT", top1text3, "LEFT", 150, 0)
-							top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
-							top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
-							top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+							top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+							top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+							top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+							top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+							top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+							top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+							top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top1header:SetText(PLAYER_DIFFICULTY1)
+							top2header:SetText("TimeWalker")
 						else
-							--Use top1, top2 and top3 area.
+							--Like one format
+							top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+							top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+							top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+							top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+							top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+							top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+							top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top1header:SetText(PLAYER_DIFFICULTY1)
+						end
+						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
+						area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
+						singleline = singleline + 1
+					elseif mod.onlyHeroic then--Some special BC, Wrath, Cata bosses
+						if mod.addon.hasTimeWalker then
+							statsType = 6--Heroic, TimeWalker
+							--Use top1 and top2 area.
+							top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+							top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+							top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+							top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+							top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+							top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+							top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+							top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+							top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+							top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+							top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+							top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+							top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+							top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top1header:SetText(PLAYER_DIFFICULTY2)
+							top2header:SetText("TimeWalker")
+						else
+							--Like one format
+							top2header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+							top2text1:SetPoint("TOPLEFT", top2header, "BOTTOMLEFT", 20, -5)
+							top2text2:SetPoint("TOPLEFT", top2text1, "BOTTOMLEFT", 0, -5)
+							top2text3:SetPoint("TOPLEFT", top2text2, "BOTTOMLEFT", 0, -5)
+							top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+							top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+							top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top2header:SetText(PLAYER_DIFFICULTY2)
+						end
+						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
+						area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
+						singleline = singleline + 1
+					else--Dungeons that are Normal, Heroic
+						if mod.addon.hasTimeWalker then
+							statsType = 7--Normal, Heroic, TimeWalker
+							--Use top1 and top2 and top 3 area.
 							top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
 							top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
 							top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
@@ -3069,55 +3385,34 @@ do
 							top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
 							top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
 							top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top1header:SetText(PLAYER_DIFFICULTY1)
+							top2header:SetText(PLAYER_DIFFICULTY2)
+							top3header:SetText("TimeWalker")
+						else
+							--Use top1 and top2 area. (normal, Heroic)
+							top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+							top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+							top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+							top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+							top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+							top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+							top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+							top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+							top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+							top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+							top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+							top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+							top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+							top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+							--Set header text.
+							top1header:SetText(PLAYER_DIFFICULTY1)
+							top2header:SetText(PLAYER_DIFFICULTY2)
 						end
-						--Set header text.
-						top1header:SetText(PLAYER_DIFFICULTY1)
-						top2header:SetText(PLAYER_DIFFICULTY2)
-						top3header:SetText(CHALLENGE_MODE)
-					elseif mod.onlyNormal then
-						--Like one format
-						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
-						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
-						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
-						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
-						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
-						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
-						--Set header text.
-						top1header:SetText(PLAYER_DIFFICULTY1)
-					elseif mod.onlyHeroic then
-						--Like one format
-						top2header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-						top2text1:SetPoint("TOPLEFT", top2header, "BOTTOMLEFT", 20, -5)
-						top2text2:SetPoint("TOPLEFT", top2text1, "BOTTOMLEFT", 0, -5)
-						top2text3:SetPoint("TOPLEFT", top2text2, "BOTTOMLEFT", 0, -5)
-						top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
-						top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
-						top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
-						--Set header text.
-						top2header:SetText(PLAYER_DIFFICULTY2)
-					else
-						--Use top1 and top2 area.
-						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
-						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
-						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
-						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
-						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
-						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
-						top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
-						top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
-						top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
-						top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
-						top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
-						top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
-						top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
-						--Set header text.
-						top1header:SetText(PLAYER_DIFFICULTY1)
-						top2header:SetText(PLAYER_DIFFICULTY2)
+						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
+						area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
+						singleline = singleline + 1
 					end
-					area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
-					singleline = singleline + 1
 				elseif mod.addon.type == "RAID" and mod.addon.noHeroic and not mod.addon.hasMythic then--Early wrath
 					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
 					--Use top1 and top2 area.
@@ -3356,7 +3651,7 @@ do
 					end
 				end
 
-				table.insert(area.onshowcall, OnShowGetStats(mod.id, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
+				tinsert(area.onshowcall, OnShowGetStats(mod.id, statsType, top1value1, top1value2, top1value3, top2value1, top2value2, top2value3, top3value1, top3value2, top3value3, bottom1value1, bottom1value2, bottom1value3, bottom2value1, bottom2value2, bottom2value3, bottom3value1, bottom3value2, bottom3value3))
 			end
 		end
 		area.frame:SetScript("OnShow", function(self)

@@ -60,12 +60,24 @@ end
 
 
 local function ShortenNumber(number)
-	if number > 1000000 then
-		return (ceil((number/10000))/100).." M"
-	elseif number > 1000 then
-		return (ceil((number/10))/100).." k"
+	if GetLocale() == "zhCN" then
+		if number > 100000000 then
+			return (ceil((number/1000))/10000).." 亿"
+		elseif number > 10000 then
+			return (ceil((number/100))/100).." 万"
+		elseif number > 1000 then
+			return (ceil((number/10))/100).." 千"
+		else
+			return number
+		end
 	else
-		return number
+		if number > 1000000 then
+			return (ceil((number/10000))/100).." M"
+		elseif number > 1000 then
+			return (ceil((number/10))/100).." k"
+		else
+			return number
+		end
 	end
 end
 
@@ -281,19 +293,19 @@ end
 local HealthTextModeFunctions = {}
 
 
-TidyPlatesHubDefaults.FriendlyStatusTextMode = "HealthFunctionTotal"
-TidyPlatesHubDefaults.EnemyStatusTextMode = "HealthFunctionTotal"
+TidyPlatesHubDefaults.FriendlyStatusTextMode = "HealthFunctionNone"
+TidyPlatesHubDefaults.EnemyStatusTextMode = "HealthFunctionNone"
 
 AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionNone, "无", "HealthFunctionNone")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionPercent, "生命值百分比", "HealthFunctionPercent")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionExact, "精确生命值", "HealthFunctionExact")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionApprox, "大约生命值", "HealthFunctionApprox")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionDeficit, "损失生命值", "HealthFunctionDeficit")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionTotal, "生命值和百分比", "HealthFunctionTotal")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionTargetOf, "目标名称", "HealthFunctionTargetOf")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionPercent, "百分比血量", "HealthFunctionPercent")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionExact, "精确血量", "HealthFunctionExact")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionApprox, "大概血量", "HealthFunctionApprox")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionDeficit, "受伤血量", "HealthFunctionDeficit")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionTotal, "血量的总计与百分比", "HealthFunctionTotal")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionTargetOf, "目标", "HealthFunctionTargetOf")
 AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionLevel, "等级", "HealthFunctionLevel")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionLevelHealth, "等级和大约生命值", "HealthFunctionLevelHealth")
-AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionArenaID, "Arena ID, 生命值, 和能量值", "HealthFunctionArenaID")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionLevelHealth, "等级和大概血量", "HealthFunctionLevelHealth")
+AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunctionArenaID, "竞技场ID,血量和能量", "HealthFunctionArenaID")
 
 
 local function HealthTextDelegate(unit)
@@ -397,12 +409,12 @@ TidyPlatesHubMenus.EnemyNameSubtextModes = {}
 TidyPlatesHubDefaults.HeadlineEnemySubtext = "RoleGuildLevel"
 TidyPlatesHubDefaults.HeadlineFriendlySubtext = "RoleGuildLevel"
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, DummyFunction, "无", "None")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextHealthPercentColored, "生命百分比", "PercentHealth")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuildLevel, "角色, 公会 或者 等级", "RoleGuildLevel")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuild, "角色 或 公会", "RoleGuild")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextNPCRole, "NPC 角色", "Role")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextHealthPercentColored, "百分比血量", "PercentHealth")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuildLevel, "角色, 公会或等级", "RoleGuildLevel")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextRoleGuild, "角色或公会", "RoleGuild")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextNPCRole, "NPC", "Role")
 AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextLevelColored, "等级", "Level")
-AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextAll, "角色, 公会, 等级 或 生命百分比", "RoleGuildLevelHealth")
+AddHubFunction(EnemyNameSubtextFunctions, TidyPlatesHubMenus.EnemyNameSubtextModes, TextAll, "角色, 公会, 等级或百分比血量", "RoleGuildLevelHealth")
 
 --[[
 local FriendlyNameSubtextFunctions = {}

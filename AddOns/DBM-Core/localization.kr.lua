@@ -211,6 +211,7 @@ DBM_CORE_UNKNOWN					= "알 수 없음"--UNKNOWN
 DBM_CORE_LEFT						= "왼쪽"
 DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
+DBM_CORE_MIDDLE						= "가운데"
 DBM_CORE_FRONT						= "앞쪽"
 DBM_CORE_INTERMISSION				= "사잇 단계"
 
@@ -401,6 +402,7 @@ DBM_SPEED_KILL_TIMER_TEXT	= "최고 기록"
 DBM_SPEED_KILL_TIMER_OPTION	= "최고 기록을 바로 보기"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "최고 기록"
 DBM_COMBAT_RES_TIMER_TEXT	= "다음 전투 부활 충전"
+DBM_CORE_TIMER_RESPAWN		= "재생성"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s 님이 당신의 공격대 귀속 정보를 요청합니다.\n이 요청을 수락하면 재접속 전까지는\n%s 님의 요청을 더 이상 받지 않습니다. 수락하시겠습니까?"

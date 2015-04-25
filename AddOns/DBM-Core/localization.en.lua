@@ -203,6 +203,7 @@ DBM_CORE_UNKNOWN					= "unknown"--UNKNOWN which is "Unknown" (does u vs U matter
 DBM_CORE_LEFT						= "Left"
 DBM_CORE_RIGHT						= "Right"
 DBM_CORE_BACK						= "Back"--BACK
+DBM_CORE_MIDDLE						= "Middle"
 DBM_CORE_FRONT						= "Front"
 DBM_CORE_INTERMISSION				= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 
@@ -410,6 +411,7 @@ DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"
 DBM_SPEED_KILL_TIMER_OPTION	= "Show a timer to beat your fastest victory"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Best Clear"
 DBM_COMBAT_RES_TIMER_TEXT	= "Next CR Charge"
+DBM_CORE_TIMER_RESPAWN		= "Respawn"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s requested to see your current instance IDs and progress.\nDo you want to send this information to %s? He or she will be able to request this information during your current session (i. e. until you relog)."

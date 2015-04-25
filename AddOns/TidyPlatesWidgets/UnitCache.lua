@@ -48,11 +48,11 @@ TooltipScanner:AddFontStrings(
 
 
 local function UpdateGuildCache()
---	if Guild then
---		Guild = wipe(Guild)
---	else
+	if Guild then
+		Guild = wipe(Guild)
+	else
 		Guild = {}
---	end
+	end
 	-- Blah blah blah
 	local guildname = GetGuildInfo("player")
 	if not guildname then return end
@@ -91,11 +91,11 @@ end
 --]]
 
 local function UpdateFriendCache()
---	if Friends then
---		Friends = wipe(Friends)
---	else
+	if Friends then
+		Friends = wipe(Friends)
+	else
 		Friends = {}
---	end
+	end
 	--
 	local numFriends = GetNumFriends()
 	for index = 1, numFriends do

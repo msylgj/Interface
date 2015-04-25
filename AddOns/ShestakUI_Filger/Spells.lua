@@ -943,7 +943,7 @@ Filger_Spells = {
 			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
 			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
-			
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Darkmoon Cards (Proc)
 			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Health, Use)

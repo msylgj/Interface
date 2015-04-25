@@ -16,7 +16,7 @@ local NO_AUTOMATION = "不自动"
 local DURING_COMBAT = "战斗中显示, 战斗结束隐藏"
 local OUT_OF_COMBAT = "战斗开始隐藏, 战斗结束显示"
 
-local font = "Fonts\\ARKai_T.ttf"
+local font = "Interface\\Addons\\TidyPlates\\Media\\DefaultFont.ttf"
 local yellow, blue, red, orange = "|cffffff00", "|cFF3782D1", "|cFFFF1100", "|cFFFF6906"
 
 local function SetSoftTransitions(enable)
@@ -31,7 +31,7 @@ local EnableCompatibilityMode = TidyPlates.EnableCompatibilityMode
 --  Default Options
 -------------------------------------------------------------------------------------
 
-local FirstTryTheme = "Grey"
+local FirstTryTheme = "Neon"
 local DefaultProfile = "Damage"
 local ActiveProfile = "None"
 local ActiveThemeName = ""
@@ -306,10 +306,10 @@ local function OnRefresh(panel)
 		secondarySpecName = name
 	end
 
-	panel.PrimaryProfileLabel:SetText(primarySpecName.. " 配置类型:")
+	panel.PrimaryProfileLabel:SetText(primarySpecName.. " Profile:")
 	panel.PrimaryThemeLabel:SetText(primarySpecName.. " 主题:")
 
-	panel.SecondaryProfileLabel:SetText(secondarySpecName.. " 配置类型:")
+	panel.SecondaryProfileLabel:SetText(secondarySpecName.. " Profile:")
 	panel.SecondaryThemeLabel:SetText(secondarySpecName.. " 主题:")
 
 	ValidateProfiles(panel)
@@ -336,7 +336,7 @@ end
 
 local version = GetAddOnMetadata("TidyPlates", "version")
 --local versionString = string.gsub(string.gsub(string.gsub(version, "%$", ""), "%(", ""), "%)", "")
-local versionString = "汉化: IT熊猫 |cFF666666"..version
+local versionString = "|cFF666666"..version
 --local versionString = string.gsub(version, "%$", "")
 local addonString = GetAddOnMetadata("TidyPlates", "title")
 local titleString = addonString			-- .." |cFF444444"..versionString
@@ -398,7 +398,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.PrimaryThemeLabel:SetPoint("BOTTOMLEFT", panel.PrimaryThemeDropdown,"TOPLEFT", 20, 5)
 	panel.PrimaryThemeLabel:SetWidth(170)
 	panel.PrimaryThemeLabel:SetJustifyH("LEFT")
-	panel.PrimaryThemeLabel:SetText("主天赋:")
+	panel.PrimaryThemeLabel:SetText("第一天赋:")
 
 	-- Dropdown
 	panel.SecondaryThemeDropdown = PanelHelpers:CreateDropdownFrame("TidyPlatesChooserDropdown2", panel, ThemeDropdownMenuItems, TidyPlatesDefaultThemeName, nil, true)
@@ -409,7 +409,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.SecondaryThemeLabel:SetPoint("BOTTOMLEFT", panel.SecondaryThemeDropdown,"TOPLEFT", 20, 5)
 	panel.SecondaryThemeLabel:SetWidth(170)
 	panel.SecondaryThemeLabel:SetJustifyH("LEFT")
-	panel.SecondaryThemeLabel:SetText("副天赋:")
+	panel.SecondaryThemeLabel:SetText("第二天赋:")
 
 	panel.ThemeLabel = panel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 	panel.ThemeLabel:SetFont(font, 22)
@@ -432,7 +432,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.PrimaryProfileLabel:SetPoint("BOTTOMLEFT", panel.PrimaryProfileDropdown,"TOPLEFT", 20, 5)
 	panel.PrimaryProfileLabel:SetWidth(170)
 	panel.PrimaryProfileLabel:SetJustifyH("LEFT")
-	panel.PrimaryProfileLabel:SetText("主天赋:")
+	panel.PrimaryProfileLabel:SetText("第一天赋:")
 
 	-- [[ Button
 	panel.EditPrimaryProfile = CreateFrame("Button", "TidyPlatesOptions_EditPrimaryProfile", panel)
@@ -454,7 +454,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.SecondaryProfileLabel:SetPoint("BOTTOMLEFT", panel.SecondaryProfileDropdown,"TOPLEFT", 20, 5)
 	panel.SecondaryProfileLabel:SetWidth(170)
 	panel.SecondaryProfileLabel:SetJustifyH("LEFT")
-	panel.SecondaryProfileLabel:SetText("副天赋:")
+	panel.SecondaryProfileLabel:SetText("第二天赋:")
 
 	panel.ProfileLabel = panel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 	panel.ProfileLabel:SetFont(font, 22)
@@ -489,7 +489,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.AutoShowEnemyLabel:SetPoint("BOTTOMLEFT", panel.AutoShowEnemy,"TOPLEFT", 20, 5)
 	panel.AutoShowEnemyLabel:SetWidth(170)
 	panel.AutoShowEnemyLabel:SetJustifyH("LEFT")
-	panel.AutoShowEnemyLabel:SetText("敌对姓名版:")
+	panel.AutoShowEnemyLabel:SetText("敌对姓名面板:")
 
 	-- Friendly Visibility
 	panel.AutoShowFriendly = PanelHelpers:CreateDropdownFrame("TidyPlatesAutoShowFriendly", panel, AutomationDropdownItems, NO_AUTOMATION, nil, true)
@@ -500,12 +500,12 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	panel.AutoShowFriendlyLabel:SetPoint("BOTTOMLEFT", panel.AutoShowFriendly,"TOPLEFT", 20, 5)
 	panel.AutoShowFriendlyLabel:SetWidth(170)
 	panel.AutoShowFriendlyLabel:SetJustifyH("LEFT")
-	panel.AutoShowFriendlyLabel:SetText("友方姓名版:")
+	panel.AutoShowFriendlyLabel:SetText("友方姓名面板:")
 
 
 	panel.AutomationLabel = panel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 	panel.AutomationLabel:SetFont(font, 22)
-	panel.AutomationLabel:SetText("自动隐藏")
+	panel.AutomationLabel:SetText("Automation")
 	panel.AutomationLabel:SetPoint("BOTTOMLEFT", panel.AutoShowEnemy, "TOPLEFT", 16+4, 22)
 	panel.AutomationLabel:SetTextColor(255/255, 105/255, 6/255)
 
@@ -517,15 +517,15 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	--BlizzOptionsButton:SetPoint("TOPRIGHT", ResetButton, "TOPLEFT", -8, 0)
 	BlizzOptionsButton:SetPoint("TOPLEFT", panel.AutoShowEnemy, "TOPLEFT", 16, -55)
 	BlizzOptionsButton:SetWidth(260)
-	BlizzOptionsButton:SetText("暴雪姓名版和显示设置")
+	BlizzOptionsButton:SetText("暴雪姓名面板")
 
 	-- Soft Transitions
-	panel.DisableSoftTransitions = PanelHelpers:CreateCheckButton("TidyPlatesOptions_DisableSoftTransitions", panel, "禁用过渡效果")
+	panel.DisableSoftTransitions = PanelHelpers:CreateCheckButton("TidyPlatesOptions_DisableSoftTransitions", panel, "关闭Transition（什么功能我也不懂）")
 	panel.DisableSoftTransitions:SetPoint("TOPLEFT", BlizzOptionsButton, "TOPLEFT", 0, -35)
 	panel.DisableSoftTransitions:SetScript("OnClick", function(self) SetSoftTransitions(not self:GetChecked()) end)
 
 	-- CompatibilityMode
-	panel.CompatibilityMode = PanelHelpers:CreateCheckButton("TidyPlatesOptions_CompatibilityMode", panel, "兼容模式 (需要重载 UI)")
+	panel.CompatibilityMode = PanelHelpers:CreateCheckButton("TidyPlatesOptions_CompatibilityMode", panel, "兼容模式 (重置下UI生效)")
 	panel.CompatibilityMode:SetPoint("TOPLEFT", panel.DisableSoftTransitions, "TOPLEFT", 0, -35)
 	panel.CompatibilityMode:SetScript("OnClick", function(self) if self:GetChecked() then EnableCompatibilityMode() end; end)
 
@@ -533,7 +533,7 @@ local function CreateTidyPlatesInterfacePanel(panel)
 	ResetButton = CreateFrame("Button", "TidyPlatesOptions_ResetButton", panel, "TidyPlatesPanelButtonTemplate")
 	ResetButton:SetPoint("BOTTOMRIGHT", -16, 8)
 	ResetButton:SetWidth(155)
-	ResetButton:SetText("重置默认配置")
+	ResetButton:SetText("重新配置")
 
 	-- Update Functions
 	panel.okay = OnOkay

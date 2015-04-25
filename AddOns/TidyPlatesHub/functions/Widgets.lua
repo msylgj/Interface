@@ -14,18 +14,18 @@ local CreateRangeWidget = WidgetLib.CreateRangeWidget
 local CreateComboPointWidget = WidgetLib.CreateComboPointWidget
 local CreateTotemIconWidget = WidgetLib.CreateTotemIconWidget
 
-TidyPlatesHubDefaults.WidgetsRangeMode = 4
+TidyPlatesHubDefaults.WidgetsRangeMode = 1
 TidyPlatesHubMenus.RangeModes = {
-				{ text = "9 码"} ,
-				{ text = "15 码" } ,
-				{ text = "28 码" } ,
-				{ text = "40 码" } ,
+				{ text = "9码"} ,
+				{ text = "15码" } ,
+				{ text = "28码" } ,
+				{ text = "40码" } ,
 			}
 
 TidyPlatesHubDefaults.WidgetsDebuffStyle = 1
 TidyPlatesHubMenus.DebuffStyles = {
-				{ text = "宽",  } ,
-				{ text = "紧凑 (可能需要重载UI生效)",  } ,
+				{ text = "宽松",  } ,
+				{ text = "紧凑(重载UI生效)",  } ,
 			}
 
 ------------------------------------------------------------------------------

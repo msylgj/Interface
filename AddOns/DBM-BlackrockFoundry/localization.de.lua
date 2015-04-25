@@ -17,27 +17,37 @@ L:SetOptionLocalization({
 ---------------------------
 L= DBM:GetModLocalization(1202)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "Verhalten der Unterbrechungswarnungen",
+	Smart				= "basierend auf dem Stapel von Schwarzfelsstacheln des Bosses",
+	Fixed				= "immer 5er- oder 3er-Sequenz nutzen (selbst wenn sich der Boss nicht so verhält)"
+})
+
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
 L= DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
-	warnRegulators		= "Hitzeregler verbleibend: %d",
-	warnBlastFrequency	= "Flammenzunge Häufigkeit erhöht: ca. alle %d Sekunden"
+	warnRegulators			= "Hitzeregler verbleibend: %d",
+	warnBlastFrequency		= "Flammenzunge Häufigkeit erhöht: ca. alle %d Sekunden",
+	specWarnTwoVolatileFire	= "Doppeltes Flüchtiges Feuer auf dir!"
 })
 
 L:SetOptionLocalization({
-	warnRegulators		= "Verkünde die Anzahl der verbleibenden Hitzeregler",
-	warnBlastFrequency	= "Verkünde, wenn sich die $spell:155209 Häufigkeit erhöht",
-	InfoFrame			= "Zeige Infofenster für $spell:155192 und $spell:155196",
-	VFYellType			= "Typ des Schreis für Flüchtiges Feuer (nur mythischer Schwierigkeitsgrad)",
-	Countdown			= "Countdown bis zum Ablauf",
-	Apply				= "nur Erhalt"
+	warnRegulators			= "Verkünde die Anzahl der verbleibenden Hitzeregler",
+	warnBlastFrequency		= "Verkünde, wenn sich die $spell:155209 Häufigkeit erhöht",
+	specWarnTwoVolatileFire	= "Spezialwarnung, wenn du $spell:176121 doppelt hast",
+	InfoFrame				= "Zeige Infofenster für $spell:155192 und $spell:155196",
+	VFYellType2				= "Typ des Schreis für Flüchtiges Feuer (nur mythischer Schwierigkeitsgrad)",
+	Countdown				= "Countdown bis zum Ablauf",
+	Apply					= "nur Erhalt"
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "Hitzeregler"
+	heatRegulator		= "Hitzeregler",
+	Regulator			= "Regler %d",
+	bombNeeded			= "%d Bombe(n)"
 })
 
 ------------------
@@ -77,7 +87,12 @@ L:SetOptionLocalization({
 	specWarnSplitSoon	= "Spezialwarnung 10 Sekunden bevor sich der Schlachtzug teilt",
 	InfoFrameSpeed		= "Infofenster zeigt nächste Zuginformation",
 	Immediately			= "sobald sich die Türen für den aktuellen Zug öffnen",
-	Delayed				= "nachdem der aktuelle Zug herausgekommen ist"
+	Delayed				= "nachdem der aktuelle Zug herausgekommen ist",
+	HudMapUseIcons		= "Benutze Schlachtzugzeichen für HudMap statt grünen Kreis",
+	TrainVoiceAnnounce	= "Gesprochene Warnungen für Züge",
+	LanesOnly			= "Verkünde nur Gleise mit ankommenden Zügen",
+	MovementsOnly		= "Verkünde nur Bewegungen zu einem anderen Gleis (nur mythisch)",
+	LanesandMovements	= "Verkünde Gleise mit ankommenden Zügen und Bewegungen (nur mythisch)"
 })
 
 L:SetMiscLocalization({
@@ -115,16 +130,18 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(959)
 
 L:SetWarningLocalization({
-	specWarnMFDPosition		= "Mark Position: %s",--translate
-	specWarnSlagPosition	= "Bomb Position: %s"--translate
+	specWarnMFDPosition		= "Todesurteil Position: %s",
+	specWarnSlagPosition	= "Bombe Position: %s"
+})
+
+L:SetOptionLocalization({
+	PositionsAllPhases	= "Gebe Position in $spell:156096 Schreien während allen Phasen an (anstatt nur in Phase 3) (im Wesentlichen für Testzwecke, nicht empfohlen)",
+	InfoFrame			= "Zeige Infofenster für $spell:155992 und $spell:156530"
 })
 
 L:SetMiscLocalization({
-	customMFDSay	= "Marked %s on %s",--translate
-	customSlagSay	= "Bomb %s on %s",--translate
-	left			= "left",--translate
-	middle			= "middle",--translate
-	right			= "right"--translate
+	customMFDSay	= "Todesurteil %s auf %s",
+	customSlagSay	= "Bombe %s auf %s"
 })
 
 -------------

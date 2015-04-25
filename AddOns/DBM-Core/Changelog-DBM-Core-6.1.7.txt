@@ -1,0 +1,36 @@
+tag 6.1.7
+a4d5360b7eb97ac0e09893d5cde2efa154c555e4
+subversion <svn@deadlybossmods.com>
+2015-04-22 14:25:49 +0200
+
+Tagging as 6.1.7
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.1.7
+	- Omega via svn r13633: Bump blackhand HF revision
+	- Omega via svn r13627: Even cleaner
+	- Omega via svn r13624: #Blackhand Update *Fix bug where slag count never reset between pulls. this didn?\226?\128?\153t break anything at all, just looked pretty silly after enough pulls. Now it?\226?\128?\153ll work correctly. *While add it, now slag bombs are counted in phase 1 and 2 as well. Tiny adjust on respawn time. sometime boss come up slightly faster than 30 second. ##Core *Fix a regression that probably occurred sometime during 5.x where pulls shorter than 30 seconds were still counting toward wipe stats. This is NOT intended and is now fixed.
+	- Omega via svn r13623: Real fix
+	- Omega via svn r13622: more adjust
+	- Omega via svn r13621: blackhand fix
+	- Omega via svn r13620: And fix bad plural grammar while at it.
+	- Omega via svn r13619: It?\226?\128?\153s not ?\226?\128?\156show show?\226?\128?\157
+	- Omega via svn r13617: clarify another option
+	- Omega via svn r13616: #DBM Core *Status whispers can now be disabled by group leader, for everyone in group. There is no opt out for this. if Group leader decides no one can poke at your progress, then it?\226?\128?\153s a decision made for entire group that applies to entire group. read http://forums.elitistjerks.com/topic/133429-upcoming-status-whisper-change/ for more information.
+	- Omega via svn r13611: Bump bw version
+	- typo in .pkgmeta
+	- add DBM-GarrisonInvasions to .pkgmeta
+	- Omega via svn r13609: Add level 4 garrison mapids to mods that need it.
+	- Omega via svn r13608: Iron Reaver drycode for tomorrow
+	- ebmor via svn r13606: deDE update
+	- Omega via svn r13605: REspawn times for oregorger and iron maidens
+	- Omega via svn r13603: Hate having to do it this way. But there is literally no way to smart load garrison invasions mod for summonable bosses. They don?\226?\128?\153t fire any event other than combat log, and i?\226?\128?\153m not injecting mod loading hacks into CLEU handler, that?\226?\128?\153s just a no no, so instead, smart load on demand for garrison mods is now gone, they load just by being anywhere in draenor. This commit isn?\226?\128?\153t going to play nice with curse packager right away, both pkgmeta?\226?\128?\153s need to be updated, and that probably won?\226?\128?\153t happen until tomorrow.
+	- ultrashining via svn r13601: zhTW update
+	- Omega via svn r13600: More GUI stats work
+	- Omega via svn r13599: Bump BW version
+	- nbluewiz via svn r13598: # koKR update.
+	- Omega via svn r13596: test live alpha push
+	- tandanu via svn r13593: increment alpha version

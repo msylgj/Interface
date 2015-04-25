@@ -38,13 +38,17 @@ local IsGuildmate = TidyPlatesUtility.IsGuildmate
 local isTanked = TidyPlatesWidgets.IsTankedByAnotherTank
 local function IsTankedByAnotherTank(...)
 
+--[[
 	-- Testing
 	if LocalVars.EnableOffTankHighlight then
 		local unit = ...
 		if not unit.isTarget then return true end
 	end
+--]]
 
-	if LocalVars.EnableOffTankHighlight and isTanked(...) then return true end
+
+	--if LocalVars.EnableOffTankHighlight and isTanked(...) then return true end
+	return 
 end
 
 HubData.Functions.IsTankedByAnotherTank = IsTankedByAnotherTank
@@ -77,9 +81,9 @@ HubData.Functions.GetEnemyClass = GetEnemyClass
 -- Define the Menu for Threat Modes
 TidyPlatesHubDefaults.ThreatWarningMode = "Auto"
 TidyPlatesHubMenus.ThreatWarningModes = {
-					{ text = "自动 (颜色交替)", value = "Auto",} ,
+					{ text = "自动 (交换颜色)", value = "Auto",} ,
 					{ text = "坦克", value = "Tank",} ,
-					{ text = "输出/治疗", value = "DPS",} ,
+					{ text = "输出或治疗", value = "DPS",} ,
 					}
 
 

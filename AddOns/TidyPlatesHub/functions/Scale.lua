@@ -118,13 +118,13 @@ local ScaleFunctionsUniversal = { DummyFunction, ScaleFunctionByThreat, ScaleFun
 local AddHubFunction = TidyPlatesHubHelpers.AddHubFunction
 
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, DummyFunction, "无", "None")
-AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByThreat, "仇恨值", "ByThreat")
+AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByThreat, "仇恨", "ByThreat")
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByElite, "精英单位", "OnElite")
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByEnemy, "敌对单位", "OnHostile")
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByNPC, "NPC", "OnNPC")
-AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByRaidIcon, "团队目标", "OnMarked")
+AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByRaidIcon, "Raid标记", "OnMarked")
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByEnemyHealer, "敌对治疗", "OnHealers")
-AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByLowHealth, "低生命值单位", "OnLowHealth")
+AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByLowHealth, "低血量单位", "OnLowHealth")
 AddHubFunction(ScaleFunctionsUniversal, TidyPlatesHubMenus.ScaleModes, ScaleFunctionByBoss, "Boss", "OnBosses")
 --TidyPlatesHubDefaults.ScaleFunctionMode = 2			-- Sets the default function
 TidyPlatesHubDefaults.ScaleFunctionMode = "ByThreat"			-- Sets the default function

@@ -218,14 +218,14 @@ DBMSkin:SetScript("OnEvent", function()
 				if (count == 1) then
 					local	_, anch, _ ,_, _ = bar:GetPoint()
 					bar:ClearAllPoints()
-					if DBM_SavedOptions.HealthFrameGrowUp then
+					if DBT_PersistentOptions.HealthFrameGrowUp then
 						bar:SetPoint("BOTTOM", anch, "TOP" , 0 , 12)
 					else
 						bar:SetPoint("TOP", anch, "BOTTOM" , 0, -buttonsize)
 					end
 				else
 					bar:ClearAllPoints()
-					if DBM_SavedOptions.HealthFrameGrowUp then
+					if DBT_PersistentOptions.HealthFrameGrowUp then
 						bar:SetPoint("TOPLEFT", prev, "TOPLEFT", 0, buttonsize+4)
 					else
 						bar:SetPoint("TOPLEFT", prev, "TOPLEFT", 0, -(buttonsize+4))

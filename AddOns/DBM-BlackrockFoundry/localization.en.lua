@@ -16,27 +16,37 @@ L:SetOptionLocalization({
 ---------------------------
 L= DBM:GetModLocalization(1202)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "Set behavior for interrupt warnings",
+	Smart				= "Interrupt warnings are based on bosses spine stacks",
+	Fixed				= "Interrupts use a 5 or 3 sequence no matter what (even if boss doesn't)"
+})
+
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
 L= DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
-	warnRegulators		= "Heat Regulator remaining: %d",
-	warnBlastFrequency	= "Blast frequency increased: Approx Every %d sec"
+	warnRegulators			= "Heat Regulator remaining: %d",
+	warnBlastFrequency		= "Blast frequency increased: Approx Every %d sec",
+	specWarnTwoVolatileFire	= "Double Volatile Fire on you!"
 })
 
 L:SetOptionLocalization({
-	warnRegulators		= "Announce how many Heat Regulator remain",
-	warnBlastFrequency	= "Announce when $spell:155209 frequency increased",
-	InfoFrame			= "Show info frame for $spell:155192 and $spell:155196",
-	VFYellType			= "Set yell type for Volatile Fire (Mythic difficulty only)",
-	Countdown			= "Countdown until expires",
-	Apply				= "Only applied"
+	warnRegulators			= "Announce how many Heat Regulator remain",
+	warnBlastFrequency		= "Announce when $spell:155209 frequency increased",
+	specWarnTwoVolatileFire	= "Show special warning when you have double $spell:176121",
+	InfoFrame				= "Show info frame for $spell:155192 and $spell:155196",
+	VFYellType2				= "Set yell type for Volatile Fire (Mythic difficulty only)",
+	Countdown				= "Countdown until expires",
+	Apply					= "Only applied"
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "Heat Regulator"
+	heatRegulator		= "Heat Regulator",
+	Regulator			= "Regulator %d",--Can't use above, too long for infoframe
+	bombNeeded			= "%d Bomb(s)"
 })
 
 ------------------
@@ -84,7 +94,12 @@ L:SetOptionLocalization({
 	specWarnSplitSoon	= "Show special warning 10 seconds before raid split",
 	InfoFrameSpeed		= "Set when InfoFrame shows next train information",
 	Immediately			= "As soon as doors open for current train",
-	Delayed				= "After current train has come out" 
+	Delayed				= "After current train has come out",
+	HudMapUseIcons		= "Use raid Icons for HudMap instead of green circle",
+	TrainVoiceAnnounce	= "Set when spoken alerts will play for trains",
+	LanesOnly			= "Only announce incoming lanes",
+	MovementsOnly		= "Only announce lane movements (Mythic Only)",
+	LanesandMovements	= "Announce incoming lanes & movements (Mythic Only)"
 })
 
 L:SetMiscLocalization({
@@ -126,12 +141,14 @@ L:SetWarningLocalization({
 	specWarnSlagPosition	= "Bomb Position: %s"
 })
 
+L:SetOptionLocalization({
+	PositionsAllPhases	= "Give positions for $spell:156096 yells during all phases (Instead of just phase 3. This is mostly for testing and assurances, this option is not actually recommended)",
+	InfoFrame			= "Show info frame for $spell:155992 and $spell:156530"
+})
+
 L:SetMiscLocalization({
 	customMFDSay	= "Marked %s on %s",
-	customSlagSay	= "Bomb %s on %s",
-	left			= "left",
-	middle			= "middle",
-	right			= "right"
+	customSlagSay	= "Bomb %s on %s"
 })
 
 -------------

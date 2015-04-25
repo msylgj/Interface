@@ -552,32 +552,32 @@ local function CreateInterfacePanel( objectName, panelTitle, parentTitle)
 
 	-- Paste
 	local PasteThemeDataButton = CreateFrame("Button", objectName.."PasteThemeDataButton", panel, "TidyPlatesPanelButtonTemplate")
-	PasteThemeDataButton.tooltipText = "从缓存粘贴你的设置.  'Shift'-点击 使用特定缓存"
+	PasteThemeDataButton.tooltipText = "Pastes your settings from the cache.  'Shift'-clicking uses the panel-specific cache"
 	PasteThemeDataButton:SetPoint("TOPRIGHT", -40, -22)
 	PasteThemeDataButton:SetWidth(60)
 	PasteThemeDataButton:SetScale(.85)
-	PasteThemeDataButton:SetText("粘贴")
+	PasteThemeDataButton:SetText("Paste")
 
 	PasteThemeDataButton:SetScript("OnClick", function() PasteSettings(panel); end)
 
 	-- Copy
 	local CopyThemeDataButton = CreateFrame("Button", objectName.."CopyThemeDataButton", panel, "TidyPlatesPanelButtonTemplate")
-	CopyThemeDataButton.tooltipText = "复制您的设置缓存.  'Shift'-点击 使用特定缓存"
+	CopyThemeDataButton.tooltipText = "Copies your settings to the cache.  'Shift'-clicking uses a panel-specific cache"
 	---- This feature works between matching panel types (ie. Hub/Damage to Hub/Damage)
 	CopyThemeDataButton:SetPoint("TOPRIGHT", PasteThemeDataButton, "TOPLEFT", -4, 0)
 	CopyThemeDataButton:SetWidth(60)
 	CopyThemeDataButton:SetScale(.85)
-	CopyThemeDataButton:SetText("复制")
+	CopyThemeDataButton:SetText("Copy")
 
 	CopyThemeDataButton:SetScript("OnClick", function() CopySettings(panel); end)
 
 	-- Reset
 	local ReloadThemeDataButton = CreateFrame("Button", objectName.."ReloadThemeDataButton", panel, "TidyPlatesPanelButtonTemplate")
-	ReloadThemeDataButton.tooltipText = "重置设置为默认设置.  按住 'Shift' 将清除保存的数据, 并重载你的 UI."
+	ReloadThemeDataButton.tooltipText = "Resets the configuration to Default.  Holding down 'Shift' will also clear saved unit data, and restart your UI."
 	ReloadThemeDataButton:SetPoint("TOPRIGHT", CopyThemeDataButton, "TOPLEFT", -4, 0)
 	ReloadThemeDataButton:SetWidth(60)
 	ReloadThemeDataButton:SetScale(.85)
-	ReloadThemeDataButton:SetText("重置")
+	ReloadThemeDataButton:SetText("Reset")
 
 	ReloadThemeDataButton:SetScript("OnClick", function()
 		PlaySound("igMainMenuOptionCheckBoxOn"); ResetSettings(panel);
@@ -589,7 +589,7 @@ local function CreateInterfacePanel( objectName, panelTitle, parentTitle)
 	BookmarkButton:SetPoint("TOPRIGHT", ReloadThemeDataButton, "TOPLEFT", -4, 0)
 	BookmarkButton:SetWidth(110)
 	BookmarkButton:SetScale(.85)
-	BookmarkButton:SetText("标签...")
+	BookmarkButton:SetText("Bookmarks...")
 
         --local child1, child2, child3 = BookmarkButton:GetRegions()
 

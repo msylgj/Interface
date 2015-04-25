@@ -175,7 +175,7 @@ local function IsTankedByAnotherTank(unit)
 	end
 	--print("IsTankedByAnotherTank", guid, targetGuid, FriendlyUnitsRole[targetGuid or 0], EnemyUnitsTargetGUID[guid])
 
-	-- ie. If the evaluated unit's  target is equal to one of the tanks, then it's tanked
+	-- ie. If the evaluated unit's target is equal to one of the tanks, then it's tanked
 	if targetGuid and FriendlyUnitsRole[targetGuid] == TANK_ROLE then	-- If the mob is tanked by an actual tank...
 		return true
 

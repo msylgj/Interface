@@ -89,17 +89,20 @@ local function PreClick(self, mouseButton)
 	if seahorse then
 		normalButton:SetAttribute("type", "macro")
 		normalButton:SetAttribute("macrotext", "/cast "..seahorse)
+		return
 	end
 
 	local broom = self:GetAttribute("magicBroom")
 	if not IsIndoors() and IsPlayerMoving() and broom then
 		normalButton:SetAttribute("type", "macro")
 		normalButton:SetAttribute("macrotext", "/use item:37011")
+		return
 	end
-
+	
 	if not IsIndoors() and self:GetAttribute("dragonwrath") then
 		normalButton:SetAttribute("type", "macro")
 		normalButton:SetAttribute("macrotext", "/use 16")
+		return
 	end
 
 	if IsIndoors() or IsPlayerMoving() then return end
@@ -171,7 +174,7 @@ local function UpdateAttributes()
 	-- normalButton:SetAttribute("combatShift", addon.combatShift)
 	normalButton:SetAttribute("magicBroom", addon.db.broomFirst and addon.hasBroom)
 	normalButton:SetAttribute("travelForm", addon.db.travelFormFirst and addon.hasTravelForm)
-	normalButton:SetAttribute("dragonwrath", addon.dragonwrathFirst and addon.dragonwrathEquipped)
+	normalButton:SetAttribute("dragonwrath", addon.db.dragonwrathFirst and addon.dragonwrathEquipped)
 
 	passengerButton:SetAttribute("spell", addon.db.passengerMount)
 	vendorButton:SetAttribute("spell", addon.db.vendorMount)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13434 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13563 $"):sub(12, -3))
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
@@ -47,7 +47,7 @@ local specWarnBurning				= mod:NewSpecialWarningStack(164380, nil, 2)--Mythic
 
 --Operator Thogar
 local timerProtoGrenadeCD			= mod:NewCDTimer(11, 155864)
-local timerEnkindleCD				= mod:NewCDTimer(12, 155921, nil, "Tank")
+local timerEnkindleCD				= mod:NewCDTimer(11.7, 155921, nil, "Tank")
 local timerTrainCD					= mod:NewNextCountTimer("d15", 176312)
 --Adds
 --local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140)
@@ -65,6 +65,8 @@ local voiceDelayedSiegeBomb			= mod:NewVoice(159481)
 mod:AddInfoFrameOption(176312)
 mod:AddSetIconOption("SetIconOnAdds", "ej9549", false, true)
 mod:AddHudMapOption("HudMapForTrain", 176312, false)
+mod:AddBoolOption("HudMapUseIcons")--Depending what is easier to see/understand, i may change this to default off
+mod:AddDropdownOption("TrainVoiceAnnounce", {"LanesOnly", "MovementsOnly", "LanesandMovements"}, "LanesOnly", "misc")
 mod:AddDropdownOption("InfoFrameSpeed", {"Immediately", "Delayed"}, "Delayed", "misc")
 
 mod.vb.trainCount = 0
@@ -431,49 +433,88 @@ end
 --Positions based on https://www.youtube.com/watch?v=0QC7BOEv2iE
 local function showHud(self, train, center)
 	if self.Options.HudMapForTrain then
+		local Red, Green, Blue = 1, 1, 1
+		local hudType = nil
+		if not self.Options.HudMapUseIcons then
+			hudType = "highlight"
+			Red, Green, Blue = 0, 1, 0
+		end
 		DBMHudMap:FreeEncounterMarkerByTarget(176312, "TrainHelper")--Clear any current icon, before showing next move
 		--Regular Lane movements
-		local specialPosition = self:IsMelee() and 3328 or 3300--Melee west, ranged east, unless center is passed then center
+		local specialPosition = center and 3314 or self:IsMelee() and 3328 or 3300--Melee west, ranged east, unless center is passed then center
 		if train == 9 then--Move to Circle (1)
+			if not hudType then hudType = "circle" end
 			if center then
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "circle", 590, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 590, 3314, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
 			else
 				--East (where adds jump down, everyone goes west on this move)
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "circle", 590, 3300, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 590, 3300, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
 			end
-		elseif train == 8 or train == 11 or train == 19.25 or train == 32 then--Move to diamond (2)
-			if center then
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
-			else
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm2")
+			end
+		elseif train == 8 or train == 11 or train == 19.25 then--Move to diamond (2)
+			if not hudType then hudType = "diamond" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 566, specialPosition, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm3")
 			end
 		elseif train == 1 or train == 7 or train == 15 or train == 21 or train == 23 or train == 26 or train == 28.5 then--Move to triangle (3)
-			if center then
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 544, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if not hudType then hudType = "triangle" end
+			if train == 1 then
+				specialPosition = self:IsMelee() and 3300 or 3328--Only train that does reverse specialPosition
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 542, specialPosition, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
 			else
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 542, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 542, specialPosition, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			end
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm4")
 			end
 		elseif train == 20 or train == 22 then--Move to Moon (4)
-			if center then
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "moon", 517, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
-			else
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "moon", 517, specialPosition, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if not hudType then hudType = "moon" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 517, specialPosition, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm5")
 			end
 		--Special lane movements (usually corners)
 		elseif train == 2 or train == 28 then--Move to Cross (2 special corner)
-			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "cross", 566, 3277, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
-		elseif train == 14 then--Move to skull (4 special corner)
-			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "skull", 517, 3353, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if not hudType then hudType = "cross" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 566, 3277, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm7")
+			end
+		elseif train == 14 or train == 32 then--Move to skull (4 special corner)
+			if not hudType then hudType = "skull" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 517, 3353, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm8")
+			end
 		elseif train == 17 then--Ranged and melee go to different lanes to avoid fire in on melee/adds in diamond while ranged kill cannon at triangle
 			if self:IsMelee() then--Move to diamond for man at arms train
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "diamond", 566, 3332, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+				if not hudType then hudType = "diamond" end
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 566, 3332, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+				if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+					voiceTrain:Play("mm3")
+				end
 			else--Move to triangle for Cannon
-				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "triangle", 544, 3314, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+				if not hudType then hudType = "triangle" end
+				DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 544, 3314, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+				if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+					voiceTrain:Play("mm4")
+				end
 			end
 		elseif train == 19 then-- (1 special corner)
-			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "square", 590, 3352, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if not hudType then hudType = "square" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 590, 3352, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm6")
+			end
 		elseif train == 19.5 then----Move to star, also during train count 19, but later
-			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", "star", 590, 3272, 3.5, 12, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
+			if not hudType then hudType = "star" end
+			DBMHudMap:RegisterPositionMarker(176312, "TrainHelper", hudType, 590, 3272, 3.5, 12, Red, Green, Blue, 0.5):Pulse(0.5, 0.5)
+			if self.Options.TrainVoiceAnnounce ~= "LanesOnly" then
+				voiceTrain:Play("mm1")
+			end
 		end
 	end
 end
@@ -661,7 +702,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 		local expectedTime
 		local count = self.vb.trainCount
 		if self:IsMythic() then
-			if mythicVoice[count] and not adjusted then
+			if mythicVoice[count] and not adjusted and self.Options.TrainVoiceAnnounce ~= "MovementsOnly" then
 				voiceTrain:Play("Thogar\\"..mythicVoice[count])
 			end
 			if count == 1 or count == 2 or count == 11 or count == 12 or count == 13 or count == 25 or count == 26 or count == 31 then
@@ -693,7 +734,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 				elseif count == 20 then
 					specWarnSplitSoon:Cancel()
 					specWarnSplitSoon:Schedule(5-fakeAdjust)
-					self:Schedule(8, showHud, self, count)
+					self:Schedule(7, showHud, self, count)
 				end
 			elseif count == 4 or count == 15 or count == 18 or count == 19  or count == 21 or count == 27 or count == 28 then
 				expectedTime = 20
@@ -735,7 +776,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 			end
 		else
 			local whatVoice = self:IsLFR() and lfrVoice[count] or otherVoice[count]
-			if whatVoice and not adjusted then
+			--Add trainvoiceanounce check only when actual movements are added to non mythic
+			if whatVoice and not adjusted then--and self.Options.TrainVoiceAnnounce ~= "MovementsOnly"
 				voiceTrain:Play("Thogar\\"..whatVoice)
 			end
 			if count == 31 or count == 32 or count == 33 then

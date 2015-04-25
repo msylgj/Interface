@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod("BlackrockFoundryTrash", "DBM-BlackrockFoundry")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13485 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13590 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
-mod:SetMinSyncTime(2)--Need to accept syncs every 3 seconds.
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 156446 163194 171537",
