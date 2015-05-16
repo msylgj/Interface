@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13543 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13703 $"):sub(12, -3))
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetHotfixNoticeRev(12975)
+mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
 
@@ -59,7 +60,7 @@ local specWarnSearingFangs			= mod:NewSpecialWarningStack(155030, nil, 12)--Stac
 local specWarnSearingFangsOther		= mod:NewSpecialWarningTaunt(155030)--No evidence of this existing ANYWHERE in any logs. removed? Bugged?
 local specWarnInfernoPyre			= mod:NewSpecialWarningMove(156824)
 local specWarnCrushArmor			= mod:NewSpecialWarningStack(155236, nil, 3)--6-9 second cd, 15 second duration, 3 is smallest safe swap, sometimes 2 when favorable RNG
-local specWarnCrushArmorOther		= mod:NewSpecialWarningTaunt(155236)
+local specWarnCrushArmorOther		= mod:NewSpecialWarningTaunt(155236, nil, nil, nil, nil, nil, 2)
 local specWarnInfernoBreath			= mod:NewSpecialWarningDodge(154989, nil, nil, nil, 2, nil, 2)
 local yellInfernoBreath				= mod:NewYell(154989)
 
@@ -201,7 +202,7 @@ function mod:SuperheatedTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -213,7 +214,7 @@ function mod:BreathTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -323,27 +324,33 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 155030 then
 		local amount = args.amount or 1
 		if amount % 3 == 0 and amount >= 12 then--Stack assumed, may need revising
-			warnSearingFangs:Show(args.destName, amount)
 			if amount >= 12 then
 				if args:IsPlayer() then
 					specWarnSearingFangs:Show(amount)
 				else
 					if not UnitDebuff("player", GetSpellInfo(155030)) and not UnitIsDeadOrGhost("player") then
 						specWarnSearingFangsOther:Show(args.destName)
+					else
+						warnSearingFangs:Show(args.destName, amount)
 					end
 				end
+			else
+				warnSearingFangs:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 155236 then
 		local amount = args.amount or 1
-		warnCrushArmor:Show(args.destName, amount)
 		if amount >= 3 and args:IsPlayer() then
 			specWarnCrushArmor:Show(amount)
 		elseif amount >= 2 and not args:IsPlayer() then--Swap at 2 WHEN POSSIBLE but 50/50 you have to go to 3.
 			if not UnitDebuff("player", GetSpellInfo(155236)) and not UnitIsDeadOrGhost("player") then
 				specWarnCrushArmorOther:Show(args.destName)
+			else
+				warnCrushArmor:Show(args.destName, amount)
 			end
 			voiceCrushArmor:Play("changemt")
+		else
+			warnCrushArmor:Show(args.destName, amount)
 		end
 	elseif args:IsSpellID(155458, 155459, 155460, 155462, 163247) then
 		DBM:Debug("SPELL_AURA_APPLIED, Boss absorbing beast abilities", 2)

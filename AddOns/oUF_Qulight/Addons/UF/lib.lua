@@ -328,12 +328,8 @@ lib.gen_hpstrings = function(f)
     hpval:SetPoint("RIGHT", f.Health, "TOPRIGHT", retVal(f,-3,-3,-1,-3), retVal(f,-10,-11,-15,-11))
     hpval.frequentUpdates = 0.1
 	
-	if f.mystyle == "player" then
+	if f.mystyle == "player" or f.mystyle == "target" or f.mystyle == "focus" then
 		f:Tag(name, "[level] [color][namelong][afk]")
-	elseif f.mystyle == "target" then
-		f:Tag(name, "[level] [color][namelong][afk]")
-	elseif f.mystyle == "focus" then	
-		f:Tag(name, "[level] [color][name][afk]")
 	else
 		f:Tag(name, "[level] [color][nameshort]")
 	end
@@ -855,10 +851,9 @@ local postUpdateIcon = function(element, unit, button, index)
 		else
 			button:SetBackdropColor(0, 0, 0)
 			button.overlay:SetVertexColor(0.3, 0.3, 0.3)
-			button.icon:SetDesaturated(true)  
+			button.icon:SetDesaturated(true)
 		end
 	end
-	--end
 	button:SetScript('OnMouseUp', function(self, mouseButton)
 		if mouseButton == 'RightButton' then
 			CancelUnitBuff('player', index)
@@ -870,30 +865,13 @@ lib.createAuras = function(f)
 	Auras.size = 18		
 	Auras:SetHeight(42)
 	Auras:SetWidth(f:GetWidth())
-	Auras.spacing = 7
-	if f.mystyle == "target" then          ----------buff位置
-		--Auras:SetPoint("BOTTOM", f, "BOTTOM", 0, -22)
-		Auras:SetPoint("TOP", f, "TOP", 0, 47)
-		Auras.numBuffs = 10
-		Auras.numDebuffs = 10
-		Auras.size = 18	
-		--Auras.onlyShowPlayer = true
-		Auras.spacing = 4.4
-	end
-	if f.mystyle == "tot" then
-		Auras:SetPoint("TOP", f, "TOP", 0, 45)
-		--Auras:SetPoint("BOTTOM", f, "BOTTOM", 0, -16)
-		Auras.numBuffs = 0
-		Auras.numDebuffs = 5
-		Auras.spacing = 10
-		Auras.size = 12			
-	end
-	if f.mystyle == "focus" then
-		Auras:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 0, 20)
-		Auras.numBuffs = 0
-		Auras.numDebuffs = 7
-		Auras.spacing = 9
-	end
+	Auras:SetPoint("TOP", f, "TOP", 0, 47)
+	Auras.numBuffs = 10
+	Auras.numDebuffs = 10
+	Auras.onlyShowPlayer = false
+	Auras.showStealableBuffs = true
+	Auras.showDebuffType = true
+	Auras.spacing = 4.4
 	Auras.gap = true
 	Auras.initialAnchor = "BOTTOMLEFT"
 	Auras["growth-x"] = "RIGHT"		
@@ -910,14 +888,7 @@ lib.createBuffs = function(f)
     b.onlyShowPlayer = buffsOnlyShowPlayer
     b:SetHeight((b.size+b.spacing)*4)
     b:SetWidth(f:GetWidth())
-    if f.mystyle == "target" then
-	    b.showBuffType = true
-		b.num = 10
-		b:SetPoint("TOP", f, "TOP", 0, 50)
-		b.initialAnchor = "TOPLEFT"
-		b["growth-x"] = "RIGHT"
-		b["growth-y"] = "UP"
-    elseif f.mystyle == "player" then
+	if f.mystyle == "player" then
 	    b.size = 28
 		b.num = 60
 		b:SetWidth(500)
@@ -955,23 +926,28 @@ lib.createDebuffs = function(f)
     b.spacing = 5
     b:SetHeight((b.size+b.spacing)*4)
     b:SetWidth(f:GetWidth())
-	if f.mystyle == "target" then
-		b.showDebuffType = true
+	if f.mystyle == "player" then
+		b:SetPoint("TOP", f, "TOP", 0, 25)
+		b.initialAnchor = "TOPRIGHT"
+		b["growth-x"] = "LEFT"
+		b["growth-y"] = "UP"
+		b.spacing = 8
+	elseif f.mystyle == "focus" then
+	    b.size = 18
 		b:SetPoint("TOP", f, "TOP", 0, 25)
 		b.initialAnchor = "TOPLEFT"
 		b["growth-x"] = "RIGHT"
 		b["growth-y"] = "UP"
-	elseif f.mystyle == "player" then
-	    b.size = 20
-		b:SetPoint("TOP", f, "TOP", 0, 25)
-		--b:SetPoint("BOTTOM", f, "BOTTOM", 0, -33)
-		b.initialAnchor = "TOPRIGHT"
-		b["growth-x"] = "LEFT"
+		b.spacing = 9
+		b.num = 7
+	elseif f.mystyle == "tot" then
+	    b.size = 13
+		b:SetPoint("TOP", f, "TOP", 0, 20)
+		b.initialAnchor = "TOPLEFT"
+		b["growth-x"] = "RIGHT"
 		b["growth-y"] = "UP"
-		-- b.initialAnchor = "BOTTOMLEFT"
-		-- b["growth-x"] = "RIGHT"
-		-- b["growth-y"] = "DOWN"
 		b.spacing = 8
+		b.num = 5
 	elseif f.mystyle == "boss" then
 	    b.size = 28
 		b:SetPoint("TOPLEFT", f, "TOPRIGHT", 8, 0)
@@ -1370,7 +1346,6 @@ lib.AltPowerBar = function(self)
 	AltPowerBar:SetPoint("BOTTOM", self, "BOTTOM", 0, -10)
 	AltPowerBar:SetWidth(self:GetWidth())
 	CreateShadowclassbar222(AltPowerBar)
-		
 	AltPowerBar:SetBackdrop({
 			bgFile = "Interface\\AddOns\\oUF_Qulight\\Root\\Media\\statusbar4", 
 			edgeFile = "Interface\\AddOns\\oUF_Qulight\\Root\\Media\\statusbar4", 
@@ -1380,13 +1355,13 @@ lib.AltPowerBar = function(self)
 		
 	AltPowerBar:SetBackdropColor(.05,.05,.05, 1)
 	AltPowerBar:SetBackdropBorderColor(0, 0, 0, 0)	
-		
+	
 	AltPowerBar.text = SetFontString(AltPowerBar, Qulight["media"].font, 10, "OUTLINE")
 	AltPowerBar.text:SetPoint("CENTER")
 	self:Tag(AltPowerBar.text, '[altpower]')
 		
-	AltPowerBar:HookScript("OnShow", AltPowerBarOnToggle)
-	AltPowerBar:HookScript("OnHide", AltPowerBarOnToggle)
+	AltPowerBar:SetScript("OnShow", AltPowerBarOnToggle)
+	AltPowerBar:SetScript("OnHide", AltPowerBarOnToggle)
 
 	self.AltPowerBar = AltPowerBar		
 	self.AltPowerBar.PostUpdate = AltPowerBarPostUpdate
@@ -1597,7 +1572,8 @@ local function CreateFocusStyle(self, unit, isSingle)
 	else
 	lib.gen_bigcastbar(self)
 	end
-	lib.createAuras(self)
+	lib.createBuffs(self)
+	lib.createDebuffs(self)
 	if Qulight["unitframes"].showPortrait then lib.gen_portrait(self) end
 end
 local function CreateToTStyle(self, unit, isSingle)
@@ -1612,13 +1588,13 @@ local function CreateToTStyle(self, unit, isSingle)
 	lib.gen_hpstrings(self)
 	lib.gen_highlight(self)
 	lib.gen_RaidMark(self)
-	lib.createAuras(self)
 	lib.gen_ppbar(self)
+	lib.createBuffs(self)
+	lib.createDebuffs(self)
 	self.Power.colorReaction = true
 	self.Power.colorClass = true
 	self.Power.colorHealth = true
 	self.Power.bg.multiplier = 0.5
-	
 	self.Health.frequentUpdates = false
 	if Qulight["unitframes"].HealthcolorClass then
 	self.Health.colorClass = true

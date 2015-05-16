@@ -2,15 +2,15 @@
 Filger_Settings = {
 	config_mode = false,				-- 开\关测试模式
 	max_test_icon = 5,					-- 测试模式下,每组显示最大图标数量
-	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 50},		-- "P_BUFF_ICON"		(player_buff_icon 位置坐标 - 主图标注号 1)
-	player_proc_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 50},		-- "P_PROC_ICON"		(player_proc_icon 位置坐标 - 主图标注号 2)
-	special_proc_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 90},	-- "SPECIAL_P_BUFF_ICON"	(special_proc_icon 位置坐标 - 主图标注号 3)
-	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 90},	-- "T_DEBUFF_ICON"		(target_debuff_icon 位置坐标 - 主图标注号 4)
-	target_buff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 200, 130},		-- "T_BUFF"				(target_buff_icon 位置坐标 - 主图标注号 5)
-	pve_debuff = {"BOTTOMRIGHT", UIParent, "CENTER", -200, 130},			-- "PVE/PVP_DEBUFF"	(pve_debuff 位置坐标 - 主图标注号 6)
-	pve_cc = {"TOPLEFT", UIParent, "LEFT", 50, 0},								-- "PVE/PVP_CC"			(pve_cc 位置坐标 - 主图标注号 7)
-	cooldown = {"TOPLEFT", UIParent, "CENTER", -90, -80},					-- "COOLDOWN"			(cooldown 位置坐标 - 主图标注号 8)
-	target_bar = {"BOTTOMLEFT", UIParent, "CENTER", 120, -150},						-- "T_DE/BUFF_BAR"
+	player_buff_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -350, 0},		-- "P_BUFF_ICON"		(player_buff_icon 位置坐标 - 主图标注号 1)
+	player_proc_icon = {"BOTTOMLEFT", UIParent, "CENTER", 350, 0},		-- "P_PROC_ICON"		(player_proc_icon 位置坐标 - 主图标注号 2)
+	special_proc_icon = {"BOTTOMRIGHT", UIParent, "CENTER", -350, 40},	-- "SPECIAL_P_BUFF_ICON"	(special_proc_icon 位置坐标 - 主图标注号 3)
+	target_debuff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 350, 40},	-- "T_DEBUFF_ICON"		(target_debuff_icon 位置坐标 - 主图标注号 4)
+	target_buff_icon = {"BOTTOMLEFT", UIParent, "CENTER", 350, 80},		-- "T_BUFF"				(target_buff_icon 位置坐标 - 主图标注号 5)
+	pve_debuff = {"BOTTOMRIGHT", UIParent, "CENTER", -350, 80},			-- "PVE/PVP_DEBUFF"	(pve_debuff 位置坐标 - 主图标注号 6)
+	pve_cc = {"TOPLEFT", UIParent, "LEFT", 300, -50},								-- "PVE/PVP_CC"			(pve_cc 位置坐标 - 主图标注号 7)
+	cooldown = {"TOPLEFT", UIParent, "CENTER", -350, -30},					-- "COOLDOWN"			(cooldown 位置坐标 - 主图标注号 8)
+	target_bar = {"BOTTOMLEFT", UIParent, "CENTER", 300, -100},						-- "T_DE/BUFF_BAR"
 }
 
 local Misc = CreateFrame("Frame")

@@ -62,16 +62,6 @@ local function Update(self, event, owner)
 		return experience:Hide()
 	end
 
-
-
-
-
-
-
-
-
-
-
 	local unit = self.unit
 	local min, max = GetXP(unit)
 	experience:SetMinMaxValues(0, max)
@@ -112,10 +102,6 @@ local function Enable(self, unit)
 		if(experience.Rested) then
 			self:RegisterEvent('UPDATE_EXHAUSTION', Update)
 		end
-
-
-
-
 
 		if(not experience.noTooltip) then
 			experience:EnableMouse(true)

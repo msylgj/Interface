@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13633 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13721 $"):sub(12, -3))
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
 mod:SetUsedIcons(3, 2, 1)
-mod:SetHotfixNoticeRev(13627)
+mod:SetHotfixNoticeRev(13645)
 mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
@@ -172,7 +172,7 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_LEFT, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 2 then
 					if self.Options.SpecWarn156096you then
 						specWarnMFDPosition:Show(DBM_CORE_RIGHT)
@@ -180,7 +180,7 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_RIGHT, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 3 then
 					if self.Options.SpecWarn156096you then
 						specWarnMFDPosition:Show(DBM_CORE_MIDDLE)
@@ -188,30 +188,12 @@ local function warnMarked(self)
 					if self.Options.Yell156096 then
 						yellMFD2:Yell(DBM_CORE_MIDDLE, playerName)
 					end
-					voiceMarkedforDeath:Schedule(0.7, "center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
+					voiceMarkedforDeath:Play("center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				end
 			end
 			if mfdFound == expectedTotal then break end
 		end
 	end
-end
-
-local function meleeCheck(uId)
-	if UnitGroupRolesAssigned(uId) == "HEALER" then
-		return false
-	end
-	local _, class = UnitClass(uId)
-	--Because healers filtered out already, paladin and monk can only be melee if not "healer"
-	if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "MONK" then
-		return true
-	end
-	--Inspect throttle exists, so have to do it this way
-	if class == "DRUID" or class == "SHAMAN" then
-		if UnitPowerMax(uId) < 35000 then
-			return true
-		end
-	end
-	return false
 end
 
 local slagDebuff = GetSpellInfo(156096)
@@ -227,7 +209,7 @@ local function checkSlag(self)
 		local unitID = "raid"..i
 		if UnitDebuff(unitID, slagDebuff) then--Tank excluded on purpose to match BW helper
 			slagFound = slagFound + 1
-			if meleeCheck(unitID) then
+			if self:IsMeleeDps(unitID) then
 				totalMelee = totalMelee + 1
 			end
 			tempTable[slagFound] = UnitName(unitID)
@@ -236,7 +218,7 @@ local function checkSlag(self)
 	end
 	if totalMelee == 1 then--Melee count exactly 1
 		--Assign melee to middle and ranged to back
-		local playerIsMelee = meleeCheck("player")
+		local playerIsMelee = self:IsMeleeDps()
 		if playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
 			if self.Options.SpecWarn157000you then
 				specWarnSlagPosition:Show(DBM_CORE_MIDDLE)
@@ -283,8 +265,8 @@ function mod:OnCombatStart(delay)
 	self.vb.smashCount = 0
 	self.vb.markCount = 0
 	self.vb.slagCastCount = 0
-	timerThrowSlagBombsCD:Start(5.5-delay, 1)
-	countdownSlagBombs:Start(5.5-delay)
+	timerThrowSlagBombsCD:Start(5.2-delay, 1)
+	countdownSlagBombs:Start(5.2-delay)
 	timerDemolitionCD:Start(15-delay, 1)
 	timerShatteringSmashCD:Start(21-delay, 1)
 	if self:IsTank() then--Ability only concerns tank in phase 1
@@ -323,8 +305,8 @@ function mod:SPELL_CAST_START(args)
 			end
 		else
 			if self:IsMythic() then
-				timerShatteringSmashCD:Start(31.5, self.vb.smashCount+1)
-				countdownShatteringSmash:Start(31.5)
+				timerShatteringSmashCD:Start(30.5, self.vb.smashCount+1)
+				countdownShatteringSmash:Start(30.5)
 			else
 				timerShatteringSmashCD:Start(nil, self.vb.smashCount+1)
 				countdownShatteringSmash:Start()--Not phase 1, concerns everyone not just tank
@@ -389,7 +371,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerImpalingThrow:Start()
 			timerMarkedforDeathCD:Start(timer, self.vb.markCount+1)
 			countdownMarkedforDeath:Start(timer)
-			DBM:Debug("Running experimental timerShatteringSmashCD adjust because debugmode is enabled", 2)
 			local elapsed, total = timerShatteringSmashCD:GetTime(self.vb.smashCount+1)
 			local remaining = total - elapsed
 			DBM:Debug("Smash Elapsed: "..elapsed.." Smash Total: "..total.." Smash Remaining: "..remaining.." MFD Timer: "..timer, 2)
@@ -411,17 +392,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if args:IsPlayer() then
 			specWarnMarkedforDeath:Show()
-			voiceMarkedforDeath:Play("findshelter")
 			countdownMarkedforDeathFades:Start()
-			if self:IsLFR() or (self.Options.PositionsAllPhases and self.vb.phase < 3) then
+			if self:IsLFR() or (not self.Options.PositionsAllPhases and self.vb.phase < 3) then
 				yellMarkedforDeath:Yell()
+				voiceMarkedforDeath:Play("findshelter")
 			end
 		end
 		if self.Options.SetIconOnMarked then
 			self:SetSortedIcon(1.5, args.destName, 1, expectedMFDCount)
 		end
 		if self.Options.HudMapOnMFD then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 157000 then--Non Tank Version
 		if self:AntiSpam(5, 4) then

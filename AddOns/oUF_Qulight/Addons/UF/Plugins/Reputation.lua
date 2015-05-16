@@ -21,14 +21,6 @@ local function update(self, event, unit)
 	bar:SetValue(value)
 	bar:Show()
 
-	if(bar.Text) then
-		if(bar.OverrideText) then
-			bar:OverrideText(min, max, value, name, id)
-		else
-			bar.Text:SetFormattedText('%d / %d - %s', value - min, max - min, name)
-		end
-	end
-
 	if(bar.PostUpdate) then bar.PostUpdate(self, event, unit, bar, min, max, value, name, id) end
 end
 
@@ -43,8 +35,8 @@ local function enable(self, unit)
 
 		if(bar.Tooltip) then
 			bar:EnableMouse()
-			bar:HookScript('OnLeave', GameTooltip_Hide)
-			bar:HookScript('OnEnter', tooltip)
+			bar:SetScript('OnLeave', GameTooltip_Hide)
+			bar:SetScript('OnEnter', tooltip)
 		end
 
 		return true

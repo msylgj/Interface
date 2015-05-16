@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13423 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13703 $"):sub(12, -3))
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod:SetZone()
 mod:SetHotfixNoticeRev(13105)
+mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
 
@@ -72,7 +73,7 @@ function mod:RuneStart()
 			DBM.Arrow:ShowRunTo(playerX, playerY, 0)
 		end
 		if self.Options.HudMapForRune then
-			DBMHudMap:RegisterPositionMarker(157060, "HudMapForRune", "highlight", playerX, playerY, 3, 20, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterPositionMarker(157060, "HudMapForRune", "highlight", playerX, playerY, 3, 20, 0, 1, 0, 0.5, nil, 4):Pulse(0.5, 0.5)
 		end
 	end
 end
@@ -186,7 +187,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156766 then
 		local amount = args.amount or 1
-		warnWarpedArmor:Show(args.destName, amount)
 		if self.vb.frenzied then
 			timerWarpedArmorCD:Start(10.2)
 		else
@@ -198,8 +198,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			else--Taunt as soon as stacks are clear, regardless of stack count.
 				if not UnitDebuff("player", GetSpellInfo(156766)) and not UnitIsDeadOrGhost("player") then
 					specWarnWarpedArmorOther:Show(args.destName)
+				else
+					warnWarpedArmor:Show(args.destName, amount)
 				end
 			end
+		else
+			warnWarpedArmor:Show(args.destName, amount)
 		end
 	elseif spellId == 161923 then
 		warnCrushingEarth:CombinedShow(0.5, args.destName)

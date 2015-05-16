@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13580 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13667 $"):sub(12, -3))
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetZone()
@@ -424,7 +424,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:CheckTankDistance(args.sourceGUID, 40) and self.vb.phase == 1 then--Filter Works very poorly, probably because mob not a BOSS id. usually see ALL warnings and all HUDs :\
 			warnBomb:CombinedShow(1, args.destName)
 			if self.Options.HudMapOnBomb then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(155192, "highlight", args.destName, 5, debuffTime+0.5, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(155192, "highlight", args.destName, 5, debuffTime+0.5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 			end
 		end
 		if args:IsPlayer() then
@@ -491,7 +491,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 155242 then
 		local amount = args.amount or 1
-		warnHeat:Show(args.destName, amount)
 		if amount >= 3 then
 			voiceHeat:Play("changemt")
 			if args:IsPlayer() then
@@ -499,8 +498,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			else--Taunt as soon as stacks are clear, regardless of stack count.
 				if not UnitDebuff("player", GetSpellInfo(155242)) and not UnitIsDeadOrGhost("player") then
 					specWarnHeatOther:Show(args.destName)
+				else
+					warnHeat:Show(args.destName, amount)
 				end
 			end
+		else
+			warnHeat:Show(args.destName, amount)
 		end
 	elseif spellId == 155181 and self:AntiSpam(10, 0) then--Loading (The two that come can be upwards of 5 seconds apart so at least 10 second antispam)
 		self.vb.bellowsOperator = self.vb.bellowsOperator + 1

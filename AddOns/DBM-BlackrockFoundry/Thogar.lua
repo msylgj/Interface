@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13563 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13707 $"):sub(12, -3))
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 2, 1)
 mod:SetHotfixNoticeRev(12936)
+mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
 
@@ -47,7 +48,7 @@ local specWarnBurning				= mod:NewSpecialWarningStack(164380, nil, 2)--Mythic
 
 --Operator Thogar
 local timerProtoGrenadeCD			= mod:NewCDTimer(11, 155864)
-local timerEnkindleCD				= mod:NewCDTimer(11.7, 155921, nil, "Tank")
+local timerEnkindleCD				= mod:NewCDTimer(11.5, 155921, nil, "Tank")
 local timerTrainCD					= mod:NewNextCountTimer("d15", 176312)
 --Adds
 --local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140)
@@ -636,7 +637,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 155921 then
 		local amount = args.amount or 1
-		warnEnkindle:Show(args.destName, amount)
 		timerEnkindleCD:Start()
 		if amount >= 2 then
 			if args:IsPlayer() then
@@ -649,8 +649,12 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 				if debuffTime < 12 and not UnitIsDeadOrGhost("player") then--No debuff, or debuff will expire before next cast.
 					specWarnEnkindleOther:Show(args.destName)
+				else
+					warnEnkindle:Show(args.destName, amount)
 				end
 			end
+		else
+			warnEnkindle:Show(args.destName, amount)
 		end
 	elseif spellId == 165195 and args:IsPlayer() and self:AntiSpam(1.5, 5) then
 		specWarnProtoGrenade:Show()

@@ -39,7 +39,8 @@ local createAuraIcon = function(icons, index)
 
 	local overlay = button:CreateTexture(nil, "OVERLAY")
 	overlay:SetTexture"Interface\\Buttons\\UI-Debuff-Overlays"
-	overlay:SetAllPoints(button)
+	overlay:SetPoint('TOPLEFT', -3, 3)
+	overlay:SetPoint('BOTTOMRIGHT', 3, -3)
 	overlay:SetTexCoord(.296875, .5703125, 0, .515625)
 	button.overlay = overlay
 

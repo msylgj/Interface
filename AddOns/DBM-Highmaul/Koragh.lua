@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13661 $"):sub(12, -3))
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetZone()
@@ -293,7 +293,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
 		end
 		if self.Options.HudMapOnMC then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 172895 then
 		warnExpelMagicFel:CombinedShow(0.5, args.destName)
@@ -305,7 +305,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			lastX, LastY = UnitPosition("player")
 			self:Schedule(7, returnPosition, self)
 			if self.Options.HudMapForFel then
-				DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5, nil, nil, 4):Pulse(0.5, 0.5)
 			end
 		end
 		if self.Options.SetIconOnFel then

@@ -52,6 +52,8 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s was engaged %s ago, recovering timers..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor logging started."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor logging ended."
 
+DBM_CORE_COMBAT_STARTED_AI_TIMER	= "My CPU is a neural net processor; a learning computer. (This fight will use the new timer AI feature to generate timer approximations)"
+
 DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods> Your current profile is corrupted. DBM will load 'Default' profile."
 DBM_CORE_PROFILE_CREATED			= "'%s' profile created."
 DBM_CORE_PROFILE_CREATE_ERROR		= "Create profile failed. Invalid profile name."
@@ -146,7 +148,7 @@ DBM_CORE_UPDATEREMINDER_TESTVERSION		= "WARNING: You are using a version of Dead
 DBM_CORE_VEM							= "WARNING: You are running both Deadly Boss Mods and Voice Encounter Mods. DBM will not run in this configuration and therefore will not be loaded."
 DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed to avoid conflict."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "WARNING: This DBM update will not work correctly if you don't fully restart your game client. This update contains new files or .toc file changes that cannot be loaded via ReloadUI. You may encounter broken functionality or errors if you continue without a client restart."
-DBM_CORE_OUT_OF_DATE_NAG				= "Your version of Deadly Boss Mods is out-of-date and you have elected to ignore popup notification. It is recommended you update so you are not missing an important alert or timer, or is missing a yell rest of raid is counting on seeing from you."
+DBM_CORE_OUT_OF_DATE_NAG				= "Your version of Deadly Boss Mods is out-of-date. It is recommended you update for this fight so you are not missing an important alert or timer or a yell rest of raid is expecting to see from you."
 
 DBM_CORE_MOVABLE_BAR				= "Drag me!"
 
@@ -320,6 +322,7 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	cast		= "%s",
 	active		= "%s ends",--Buff/Debuff/event on boss
 	fades		= "%s fades",--Buff/Debuff on players
+	ai			= "%s AI",
 	cd			= "%s CD",
 	cdcount		= "%s CD (%%d)",
 	cdsource	= "%s CD: >%%s<",
@@ -338,6 +341,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS = {
 	cast		= "Show timer for $spell:%s cast",
 	active		= "Show timer for $spell:%s duration",
 	fades		= "Show timer for when $spell:%s fades from players",
+	ai			= "Show AI timer for $spell:%s cooldown",
 	cd			= "Show timer for $spell:%s cooldown",
 	cdcount		= "Show timer for $spell:%s cooldown",
 	cdsource	= "Show timer (with source) for $spell:%s cooldown",--Maybe better wording?

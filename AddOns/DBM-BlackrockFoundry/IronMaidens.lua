@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13608 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13707 $"):sub(12, -3))
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(5, 4, 3, 2, 1)
 mod:SetModelSound("sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg", "sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg")
 mod:SetHotfixNoticeRev(13439)
-mod:SetRespawnTime(30)
+mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
 
@@ -102,7 +102,7 @@ mod:AddTimerLine(Garan)
 local timerRapidFireCD					= mod:NewCDTimer(30, 156626)
 local timerDarkHuntCD					= mod:NewCDCountTimer(13.5, 158315, nil, false)--Important to know you have it, not very important to know it's coming soon.
 local timerPenetratingShotCD			= mod:NewCDCountTimer(28.8, 164271)--22-30 at least. maybe larger variation.
-local timerDeployTurretCD				= mod:NewCDCountTimer(20.5, 158599)--20.5-23.5
+local timerDeployTurretCD				= mod:NewCDCountTimer(20.2, 158599)--20.2-23.5
 ----Enforcer Sorka
 mod:AddTimerLine(Sorka)
 local timerBladeDashCD					= mod:NewCDCountTimer(20, 155794, nil, "Ranged|Tank")
@@ -452,7 +452,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnBloodRitual:Show(self.vb.bloodRitual, args.destName)
 			end
 			if self.Options.HudMapOnBloodRitual then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 7, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
 			end
 			if args:IsPlayer() then
 				yellBloodRitual:Yell()
@@ -475,7 +475,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					warnRapidFire:Show(self.vb.rapidfire, args.destName)
 				end
 				if self.Options.HudMapOnRapidFire then
-					DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 9, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+					DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 9, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 				end
 			end
 		end
@@ -610,7 +610,7 @@ function mod:CHAT_MSG_ADDON(prefix, msg, channel, targetName)
 				warnRapidFire:Show(self.vb.rapidfire, targetName)
 			end
 			if self.Options.HudMapOnRapidFire then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(156631, "highlight", targetName, 5, 12, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(156631, "highlight", targetName, 5, 12, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 			end
 		end
 	end

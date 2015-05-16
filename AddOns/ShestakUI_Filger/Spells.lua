@@ -929,8 +929,10 @@ Filger_Spells = {
 			{spellID = 79683, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Pyroblast!
 			{spellID = 48108, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ½äÖ¸
+			-- 690½äÖ¸
 			{spellID = 177159, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 715½äÖ¸
+			{spellID = 177176, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 2T17 °Â
 			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 4T17 »ð

@@ -52,9 +52,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 13634 $"):sub(12, -3)),
-	DisplayVersion = "6.1.7", -- the string that is shown as version
-	ReleaseRevision = 13634 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 13725 $"):sub(12, -3)),
+	DisplayVersion = "6.1.8", -- the string that is shown as version
+	ReleaseRevision = 13725 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -201,6 +201,26 @@ DBM.DefaultOptions = {
 	SpecialWarningFlashRepeat4 = false,
 	SpecialWarningFlashRepeatAmount = 2,--Repeat 2 times, mean 3 flashes (first plus 2 repeat)
 	SWarnClassColor = true,
+	HUDColorOverride = false,
+	HUDSizeOverride = false,
+	HUDAlphaOverride = false,
+	HUDTextureOverride = false,
+	HUDSize1 = 5,
+	HUDSize2 = 5,
+	HUDSize3 = 5,
+	HUDSize4 = 5,
+	HUDAlpha1 = 0.5,
+	HUDAlpha2 = 0.5,
+	HUDAlpha3 = 0.5,
+	HUDAlpha4 = 0.5,
+	HUDColor1 = {1.0, 1.0, 0.0},--Yellow
+	HUDColor2 = {1.0, 0.0, 0.0},--Red
+	HUDColor3 = {1.0, 0.5, 0.0},--Orange
+	HUDColor4 = {0.0, 1.0, 0.0},--Green
+	HUDTexture1 = "highlight",
+	HUDTexture2 = "highlight",
+	HUDTexture3 = "highlight",
+	HUDTexture4 = "highlight",
 	HealthFrameGrowUp = false,
 	HealthFrameLocked = true,
 	HealthFrameWidth = 200,
@@ -209,8 +229,8 @@ DBM.DefaultOptions = {
 	ArrowPoint = "TOP",
 	-- global boss mod settings (overrides mod-specific settings for some options)
 	DontShowBossAnnounces = false,
+	DontShowBossTimers = false,
 	DontShowFarWarnings = true,
-	DontSendBossWhispers = false,
 	DontSetIcons = false,
 	DontRestoreIcons = false,
 	DontShowRangeFrame = false,
@@ -219,6 +239,7 @@ DBM.DefaultOptions = {
 	DontShowHudMap2 = true,
 	DontShowHealthFrame = false,
 	DontPlayCountdowns = false,
+	DontShowRespawn = false,
 	DontShowPT2 = false,
 	DontShowPTCountdownText = false,
 	DontPlayPTCountdown = false,
@@ -250,6 +271,8 @@ DBM.DefaultOptions = {
 	AutoAcceptFriendInvite = false,
 	AutoAcceptGuildInvite = false,
 	FakeBWVersion = false,
+	AITimer = true,
+	AutoCorrectTimer = false,
 	ChatFrame = "DEFAULT_CHAT_FRAME",
 }
 
@@ -335,7 +358,7 @@ local lastBossDefeat = {}
 local bossuIdFound = false
 local timerRequestInProgress = false
 local updateNotificationDisplayed = 0
-local showConstantReminder = false
+local showConstantReminder = 0
 local tooltipsHidden = false
 local SWFilterDisabed = 3
 local currentSpecGroup = GetActiveSpecGroup()
@@ -353,7 +376,7 @@ local targetMonitor = nil
 local statusWhisperDisabled = false
 local wowTOC = select(4, GetBuildInfo())
 
-local fakeBWRevision = 13052
+local fakeBWRevision = 13114
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 local guiRequested = false
@@ -2582,7 +2605,7 @@ end
 
 --For returning the number of players actually in zone with us for status functions
 --This is very touchy though and will fail if everyone isn't in same SUB zone (ie same room/area)
---It should work for pretty much any case we'd use it though except maybe a fight like heroic LK? TODO: check this
+--It should work for pretty much any case but outdoor
 function DBM:GetNumRealGroupMembers()
 	if not IsInInstance() then--Not accurate outside of instances (such as world bosses)
 		return IsInGroup() and GetNumGroupMembers() or 1--So just return regular group members.
@@ -3083,7 +3106,6 @@ do
 		DBM:Schedule(5, DBM.SetRaidWarningPositon, DBM)
 		DBM:Schedule(20, DBM.SetRaidWarningPositon, DBM)--A second attempt after we are sure all other mods are loaded, so we can work around issues with movemanything or other mods.
 		--Fix old options that use .wav instead of .ogg, to prevent no sounds bug as of 6.1+
-		--Check file paths for .wav, but make sure file path does not contain Interface\\AddOns, because wav there is still valid. Only blizzard .wav is gone.
 		if DBM.Options.RaidWarningSound:find(".wav") then DBM.Options.RaidWarningSound = DBM.DefaultOptions.RaidWarningSound end
 		if DBM.Options.SpecialWarningSound:find(".wav") then DBM.Options.SpecialWarningSound = DBM.DefaultOptions.SpecialWarningSound end
 		if DBM.Options.SpecialWarningSound2:find(".wav") then DBM.Options.SpecialWarningSound2 = DBM.DefaultOptions.SpecialWarningSound2 end
@@ -3592,6 +3614,7 @@ do
 			--TODO, maybe require at least 2 senders? this doesn't disable mod or make a popup though, just warn in chat that mod may have invalid timers/warnings do to a blizzard hotfix
 			if DBM:AntiSpam(3, "HOTFIX") then
 				if DBM.HighestRelease < modRevision then--There is a newer RELEASE version of DBM out that has this mods fixes
+					showConstantReminder = 2
 					DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HOTFIX)
 				else--This mods fixes are in an alpha version
 					DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA)
@@ -3861,7 +3884,7 @@ do
 						DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
 						DBM:AddMsg(DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
 						DBM:AddMsg(("|HDBM:update:%s:%s|h|cff3588ff[%s]"):format(displayVersion, version, DBM_CORE_UPDATEREMINDER_URL or "http://www.deadlybossmods.com"))
-						showConstantReminder = true
+						showConstantReminder = 1
 					elseif #newerVersionPerson == 3 then--Requires 3 for force disable.
 						--Find min revision.
 						local revDifference = mmin((raid[newerVersionPerson[1]].revision - DBM.Revision), (raid[newerVersionPerson[2]].revision - DBM.Revision), (raid[newerVersionPerson[3]].revision - DBM.Revision))
@@ -4644,7 +4667,7 @@ do
 			local v = inCombat[i]
 			if not v.combatInfo then return end
 			if v.noEEDetection then return end
-			if v.respawnTime then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
+			if v.respawnTime and success == 0 and not self.Options.DontShowRespawn then--No special hacks needed for bad wrath ENCOUNTER_END. Only mods that define respawnTime have a timer, since variable per boss.
 				self.Bars:CreateBar(v.respawnTime, DBM_CORE_TIMER_RESPAWN, "Interface\\Icons\\Spell_Holy_BorrowedTime")
 			end
 			if v.multiEncounterPullDetection then
@@ -5074,6 +5097,10 @@ do
 				if self.Options.DisableStatusWhisper and UnitIsGroupLeader("player") and (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16 or difficultyIndex == 23) then
 					sendSync("DSW")
 				end
+				--show hotfix notify
+				if mod.hotfixNoticeRev then
+					sendSync("HF", modId.."\t"..mod.hotfixNoticeRev)
+				end
 				--show bigbrother check
 				if self.Options.ShowBigBrotherOnCombatStart and BigBrother and type(BigBrother.ConsumableCheck) == "function" then
 					if self.Options.BigBrotherAnnounceToRaid then
@@ -5108,10 +5135,6 @@ do
 					dummyMod.text:Cancel()
 					self.Bars:CancelBar(DBM_CORE_TIMER_PULL)
 					TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
-				end
-				--show hotfix notify
-				if mod.hotfixNoticeRev then
-					sendSync("HF", modId.."\t"..mod.hotfixNoticeRev)
 				end
 			elseif self.Options.ShowRecoveryMessage then--show timer recovery message
 				self:AddMsg(DBM_CORE_COMBAT_STATE_RECOVERED:format(difficultyText..name, strFromTime(delay)))
@@ -5243,13 +5266,11 @@ do
 						end
 					end
 				end
-				if showConstantReminder and IsInGroup() and savedDifficulty ~= "lfr" and savedDifficulty ~= "lfr25" then
-					--Show message about 33% of time, when you wipe, while in a group that isn't LFR if you chose to disable update notification popup. I've seen far too many wipes caused by out of date mod versions
+				if showConstantReminder == 2 and IsInGroup() and savedDifficulty ~= "lfr" and savedDifficulty ~= "lfr25" then
+					showConstantReminder = 1
+					--Show message any time this is a mod that has a newer hotfix revision
 					--These people need to know the wipe could very well be their fault.
-					local RNG = math.random(1, 3)
-					if RNG == 3 then
-						self:AddMsg(DBM_CORE_OUT_OF_DATE_NAG)
-					end
+					self:AddMsg(DBM_CORE_OUT_OF_DATE_NAG)
 				end
 				local msg
 				for k, v in pairs(autoRespondSpam) do
@@ -6502,8 +6523,8 @@ function bossModPrototype:IsTrivial(level)
 	return false
 end
 
-function bossModPrototype:CheckInterruptFilter(sourceGUID)
-	if not DBM.Options.FilterInterrupt then return true end
+function bossModPrototype:CheckInterruptFilter(sourceGUID, skip)
+	if not DBM.Options.FilterInterrupt and not skip then return true end
 	if UnitGUID("target") == sourceGUID or UnitGUID("focus") == sourceGUID then
 		return true
 	end
@@ -6534,10 +6555,6 @@ function bossModPrototype:IsCriteriaCompleted(criteriaIDToCheck)
 		end
 	end
 	return false
-end
-
-function bossModPrototype:SendWhisper(msg, target)
-	return not DBM.Options.DontSendBossWhispers and sendWhisper(target, chatPrefixShort..msg)
 end
 
 function bossModPrototype:LatencyCheck()
@@ -6646,7 +6663,12 @@ do
 		else
 			name, uid, bossuid = getBossTarget(cidOrGuid, scanOnlyBoss)
 		end
-		if uid and (DBM:GetUnitCreatureId(uid) == 24207 or DBM:GetUnitCreatureId(uid) == 80258) then return nil, nil, nil end--filter army of the dead/Garrison Footman (basically same thing as army)
+		if uid then
+			local cid = DBM:GetUnitCreatureId(uid)
+			if cid == 24207 or cid == 80258 or cid == 87519 then--filter army of the dead/Garrison Footman (basically same thing as army)
+				return nil, nil, nil
+			end
+		end
 		return name, uid, bossuid
 	end
 
@@ -7227,7 +7249,48 @@ do
 		return false
 	end
 
-	function bossModPrototype:IsMelee()
+	function bossModPrototype:IsMeleeDps(uId)
+		if uId then--This version includes ONLY melee dps
+			local role = UnitGroupRolesAssigned(uId)
+			if role == "HEALER" or role == "TANK" then--Auto filter healer from dps check
+				return false
+			end
+			local _, class = UnitClass(uId)
+			if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" then
+				return true
+			end
+			--Inspect throttle exists, so have to do it this way
+			if class == "DRUID" or class == "SHAMAN" or class == "PALADIN" or class == "MONK" then
+				if UnitPowerMax(uId) < 35000 then
+					return true
+				end
+			end
+			return false
+		end
+		if not currentSpecID then
+			DBM:SetCurrentSpecInfo()
+		end
+		if specRoleTable[currentSpecID]["MeleeDps"] then
+			return true
+		else
+			return false
+		end
+	end
+
+	function bossModPrototype:IsMelee(uId)
+		if uId then--This version includes monk healers as melee and tanks as melee
+			local _, class = UnitClass(uId)
+			if class == "WARRIOR" or class == "ROGUE" or class == "DEATHKNIGHT" or class == "MONK" then
+				return true
+			end
+			--Inspect throttle exists, so have to do it this way
+			if class == "DRUID" or class == "SHAMAN" or class == "PALADIN" then
+				if UnitPowerMax(uId) < 35000 then
+					return true
+				end
+			end
+			return false
+		end
 		if not currentSpecID then
 			DBM:SetCurrentSpecInfo()
 		end
@@ -7262,6 +7325,7 @@ do
 end
 
 function bossModPrototype:IsTank()
+	--IsTanking already handles external calls, no need here.
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
@@ -7273,7 +7337,13 @@ function bossModPrototype:IsTank()
 	end
 end
 
-function bossModPrototype:IsDps()
+function bossModPrototype:IsDps(uId)
+	if uId then--External unit call.
+		if UnitGroupRolesAssigned(uId) == "DAMAGER" then
+			return true
+		end
+		return false
+	end
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
@@ -7285,7 +7355,13 @@ function bossModPrototype:IsDps()
 	end
 end
 
-function bossModPrototype:IsHealer()
+function bossModPrototype:IsHealer(uId)
+	if uId then--External unit call.
+		if UnitGroupRolesAssigned(uId) == "HEALER" then
+			return true
+		end
+		return false
+	end
 	if not currentSpecID then
 		DBM:SetCurrentSpecInfo()
 	end
@@ -8931,6 +9007,14 @@ do
 			end
 		end
 	end
+	
+	function DBM:ShowTestHUD()
+		local x, y = UnitPosition("player")
+		DBMHudMap:RegisterPositionMarker(10000, "Test1", "highlight", x, y-20, 5, 10, 1, 1, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterPositionMarker(20000, "Test2", "highlight", x-20, y, 5, 10, 1, 0, 0, 0.5, nil, 2):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterPositionMarker(30000, "Test3", "highlight", x+20, y, 5, 10, 1, 0.5, 0, 0.5, nil, 3):Pulse(0.5, 0.5)
+		DBMHudMap:RegisterPositionMarker(40000, "Test4", "highlight", x, y+20, 5, 10, 0, 1, 0, 0.5, nil, 4):Pulse(0.5, 0.5)
+	end
 end
 
 --------------------
@@ -8941,30 +9025,79 @@ do
 	local mt = {__index = timerPrototype}
 
 	function timerPrototype:Start(timer, ...)
+		if DBM.Options.DontShowBossTimers then return end
 		if timer and type(timer) ~= "number" then
 			return self:Start(nil, timer, ...) -- first argument is optional!
 		end
 		if not self.option or self.mod.Options[self.option] then
 			if self.type and self.type:find("count") and not self.allowdouble then--cdcount, nextcount. remove previous timer.
 				for i = #self.startedTimers, 1, -1 do
-					if DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
+					if DBM.Options.AutoCorrectTimer or (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
 						local bar = DBM.Bars:GetBar(self.startedTimers[i])
 						if bar then
 							local remaining = ("%.1f"):format(bar.timer)
 							local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 							ttext = ttext.."("..self.id..")"
 							if bar.timer > 0.2 then
-								DBM:Debug("Timer "..ttext.. " refreshed before expires. Remaining time is : "..remaining, 2)
+								if timer then
+									self.correctedCast = timer - bar.timer--Store what lowest timer is in timer object
+									self.correctedDiff = difficultyIndex--Store index of correction to ensure the change is only used in one difficulty (so a mythic timer doesn't alter heroic for example)
+								end
+								DBM:Debug("Timer "..ttext.. " refreshed before expired. Remaining time is : "..remaining, 2)
 							end
 						end
 					end
-					DBM.Bars:CancelBar(self.startedTimers[i])--ASSUMED location, review!
+					DBM.Bars:CancelBar(self.startedTimers[i])
 					self.startedTimers[i] = nil
 				end
 			end
 			local timer = timer and ((timer > 0 and timer) or self.timer + timer) or self.timer
+			if self.type == "ai" then--A learning timer
+				if not DBM.Options.AITimer then return end
+				if timer > 2 then--Normal behavior.
+					if self.firstCastTimer and type(self.firstCastTimer) == "string" then--This is first cast of spell, we need to generate self.firstPullTimer
+						self.firstCastTimer = tonumber(self.firstCastTimer)
+						self.firstCastTimer = GetTime() - self.firstCastTimer--We have generated a self.firstCastTimer! Next pull, DBM should know timer for first cast next pull. FANCY!
+						DBM:Debug("AI timer learned a first timer for pull of "..self.firstCastTimer, 2)
+					end
+					if self.phaseCastTimer and type(self.phaseCastTimer) == "string" then--This is first cast of spell after a phase transition, we need to generate self.phaseCastTimer
+						self.phaseCastTimer = tonumber(self.phaseCastTimer)
+						self.phaseCastTimer = GetTime() - self.phaseCastTimer--We have generated a self.phaseCastTimer!
+						DBM:Debug("AI timer learned a first timer for phase of "..self.phaseCastTimer, 2)
+					end
+					if self.lastCast then--We have a GetTime() on last cast
+						local timeLastCast = GetTime() - self.lastCast--Get time between current cast and last cast
+						if timeLastCast > 4 then--Prevent infinite loop cpu hang. Plus anything shorter than 5 seconds doesn't need a timer
+							if not self.lowestSeenCast or (self.lowestSeenCast and self.lowestSeenCast > timeLastCast) then--Always use lowest seen cast for a timer
+								self.lowestSeenCast = timeLastCast
+								DBM:Debug("AI timer learned a new lowest timer of "..self.lowestSeenCast, 2)
+							end
+						end
+					end
+					self.lastCast = GetTime()
+					if self.lowestSeenCast then--Always use lowest seen cast for timer
+						timer = self.lowestSeenCast
+					else
+						return--Don't start the bogus timer shoved into timer field in the mod
+					end
+				elseif timer == 2 then
+					if self.phaseCastTimer and type(self.phaseCastTimer) == "number" then
+						timer = self.phaseCastTimer
+					else--No first pull timer generated yet, set it to GetTime, as a string
+						self.phaseCastTimer = tostring(GetTime())
+						return--Don't start the 2 second timer
+					end
+				else--1 was sent, trigger a first Cast timer
+					if self.firstCastTimer and type(self.firstCastTimer) == "number" then
+						timer = self.firstCastTimer
+					else--No first pull timer generated yet, set it to GetTime, as a string
+						self.firstCastTimer = tostring(GetTime())
+						return--Don't start the 1 second timer
+					end
+				end
+			end
 			local id = self.id..pformat((("\t%s"):rep(select("#", ...))), ...)
-			if DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
+			if DBM.Options.AutoCorrectTimer or (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
 				if not self.type or (self.type ~= "target" and self.type ~= "active" and self.type ~= "fades") then
 					local bar = DBM.Bars:GetBar(id)
 					if bar then
@@ -8972,10 +9105,17 @@ do
 						local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 						ttext = ttext.."("..self.id..")"
 						if bar.timer > 0.2 then
-							DBM:Debug("Timer "..ttext.. " refreshed before expires. Remaining time is : "..remaining, 2)
+							self.correctedCast = timer - bar.timer--Store what lowest timer is for advanced user feature
+							self.correctedDiff = difficultyIndex--Store index of correction to ensure the change is only used in one difficulty (so a mythic timer doesn't alter heroic for example
+							DBM:Debug("Timer "..ttext.. " refreshed before expired. Remaining time is : "..remaining, 2)
 						end
 					end
 				end
+			end
+			if DBM.Options.AutoCorrectTimer and self.correctedCast and self.correctedDiff and self.correctedDiff == difficultyIndex and self.correctedCast < timer then
+				local debugtemp = timer - self.correctedCast
+				DBM:Debug("Timer autocorrected by "..debugtemp, 2)
+				timer = self.correctedCast
 			end
 			local bar = DBM.Bars:CreateBar(timer, id, self.icon)
 			if not bar then
@@ -9064,6 +9204,7 @@ do
 	end
 
 	function timerPrototype:Update(elapsed, totalTime, ...)
+		if DBM.Options.DontShowBossTimers then return end
 		if self:GetTime(...) == 0 then
 			self:Start(totalTime, ...)
 		end
@@ -9269,6 +9410,10 @@ do
 	
 	function bossModPrototype:NewRPTimer(...)
 		return newTimer(self, "roleplay", ...)
+	end
+	
+	function bossModPrototype:NewAITimer(...)
+		return newTimer(self, "ai", ...)
 	end
 
 	function bossModPrototype:GetLocalizedTimerText(timerType, spellId)

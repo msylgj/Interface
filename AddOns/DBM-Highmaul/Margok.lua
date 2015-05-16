@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13249 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13667 $"):sub(12, -3))
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetZone()
@@ -40,7 +40,6 @@ local warnMarkOfChaos							= mod:NewTargetAnnounce("OptionVersion2", 158605, 4,
 local warnMarkOfChaosDisplacement				= mod:NewTargetAnnounce("OptionVersion2", 164176, 4, nil, nil, false)
 local warnMarkOfChaosFortification				= mod:NewTargetAnnounce("OptionVersion2", 164178, 4, nil, nil, false)
 local warnMarkOfChaosReplication				= mod:NewTargetAnnounce("OptionVersion2", 164191, 4, nil, nil, false)
-local warnAcceleratedAssault					= mod:NewStackAnnounce(159515, 3, nil, "Tank")
 --Intermission: Dormant Runestones
 local warnFixate								= mod:NewTargetAnnounce("OptionVersion3", 157763, 3)
 --Intermission: Lineage of Power
@@ -673,7 +672,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			updateRangeFrame(self)--Update it here cause we don't need it before stacks get to relevant levels.
 			if self.Options.HudMapOnBranded then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 4, 5, 0, 0, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 			end
 		end
 	elseif spellId == 158553 then
@@ -694,7 +693,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			return
 		end
 		if (amount == 5 or amount >= 9) and not self.vb.noTaunt and self:AntiSpam(3, 3) then--First warning at 5, then a decent amount of time until 8. then spam every 3 seconds at 8 and above.
-			warnAcceleratedAssault:Show(args.destName, amount)
 			local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 			if tanking or (status == 3) then
 				specWarnAcceleratedAssault:Show(amount)
@@ -737,7 +735,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		updateRangeFrame(self)
 		if self.Options.HudMapOnMarkOfChaos then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 7, 1, 0, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 157801 and self:CheckDispelFilter() then
 		specWarnSlow:CombinedShow(1, args.destName)

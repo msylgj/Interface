@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13589 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13703 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
 mod:SetUsedIcons(6, 5, 4, 3)
 mod:SetHotfixNoticeRev(13445)
+mod:SetRespawnTime(29.5)
 
 mod:RegisterCombat("combat")
 
@@ -90,7 +91,7 @@ local function showFixate(self)
 	for name, time in pairs(fixateTagets) do
 		text[#text + 1] = name
 		if self.Options.HudMapOnFixate then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3, 10, 1, 1, 0, 0.5, nil, true):Pulse(0.5, 0.5)
+			DBMHudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3, 10, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	end
 	warnFixate:Show(table.concat(text, "<, >"))
@@ -185,7 +186,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 163284 then
 		local amount = args.amount or 1
 		if amount % 3 == 0 then
-			warnRisingFlames:Show(args.destName, amount)
 			if amount >= 6 then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnRisingFlames:Show(amount)
@@ -193,23 +193,30 @@ function mod:SPELL_AURA_APPLIED(args)
 					if not UnitDebuff("player", GetSpellInfo(163284)) and not UnitIsDeadOrGhost("player") then
 						specWarnRisingFlamesOther:Show(args.destName)
 						voiceRisingFlames:Play("changemt")
+					else
+						warnRisingFlames:Show(args.destName, amount)
 					end
 				end
+			else
+				warnRisingFlames:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 155074 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId, "boss1") or self:IsTanking(uId, "boss2") or self:IsTanking(uId, "boss3") or self:IsTanking(uId, "boss4") or self:IsTanking(uId, "boss5") then
 			local amount = args.amount or 1
-			warnCharringBreath:Show(args.destName, amount)
 			if amount >= 2 then
 				if args:IsPlayer() then
 					specWarnCharringBreath:Show(amount)
 				else--Taunt as soon as stacks are clear, regardless of stack count.
 					if not UnitDebuff("player", GetSpellInfo(155074)) and not UnitIsDeadOrGhost("player") then
 						specWarnCharringBreathOther:Show(args.destName)
+					else
+						warnCharringBreath:Show(args.destName, amount)
 					end
 				end
+			else
+				warnCharringBreath:Show(args.destName, amount)
 			end
 		end
 	elseif spellId == 154932 then

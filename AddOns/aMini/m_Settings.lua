@@ -1,6 +1,7 @@
 ﻿local SCREENSHOT_QUALITY = 7
 local ainvenabled = false
 local autorollgreens = true
+local autoDE = false
 local HideErrors = true
 local autoacceptDE = true
 
@@ -241,8 +242,8 @@ if autorollgreens then
 	f:RegisterEvent("START_LOOT_ROLL")
 	f:SetScript("OnEvent", function(_, _, id)
 	if not id then return end -- What the fuck?
-	local _, _, _, quality, bop, _, _, canDE = GetLootRollItemInfo(id)
-	if quality == 2 and not bop then RollOnLoot(id, canDE and 3 or 2) end
+	local _, name, _, quality, bop, _, _, canDE = GetLootRollItemInfo(id)
+	if quality == 2 and not bop then RollOnLoot(id, (canDE and autoDE) and 3 or 2) end
 	end)
 end
 

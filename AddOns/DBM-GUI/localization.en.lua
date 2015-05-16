@@ -184,6 +184,21 @@ L.SpecialWarnSound2			= "Set default sound for special warnings affecting everyo
 L.SpecialWarnSound3			= "Set default sound for VERY important special warnings"
 L.SpecialWarnSound4			= "Set default sound for run away special warnings"
 
+-- Tab: Heads Up Display Frame
+L.Panel_HUD					= "Heads Up Display"
+L.Area_HUDOptions			= "HUD Options"
+L.HUDColorOverride			= "Override mod chosen colors for HUD"
+L.HUDSizeOverride			= "Override mod chosen sizes for HUD"
+L.HUDAlphaOverride			= "Override mod chosen alpha (transparency) for HUD"
+L.HUDTextureOverride		= "Override mod chosen textures for HUD (does not apply to 'icon' texture options)"
+L.HUDColorSelect			= "HUD color %d"
+L.HUDTextureSelect1			= "Set texture for primary HUD"
+L.HUDTextureSelect2			= "Set texture for secondary HUD"
+L.HUDTextureSelect3			= "Set texture for tertiary HUD"
+L.HUDTextureSelect4			= "Set texture for 'run to' HUD"
+L.HUDSizeSlider				= "Circle Radius: %0.1f"
+L.HUDAlphaSlider			= "Alpha: %0.1f"
+
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Spoken Alerts"
 L.Area_VoiceSelection		= "Voice Selections"
@@ -213,7 +228,7 @@ L.BarWidth					= "Bar width: %d"
 L.Panel_SpamFilter			= "DBM Global Disables & Filters"
 L.Area_SpamFilter_Outgoing	= "DBM Global Disable & Filter Options"
 L.SpamBlockNoShowAnnounce	= "Do not show announces or play warning sounds"
-L.SpamBlockNoSendWhisper	= "Do not send boss warning whispers to other players"
+L.SpamBlockNoShowTimers		= "Do not show timers"
 L.SpamBlockNoSetIcon		= "Do not set icons on targets"
 L.SpamBlockNoRangeFrame		= "Do not show range frame"
 L.SpamBlockNoInfoFrame		= "Do not show info frame"
@@ -237,6 +252,7 @@ L.FilterDispels				= "Filter warnings for dispelable spells if your dispel is on
 L.FilterSelfHud				= "Filter yourself from HudMap (Excludes range based Hud functions)"
 
 L.Area_PullTimer			= "Pull, Break, Combat, & Custom Timer Filter Options"
+L.DontShowRespawn			= "Don't show boss respawn timer"
 L.DontShowPTNoID			= "Block Pull Timer if not sent from same zone as you"
 L.DontShowPT				= "Do not show Pull/Break Timer bar"
 L.DontShowPTText			= "Do not show announce text for Pull/Break Timer"
@@ -282,6 +298,8 @@ L.AutoAcceptFriendInvite	= "Automatically accept group invites from friends"
 L.AutoAcceptGuildInvite		= "Automatically accept group invites from guild members"
 L.Area_Advanced				= "Advanced Options"
 L.FakeBW					= "Pretend to be BigWigs in version checks instead of DBM (Useful for guilds that force using BigWigs)"
+L.AITimer					= "Automatically generate timers for never before seen fights using DBM's built in timer AI (Useful for pulling a test boss for the very first time such as beta or PTR). Note: This won't work for properlty for multiple adds with same ability."
+L.AutoCorrectTimer			= "Automatically correct timers that are too long (Useful for guilds pulling cutting edge content that boss mods aren't updated for yet). Note: This option may also make some timers worse if boss resets timers on phase changes that DBM isn't coded to handle properly yet."
 
 L.PizzaTimer_Headline 		= 'Create a "Pizza Timer"'
 L.PizzaTimer_Title			= 'Name (e.g. "Pizza!")'
