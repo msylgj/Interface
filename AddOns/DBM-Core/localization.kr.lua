@@ -16,8 +16,6 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "전투 도중 DBM 바 스킨 설정에 실패했�
 DBM_CORE_BAD_LOAD					= "DBM이 현재 인스턴스의 경고를 완전히 불러오지 못한 것을 발견했습니다. 전투가 종료된 후에, /console reloadui 명령어를 입력하여 경고를 다시 불러오시기 바랍니다."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "현재 사용중인 DBM 버전은 '%s' 경보에 필요한 기능이 없습니다. 새로운 DBM을 설치하셔야 이 경보를 불러올 수 있습니다."
 
-DBM_CORE_BLIZZ_BUGS					= "6.1 패치로 wav 파일 재생이 불가능하게 변경되었습니다. 이에 따라 잘못된 소리 재생을 막기 위해 개별로 설정한 특수 경고 소리가 기본값으로 재설정 됩니다. 설정을 다시 하시면 재설정이 되지 않습니다. 하나의 캐릭터를 설정 완료하시고 나면, 소리 설정은 각 보스별 통계화면에서 복사하실 수 있습니다."
-
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대원 숫자에 맞는 근접판정 정보를 알 수 없기 때문에 DBM이 이 전투에서 거리 창을 비활성화 했습니다."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "현재 공격대원 숫자에 맞는 쫄 소환 정보를 알 수 없기 때문에 DBM이 이 전투에서 소환 횟수 정보를 비활성화 했습니다."
 DBM_CORE_DYNAMIC_MULTIPLE			= "현재 공격대원 숫자에 맞는 우두머리 특수 정보가 없기 때문에 DBM이 이 전투에서 다수 기능을 비활성화 했습니다."
@@ -52,6 +50,8 @@ DBM_CORE_SCENARIO_ENDED_AT_LONG		= "%s|1이;가; 종료되었습니다. 소요�
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s 전투가 %s 전에 시작되었습니다. 바를 복구 합니다."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor 기록을 시작합니다."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor 기록을 중단합니다."
+
+DBM_CORE_COMBAT_STARTED_AI_TIMER	= "DBM 인공지능 바가 작동합니다. (이 전투에서 사용될 주문들의 대기시간들을 추정해서 보여줍니다.)"
 
 DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods> 현재 설정된 프로필이 손상되었습니다. 'Default' 프로필을 불러옵니다."
 DBM_CORE_PROFILE_CREATED			= "'%s' 프로필을 만들었습니다."
@@ -148,7 +148,7 @@ DBM_CORE_UPDATEREMINDER_TESTVERSION		= "경고: 현재 게임 버전과 맞지 �
 DBM_CORE_VEM							= "경고: 당신은 DBM과 VEM을 동시에 사용중입니다. 현재 설정에서는 DBM이 작동하지 않으므로 DBM을 불러오지 않습니다."
 DBM_CORE_3RDPROFILES					= "경고: DBM-Profiles는 이 버전의 DBM과 호환되지 않습니다. 충돌을 방지하기 위해 해당 애드온을 제거하셔야 DBM을 불러올 수 있습니다."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "경고: 지금 업데이트하신 DBM은 게임 클라이언트를 완전히 재시작하지 전까지 정상작동하지 않습니다. 이 업데이트는 새 파일이 추가되었거나 UI 재시작으로는 불러올 수 없는 TOC 변경이 포함되어 있습니다. 재시작 없이 사용하실 경우 오류가 발생하거나 작동하지 않을 수 있습니다."
-DBM_CORE_OUT_OF_DATE_NAG				= "경고: 현재 사용중인 DBM 버전이 오래되었으며 현재 업데이트 팝업 끄기가 선택된 상태입니다. 중요한 알림, 바 그리고 공격대원 모두가 볼 수 있는 대화 알림을 놓치지 않기 위해 업데이트 하시는 것을 강력하게 권장 드립니다."
+DBM_CORE_OUT_OF_DATE_NAG				= "경고: 현재 사용중인 DBM 버전이 오래되었습니다. 이 전투를 위한 중요한 알림, 바 그리고 공격대원 모두가 볼 수 있는 대화 알림을 놓치지 않기 위해 업데이트 하시는 것을 강력하게 권장 드립니다."
 
 DBM_CORE_MOVABLE_BAR				= "나를 움직이세요~_~"
 
@@ -315,6 +315,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.active			= "%s 종료"
 DBM_CORE_AUTO_TIMER_TEXTS.fades				= "%s 사라짐"
+DBM_CORE_AUTO_TIMER_TEXTS.ai				= "%s 예정"
 DBM_CORE_AUTO_TIMER_TEXTS.cd				= "%s 가능"
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount			= "%s 가능 (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource			= "%s 가능: >%%s<"
@@ -331,6 +332,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS.target			= "$spell:%s 약화효과 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.cast			= "$spell:%s 시전 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.active			= "$spell:%s 유지시간 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.fades			= "$spell:%s 남은시간 바 보기"
+DBM_CORE_AUTO_TIMER_OPTIONS.ai				= "$spell:%s 예정 바 보기(인공지능 사용)"
 DBM_CORE_AUTO_TIMER_OPTIONS.cd				= "$spell:%s 대기시간 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.cdcount			= "$spell:%s 대기시간 바 보기"
 DBM_CORE_AUTO_TIMER_OPTIONS.cdsource		= "$spell:%s 대기시간 바 보기"

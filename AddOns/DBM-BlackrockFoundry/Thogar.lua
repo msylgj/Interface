@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13707 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
@@ -29,7 +29,7 @@ local warnTrain						= mod:NewTargetCountAnnounce(176312, 4)
 local warnDelayedSiegeBomb			= mod:NewTargetAnnounce(159481, 3)
 
 --Operator Thogar
-local specWarnProtoGrenade			= mod:NewSpecialWarningMove(165195, nil, nil, nil, nil, nil, 2)
+local specWarnProtoGrenade			= mod:NewSpecialWarningMove(165195, nil, nil, nil, nil, 2)
 local specWarnProtoGrenadeNear		= mod:NewSpecialWarningClose(165195)
 local yellProtoGrenade				= mod:NewYell(165195)
 local specWarnEnkindle				= mod:NewSpecialWarningStack(155921, nil, 2)--Maybe need 3 for new cd?
@@ -37,10 +37,10 @@ local specWarnEnkindleOther			= mod:NewSpecialWarningTaunt(155921)
 local specWarnTrain					= mod:NewSpecialWarningDodge(176312, nil, nil, nil, 3)
 local specWarnSplitSoon				= mod:NewSpecialWarning("specWarnSplitSoon")--TODO, maybe include types in the split?
 --Adds
-local specWarnCauterizingBolt		= mod:NewSpecialWarningInterrupt("OptionVersion2", 160140, "-Healer")
+local specWarnCauterizingBolt		= mod:NewSpecialWarningInterrupt(160140, "-Healer", nil, 2)
 local specWarnCauterizingBoltDispel	= mod:NewSpecialWarningDispel(160140, "MagicDispeller")
 local specWarnIronbellow			= mod:NewSpecialWarningSpell(163753, nil, nil, nil, 2)
-local specWarnDelayedSiegeBomb		= mod:NewSpecialWarningYou(159481, nil, nil, nil, nil, nil, 2)
+local specWarnDelayedSiegeBomb		= mod:NewSpecialWarningYou(159481, nil, nil, nil, nil, 2)
 local specWarnDelayedSiegeBombMove	= mod:NewSpecialWarningMove(159481)
 local yellDelayedSiegeBomb			= mod:NewCountYell(159481)
 local specWarnManOArms				= mod:NewSpecialWarningSwitch("ej9549", "-Healer")

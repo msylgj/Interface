@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tonks", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13167 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -12,7 +12,7 @@ mod:RegisterEvents(
 )
 mod.noStatistics = true
 
-local specWarnMarked			= mod:NewSpecialWarningRun("OptionVersion2", 102341, nil, nil, nil, 4)
+local specWarnMarked			= mod:NewSpecialWarningRun(102341, nil, nil, 2, 4)
 
 local timerGame					= mod:NewBuffActiveTimer(60, 102178)
 

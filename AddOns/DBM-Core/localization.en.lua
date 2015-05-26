@@ -7,7 +7,7 @@ DBM_FORUMS_MESSAGE					= "Found a bug or wrong timer? Do you think some mod woul
 DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums\r\n(hosted by Elitist Jerks!)"
 
 DBM_CORE_LOAD_MOD_ERROR				= "Error while loading boss mods for %s: %s"
-DBM_CORE_LOAD_MOD_SUCCESS			= "Loaded '%s' mods. For more options, type /dbm or /dbm help in your chat."
+DBM_CORE_LOAD_MOD_SUCCESS			= "Loaded '%s' mods. For more options such as custom alert sounds and personalized warning notes, type /dbm."
 DBM_CORE_LOAD_MOD_COMBAT			= "Loading of '%s' delayed until you leave combat"
 DBM_CORE_LOAD_GUI_ERROR				= "Could not load GUI: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "GUI cannot be initially loaded in combat. GUI will be loaded out of combat. After GUI loaded, you can load GUI in combat."
@@ -15,7 +15,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your tim
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_BLIZZ_BUGS					= "Do to changes in 6.1 that disabled playing .wav media, all custom special warning sounds have been reset to defaults to force wipe any bad/missing sounds a user may have set in their mods. This reset will not occur again and you're safe to reconfigure custom sounds once more and copy to other characters with profiles features."
+DBM_CORE_WHATS_NEW					= "New in this version: DBM now supports personalized notes in every special warning. As well as a custom warning sound/flash if a warning contains a note with your name in it."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -33,7 +33,7 @@ DBM_CORE_COMBAT_STARTED				= "%s engaged. Good luck and have fun! :)"
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "Engaged an in progress fight against %s. Good luck and have fun! :)"
 DBM_CORE_GUILD_COMBAT_STARTED		= "%s has been engaged by guild"
 DBM_CORE_SCENARIO_STARTED			= "%s started. Good luck and have fun! :)"
-DBM_CORE_SCENARIO_STARTED_IN_PROGRESS	= "Joined %s as in progress. Good luck and have fun! :)"
+DBM_CORE_SCENARIO_STARTED_IN_PROGRESS	= "Joined %s a scenario that's in progress. Good luck and have fun! :)"
 DBM_CORE_BOSS_DOWN					= "%s down after %s!"
 DBM_CORE_BOSS_DOWN_I				= "%s down! You have %d total victories."
 DBM_CORE_BOSS_DOWN_L				= "%s down after %s! Your last kill took %s and your fastest kill took %s. You have %d total victories."
@@ -69,9 +69,9 @@ DBM_CORE_PROFILE_CANNOT_DELETE		= "Cannot delete 'Default' profile."
 DBM_CORE_MPROFILE_COPY_SUCCESS		= "%s's (%d spec) mod settings have been copied."
 DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "Cannot copy character settings to itself"
 DBM_CORE_MPROFILE_COPY_S_ERROR		= "Source is corrupted. Settings not copied or partly copied. Copy failed."
-DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s's (%d spec) mod sound settings have been copied."
-DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "Cannot copy character sound settings to itself"
-DBM_CORE_MPROFILE_COPYS_S_ERROR		= "Source is corrupted. Sound settings not copied or partly copied. Copy failed."
+DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s's (%d spec) mod sound or note settings have been copied."
+DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "Cannot copy character sound or note settings to itself"
+DBM_CORE_MPROFILE_COPYS_S_ERROR		= "Source is corrupted. Sound or note settings not copied or partly copied. Copy failed."
 DBM_CORE_MPROFILE_DELETE_SUCCESS	= "%s's (%d spec) mod settings deleted."
 DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "Cannot delete mod settings currently in use."
 DBM_CORE_MPROFILE_DELETE_S_ERROR	= "Source is corrupted. Settings not deleted or partly deleted. Delete failed."
@@ -245,7 +245,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 local prewarnOption = "Show pre-warning for $spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 	target		= "Announce $spell:%s targets",
-	targetcount	= "Announce $spell:%s targets",
+	targetcount	= "Announce $spell:%s targets (with count)",
 	spell		= "Show warning for $spell:%s",
 	ends		= "Show warning when $spell:%s has ended",
 	endtarget	= "Show warning when $spell:%s has ended",
@@ -257,7 +257,7 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 	phase		= "Announce Phase %s",
 	phasechange	= "Announce phase changes",
 	prephase	= "Show a prewarning for Phase %s",
-	count		= "Show warning for $spell:%s",
+	count		= "Show warning for $spell:%s (with count)",
 	stack		= "Announce $spell:%s stacks"
 }
 
@@ -290,31 +290,31 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
-	spell 		= "Show special warning for $spell:%s",
-	ends 		= "Show special warning when $spell:%s has ended",
-	fades 		= "Show special warning when $spell:%s has faded",
-	soon 		= "Show pre-special warning for $spell:%s",
-	prewarn 	= "Show pre-special warning %s seconds before $spell:%s",
-	dispel 		= "Show special warning to dispel/spellsteal $spell:%s",
-	interrupt	= "Show special warning to interrupt $spell:%s",
-	you 		= "Show special warning when you are affected by $spell:%s",
-	target 		= "Show special warning when someone is affected by $spell:%s",
-	taunt 		= "Show special warning to taunt when other tank affected by $spell:%s",
-	close 		= "Show special warning when someone close to you is affected by $spell:%s",
-	move 		= "Show special warning to move out from $spell:%s",
-	dodge 		= "Show special warning to dodge $spell:%s",
-	moveaway	= "Show special warning to move away from others for $spell:%s",
-	moveto		= "Show special warning to move to someone affected by $spell:%s",
-	run 		= "Show special warning to run away from $spell:%s",
-	cast 		= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
-	reflect 	= "Show special warning to stop attacking $spell:%s",--Spell Reflect
-	count 		= "Show special warning for $spell:%s",
-	stack 		= "Show special warning when you are affected by >=%d stacks of $spell:%s",
-	switch		= "Show special warning to switch targets for $spell:%s"
+	spell 			= "Show special warning for $spell:%s",
+	ends 			= "Show special warning when $spell:%s has ended",
+	fades 			= "Show special warning when $spell:%s has faded",
+	soon 			= "Show pre-special warning for $spell:%s",
+	prewarn 		= "Show pre-special warning %s seconds before $spell:%s",
+	dispel 			= "Show special warning to dispel/spellsteal $spell:%s",
+	interrupt		= "Show special warning to interrupt $spell:%s",
+	interruptcount	= "Show special warning (with count) to interrupt $spell:%s",
+	you 			= "Show special warning when you are affected by $spell:%s",
+	target 			= "Show special warning when someone is affected by $spell:%s",
+	targetcount 	= "Show special warning (with count) when someone is affected by $spell:%s",
+	taunt 			= "Show special warning to taunt when other tank affected by $spell:%s",
+	close 			= "Show special warning when someone close to you is affected by $spell:%s",
+	move 			= "Show special warning to move out from $spell:%s",
+	dodge 			= "Show special warning to dodge $spell:%s",
+	moveaway		= "Show special warning to move away from others for $spell:%s",
+	moveto			= "Show special warning to move to someone affected by $spell:%s",
+	run 			= "Show special warning to run away from $spell:%s",
+	cast 			= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
+	reflect 		= "Show special warning to stop attacking $spell:%s",--Spell Reflect
+	count 			= "Show special warning (with count) for $spell:%s",
+	stack 			= "Show special warning when you are affected by >=%d stacks of $spell:%s",
+	switch			= "Show special warning to switch targets for $spell:%s",
+	switchcount		= "Show special warning (with count) to switch targets for $spell:%s"
 }
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {

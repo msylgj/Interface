@@ -1,0 +1,81 @@
+tag 6.1.9
+0de1666ad44fe3fd4182716cc0a3c9eded79037a
+subversion <svn@deadlybossmods.com>
+2015-05-26 00:02:16 +0200
+
+Tagging as 6.1.9
+
+
+--------------------
+
+subversion:
+	- increment version number to 6.1.9
+	- Omega via svn r13817: Add way to copy just notes from one profile to another
+	- Omega via svn r13815: Added a what?\226?\128?\153s new message Changed prints for mass rez to debug mode only. Made it so update notification doesn?\226?\128?\153t fire when someone in raid is on an out of date 6.2 beta that is actually OLDER than most current 6.1 live versions
+	- Omega via svn r13814: BW version
+	- Omega via svn r13813: Fix error
+	- Omega via svn r13812: Zakuun Update *Fixed Cavitation warnings/timers not working (no longer appears properly in combat log, worked on heroic.) *Better code for wake of destruction to avoid spam if two things that trigger it happen in close proximity *Timers now update for Enrage Note, befouled still doesn?\226?\128?\153t work because it?\226?\128?\153s still flagged hidden from combat log.
+	- Omega via svn r13811: Xhulhorac Update *Fixed fel and void strike warnings not working *Added tank swap warnings for two add debuffs *Fixed overwhelming chaos warning not showing *Enabled the overwhelming Chaos timer properly *Fixed first fel strike timer *Improved timer update after Shadowfel Phasing
+	- Omega via svn r13810: Fix mannoroth phase detection messing up what phase it is Fix mannoroth adds timers/warnings not working Fix phase 4 timers since blizz seems to have more or less swapped gaze and shadowforce in phase 4
+	- Omega via svn r13809: Fix error
+	- Omega via svn r13808: Rearrange bosses
+	- Omega via svn r13807: Fix some options bugs on hellfire council and uncomment the silly timers that I thought they?\226?\128?\153d change but i guess they didn?\226?\128?\153t.
+	- Omega via svn r13806: enable special yells even in LFR, if IsTestBuild() is true, for testing.
+	- pkgmeta: add hellfire citadel
+	- Omega via svn r13805: Merge one change from branch that didn?\226?\128?\153t make it into trunk
+	- Omega via svn r13804: Make trunk compatible with 6.2
+	- Omega via svn r13803: open to a better icon if one is found, but this is a start
+	- Omega via svn r13802: Kill target scanning on whirling axe, so not reliable
+	- Omega via svn r13801: Curse missed last fix to mass rez stuff. so push white space update to try and tag packager
+	- Omega via svn r13799: Avoid errors from the mass rez function when not in raid
+	- ultrashining via svn r13798: zhTW update
+	- Omega via svn r13796: Something to play with later
+	- Omega via svn r13795: fix the fix
+	- Omega via svn r13794: Fix nil errors from notes feature on warnings that have no option
+	- Omega via svn r13793: Use voice filter on marked for death on other, it has a voice
+	- Omega via svn r13792: Fix error with inferno slice and marked for death (and any other note count that uses a hyphenated string instead of number value)
+	- Omega via svn r13791: Fix another bug that was setting sound id to nil
+	- Omega via svn r13790: Remove unused string Option was changed and moved for good reason. global DISABLES should be in unified area. global enables shouldn?\226?\128?\153t exist
+	- Omega via svn r13789: Fix more bugs in GUI
+	- Omega via svn r13788: Fix it so VP filter never filters custom note sound. Fix Text overlap in UI
+	- Omega via svn r13787: Added options for custom special warnings if you have a note containing your player name in it
+	- Omega via svn r13786: Add option clarity to count warnings so users KNOW they are count warnings (and can set better notes)
+	- Omega via svn r13785: Kill off hasnote args, it?\226?\128?\153s not actually needed. Handled by core now Fixed layout bug that caused white space. :D
+	- Omega via svn r13784: Notes for all, now to work on GUI issues this will cause
+	- Omega via svn r13783: Switch to using / because blizz always parses | as ||
+	- Omega via svn r13782: Add countdown option to molten torrent fading
+	- Omega via svn r13781: clarifications
+	- Omega via svn r13780: Let there be notes!
+	- Omega via svn r13779: Refactor notes feature to use less option space and be easier to make an edit box for hopefully
+	- Omega via svn r13778: Fix stupid
+	- Omega via svn r13777: Add global option to disable all chat yells.
+	- Omega via svn r13776: Increase combat range
+	- Omega via svn r13775: Fix debug error
+	- Omega via svn r13774: Fix it so the button shows even before player adds a note.
+	- Omega via svn r13772: Fix broken callback from notes feature Added in some stuff for tomorrows mythic testing.
+	- Omega via svn r13771: CN update
+	- Omega via svn r13769: Oh yeah, forgot to do this, mortar prewarn at 80 energy is near useless, make it 70 energy
+	- Omega via svn r13768: debug tweak
+	- Omega via svn r13767: More comments
+	- Omega via svn r13766: The 126 pixel wide clickable area was OptionsCheckButtonTemplate, so switch to a custom version of it called DBMOptionsCheckButtonTemplate to make it so clickable area of checkboxes isn?\226?\128?\153t massively large anymore. Now the notes button can be clicked. progress!
+	- Omega via svn r13765: More notes
+	- Omega via svn r13764: tweak space
+	- Omega via svn r13763: Some real gui progress today. Still doesn?\226?\128?\153t work. Known bugs: 1. Clickable area for checkbox is still too big, making it impossible to click note button 2. Note button doesn?\226?\128?\153t actually do anything yet, just prints text if by some miracle you manage to click it. 3. Each note seems to add a new line to auto panel width, not sure why. If you have 4 notes in a mod, then 4 bank lines are inserted at button.
+	- Omega via svn r13762: REmove print i accidentally left in
+	- Omega via svn r13760: Bump hotfix revision
+	- Omega via svn r13759: Fixed two bugs that prevented slag yells from working on phase 3 mythic.
+	- Omega via svn r13757: Fix bug with last
+	- Omega via svn r13756: Allow class coloring on notes if note uses ><
+	- ultrashining via svn r13755: zhTW update
+	- Omega via svn r13754: Some debug tweaks
+	- Omega via svn r13753: More notes and broken code that?\226?\128?\153s commented out. I?\226?\128?\153ve hit a brick wall and going to have to commission someone else to finish writing this.
+	- Omega via svn r13751: More fixes
+	- Omega via svn r13750: Code to prevent more mods with bad arg counts
+	- Omega via svn r13749: Fix some mods with bad args
+	- Omega via svn r13748: Add notes for first 8 smashes on blackhand. GUI doesn?\226?\128?\153t exist. but base code is for most part working. defaults generate, and editing them with real notes works. Adds them to warnings.
+	- Omega via svn r13747: Fix special warning sounds
+	- Omega via svn r13746: Kill optionversion in special warnings
+	- Omega via svn r13737: Fix boss target scanning whenever annihilon casts one of his scan abilities immediately after other scanned ability.
+	- Omega via svn r13733: Improve AI timers to support pull, and phases 2 3 and 4 start times. Now a fight like archimond can be cleanly drycoded to fully support automated timer learning for all phases, including all first casts.
+	- nbluewiz via svn r13731: # koKR update.
+	- tandanu via svn r13728: increment alpha version

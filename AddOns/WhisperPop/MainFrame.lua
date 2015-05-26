@@ -214,13 +214,17 @@ list:SetScript("OnEvent", function (self, event, text, name, _, _, _, status, _,
 	if type(text) ~= "string" or type(name) ~= "string" or (BNguid == 0 and (type(guid) ~= "string")) or WhisperPop:IsIgnoredMessage(text) or WhisperPop:IsFilterMessage(text) or status == "DND" then
 		return
 	end
+	
 	local bnFriend = event == "CHAT_MSG_BN_WHISPER" or event == "CHAT_MSG_BN_WHISPER_INFORM"
-
 	-- Whenever we recieve a whisper message, we check if the person is already in list, if it is, we bring it to top
 	local inform = event == "CHAT_MSG_WHISPER_INFORM" or event == "CHAT_MSG_BN_WHISPER_INFORM"
+	if event == "CHAT_MSG_WHISPER" then
+		if not strfind(name, "-") then
+			name = name.."-"..GetRealmName()
+		end
+	end
 	local timeStamp = "|cffffd200"..strsub(date(), 10, 17).."|r"
 	local reading = WhisperPop.messageFrame:IsReading() == name
-
 	local idx = list:FindData(name, CompareData)
 	local data = list:GetData(idx)
 	if data then

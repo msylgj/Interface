@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1160, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12631 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
 mod:SetCreatureID(76407)
 mod:SetEncounterID(1682)
 
@@ -21,7 +21,7 @@ local specWarnRitualOfBones		= mod:NewSpecialWarningSpell(154671, nil, nil, nil,
 local specWarnOmenOfDeath		= mod:NewSpecialWarningMove(154350)
 local specWarnOmenOfDeathNear	= mod:NewSpecialWarningClose(154350)
 local yellOmenOfDeath			= mod:NewYell(154350)
-local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, nil, true)
+local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, 2)
 
 local timerRitualOfBonesCD		= mod:NewCDTimer(50.5, 154671)
 local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350)

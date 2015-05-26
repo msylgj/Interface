@@ -1,6 +1,6 @@
 ﻿-- Config start
 local anchor = "TOPLEFT"
-local x, y = 12, -200
+local x, y = 12, -50
 local width, height = 130, 14
 local spacing = 5
 local icon_size = 14
@@ -37,7 +37,7 @@ local spells = {
 	[159916] = 120, -- 魔法增效
 	
 	-- 单体减伤
-	[116849] = 120, -- 泡泡(奶僧100)
+	[116849] = 100, -- 泡泡(奶僧100)
 	[633] = 600, -- 圣疗
 	[6940] = 120, -- 牺牲(惩戒90)
 	[33206] = 180, -- 痛苦压制
@@ -47,11 +47,11 @@ local spells = {
 	[172106] = 180,  --灵狐守护
 	[106898] = 120,  --豹奔
 	
-	-- 战复(特殊处理充能)
-	[20484] = true,	-- 复生
-	[61999] = true,	-- 复活盟友
-	[20707] = true,	-- 灵魂石复活
-	[126393] = true, -- 永恒守护者
+	-- 战复(非首领战)
+	[20484] = 600,	-- 复生
+	[61999] = 600,	-- 复活盟友
+	[20707] = 600,	-- 灵魂石复活
+	[126393] = 600, -- 永恒守护者
 	
 	-- 其他
 	[32182] = 300,	-- 英勇
@@ -62,7 +62,6 @@ local spells = {
 	[16190] = 180,  --潮汐
 	[115213] = 180,	-- 慈悲庇护
 	--[133] = 180, --测试
-	
 }
 
 local cfg = {}
@@ -71,7 +70,9 @@ local filter = COMBATLOG_OBJECT_AFFILIATION_RAID + COMBATLOG_OBJECT_AFFILIATION_
 local band = bit.band
 local sformat = string.format
 local floor = math.floor
-local timer = 0
+local currentNumResses = 0
+local charges = nil
+local inBossCombat = nil
 
 local backdrop = {
 	bgFile = [=[Interface\ChatFrame\ChatFrameBackground]=],
@@ -80,19 +81,11 @@ local backdrop = {
 }
 
 local bars = {}
-
+local Ressesbars = {}
 local anchorframe = CreateFrame("Frame", "RaidCD", UIParent)
 anchorframe:SetSize(width, height)
 anchorframe:SetPoint(anchor, x, y)
 if UIMovableFrames then tinsert(UIMovableFrames, anchorframe) end
-
-local function bossexists()
-	for i = 1, MAX_BOSS_FRAMES do
-		if UnitExists("boss"..i) then
-			return true
-		end
-	end
-end
 
 local FormatTime = function(time)
 	if time >= 60 then
@@ -122,29 +115,66 @@ local CreateBG = CreateBG or function(parent)
 end
 
 local UpdatePositions = function()
-	for i = 1, #bars do
-		bars[i]:ClearAllPoints()
-		if i == 1 then
-			bars[i]:SetPoint("TOPLEFT", anchorframe, 0, 0)
-		else
-			bars[i]:SetPoint("TOPLEFT", bars[i-1], "BOTTOMLEFT", 0, -spacing)
+	if charges and Ressesbars[1] then
+		Ressesbars[1]:SetPoint("TOPLEFT", anchorframe, 0, 0)
+		Ressesbars[1].id = 1
+		for i = 1, #bars do
+			bars[i]:ClearAllPoints()
+			if i == 1 then
+				bars[i]:SetPoint("TOPLEFT", Ressesbars[1], "BOTTOMLEFT", 0, -spacing)
+			else
+				bars[i]:SetPoint("TOPLEFT", bars[i-1], "BOTTOMLEFT", 0, -spacing)
+			end
+			bars[i].id = i
 		end
-		bars[i].id = i
+	else
+		for i = 1, #bars do
+			bars[i]:ClearAllPoints()
+			if i == 1 then
+				bars[i]:SetPoint("TOPLEFT", anchorframe, 0, 0)
+			else
+				bars[i]:SetPoint("TOPLEFT", bars[i-1], "BOTTOMLEFT", 0, -spacing)
+			end
+			bars[i].id = i
+		end	
 	end
 end
 
 local StopTimer = function(bar)
 	bar:SetScript("OnUpdate", nil)
 	bar:Hide()
-	tremove(bars, bar.id)
+	if bar.isResses then
+		tremove(Ressesbars, bar.id)
+	else
+		tremove(bars, bar.id)
+	end
 	UpdatePositions()
+end
+
+local UpdateCharges = function(bar)
+	local curCharges, maxCharges, start, duration = GetSpellCharges(20484)
+	if curCharges == maxCharges then
+		bar.startTime = 0
+		bar.endTime = GetTime()
+	else
+		bar.startTime = start
+		bar.endTime = start + duration
+	end
+	if curCharges ~= currentNumResses then
+		currentNumResses = curCharges
+		bar.left:SetText(bar.name.." : "..currentNumResses)
+	end
 end
 
 local BarUpdate = function(self, elapsed)
 	local curTime = GetTime()
 	if self.endTime < curTime then
-		StopTimer(self)
-		return
+		if self.isResses then
+			UpdateCharges(self)
+		else
+			StopTimer(self)
+			return
+		end
 	end
 	self.status:SetValue(100 - (curTime - self.startTime) / (self.endTime - self.startTime) * 100)
 	self.right:SetText(FormatTime(self.endTime - curTime))
@@ -163,7 +193,11 @@ end
 
 local OnMouseDown = function(self, button)
 	if button == "LeftButton" then
-		SendChatMessage(sformat("团队技能冷却时间 %s %s: %s", self.left:GetText(), self.spell, self.right:GetText()), "RAID")
+		if self.isResses then
+			SendChatMessage(sformat("团队战复剩余: %d次 下次充能时间: %s", currentNumResses, self.right:GetText()), "SAY")
+		else
+			SendChatMessage(sformat("团队技能冷却时间 %s %s: %s", self.left:GetText(), self.spell, self.right:GetText()), "RAID")
+		end
 	elseif button == "RightButton" then
 		StopTimer(self)
 	end
@@ -173,14 +207,10 @@ local CreateBar = function()
 	local bar = CreateFrame("Frame", nil, UIParent)
 	bar:SetSize(width, height)
 	bar.status = CreateFrame("Statusbar", nil, bar)
-	if show_icon then
-		bar.icon = CreateFrame("button", nil, bar)
-		bar.icon:SetSize(icon_size, icon_size)
-		bar.icon:SetPoint("BOTTOMLEFT", 0, 0)
-		bar.status:SetPoint("BOTTOMLEFT", bar.icon, "BOTTOMRIGHT", 5, 0)
-	else
-		bar.status:SetPoint("BOTTOMLEFT", 0, 0)
-	end
+	bar.icon = CreateFrame("button", nil, bar)
+	bar.icon:SetSize(icon_size, icon_size)
+	bar.icon:SetPoint("BOTTOMLEFT", 0, 0)
+	bar.status:SetPoint("BOTTOMLEFT", bar.icon, "BOTTOMRIGHT", 5, 0)
 	bar.status:SetPoint("BOTTOMRIGHT", 0, 0)
 	bar.status:SetHeight(height)
 	bar.status:SetStatusBarTexture(texture)
@@ -199,63 +229,109 @@ end
 
 local StartTimer = function(name, spellId)
 	local spell, rank, icon = GetSpellInfo(spellId)
+	if charges and spellId == 20484 then
+		--团队首领战中战复技能计时特殊处理
+		for _, v in pairs(Ressesbars) do
+			UpdateCharges(v)
+			return
+		end
+	end
 	for _, v in pairs(bars) do
 		if v.name == name and v.spell == spell then
-			--发现重复计时事件时重置计时条,适应充能
+			--发现重复计时事件时重置计时条,适应战复以外充能技能
 			StopTimer(v)
 		end
 	end
 	local bar = CreateBar()
-	--判断战复充能冷却时间
-	local cooldown = spells[spellId]
-	local _, _, difficulty, _, maxPlayers, _, _, _, instanceGroupSize = GetInstanceInfo()
-	if cooldown == true then
-	   if bossexists() then
-		  if difficulty == 14 or difficulty == 15 or difficulty == 17 then  --彈性模式
-			 cooldown = (90/instanceGroupSize)*60
-		  elseif difficulty == 3 or difficulty == 5 then
-			 cooldown = 540
-		  elseif difficulty == 16 then
-			 cooldown = 270
-		  elseif difficulty == 4 or difficulty == 6 then
-			 cooldown = 216
-		  else
-			 cooldown = 180
-		  end
-	   else
-		  cooldown = 600
-	   end
+	local color
+	if charges and spellId == 20484 then
+		--初始化战复技能计时条
+		local curCharges, _, _, duration = GetSpellCharges(20484)
+		currentNumResses = curCharges
+		bar.endTime = GetTime() + duration
+		bar.left:SetText(name.." : "..curCharges)
+		bar.right:SetText(FormatTime(duration))
+		bar.isResses = true
+		color = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+		bar.startTime = GetTime()
+		bar.name = name
+		bar.spell = spell
+		bar.spellId = spellId
+		if icon and bar.icon then
+			bar.icon:SetNormalTexture(icon)
+			bar.icon:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		end
+		bar:Show()
+		bar.status:SetStatusBarColor(color.r, color.g, color.b)
+		bar:SetScript("OnUpdate", BarUpdate)
+		bar:EnableMouse(true)
+		bar:SetScript("OnEnter", OnEnter)
+		bar:SetScript("OnLeave", OnLeave)
+		bar:SetScript("OnMouseDown", OnMouseDown)
+		tinsert(Ressesbars, bar)
+	else
+		bar.endTime = GetTime() + spells[spellId]
+		bar.left:SetText(name)
+		bar.right:SetText(FormatTime(spells[spellId]))
+		bar.isResses = false
+		color = RAID_CLASS_COLORS[select(2, UnitClass(name))]
+		bar.startTime = GetTime()
+		bar.name = name
+		bar.spell = spell
+		bar.spellId = spellId
+		if icon and bar.icon then
+			bar.icon:SetNormalTexture(icon)
+			bar.icon:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		end
+		bar:Show()
+		bar.status:SetStatusBarColor(color.r, color.g, color.b)
+		bar:SetScript("OnUpdate", BarUpdate)
+		bar:EnableMouse(true)
+		bar:SetScript("OnEnter", OnEnter)
+		bar:SetScript("OnLeave", OnLeave)
+		bar:SetScript("OnMouseDown", OnMouseDown)
+		tinsert(bars, bar)
 	end
-	bar.endTime = GetTime() + cooldown
-	bar.startTime = GetTime()
-	bar.left:SetText(name)
-	bar.name = name
-	bar.right:SetText(FormatTime(cooldown))
-	if icon and bar.icon then
-		bar.icon:SetNormalTexture(icon)
-		bar.icon:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	end
-	bar.spell = spell
-	bar:Show()
-	local color = RAID_CLASS_COLORS[select(2, UnitClass(name))]
-	bar.status:SetStatusBarColor(color.r, color.g, color.b)
-	bar:SetScript("OnUpdate", BarUpdate)
-	bar:EnableMouse(true)
-	bar:SetScript("OnEnter", OnEnter)
-	bar:SetScript("OnLeave", OnLeave)
-	bar:SetScript("OnMouseDown", OnMouseDown)
-	tinsert(bars, bar)
 	UpdatePositions()
 end
 
 local OnEvent = function(self, event, ...)
+	if event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA" then
+		if select(2, IsInInstance()) == "raid" then
+			self:RegisterEvent("SPELL_UPDATE_CHARGES")
+		else
+			self:UnregisterEvent("SPELL_UPDATE_CHARGES")
+			charges = nil
+			inBossCombat = nil
+			currentNumResses = 0
+			Ressesbars = {}
+		end
+	end
+	if event == "SPELL_UPDATE_CHARGES" then
+		charges = select(1, GetSpellCharges(20484))
+		if charges then
+			if not inBossCombat then
+				for _, v in pairs(bars) do
+					StopTimer(v)
+				end
+				inBossCombat = true
+			end
+			StartTimer("战斗复活", 20484)
+		elseif not charges and inBossCombat then
+			inBossCombat = nil
+			currentNumResses = 0
+			for _, v in pairs(Ressesbars) do
+				StopTimer(v)
+			end
+		end
+	end
 	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
 		local timestamp, eventType, _, sourceGUID, sourceName, sourceFlags = ...
 		if band(sourceFlags, filter) == 0 then return end
-		if eventType == "SPELL_RESURRECT" or eventType == "SPELL_CAST_SUCCESS" or eventType == "SPELL_AURA_APPLIED" then
+		if (eventType == "SPELL_RESURRECT" and not charges) or eventType == "SPELL_CAST_SUCCESS" or eventType == "SPELL_AURA_APPLIED" then
 			local spellId = select(12, ...)
 			if sourceName then
-				sourceName = sourceName:gsub("-%w+", "")
+				sourceName = sourceName:gsub("-.+", "")
 			else
 				return
 			end
@@ -263,9 +339,11 @@ local OnEvent = function(self, event, ...)
 				StartTimer(sourceName, spellId)
 			end
 		end
-	--增加首领战时清空计时条,适应现在boss战重置CD机制
-	elseif (event == "ZONE_CHANGED_NEW_AREA" and select(2, IsInInstance()) == "arena") or (event == "PLAYER_REGEN_DISABLED" and bossexists()) then
-		for k, v in pairs(bars) do
+	elseif event == "ZONE_CHANGED_NEW_AREA" and select(2, IsInInstance()) == "arena" then
+		for _, v in pairs(Ressesbars) do
+			StopTimer(v)
+		end
+		for _, v in pairs(bars) do
 			StopTimer(v)
 		end
 	end
@@ -273,13 +351,13 @@ end
 
 local addon = CreateFrame("frame")
 addon:SetScript('OnEvent', OnEvent)
+addon:RegisterEvent("PLAYER_ENTERING_WORLD")
 addon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-addon:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 SlashCmdList["RaidCD"] = function(msg) 
 	StartTimer(UnitName('player'), 20484)
-	StartTimer(UnitName('player'), 61999)
+	StartTimer(UnitName('player'), 740)
 	StartTimer(UnitName('player'), 20707)
 end
 SLASH_RaidCD1 = "/raidcd"

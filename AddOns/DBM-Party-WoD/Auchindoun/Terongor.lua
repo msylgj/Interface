@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1225, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12926 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
 mod:SetCreatureID(77734)
 mod:SetEncounterID(1714)
 mod:SetZone()
@@ -37,7 +37,7 @@ local specWarnCorruption		= mod:NewSpecialWarningDispel(156842, "Healer")
 local specWarnRainOfFire		= mod:NewSpecialWarningSpell(156857, nil, nil, nil, 2)--156856 fires SUCCESS but do not use, it fires for any player walking in or out of it
 local specWarnRainOfFireMove	= mod:NewSpecialWarningMove(156857)
 --Unknown Abilities
-local specWarnFixate			= mod:NewSpecialWarningRun("OptionVersion2", 157168, nil, nil, nil, 4)
+local specWarnFixate			= mod:NewSpecialWarningRun(157168, nil, nil, 2, 4)
 --Affliction Abilities
 --TODO : Maybe need shit warning.
 local specWarnSeedOfMelevolence	= mod:NewSpecialWarningMoveAway(156921)

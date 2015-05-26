@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13703 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13785 $"):sub(12, -3))
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
@@ -34,19 +34,19 @@ local warnBlazingRadiance				= mod:NewTargetAnnounce(155277, 3)
 local warnRisingFlames					= mod:NewStackAnnounce(163284, 2, nil, "Tank")
 local warnCharringBreath				= mod:NewStackAnnounce(155074, 2, nil, "Tank")
 
-local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, nil, 2)
-local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, nil, 2)
+local specWarnLavaSlash					= mod:NewSpecialWarningMove(155318, nil, nil, nil, nil, 2)
+local specWarnMoltenTorrent				= mod:NewSpecialWarningYou(154932, nil, nil, nil, nil, 2)
 local yellMoltenTorrent					= mod:NewFadesYell(154932)
-local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, nil, 2)
+local specWarnCinderWolves				= mod:NewSpecialWarningSpell(155776, nil, nil, nil, nil, 2)
 local specWarnOverheated				= mod:NewSpecialWarningSwitch(154950, "Tank")
-local specWarnFixate					= mod:NewSpecialWarningYou(154952, nil, nil, nil, 3, nil, 2)
+local specWarnFixate					= mod:NewSpecialWarningYou(154952, nil, nil, nil, 3, 2)
 local specWarnFixateEnded				= mod:NewSpecialWarningEnd(154952, false)
-local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, nil, 2)
+local specWarnBlazinRadiance			= mod:NewSpecialWarningMoveAway(155277, nil, nil, nil, nil, 2)
 local yellBlazinRadiance				= mod:NewYell(155277, nil, false)
-local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, nil, 2)
-local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, nil, 2)
+local specWarnFireStorm					= mod:NewSpecialWarningCount(155493, nil, nil, nil, 2, 2)
+local specWarnFireStormEnded			= mod:NewSpecialWarningEnd(155493, nil, nil, nil, nil, 2)
 local specWarnRisingFlames				= mod:NewSpecialWarningStack(163284, nil, 6)--stack guessed
-local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, nil, 2)
+local specWarnRisingFlamesOther			= mod:NewSpecialWarningTaunt(163284, nil, nil, nil, nil, 2)
 local specWarnCharringBreath			= mod:NewSpecialWarningStack(155074, nil, 2)--Assumed based on timing and casts, that you swap every breath.
 local specWarnCharringBreathOther		= mod:NewSpecialWarningTaunt(155074)
 --
@@ -68,6 +68,7 @@ local countdownCinderWolves				= mod:NewCountdown(76, 155776)
 local countdownFireStorm				= mod:NewCountdown(61, 155493)--Same voice as wolves cause never happen at same time, in fact they alternate.
 local countdownEnchantedArmaments		= mod:NewCountdown("OptionVersion2", "Alt45", 156724, false)
 local countdownOverheated				= mod:NewCountdownFades("Alt20", 154950, "Tank")
+local countdownMoltenTorrent			= mod:NewCountdownFades("AltTwo6", 154932)
 
 local voiceMoltenTorrent				= mod:NewVoice(154932) --runin
 local voiceFixate						= mod:NewVoice(154952) --justrun
@@ -223,6 +224,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMoltenTorrentCD:Start()
 		if args:IsPlayer() then
 			specWarnMoltenTorrent:Show()
+			countdownMoltenTorrent:Start(6)
 			voiceMoltenTorrent:Play("runin")
 			yellMoltenTorrent:Schedule(5, 1)
 			yellMoltenTorrent:Schedule(4, 2)

@@ -676,6 +676,7 @@ SlashCmdList.CBNIV = HandleSlash
 local buttonCollector = {}
 local Event =  CreateFrame('Frame', nil)
 Event:RegisterEvent("PLAYER_ENTERING_WORLD")
+Event:RegisterEvent("BANKFRAME_OPENED")
 Event:SetScript('OnEvent', function(self, event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
 		for bagID = -3, 11 do
@@ -728,5 +729,18 @@ Event:SetScript('OnEvent', function(self, event, ...)
 		end
 
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	end
+	--自动存材料到材料银行 素年已逝分享
+	if event == "BANKFRAME_OPENED" then
+		if not BankFrameItemButton_Update_OLD then
+			BankFrameItemButton_Update_OLD = BankFrameItemButton_Update
+			BankFrameItemButton_Update = function(button)
+				if button then
+					BankFrameItemButton_Update_OLD(button)
+				end
+			end
+	    end
+	    DepositReagentBank() 
+		cbNivaya:UpdateBags()
 	end
 end)

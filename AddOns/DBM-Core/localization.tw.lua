@@ -16,8 +16,6 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM計時條在戰鬥中套用外觀失敗。你�
 DBM_CORE_BAD_LOAD					= "DBM偵測到你的此副本的模組在戰鬥中讀取失敗。一旦脫離戰鬥，請立即輸入/consoel reloadui重新載入。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s不能被讀取因為你的DBM核心未達需求，請更新版本。"
 
-DBM_CORE_BLIZZ_BUGS					= "6.1 禁用了用.wav 媒體檔播放，如果使用者的插件有缺失或損毀的自訂音效設定值則會被強制重置設定回預設值。這重置設定只會發生一次而你可以再次重新設定自訂音效。記得，一旦你在某個配置檔設定過自訂音效，你可以從模組狀態視窗複製音效設定到另一個配置檔。"
-
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM已中禁用動態距離框架，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM已中禁用小怪計數警告，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
 DBM_CORE_DYNAMIC_MULTIPLE			= "DBM已中禁用多項功能，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
@@ -52,6 +50,8 @@ DBM_CORE_SCENARIO_ENDED_AT_LONG		= "%s結束!本次用了%s，你已有共%d次�
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s的戰鬥在%s前開始，恢復計時器中..."
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor開始記錄。"
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor結束紀錄。"
+
+DBM_CORE_COMBAT_STARTED_AI_TIMER	= "我的CPU是類神經網路處理器，一種學習型電腦。(此戰鬥會使用新的AI計時器功能去產生計時器的近似值)"
 
 DBM_CORE_PROFILE_NOT_FOUND			= "<Deadly Boss Mods>你目前的配置檔已經損毀。DBM會載入'Default'配置檔。"
 DBM_CORE_PROFILE_CREATED			= "配置檔'%s'已建立。"
@@ -237,7 +237,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= ">%%s<中了%s (%%d)"
 
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target		= "提示$spell:%s的目標"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount	= "提示$spell:%s的目標"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount	= "提示$spell:%s的目標(次數)"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell		= "為$spell:%s顯示警告"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.ends			= "為$spell:%s結束顯示警告"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.endtarget	= "為$spell:%s結束顯示警告"
@@ -249,7 +249,7 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn		= "為$spell:%s顯示預先警告"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.phase		= "提示第%s階段"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.phasechange	= "提示階段轉換"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prephase		= "為第%s階段顯示預先警告"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count		= "為$spell:%s顯示警告"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count		= "為$spell:%s顯示警告(次數)"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack		= "提示$spell:%s的堆疊"
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell			= "%s!"
@@ -283,8 +283,10 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon 		= "為$spell:%s顯示預先特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn 	= "在%s秒前為$spell:%s顯示預先特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel		= "需對$spell:%s驅散/竊取時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "需對$spell:%s斷法時顯示特別警告"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= "需對$spell:%s斷法(次數)時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you			= "當你中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target		= "當有人中了$spell:%s時顯示特別警告"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount	= "當有人中了$spell:%s時(次數)顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 		= "當其他坦克中了$spell:%s顯示特別警告去嘲諷"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close		= "當你附近有人中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "當你中了$spell:%s時顯示特別警告"
@@ -297,9 +299,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect		= "為$spell:%s施放時顯示停止攻
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 		= "為$spell:%s顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack		= "為中了>=%d層$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "需對$spell:%s更換目標時顯示特別警告"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = "需對$spell:%s更換目標時(次數)顯示特別警告"
 
 DBM_CORE_AUTO_TIMER_TEXTS.target			= "%s:>%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cast				= "%s"
