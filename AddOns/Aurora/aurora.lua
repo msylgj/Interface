@@ -47,7 +47,6 @@ C.media = {
 
 C.defaults = {
 	["acknowledgedSplashScreen"] = false,
-
 	["alpha"] = 0.5,
 	["bags"] = true,
 	["buttonGradientColour"] = {.3, .3, .3, .3},

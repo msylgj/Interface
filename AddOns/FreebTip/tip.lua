@@ -1,5 +1,5 @@
 local _, ns = ...
-local mediapath = "Interface\\AddOns\\media\\"
+local mediapath = "Interface\\AddOns\\FreebTip\\media\\"
 
 local cfg = {
 	font = "Fonts\\ARKai_T.ttf",

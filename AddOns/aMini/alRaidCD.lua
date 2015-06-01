@@ -194,7 +194,7 @@ end
 local OnMouseDown = function(self, button)
 	if button == "LeftButton" then
 		if self.isResses then
-			SendChatMessage(sformat("团队战复剩余: %d次 下次充能时间: %s", currentNumResses, self.right:GetText()), "SAY")
+			SendChatMessage(sformat("团队战复剩余: %d次 下次充能时间: %s", currentNumResses, self.right:GetText()), "RAID")
 		else
 			SendChatMessage(sformat("团队技能冷却时间 %s %s: %s", self.left:GetText(), self.spell, self.right:GetText()), "RAID")
 		end
