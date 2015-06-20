@@ -156,10 +156,6 @@ ChatTypeInfo['WHISPER'].sticky = 0				--悄悄話
 ChatTypeInfo.BN_WHISPER.sticky = 0				--实名密语
 ChatTypeInfo['CHANNEL'].sticky = 0				--普通频道
 
---If you want to unsticky whispers or BNet whispers, remove the "--" on the following lines
---ChatTypeInfo.WHISPER.sticky = 0
---ChatTypeInfo.BN_WHISPER.sticky = 0
-
 --[[-----------------------------------------------------------------------------
 Chat fade hide.
 -------------------------------------------------------------------------------]]

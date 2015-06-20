@@ -31,7 +31,7 @@
   cfg.background = {
     showbg            = true,  --show an background image?
     showshadow        = true,   --show an outer shadow?
-    useflatbackground = false,  --true uses plain flat color instead
+    useflatbackground = true,  --true uses plain flat color instead
     backgroundcolor   = { r = 0.3, g = 0.3, b = 0.3, a = 0.7},
     shadowcolor       = { r = 0, g = 0, b = 0, a = 0.9},
     classcolored      = false,

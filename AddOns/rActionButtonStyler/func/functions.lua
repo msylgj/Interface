@@ -85,7 +85,9 @@
     bu:SetNormalTexture(cfg.textures.normal)
     local nt = bu:GetNormalTexture()
     nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
-    nt:SetAllPoints(bu)
+    --nt:SetAllPoints(bu)
+	nt:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2)
+	nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2)
     --apply background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true

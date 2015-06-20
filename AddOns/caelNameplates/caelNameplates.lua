@@ -152,8 +152,8 @@ end
 local FixCastbar = function(self)
 	self.castbarOverlay:Hide()
 	self:ClearAllPoints()
-	self:SetPoint("TOP", self.healthBar, "BOTTOM", 0, -6)
-	self:SetHeight(3)
+	self:SetPoint("TOP", self:GetParent().healthBar, "BOTTOM", 0, -6)
+	self:SetHeight(6)
 	self:SetWidth(100)
 end
 
@@ -167,7 +167,7 @@ local ColorCastBar = function(self, shielded)
 end
 
 local OnSizeChanged = function(self, width, height)
-	if floor(height) ~= 3 then
+	if floor(height) ~= 6 then
 		self.needFix = true
 	end
 end
@@ -252,7 +252,6 @@ local CreatePlate = function(frame)
 	healthBar.hpGlow:SetBackdropBorderColor(0, 0, 0)
 
 	castBar.castbarOverlay = castbarOverlay
-	castBar.healthBar = healthBar
 	castBar.shieldedRegion = shieldedRegion
 	castBar:SetStatusBarTexture(barTexture)
 

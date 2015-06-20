@@ -13,6 +13,7 @@
 	<Script file="damagemeters.lua"/>
 	<Script file="Focuser.lua"/>
 	<Script file="Foglight.lua"/>
+	<Script file="IgniteDamage.lua"/>
 	<Script file="InspectFix.lua"/>
 	<Script file="JewelTips.lua"/>
 	<Script file="m_Settings.lua"/>

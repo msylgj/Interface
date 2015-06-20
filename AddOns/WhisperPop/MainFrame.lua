@@ -26,7 +26,7 @@ tipFrame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
 tipFrame.icon = tipFrame:CreateTexture(tipFrame:GetName().."Icon", "ARTWORK")
 tipFrame.icon:SetAllPoints(tipFrame)
-tipFrame.icon:SetTexture("Interface\\Icons\\INV_Letter_18")
+tipFrame.icon:SetTexture("Interface\\Addons\\WhisperPop\\Mail")
 tipFrame.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 tipFrame.icon:SetDesaturated(true)
 

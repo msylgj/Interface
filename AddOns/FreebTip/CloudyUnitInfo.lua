@@ -196,7 +196,7 @@ local function UnitGear(id)
 						--else
 --						local upgradeId = tonumber(strmatch(itemLink, "item:%d+:%d+:%d+:%d+:%d+:%d+:%-?%d+:%-?%d+:%d+:%d+:(%d+)"))
 							if (level >= 458) then 
-local upgradeId = tonumber(select(1,strsplit(":", select(11,strsplit(":", string.match(itemLink, "item[%-?%d:]+"))))))
+								local upgradeId = tonumber(select(1,strsplit(":", select(11,strsplit(":", string.match(itemLink, "item[%-?%d:]+"))))))
 								level = level + (upgradeId and upgradeTable[upgradeId] or 0) 
 
 							end
