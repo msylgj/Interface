@@ -20,6 +20,169 @@
 			SpellName(63050),
 			
 			----------------------------------WOD------------------------------------
+			-- 地狱火堡垒 --
+			--奇袭地狱火
+			SpellName(186016),  --邪火弹药
+			SpellName(184379),  --啸风战斧
+			SpellName(184238),  --颤抖！
+			SpellName(184243),  --猛击
+			SpellName(185806),  --导电冲击脉冲
+			SpellName(180022),  --钻孔
+			SpellName(185157),  --灼烧
+			SpellName(187655),  --腐化虹吸
+			--钢铁掠夺者
+			SpellName(182074),  --献祭
+			SpellName(182001),  --不稳定的宝珠
+			SpellName(182280),  --炮击
+			SpellName(182003),  --燃料尾痕
+			SpellName(179897/185242),  --迅猛突袭
+			SpellName(185978),  --易爆火焰炸弹
+			--考莫克
+			SpellName(181345),  --攫取之手
+			SpellName(181321),  --邪能之触
+			SpellName(181306),  --爆裂冲击
+			SpellName(187819),  --邪污碾压
+			SpellName(180270),  --暗影血球
+			SpellName(185519),  --炽热血球
+			SpellName(185521),  --邪污血球
+			SpellName(181082),  --暗影之池
+			SpellName(186559),  --火焰之池
+			SpellName(186560),  --邪污之池
+			SpellName(181208),  --暗影残渣
+			SpellName(185686),  --爆炸残渣
+			SpellName(185687),  --邪恶残渣
+			--地狱火高阶议会
+			SpellName(184449),  --死灵印记紫
+			SpellName(184450),  --死灵印记紫
+			SpellName(184676),  --死灵印记紫
+			SpellName(185065),  --死灵印记黄
+			SpellName(185066),  --死灵印记红
+			SpellName(184360),  --堕落狂怒
+			SpellName(184847),  --酸性创伤
+			SpellName(184652),  --暗影收割
+			SpellName(184357),  --污血
+			SpellName(184355),  --血液沸腾
+			--基爾羅格‧亡眼
+			SpellName(188929),  --剖心飞刀
+			SpellName(180389),  --剖心飞刀
+			SpellName(182159),  --邪能腐蚀
+			SpellName(184396),  --邪能腐蚀
+			SpellName(180313),  --恶魔附身
+			SpellName(180718),  --永恒的决心
+			SpellName(181488),  --死亡幻象
+			SpellName(185563),  --永恒的救赎
+			SpellName(180200),  --碎甲
+			SpellName(180575),  --邪能烈焰
+			SpellName(183917),  --撕裂嚎叫
+			SpellName(188852),  --溅血
+			SpellName(184067),  --邪能腐液
+			--血魔
+			SpellName(180093),  --灵魂箭雨
+			SpellName(179864),  --死亡之影
+			SpellName(179867),  --血魔的腐化
+			SpellName(181295),  --消化
+			SpellName(180148),  --生命渴望
+			SpellName(179977),  --毁灭之触
+			SpellName(179995),  --末日井
+			SpellName(185189),  --邪能之怒
+			SpellName(179908),  --命运相连
+			SpellName(179909),  --命运相连
+			SpellName(186770),  --灵魂之池
+			--暗影領主伊斯卡
+			SpellName(185239),  --安苏之光
+			SpellName(182325),  --幻影之伤
+			SpellName(182600),  --邪能焚化
+			SpellName(181957),  --幻影之风
+			SpellName(182200/182178),  --邪能飞轮
+			SpellName(179219),  --幻影邪能炸弹
+			SpellName(181753),  --邪能炸弹
+			SpellName(181824),  --幻影腐蚀
+			SpellName(187344),  --幻影焚化
+			SpellName(185456),  --绝望之链
+			SpellName(185510),  --暗影之缚
+			--永恆者索奎薩爾
+			SpellName(182038),  --粉碎防御
+			SpellName(189627),  --易爆的邪能宝珠
+			SpellName(182218),  --邪炽残渣
+			SpellName(180415),  --邪能牢笼
+			SpellName(189540),  --压倒能量
+			SpellName(190466),  --低同步率
+			SpellName(184124),  --堕落者之赐
+			SpellName(182769),  --魅影重重
+			SpellName(184239),  --暗言术：恶
+			SpellName(182900),  --恶毒鬼魅
+			SpellName(188666),  --无尽饥渴
+			SpellName(190776),  --索克雷萨之咒
+			--女暴君維哈里
+			SpellName(180000),  --凋零契印
+			SpellName(179987),  --蔑视光环
+			SpellName(181683),  --抑制光环
+			SpellName(179993),  --怨恨光环
+			SpellName(180526),  --腐蚀序列
+			SpellName(180166/180164),  --裂伤之触
+			SpellName(182459),  --谴责法令
+			SpellName(180604),  --亵渎之地
+			--惡魔領主札昆
+			SpellName(189260),  --破碎之魂
+			SpellName(179407),  --魂不附体
+			SpellName(182008),  --潜伏能量
+			SpellName(189032),  --玷污绿
+			SpellName(189031),  --玷污黄
+			SpellName(189030),  --玷污红橙
+			SpellName(179428),  --轰鸣的裂隙
+			SpellName(181508),  --毁灭之种
+			SpellName(181515),  --毁灭之种
+			SpellName(181653),  --邪能水晶
+			SpellName(188998),  --枯竭灵魂
+			--祖霍拉克
+			SpellName(186134),  --邪蚀
+			SpellName(186135),  --灵媒
+			SpellName(185656),  --邪影屠戮
+			SpellName(186073),  --邪能炙烤
+			SpellName(186063),  --虚空消耗
+			SpellName(186407),  --魔能喷涌
+			SpellName(186333),  --灵能涌动
+			SpellName(186448),  --邪焰乱舞
+			SpellName(186453),  --邪焰乱舞
+			SpellName(186785),  --凋零凝视
+			SpellName(186783),  --凋零凝视
+			SpellName(188208),  --点燃
+			SpellName(186547),  --黑洞
+			SpellName(186500),  --邪能锁链
+			SpellName(189775),  --强化邪能锁链
+			--瑪諾洛斯
+			SpellName(181275),  --军团诅咒
+			SpellName(181099),  --末日印记
+			SpellName(181119),  --末日之刺
+			SpellName(189717),  --末日之刺
+			SpellName(182171),  --玛洛诺斯之血
+			SpellName(184252),  --穿刺之伤
+			SpellName(191231),  --穿刺之伤
+			SpellName(181359),  --巨力冲击
+			SpellName(181597),  --玛诺洛斯凝视
+			SpellName(181841),  --暗影之力
+			SpellName(182006),  --强化玛诺洛斯凝视
+			SpellName(182088),  --强化暗影之力
+			SpellName(182031),  --凝视暗影
+			SpellName(190482),  --束缚暗影
+			--阿克蒙德
+			SpellName(183634),  --暗影冲击
+			SpellName(187742),  --暗影冲击
+			SpellName(183864),  --暗影冲击
+			SpellName(183828),  --死亡烙印
+			SpellName(183586),  --魔火
+			SpellName(182879),  --魔火锁定
+			SpellName(183963),  --纳鲁之光
+			SpellName(185014),  --聚焦混乱
+			SpellName(186123),  --精炼混乱
+			SpellName(184964),  --枷锁酷刑
+			SpellName(186952),  --虚空放逐
+			SpellName(186961),  --虚空放逐
+			SpellName(187047),  --吞噬生命
+			SpellName(189891),  --虚空撕裂
+			SpellName(190049),  --虚空腐化
+			SpellName(188796),  --邪能腐蚀
+
 			-- 黑石要塞
 			-- 1	格鲁尔 [Gruul]
 			SpellName(155326),

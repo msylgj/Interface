@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: Enhanced Chat Filter MOD
 ## Notes: 基于黑名单的聊天过滤器，包含了密语过滤.
 ## Version: 1.60.01.26

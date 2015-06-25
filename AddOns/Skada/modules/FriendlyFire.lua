@@ -1,6 +1,8 @@
 Skada:AddLoadableModule("Friendly Fire", function(Skada, L)
 if Skada.db.profile.modulesBlocked.FriendlyFire then return end
 
+local Skada = Skada
+
 local mod = Skada:NewModule(L["Friendly Fire"])
 local playermod = Skada:NewModule(L["Friendly Fire"].." - "..L["List of players damaged"])
 local spellmod = Skada:NewModule(L["Friendly Fire"].." - "..L["List of damaging spells"])

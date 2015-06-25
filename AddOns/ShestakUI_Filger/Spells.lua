@@ -68,7 +68,39 @@ Filger_Spells = {
 			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Health, Use)
 			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
+			{spellID = 170397, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Tank
+			-- 骑士徽章
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 抑制雕像
+
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 齐布的愚忠
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 普尔的盲目之眼
+
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 石化食肉孢子
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 不眠奥术精魂
+
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 无懈合击石板
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 爆裂熔炉之门
+
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 重击护符
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Armor
+
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Mastery
+
+			{spellID = 177057, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Proc Haste
+
+			{spellID = 177104, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Rook's Unlucky Talisman (Reduces damage, Use)
 			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Resolve of Niuzao (Dodge, Use)
@@ -118,7 +150,24 @@ Filger_Spells = {
 			{spellID = 126679, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Strength, Proc)
 			{spellID = 126700, unitID = "player", caster = "player", filter = "BUFF"},
-
+			-- 战争之颅
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 活体之山微粒
+			{spellID = 176974, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 奇亚诺斯的剑鞘
+			{spellID = 177189, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 泰克图斯的脉动之心
+			{spellID = 177040, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 尖啸之魂号角
+			{spellID = 177042, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 熔炉主管的徽记
+			{spellID = 177096, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Multi-strike
+			{spellID = 176874, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Mastery
+			{spellID = 177044, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Multi-strike
+			{spellID = 177098, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Enchants
 			-- General
 			-- Tank
@@ -128,7 +177,27 @@ Filger_Spells = {
 			-- Physical Melee
 			-- Dancing Steel (Strength)
 			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
+			-- WOD
+			-- 霜狼印记（双击
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 雷王印记（爆击
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 血环印记（精通
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 战歌印记（加速
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 黑石印记（护甲
+			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
 
+			-- Legendary Meta Gems
+			-- Indomitable Primal Diamond (Tank)
+
+
+			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- 690橘戒 （力量）
+			{spellID = 177160, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- 710橘戒 （力量）
+			{spellID = 177175, unitID = "player", caster = "all", filter = "BUFF", absID = true},
 			-- 橙色多彩
 			-- 不屈之源钻 (耐力, 减伤)
 			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
@@ -301,6 +370,18 @@ Filger_Spells = {
 			{spellID = 170856, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Dash
 			{spellID = 1850, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Harmony
+			{spellID = 100977, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Solar Empowerment
+			{spellID = 164545, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lunar Empowerment
+			{spellID = 164547, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lunar Empowerment
+			{spellID = 80313, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 日殞術
+			{spellID = 155592, unitID = "player", caster = "player", filter = "BUFF"}, 
+			-- 自然智慧
+			{spellID = 177794, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -929,10 +1010,6 @@ Filger_Spells = {
 			{spellID = 79683, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Pyroblast!
 			{spellID = 48108, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 690戒指
-			{spellID = 177159, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 715戒指
-			{spellID = 177176, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 2T17 奥
 			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
 			-- 4T17 火
@@ -942,11 +1019,6 @@ Filger_Spells = {
 
 			-- Trinkets
 			-- General
-			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Darkmoon Cards (Proc)
 			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
 			-- PvP Trinkets (Health, Use)
@@ -961,6 +1033,44 @@ Filger_Spells = {
 			-- PvP Trinkets (Spell Power, Proc)
 			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Caster DPS
+			-- 睡魔之袋
+			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 狂怒之心护符
+
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 虚无碎片
+
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 科普兰的清醒
+
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 鬣蜥人灵魂容器
+
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 达玛克的无常护符
+
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 黑铁微型坩埚
+
+			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Critical Strike
+
+			{spellID = 177047, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Haste
+
+			{spellID = 177052, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Proc Multi-strike
+
+			{spellID = 177085, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Spirit
+
+			{spellID = 177062, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Attacks Proc Multi-strike
+
+			{spellID = 177064, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Proc Haste
+
+			{spellID = 177090, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Purified Bindings of Immerseus (Intellect, Proc)
 			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Kardris' Toxic Totem (Intellect, Proc)
@@ -991,10 +1101,25 @@ Filger_Spells = {
 			-- Caster General
 			-- Jade Spirit (Intellect + Spirit)
 			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- 血环之印
-			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
-			-- 雷神之印
+			-- WOD
+			-- 霜狼印记（双击
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 雷王印记（爆击
 			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 血环印记（精通
+
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 战歌印记（加速
+
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
+
+			-- Legendary Meta Gems
+			-- Sinister Primal Diamond (Caster DPS)
+
+			-- 690橘戒 （法系）
+			{spellID = 177159, unitID = "player", caster = "all", filter = "BUFF"},
+			-- 715橘戒 （法系）
+			{spellID = 177176, unitID = "player", caster = "all", filter = "BUFF"},
 			-- 橙色多彩
 			-- 阴险之源钻 (暴击, 急速)
 			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
@@ -3145,8 +3270,6 @@ Filger_Spells = {
 			{spellID = 31821, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Rallying Cry
 			{spellID = 97463, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Amplify Magic
-			{spellID = 159916, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Tricks of the Trade
 			{spellID = 57933, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Stampeding Roar
@@ -3157,8 +3280,6 @@ Filger_Spells = {
 			{spellID = 8178, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Lightwell Renew
 			{spellID = 7001, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Aspect of the Fox
-			{spellID = 172106, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Slow Fall
 			{spellID = 130, unitID = "player", caster = "all", filter = "BUFF"},
 			-- Levitate
@@ -4092,6 +4213,316 @@ Filger_Spells = {
 			 
 			-- 黑石铸造厂 [结束]
 			
+			-- 60200地狱火堡垒
+            -- 1 奇袭地狱火
+            -- 邪火弹药 Felfire-Munitions
+            {spellID = 186016, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 啸风战斧 howling-axe
+            {spellID = 184379, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 颤抖 cower
+            {spellID = 184238, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 猛击 slam
+            {spellID = 184243, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 导电冲击脉冲 conducted-shock-pulse
+            {spellID = 185806, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 钻孔 bore
+            {spellID = 180022, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 灼烧 burn
+            {spellID = 185157, unitID = "player", caster = "all", filter = "DEBUFF"},
+            --M 腐化虹吸 corruption-siphon
+            {spellID = 187655, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 2 钢铁掠夺者
+            -- 献祭 immolation
+            {spellID = 182074, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 不稳定的宝珠 unstable-orb
+            {spellID = 182001, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 炮击 artillery
+            {spellID = 182280, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 燃料尾痕 fuel-streak
+            {spellID = 182003, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 迅猛突袭 blitz
+            {spellID = 179897, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 185242, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            --M 易爆火焰炸弹 firebomb-vulnerability
+            {spellID = 185978, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 3 考莫克
+            -- 攫取之手 foul-crush
+            {spellID = 181345, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能之触 fel-touch
+            {spellID = 181321, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 爆裂冲击 explosive-burst
+            {spellID = 181306, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪污碾压 crush
+            {spellID = 187819, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗影血球 shadow-globule
+            {spellID = 180270, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 炽热血球 fiery-globule
+            {spellID = 185519, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪污血球 foul-globule
+            {spellID = 185521, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗影之池 shadowy-pool
+            {spellID = 181082, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 火焰之池 fiery-pool
+            {spellID = 186559, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪污之池 foul-pool
+            {spellID = 186560, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 暗影残渣 shadow-residue
+            {spellID = 181208, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 爆炸残渣 fiery-residue
+            {spellID = 185686, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 邪恶残渣 foul-residue
+            {spellID = 185687, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 4 地狱火高阶议会
+            -- 死灵印记 mark-of-the-necromancer
+            {spellID = 184449, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 184450, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 184676, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 185065, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 185066, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 梦魇幻影 nightmare-visage
+            {spellID = 184673, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 堕落狂怒 fel-rage
+            {spellID = 184360, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 酸性创伤 acidic-wound
+            {spellID = 184847, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗影收割 reap
+            {spellID = 184652, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 污血 tainted-blood
+            {spellID = 184357, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 血液沸腾 bloodboil
+            {spellID = 184355, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 5 基爾羅格&#8231;亡眼
+            -- 剖心飞刀 heart-seeker
+            {spellID = 188929, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 180389, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 邪能腐蚀 fel-corruption
+            {spellID = 182159, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 184396, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 恶魔附身 demonic-possession
+            {spellID = 180313, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 永痕的决心 undying-resolve
+            {spellID = 180718, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 死亡幻象 vision-of-death
+            {spellID = 181488, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 永恒的救赎 undying-salvation
+            {spellID = 185563, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 碎甲 shredded-armor
+            {spellID = 180200, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能烈焰 fel-flames
+            {spellID = 180575, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 撕裂嚎叫 rending-howl
+            {spellID = 183917, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 溅血 blood-splatter
+            {spellID = 188852, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能腐液 fel-puddle
+            {spellID = 184067, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 6 血魔
+            -- 灵魂箭雨 spirit-volley
+            {spellID = 180093, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 死亡之影 shadow-of-death
+            {spellID = 179864, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 血魔的腐化 gorefiends-corruption
+            {spellID = 179867, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 消化 digest
+            {spellID = 181295, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 生命渴望 hunger-for-life
+            {spellID = 180148, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 毁灭之触 touch-of-doom
+            {spellID = 179977, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 末日井 doom-well
+            {spellID = 179995, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 命运相连 shared-fate
+            {spellID = 179908, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 179909, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 灵魂之池 pool-of-souls
+            {spellID = 186770, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 7 暗影領主伊斯卡
+            -- 安苏之光 radiance-of-anzu
+            {spellID = 185239, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 幻影之伤 phantasmal-wounds
+            {spellID = 182325, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能焚化 fel-fire
+            {spellID = 182600, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 幻影之风 phantasmal-winds
+            {spellID = 181957, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能飞轮 fel-chakram
+            {spellID = 182200, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 182178, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 幻影邪能炸弹 phantasmal-fel-bomb
+            {spellID = 179219, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能炸弹 fel-bomb
+            {spellID = 181753, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 幻影腐蚀 phantasmal-corruption
+            {spellID = 181824, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 幻影焚化 phantasmal-cremation
+            {spellID = 187344, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 绝望之链 chains-of-despair
+            {spellID = 185456, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 暗影之缚 dark-bindings
+            {spellID = 185510, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 8 永恆者索奎薩爾
+            -- 粉碎防御 shattered-defenses
+            {spellID = 182038, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 易爆的邪能宝珠 volatile-fel-orb
+            {spellID = 189627, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魔炎殘渣 felblaze-residue
+            {spellID = 182218, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能牢笼 fel-prison
+            {spellID = 180415, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 压倒能量 overwhelming-power
+            {spellID = 189540, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 堕落者之赐 gift-of-the-manari
+            {spellID = 184124, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魅影重重 ghastly-fixation
+            {spellID = 182769, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗言术:恶 shadow-word-agony
+            {spellID = 184239, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 恶毒鬼魅 virulent-haunt
+            {spellID = 182900, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- M 无尽饥渴 eternal-hunger
+            {spellID = 188666, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- M 索克雷萨之咒 socrethars-contingency
+            {spellID = 190776, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 步履蹒跚 blooded-tracker
+            {spellID = 188767, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 9 女暴君維哈里
+            -- 凋零契印 seal-of-decay
+            {spellID = 180000, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 蔑视光环 aura-of-contempt
+            {spellID = 179987, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 抑制光环 aura-of-oppression
+            {spellID = 181683, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 怨恨光环 aura-of-malice
+            {spellID = 179993, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 腐蚀序列 font-of-corruption
+            {spellID = 180526, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 裂伤之触 touch-of-harm
+            {spellID = 180166, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 180164, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 谴责法令 edict-of-condemnation
+            {spellID = 182459, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 亵渎之地 despoiled-ground
+            {spellID = 180604, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 10 惡魔領主札昆
+            -- 破碎之魂 cloven-soul
+            {spellID = 189260, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魂不附体 disembodied
+            {spellID = 179407, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 潜伏能量 latent-energy
+            {spellID = 182008, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 玷污 befouled
+            {spellID = 189032, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 189031, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 189031, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 轰鸣的裂隙 rumbling-fissure
+            {spellID = 179428, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 毁灭之种 seed-of-destruction
+            {spellID = 181508, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 181515, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 邪能水晶 fel-crystals
+            {spellID = 181653, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 枯竭灵魂 exhausted-soul
+            {spellID = 188998, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 11 祖霍拉克
+            -- 邪蚀 feltouched
+            {spellID = 186134, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 灵媒 voidtouched
+            {spellID = 186135, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪影屠戮 shadowfel-annihilation
+            {spellID = 185656, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能炙烤 felsinged
+            {spellID = 186073, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 虚空消耗 wasting-void
+            {spellID = 186063, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魔能喷涌 fel-surge
+            {spellID = 186407, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 灵能涌动 void-surge
+            {spellID = 186333, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪焰乱舞 felblaze-flurry
+            {spellID = 186448, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 186453, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 凋零凝视 withering-gaze
+            {spellID = 186785, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 186783, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 点燃 ablaze
+            {spellID = 188208, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 黑洞 black-hole
+            {spellID = 186547, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能锁链 chains-of-fel
+            {spellID = 186500, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 強化魔化鎖鍊 empowered-chains-of-fel
+            {spellID = 189775, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 12 瑪諾洛斯/mannoroth
+            -- 军团诅咒 curse-of-the-legion
+            {spellID = 181275, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 末日印记 mark-of-doom
+            {spellID = 181099, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 末日之刺 doom-spike
+            {spellID = 181119, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 189717, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 玛洛诺斯之血 blood-of-mannoroth
+            {spellID = 182171, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 穿刺之伤 puncture-wound
+            {spellID = 184252, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 191231, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 巨力冲击 massive-blast
+            {spellID = 181359, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 玛诺洛斯凝视 mannoroths-gaze
+            {spellID = 181597, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗影之力 shadowforce
+            {spellID = 181841, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 强化玛诺洛斯凝视 empowered-mannoroths-gaze
+            {spellID = 182006, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 强化暗影之力 empowered-shadowforce
+            {spellID = 182088, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 凝视暗影 gazing-shadows
+            {spellID = 182031, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- M 束缚暗影 gripping-shadows
+            {spellID = 190482, unitID = "player", caster = "all", filter = "DEBUFF"},
+            
+            -- 13 阿克蒙德
+            -- 暗影冲击 shadowfel-burst
+            {spellID = 183634, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 暗影冲击 shadow-blast
+            {spellID = 187742, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 183864, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 死亡烙印 death-brand
+            {spellID = 183828, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魔火 doomfire
+            {spellID = 183586, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 魔火锁定 doomfire-fixate
+            {spellID = 182879, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 纳鲁之光 light-of-the-naaru
+            {spellID = 183963, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 聚焦混乱 focused-chaos
+            {spellID = 185014, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 精炼混乱 wrought-chaos
+            {spellID = 186123, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 枷锁酷刑 shackled-torment
+            {spellID = 184964, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 虚空放逐 nether-banish
+            {spellID = 186952, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            {spellID = 186961, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+            -- 吞噬声明 devour-life
+            {spellID = 187047, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 虚空撕裂 nether-tear
+            {spellID = 189891, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 虚空腐化 nether-corruption
+            {spellID = 190049, unitID = "player", caster = "all", filter = "DEBUFF"},
+            -- 邪能腐蚀 fel-corruption
+            {spellID = 188796, unitID = "player", caster = "all", filter = "DEBUFF"}, 
+			--地狱火堡垒结束
 			
 			-- outdoor bosses -- 户外首领
 			-- Sha of Anger [怒之煞]
@@ -4414,6 +4845,95 @@ Filger_Spells = {
 			{spellID = 66271, unitID = "target", caster = "all", filter = "DEBUFF"},
 			-- Drink
 			{spellID = 80167, unitID = "target", caster = "all", filter = "BUFF"},
+
+			-- 60200地狱火堡垒
+            -- 1 奇袭地狱火
+            -- 英姿勃发 inspiring-presence
+            {spellID = 185090, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 振奋狂哮 rallying-roar
+            {spellID = 180319, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 恶魔变形 metamorphosis
+            {spellID = 181968, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 修复 repair
+            {spellID = 185816, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            -- 2 钢铁掠夺者
+            -- 重击 pounding
+            {spellID = 182020, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            -- 3 考莫克
+            -- 暗影能量 shadow-energy
+            {spellID = 180115, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 爆炸能量 explosive-energy
+            {spellID = 180116, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 邪恶能量 foul-energy
+            {spellID = 180117, unitID = "target", caster = "all", filter = "BUFF"},
+            -- 重击 pound
+            {spellID = 180244, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            -- 4 地狱火高阶议会
+            -- 梦魇幻影 nightmare-visage
+            {spellID = 184657, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --邪能風暴 felstorm
+            {spellID = 183701, unitID = "target", caster = "all", filter = "BUFF"},
+            --愤怒 fury
+            {spellID = 184359, unitID = "target", caster = "all", filter = "BUFF"},
+            --堕落狂怒 fel-rage
+            {spellID = 184358, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --毁灭飞跃 demolishing-leap
+            {spellID = 184365, unitID = "target", caster = "all", filter = "BUFF"},
+            --镜像 mirror-images
+            {spellID = 183885, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --5 基爾羅格.亡眼
+            --撕裂嚎叫 rending-howl
+            {spellID = 186919, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --死亡挣扎 death-throes
+            {spellID = 180224, unitID = "target", caster = "all", filter = "BUFF"},
+            --死亡之门 deaths-door
+            {spellID = 184551, unitID = "target", caster = "all", filter = "BUFF"},
+            --野蛮打击 savage-strikes
+            {spellID = 180163, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --6 血魔
+            --生命渴望 hunger-for-life
+            {spellID = 185038, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --邪能烈焰 fel-flames
+            {spellID = 185190, unitID = "target", caster = "all", filter = "BUFF"},
+            --邪能之怒 fel-flames
+            {spellID = 185189, unitID = "target", caster = "all", filter = "BUFF"},
+            --灵魂纽带 nexus-of-souls
+            {spellID = 180491, unitID = "target", caster = "all", filter = "BUFF"},
+            --狂野怒吼 bellowing-shout
+            {spellID = 181582, unitID = "target", caster = "all", filter = "BUFF"},
+            --灵魂盛宴 feast-of-souls
+            {spellID = 181973, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --7 暗影領主伊斯卡
+            --8 永恆者索奎薩爾
+            --邪能壁垒 fel-barrier
+            {spellID = 184053, unitID = "target", caster = "all", filter = "BUFF"},
+            --恶毒鬼魅 virulent-haunt
+            {spellID = 182925, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --M无尽饥渴 eternal-hunger
+            {spellID = 188666, unitID = "target", caster = "all", filter = "BUFF", absID = true},
+            --M 步履蹒跚 blooded-tracker
+            {spellID = 188767, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --9 女暴君維哈里
+            --统御者壁垒 sovereigns-ward
+            {spellID = 180040, unitID = "target", caster = "all", filter = "BUFF"},
+            --地火风暴 infernal-tempest
+            {spellID = 180300, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --10 惡魔領主札昆
+            --11 祖霍拉克
+            --混乱压制 overwhelming-chaos
+            {spellID = 187204, unitID = "target", caster = "all", filter = "BUFF"},
+            
+            --12 瑪諾洛斯/mannoroth
+            --13 阿克蒙德
+            -- 60200地狱火堡垒 结束--
 		},
 	},
 }

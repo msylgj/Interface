@@ -6,7 +6,7 @@ local L
 L= DBM:GetModLocalization(1426)
 
 L:SetTimerLocalization({
-	timerSiegeVehicleCD		= "Next Siege Vehicle",
+	timerSiegeVehicleCD		= "Next Vehicle %s",
 })
 
 L:SetOptionLocalization({
@@ -14,8 +14,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	AddsSpawn1		=	"Comin' in hot!",
-	AddsSpawn2		=	"Fire in the hole!"
+	AddsSpawn1		=	"Comin' in hot!",--Blizzard seems to have disabled these
+	AddsSpawn2		=	"Fire in the hole!",--Blizzard seems to have disabled these
+	BossLeaving		=	"I'll be back..."
 })
 
 ---------------------------
@@ -46,6 +47,18 @@ L:SetMiscLocalization({
 --Gorefiend --
 --------------------
 L= DBM:GetModLocalization(1372)
+
+L:SetTimerLocalization({
+	SoDDPS		= "Next Shadows (%s)",
+	SoDTank		= "Next Shadows (%s)",
+	SoDHealer	= "Next Shadows (%s)"
+})
+
+L:SetOptionLocalization({
+	SoDDPS		= "Show timer for next $spell:179864 affecting Damagers",
+	SoDTank		= "Show timer for next $spell:179864 affecting Tanks",
+	SoDHealer	= "Show timer for next $spell:179864 affecting Healers"
+})
 
 --------------------------
 -- Shadow-Lord Iskar --
@@ -94,9 +107,9 @@ L= DBM:GetModLocalization(1447)
 
 L:SetOptionLocalization({
 	ChainsBehavior		= "Set Fel Chains warning behavior",
-	Cast				= "Only give orininal target on begin cast. Timer syncs to cast start.",
-	Applied				= "Only give all targets affected on cast finish. Timer syncs to cast finish.",
-	Both				= "Give original target on cast start and all affected targets on cast finish. Timer syncs to cast start."
+	Cast				= "Only give original target on cast start. Timer syncs to cast start.",
+	Applied				= "Only give targets affected on cast end. Timer syncs to cast end.",
+	Both				= "Give original target on cast start and targets affected on cast end. Timer syncs to cast start."
 })
 
 --------------------------

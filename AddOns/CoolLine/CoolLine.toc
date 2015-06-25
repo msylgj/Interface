@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: |cffff00ffCoolLine 中文版|r
 ## Notes: Shows cooldowns on a single bar.
 ## Notes-zhCN: 在一个独立bar上以流水线的方式显示冷却时间

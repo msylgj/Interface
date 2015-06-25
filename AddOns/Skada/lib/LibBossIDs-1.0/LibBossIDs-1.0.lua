@@ -1,6 +1,6 @@
 --[[
 Name: LibBossIDs-1.0
-Revision: $Revision: 91 $
+Revision: $Revision: 95 $
 Author: Elsia
 Website: http://www.wowace.com/addons/libbossids-1-0/
 Documentation:
@@ -10,7 +10,7 @@ Dependencies: LibStub
 License: Public Domain, Absolutely no Warranty.
 ]]
 
-local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 91 $"
+local MAJOR, MINOR = "LibBossIDs-1.0", "$Revision: 95 $"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then return end
@@ -202,19 +202,24 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Blackrock Foundry
 	-------------------------------------------------------------------------------
-	[87420]	= true,	-- Blackhand
-	[76865]	= true,	-- Beastlord Darmac
-	[76814]	= true,	-- Flamebender Ka'graz
-	[76906]	= true,	-- Operator Thogar
-	[76809]	= true,	-- Foreman Feldspar
-	[76973]	= true,	-- Hans'gar
-	[76974]	= true,	-- Franzok
+	-- Slagworks
 	[76877]	= true,	-- Gruul
-	[77692]	= true,	-- Kromog
 	[77182]	= true,	-- Oregorger
-	[77557]	= true,	-- Admiral Gar'an
-	[77477]	= true,	-- Marak the Blooded
-	[77231]	= true,	-- Enforcer Sorka
+	[76806]	= true,	-- Blast Furnace - Heart of the Mountain
+	[76809]	= true,	-- Blast Furnace - Foreman Feldspar
+	-- The Black Forge
+	[76973]	= true,	-- Hans'gar & Franzok - Hans'gar
+	[76974]	= true,	-- Hans'gar & Franzok - Franzok
+	[76814]	= true,	-- Flamebender Ka'graz
+	[77692]	= true,	-- Kromog
+	-- Iron Assembly
+	[76865]	= true,	-- Beastlord Darmac
+	[76906]	= true,	-- Operator Thogar
+	[77557]	= true,	-- Iron Maidens - Admiral Gar'an
+	[77231]	= true,	-- Iron Maidens - Enforcer Sorka
+	[77477]	= true,	-- Iron Maidens - Marak the Blooded
+	-- Blackhand's Crucible
+	[77325]	= true,	-- Blackhand
 
 	-------------------------------------------------------------------------------
 	-- Blackrock Mountain: Blackrock Caverns
@@ -255,10 +260,10 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Bloodmaul Slag Mines
 	-------------------------------------------------------------------------------
-	[75786]	= true,	-- Roltall
 	[74787]	= true,	-- Slave Watcher Crushto
-	[74790]	= true,	-- Gug'rokk
 	[74366]	= true,	-- Forgemaster Gog'duh
+	[75786]	= true,	-- Roltall
+	[74790]	= true,	-- Gug'rokk
 
 	-------------------------------------------------------------------------------
 	-- Caverns of Time: Battle for Mount Hyjal
@@ -427,7 +432,7 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Gorgrond
 	-------------------------------------------------------------------------------
-	[87437]	= true,	-- Drov the Ruiner
+	[81252]	= true,	-- Drov the Ruiner
 	[81535]	= true,	-- Tarlna the Ageless
 
 	-------------------------------------------------------------------------------
@@ -441,10 +446,10 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Grimrail Depot
 	-------------------------------------------------------------------------------
-	[80005]	= true,	-- Skylord Tovra
 	[77803]	= true,	-- Railmaster Rocketspark
 	[77816]	= true,	-- Borka the Brute
 	[79545]	= true,	-- Nitrogg Thundertower
+	[80005]	= true,	-- Skylord Tovra
 
 	-------------------------------------------------------------------------------
 	-- Gruul's Lair
@@ -550,14 +555,17 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- Highmaul
 	-------------------------------------------------------------------------------
-	[87447]	= true,	-- The Butcher
-	[87444]	= true,	-- Kargath Bladefist
-	[87449]	= true,	-- Pol
-	[78237]	= true,	-- Phemos
-	[87445]	= true,	-- Ko'ragh
-	[87446]	= true,	-- Tectus
-	[87441]	= true,	-- Brackenspore
-	[87818]	= true,	-- Imperator Mar'gok
+	-- Walled City
+	[78714]	= true,	-- Kargath Bladefist
+	[77404]	= true,	-- The Butcher
+	[78491]	= true,	-- Brackenspore
+	-- Arcane Sanctum
+	[78948]	= true,	-- Tectus
+	[78238]	= true,	-- Twin Ogron - Pol
+	[78237]	= true,	-- Twin Ogron - Phemos
+	[79015]	= true,	-- Ko'ragh
+	-- Imperator's Rise
+	[77428]	= true,	-- Imperator Mar'gok
 
 	-------------------------------------------------------------------------------
 	-- Hour of Twilight 4.3
@@ -598,13 +606,14 @@ local BossIDs = {
 	-- Iron Docks
 	-------------------------------------------------------------------------------
 	[81305]	= true,	-- Fleshrender Nok'gar
-	[81297]	= true,	-- Dreadfang
-	[80816]	= true,	-- Ahri'ok Dugru
-	[80805]	= true,	-- Makogg Emberblade
-	[80808]	= true,	-- Neesa Nox
+	[81297]	= true,	-- Fleshrender Nok'gar - Dreadfang
+	[80816]	= true,	-- Grimrail Enforcers - Ahri'ok Dugru
+	[80805]	= true,	-- Grimrail Enforcers - Makogg Emberblade
+	[80808]	= true,	-- Grimrail Enforcers - Neesa Nox
 	[79852]	= true,	-- Oshir
 	[83612]	= true,	-- Skulloc
-	[83613]	= true,	-- Captain Koramar
+	[83613]	= true,	-- Skulloc - Koramar
+	[83616]	= true,	-- Skulloc - Zoggosh
 
 	-------------------------------------------------------------------------------
 	-- Isle of Giants
@@ -996,9 +1005,9 @@ local BossIDs = {
 	-- Shadowmoon Burial Grounds
 	-------------------------------------------------------------------------------
 	[75509]	= true,	-- Sadana Bloodfury
+	[75829]	= true,	-- Nhallish
 	[75452]	= true,	-- Bonemaw
 	[76407]	= true,	-- Ner'zhul
-	[75829]	= true,	-- Nhallish
 
 	-------------------------------------------------------------------------------
 	-- Shadowmoon Valley
@@ -1059,13 +1068,13 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	[75964]	= true,	-- Ranjit
 	[76141]	= true,	-- Araknath
-	[76143]	= true,	-- Rukhran
+	[76379]	= true,	-- Rukhran
 	[76266]	= true,	-- High Sage Viryx
 
 	-------------------------------------------------------------------------------
 	-- Spires of Arak
 	-------------------------------------------------------------------------------
-	[87493]	= true,	-- Rukhmar
+	[83746]	= true,	-- Rukhmar
 
 	-------------------------------------------------------------------------------
 	-- Stormstout Brewery (MoP Dungeon)
@@ -1301,13 +1310,13 @@ local BossIDs = {
 	-------------------------------------------------------------------------------
 	-- The Everbloom
 	-------------------------------------------------------------------------------
-	[83894]	= true,	-- Dulhu
-	[83892]	= true,	-- Life Warden Gola
-	[83893]	= true,	-- Earthshaper Telu
-	[82682]	= true,	-- Archmage Sol
-	[84550]	= true,	-- Xeri'tac
-	[83846]	= true,	-- Yalnu
 	[81522]	= true,	-- Witherbark
+	[83892]	= true,	-- Ancient Protectors - Life Warden Gola
+	[83893]	= true,	-- Ancient Protectors - Earthshaper Telu
+	[83894]	= true,	-- Ancient Protectors - Dulhu
+	[84550]	= true,	-- Xeri'tac
+	[82682]	= true,	-- Archmage Sol
+	[83846]	= true,	-- Yalnu
 
 	-------------------------------------------------------------------------------
 	-- The Eye of Eternity

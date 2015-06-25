@@ -136,7 +136,7 @@ Skada:AddLoadableModule("DamageTaken", function(Skada, L)
 
 			d.label = name
 			d.value = spell.damage
-			d.valuetext = Skada:FormatNumber(spell.damage)..(" (%02.2f%%)"):format(spell.damage / set.damagetaken * 100)
+			d.valuetext = Skada:FormatNumber(spell.damage)..(" (%02.1f%%)"):format(spell.damage / set.damagetaken * 100)
 			d.id = name
 			local _, _, icon = GetSpellInfo(spell.id)
 			d.icon = icon
@@ -198,8 +198,8 @@ Skada:AddLoadableModule("DamageTaken", function(Skada, L)
 
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(player.damagetaken), self.metadata.columns.Damage,
-												string.format("%02.2f", dtps), self.metadata.columns.DTPS,
-												string.format("%02.2f%%", player.damagetaken / set.damagetaken * 100), self.metadata.columns.Percent
+												string.format("%02.1f", dtps), self.metadata.columns.DTPS,
+												string.format("%02.1f%%", player.damagetaken / set.damagetaken * 100), self.metadata.columns.Percent
 											)
 				d.id = player.id
 				d.class = player.class
@@ -240,7 +240,7 @@ Skada:AddLoadableModule("DamageTaken", function(Skada, L)
 				d.icon = icon
 				d.id = spellname
 				d.spellid = spell.id
-				d.valuetext = Skada:FormatNumber(spell.damage)..(" (%02.2f%%)"):format(spell.damage / player.damagetaken * 100)
+				d.valuetext = Skada:FormatNumber(spell.damage)..(" (%02.1f%%)"):format(spell.damage / player.damagetaken * 100)
 
 				max = math.max(max, spell.damage)
 				nr = nr + 1

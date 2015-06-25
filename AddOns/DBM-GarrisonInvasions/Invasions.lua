@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("GarrisonInvasions", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13603 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13864 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCESS 181098 181072 181088 181084",
+	"SPELL_CAST_SUCCESS 181098 181072 181088 181084 181095 181083",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -22,7 +22,6 @@ local specWarnBuilding			= mod:NewSpecialWarning("specWarnBuilding")
 --local timerCombatStart			= mod:NewCombatTimer(44)--rollplay for first pull
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
@@ -35,6 +34,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		DBM:StartCombat(DBM:GetModByName("LadyFleshsear"), 0, "SPELL_CAST_SUCCESS")
 	elseif spellId == 181084 then--Commander Dro'gan Summon
 		DBM:StartCombat(DBM:GetModByName("Drogan"), 0, "SPELL_CAST_SUCCESS")
+	elseif spellId == 181095 then--Mage Lord Gogg'nathog Summon
+		DBM:StartCombat(DBM:GetModByName("Goggnathog"), 0, "SPELL_CAST_SUCCESS")
+	elseif spellId == 181083 then--Gaur
+		DBM:StartCombat(DBM:GetModByName("Gaur"), 0, "SPELL_CAST_SUCCESS")
 	end
 end
 

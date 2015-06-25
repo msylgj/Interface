@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tonks", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -19,7 +19,6 @@ local timerGame					= mod:NewBuffActiveTimer(60, 102178)
 local countdownGame				= mod:NewCountdownFades(60, 102178)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 102341 and UnitGUID("pet") == args.destGUID and self:AntiSpam() then

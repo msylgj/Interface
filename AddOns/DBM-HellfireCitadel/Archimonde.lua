@@ -1,22 +1,23 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13804 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13915 $"):sub(12, -3))
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetHotfixNoticeRev(13908)
 --mod:SetRespawnTime(20)
 
 mod:RegisterCombat("combat")
 
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 183254 189897 183817 183828 185590 184265 183864",
+	"SPELL_CAST_START 183254 189897 183817 183828 185590 184265 183864 190506",
 	"SPELL_CAST_SUCCESS 183865 184931 187180",
-	"SPELL_AURA_APPLIED 182879 183634 183865 184964 186574 187180 186961 189895 186123 186662 186952",
+	"SPELL_AURA_APPLIED 182879 183634 183865 184964 186574 187180 186961 189895 186123 186662 186952 190400 190703",
 	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 186123 185014 187180 186961 186952 184964",
+	"SPELL_AURA_REMOVED 186123 185014 187180 186961 186952 184964 190400",
 	"CHAT_MSG_MONSTER_YELL",
 	"RAID_BOSS_WHISPER",
 	"CHAT_MSG_ADDON",
@@ -45,6 +46,8 @@ local warnDemonicFeedback			= mod:NewTargetAnnounce(187180, 3)
 local warnNetherBanish				= mod:NewTargetAnnounce(186961, 2)
 ----The Nether
 local warnVoidStarFixate			= mod:NewTargetAnnounce(189895, 2)
+--Mythic
+local warnTouchofLegion				= mod:NewTargetAnnounce(190400, 4)
 
 --Phase 1: The Defiler
 local specWarnDoomfire				= mod:NewSpecialWarningSwitch(189897, "Dps", nil, nil, 1, 5)
@@ -77,6 +80,14 @@ local specWarnVoidStarFixate		= mod:NewSpecialWarningYou(189895)--Maybe move awa
 local yellVoidStarFixate			= mod:NewYell(189895, nil, false)
 --Phase 3.5
 local specWarnRainofChaos			= mod:NewSpecialWarningSpell(189953, nil, nil, nil, 2)
+--Mythic
+local specWarnSeethingCorruption	= mod:NewSpecialWarningSpell(190506, nil, nil, nil, 2)
+local specWarnTouchofLegion			= mod:NewSpecialWarningYou(190400)--Somehow i suspect this replaces fel burst. It's basically same mechanic, but on multiple people and slightly larger
+local yellTouchofLegion				= mod:NewFadesYell(190400)
+local specWarnSourceofChaos			= mod:NewSpecialWarningYou(190703)
+local yellSourceofChaos				= mod:NewYell(190703)
+local specWarnSourceofChaosOthers	= mod:NewSpecialWarningSwitch(190703)--Maybe exclude ranged or healers. Not sure if just dps is enough to soak it, at very least dps have to kill it
+--
 
 --Phase 1: The Defiler
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
@@ -99,6 +110,12 @@ mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerDemonicFeedbackCD		= mod:NewCDTimer(16.9, 187180)
 local timerNetherBanishCD			= mod:NewCDTimer(61.9, 186961)
 ----The Nether
+--Mythic
+local timerSeethingCorruptionCD		= mod:NewAITimer(107, 190506)
+local timerTouchOfLegionCD			= mod:NewAITimer(107, 190400)
+local timerTouchOfLegion			= mod:NewTargetTimer(12, 190400, nil, false)
+local timerSourceofChaosCD			= mod:NewAITimer(107, 190703)
+
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
@@ -125,6 +142,7 @@ mod.vb.phase = 1
 mod.vb.demonicFeedbacks = 0
 mod.vb.netherPortals = 0
 mod.vb.unleashedCountRemaining = 0
+mod.vb.touchOfLegionRemaining = 0
 local playerName = UnitName("player")
 local playerBanished = false
 local AddsSeen = {}
@@ -132,7 +150,8 @@ local UnitDebuff = UnitDebuff
 local DemonicFeedback = GetSpellInfo(187180)
 local NetherBanish = GetSpellInfo(186961)
 local shackledDebuff = GetSpellInfo(184964)
-local demonicFilter, netherFilter
+local touchOfLegionDebuff = GetSpellInfo(190400)
+local demonicFilter, netherFilter, touchOfLegionFilter
 do
 	demonicFilter = function(uId)
 		if UnitDebuff(uId, DemonicFeedback) then
@@ -144,6 +163,11 @@ do
 			return true
 		end
 	end
+	touchOfLegionFilter = function(uId)
+		if UnitDebuff(uId, touchOfLegionDebuff) then
+			return true
+		end
+	end
 end
 
 local function updateRangeFrame(self)
@@ -151,6 +175,12 @@ local function updateRangeFrame(self)
 	if self.vb.netherPortals > 0 then
 		--Blue post says 8, but pretty sure it's 10. The visual was bigger than 8
 		if UnitDebuff("player", NetherBanish) then
+			DBM.RangeCheck:Show(10)
+		else
+			DBM.RangeCheck:Show(10, netherFilter)
+		end
+	elseif self.vb.touchOfLegionRemaining > 0 then
+		if UnitDebuff("player", touchOfLegionDebuff) then
 			DBM.RangeCheck:Show(10)
 		else
 			DBM.RangeCheck:Show(10, netherFilter)
@@ -221,6 +251,7 @@ function mod:OnCombatStart(delay)
 	self.vb.demonicFeedbacks = 0
 	self.vb.netherPortals = 0
 	self.vb.unleashedCountRemaining = 0
+	self.vb.touchOfLegionRemaining = 0
 	table.wipe(AddsSeen)
 	playerBanished = false
 	timerDoomfireCD:Start(6-delay)
@@ -278,6 +309,9 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 183864 then
 		timerShadowBlastCD:Start(args.sourceGUID)
+	elseif spellId == 190506 then
+		specWarnSeethingCorruption:Show()
+		timerSeethingCorruptionCD:Start()
 	end
 end
 
@@ -395,7 +429,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerShackledTormentCD:Start(45.4)
 		end
 	elseif spellId == 189895 and (playerBanished or not self.Options.FilterOtherPhase) then
-		warnVoidStarFixate:CombinedShow(0.3, args.destName)--More than one?
+		warnVoidStarFixate:CombinedShow(0.3, args.destName)--5 on mythic
 		if args:IsPlayer() then
 			specWarnVoidStarFixate:Show()
 			yellVoidStarFixate:Yell()
@@ -409,6 +443,35 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 186952 and args:IsPlayer() then
 		playerBanished = true
+	elseif spellId == 190400 then
+		self.vb.touchOfLegionRemaining = self.vb.touchOfLegionRemaining + 1
+		local uId = DBM:GetRaidUnitId(args.destName)
+		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff(uId, args.spellName)--Find out what our specific seed timer is
+		warnTouchofLegion:CombinedShow(0.5, args.destName)
+		if self:AntiSpam(3, 1) then
+			timerTouchOfLegionCD:Start()
+		end
+		if expires then
+			local remaining = expires-GetTime()
+			timerTouchOfLegion:Start(remaining, args.destName)--Maybe info frame showing player names and expire order better than showing a bunch of timers?
+			if args:IsPlayer() then
+				specWarnTouchofLegion:Show()
+				yellTouchofLegion:Schedule(remaining-1, 1)
+				yellTouchofLegion:Schedule(remaining-2, 2)
+				yellTouchofLegion:Schedule(remaining-3, 3)
+				yellTouchofLegion:Schedule(remaining-4, 4)
+				yellTouchofLegion:Schedule(remaining-5, 5)
+			end
+		end
+		updateRangeFrame(self)
+	elseif spellId == 190703 then
+		timerSourceofChaosCD:Start()
+		if args:IsPlayer() then
+			specWarnSourceofChaos:Show()
+			yellSourceofChaos:Yell()
+		else
+			specWarnSourceofChaosOthers:Show()
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -434,6 +497,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		if (not playerBanished or not self.Options.FilterOtherPhase) and not self:IsLFR() then
 			warnUnleashedTorment:Show(self.vb.unleashedCountRemaining)
 		end
+	elseif spellId == 190400 then
+		self.vb.touchOfLegionRemaining = self.vb.touchOfLegionRemaining - 1
+		timerTouchOfLegion:Cancel(args.destName)
+		if args:IsPlayer() then
+			yellTouchofLegion:Cancel()
+		end
+		updateRangeFrame(self)
 	end
 end
 
@@ -517,7 +587,7 @@ function mod:OnSync(msg)
 		timerFelBurstCD:Cancel()
 		timerDesecrateCD:Cancel()
 		timerDoomfireCD:Cancel()
-		timerAllureofFlamesCD()--Reset to 35.5
+		timerAllureofFlamesCD:Cancel()--Reset to 35.5
 		timerAllureofFlamesCD:Start(35.5)
 		timerShackledTormentCD:Start(12)
 	elseif msg == "phase25" and self.vb.phase < 2.5 then

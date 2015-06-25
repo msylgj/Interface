@@ -246,14 +246,14 @@ local StartTimer = function(name, spellId)
 	local color
 	if charges and spellId == 20484 then
 		--初始化战复技能计时条
-		local curCharges, _, _, duration = GetSpellCharges(20484)
+		local curCharges, _, start, duration = GetSpellCharges(20484)
 		currentNumResses = curCharges
-		bar.endTime = GetTime() + duration
+		bar.endTime = start + duration
 		bar.left:SetText(name.." : "..curCharges)
 		bar.right:SetText(FormatTime(duration))
 		bar.isResses = true
 		color = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
-		bar.startTime = GetTime()
+		bar.startTime = start
 		bar.name = name
 		bar.spell = spell
 		bar.spellId = spellId

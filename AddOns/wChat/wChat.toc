@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: |cff3399FFw|rChat|r with Neavo_ChatBar
 ## Version: 7.0
 ## Author: Weasoug

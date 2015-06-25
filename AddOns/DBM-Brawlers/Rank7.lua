@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank7", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetModelID(46798)
 mod:SetZone()
 
@@ -36,7 +36,6 @@ local timerGhostCD				= mod:NewNextTimer(13, 133465)--Battletron
 local timerDivineCircleCD		= mod:NewCDTimer(35, 142585)--Insufficent data to say if accurate with certainty
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 local remainingMines = 8

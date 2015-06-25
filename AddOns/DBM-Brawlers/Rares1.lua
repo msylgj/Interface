@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRare1", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetModelID(46265)
 mod:SetZone()
 
@@ -56,7 +56,6 @@ local timerHeatedPokers				= mod:NewBuffActiveTimer(8, 133286)--Dungeon Master V
 local timerHeatedPokersCD			= mod:NewCDTimer(29, 133286)--Dungeon Master Vishas
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

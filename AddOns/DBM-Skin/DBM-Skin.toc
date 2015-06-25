@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: |cffffd200Deadly Boss Mods|r |cff69ccf0Skin|r
 ## Notes: DBM-Skin
 ## OptionalDeps: DBM-Core

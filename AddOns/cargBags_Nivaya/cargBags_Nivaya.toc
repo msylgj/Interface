@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: cargBags_Nivaya: |cffffffffReal|r|cffbf3030UI|r
 ## Author: Luzzifus (Modified by Nibelheim, humfras)
 ## OptionalDeps: nibRealUI, ItemRack, Outfitter

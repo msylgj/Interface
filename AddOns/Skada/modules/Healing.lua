@@ -309,7 +309,7 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(totalhealing), self.metadata.columns.Healing,
 												Skada:FormatNumber(getHPSByValue(set, player, totalhealing)), self.metadata.columns.HPS,
-												string.format("%02.2f%%", totalhealing / set.healing * 100), self.metadata.columns.Percent
+												string.format("%02.1f%%", totalhealing / set.healing * 100), self.metadata.columns.Percent
 											)
 				d.class = player.class
 				d.role = player.role
@@ -343,7 +343,7 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(player.healing), self.metadata.columns.Healing,
 												Skada:FormatNumber(getHPS(set, player)), self.metadata.columns.HPS,
-												string.format("%02.2f%%", player.healing / set.healing * 100), self.metadata.columns.Percent
+												string.format("%02.1f%%", player.healing / set.healing * 100), self.metadata.columns.Percent
 											)
 				d.class = player.class
 				d.role = player.role
@@ -371,16 +371,16 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
 				end
 				tooltip:AddDoubleLine(L["Average hit:"], Skada:FormatNumber(spell.healing / spell.hits), 255,255,255,255,255,255)
 				if spell.hits then
-					tooltip:AddDoubleLine(L["Critical"]..":", ("%02.2f%%"):format(spell.critical / spell.hits * 100), 255,255,255,255,255,255)
+					tooltip:AddDoubleLine(L["Critical"]..":", ("%02.1f%%"):format(spell.critical / spell.hits * 100), 255,255,255,255,255,255)
 				end
 				if spell.hits and spell.multistrike then
-					tooltip:AddDoubleLine(L["Multistrike"]..":", ("%02.2f%%"):format(spell.multistrike / spell.hits * 100), 255,255,255,255,255,255)
+					tooltip:AddDoubleLine(L["Multistrike"]..":", ("%02.1f%%"):format(spell.multistrike / spell.hits * 100), 255,255,255,255,255,255)
 				end
 				if spell.hits then
-					tooltip:AddDoubleLine(L["Overhealing"]..":", ("%02.2f%%"):format(spell.overhealing / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
+					tooltip:AddDoubleLine(L["Overhealing"]..":", ("%02.1f%%"):format(spell.overhealing / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
 				end
 				if spell.hits and spell.absorbed then
-					tooltip:AddDoubleLine(L["Absorbed"]..":", ("%02.2f%%"):format(spell.absorbed / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
+					tooltip:AddDoubleLine(L["Absorbed"]..":", ("%02.1f%%"):format(spell.absorbed / (spell.overhealing + spell.healing) * 100), 255,255,255,255,255,255)
 				end
 			end
 		end
@@ -409,7 +409,7 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
 				d.value = spell.healing
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(spell.healing), self.metadata.columns.Healing,
-												string.format("%02.2f%%", spell.healing / player.healing * 100), self.metadata.columns.Percent
+												string.format("%02.1f%%", spell.healing / player.healing * 100), self.metadata.columns.Percent
 											)
 				local _, _, icon = GetSpellInfo(spell.id)
 				d.icon = icon
@@ -452,7 +452,7 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
                     d.role = player.role
 					d.valuetext = Skada:FormatValueText(
 													Skada:FormatNumber(heal.amount), self.metadata.columns.Healing,
-													string.format("%02.2f%%", heal.amount / player.healing * 100), self.metadata.columns.Percent
+													string.format("%02.1f%%", heal.amount / player.healing * 100), self.metadata.columns.Percent
 												)
 					if heal.amount > max then
 						max = heal.amount
@@ -498,13 +498,13 @@ Skada:AddLoadableModule("Healing", function(Skada, L)
 			endtime = time()
 		end
 		local raidhps = set.healing / (endtime - set.starttime + 1)
-		GameTooltip:AddDoubleLine(L["HPS"], ("%02.2f"):format(raidhps), 1,1,1)
+		GameTooltip:AddDoubleLine(L["HPS"], ("%02.1f"):format(raidhps), 1,1,1)
 	end
 
 	function mod:GetSetSummary(set)
 		return Skada:FormatValueText(
 			Skada:FormatNumber(set.healing), self.metadata.columns.Healing,
-			("%02.2f"):format(getRaidHPS(set)), self.metadata.columns.HPS
+			("%02.1f"):format(getRaidHPS(set)), self.metadata.columns.HPS
 		)
 	end
 

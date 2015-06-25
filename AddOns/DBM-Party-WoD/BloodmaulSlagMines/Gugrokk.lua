@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(889, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13847 $"):sub(12, -3))
 mod:SetCreatureID(74790)
 mod:SetEncounterID(1654)
 mod:SetZone()
@@ -69,8 +69,11 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 150678 and not args:IsDestTypePlayer() then
-		warnMoltenCore:Show(args.destName)
-		specWarnMoltenCore:Show(args.destName)
+		if self.Options.SpecWarn150678dispel then
+			specWarnMoltenCore:Show(args.destName)
+		else
+			warnMoltenCore:Show(args.destName)
+		end
 		voiceMoltenCore:Play("dispelboss")
 	end
 end

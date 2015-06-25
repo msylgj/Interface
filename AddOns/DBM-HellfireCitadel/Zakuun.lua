@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13812 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13895 $"):sub(12, -3))
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 179406 179582",
-	"SPELL_CAST_SUCCESS 181508 179709",
+	"SPELL_CAST_SUCCESS 181508 181515 179709",
 	"SPELL_AURA_APPLIED 181508 181515 182008 179670 179711 179681 179407 179667",
 	"SPELL_AURA_REMOVED 179711 181508 181515 179667",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
@@ -69,7 +69,7 @@ local voiceWakeofDestruction			= mod:NewVoice(181499)--watchwave
 local voiceSeedsofDestruction			= mod:NewVoice(181508)--Runout
 local voiceEnrage						= mod:NewVoice(179681)--enrage
 
-mod:AddRangeFrameOption(10, 179711)
+--mod:AddRangeFrameOption(10, 179711)
 --Icon options will conflict on mythic or 25-30 players (when you get 5 targets for each debuff). Below that, they can coexist.
 --mod:AddSetIconOption("SetIconOnBefouled", 179711, false)--Start at 1, ascending--Disabled for now to avoid conflict, seeds icons are too important to create conflicts
 mod:AddSetIconOption("SetIconOnSeeds", 181508, true)--Start at 8, descending. On by default, because it's quite imperative to know who/where seed targets are at all times.
@@ -98,6 +98,7 @@ do
 	end
 end
 
+--[[
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
 	if UnitDebuff("player", befouledName) then
@@ -106,6 +107,27 @@ local function updateRangeFrame(self)
 		DBM.RangeCheck:Show(10, debuffFilter)
 	else
 		DBM.RangeCheck:Hide()
+	end
+end--]]
+
+local function findBefouled(self)
+	local BefouledTargets = {}
+	local found = 0
+	for uId in DBM:GetGroupMembers() do
+		if UnitDebuff(uId, befouledName) then--Fixate with just name very usual debuff, so check spellId also.
+			found = found + 1
+			local targetname = GetUnitName(uId, true)
+			BefouledTargets[#BefouledTargets + 1] = targetname
+			if targetname == UnitName("player") then
+				specWarnBefouled:Show()
+			end
+		end
+	end
+	if found == 0 then return end--Did not find any, failed
+	if self.Options.SpecWarn179771targetcount then
+		specWarnBefouledOther:Show(self.vb.BefouledCount, table.concat(BefouledTargets, "<, >"))
+	else
+		warnBefouled:Show(self.vb.BefouledCount, table.concat(BefouledTargets, "<, >"))
 	end
 end
 
@@ -120,7 +142,7 @@ local DirectionVoiceAssignments = {"left", "centerleft", "center", "centerright"
 local function warnSeeds(self)
 	table.wipe(seedTargets)
 	--Sort by raidid since combat log order may diff person to person
-	if self:IsLFR() and not IsTestBuild() then return end
+	if self:IsLFR() then return end
 	local seedsFound = 0
 	local numGroupMembers = DBM:GetNumGroupMembers()
 	local expectedTotal = self:IsMythic() and 5 or 4--TODO, verify it's always 4, flexible shit sucks for this
@@ -181,7 +203,7 @@ function mod:OnCombatStart(delay)
 	timerCavitationCD:Start(35-delay, 1)
 	timerDisarmCD:Start(86.7-delay)
 	countdownDisarm:Start(86.7-delay)
-	if UnitIsGroupLeader("player") then
+	if UnitIsGroupLeader("player") and not self:IsLFR() then
 		if self.Options.SeedsBehavior == "Iconed" then
 			self:SendSync("Iconed")
 		elseif self.Options.SeedsBehavior == "Numbered" then
@@ -197,9 +219,9 @@ end
 
 function mod:OnCombatEnd()
 	yellType = "Icon"--Reset on combat end, resetting on combat start could accidentally overright raid leaders assignment set on combat start.
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
+--	if self.Options.RangeFrame then
+--		DBM.RangeCheck:Hide()
+--	end
 	if self.Options.HudMapOnSeeds then
 		DBMHudMap:Disable()
 	end
@@ -225,23 +247,27 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 181508 then--Seed
+	if spellId == 181508 or spellId == 181515 then--181508 disarmed version, 181515 enraged version
 		self.vb.SeedsCount = self.vb.SeedsCount + 1
-		if self.vb.Enraged or self.vb.SeedsCount == 1 then--Only casts two between phases, unless enraged
+		if self.vb.Enraged then
+			timerSeedsofDestructionCD:Start(40, self.vb.SeedsCount+1)
+			countdownSeedsofDestructionCD:Start(40)
+		elseif self.vb.SeedsCount < 2 then--Only casts two between phases, unless enraged
 			timerSeedsofDestructionCD:Start(nil, self.vb.SeedsCount+1)
 			countdownSeedsofDestructionCD:Start(14.5)
 		end
 	elseif spellId == 179709 then--Foul
 		self.vb.BefouledCount = self.vb.BefouledCount + 1
-		if self.vb.Enraged or self.vb.BefouledCount == 1 then--Only casts two between phases, unless enraged
+		if self.vb.Enraged or self.vb.BefouledCount < 2 then--Only casts two between phases, unless enraged
 			timerBefouledCD:Start(nil, self.vb.BefouledCount+1)
 		end
+		self:Schedule(0.3, findBefouled, self)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 181508 or spellId == 181515 then--No idea what 181515 is. 181508 confirmed heroic
+	if spellId == 181508 or spellId == 181515 then--181508 disarmed version, 181515 enraged version
 		warnSeedofDestruction:CombinedShow(0.3, self.vb.SeedsCount, args.destName)
 		if args:IsPlayer() then
 			specWarnSeedofDestruction:Show()
@@ -290,7 +316,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		countdownSeedsofDestructionCD:Start(27)
 		timerCavitationCD:Start(35.5, 1)
 	elseif spellId == 179711 then
-		self.vb.befouledTargets = self.vb.befouledTargets + 1
+		DBM:Debug("Befouled is in combat log again, refactor mod!")
+--[[		self.vb.befouledTargets = self.vb.befouledTargets + 1
 		if args:IsPlayer() then
 			specWarnBefouled:Show()
 		end
@@ -302,7 +329,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		updateRangeFrame(self)
 --		if self.Options.SetIconOnBefouled and not self:IsLFR() then
 --			self:SetSortedIcon(0.7, args.destName, 1)
---		end
+--		end--]]
 	elseif spellId == 179407 then
 		warnDisembodied:Show(self.vb.SoulCleaveCount, args.destName)
 		countdownDisembodied:Start()
@@ -315,8 +342,8 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 179711 then
-		self.vb.befouledTargets = self.vb.befouledTargets - 1
-		updateRangeFrame(self)
+--		self.vb.befouledTargets = self.vb.befouledTargets - 1
+--		updateRangeFrame(self)
 --		if self.Options.SetIconOnBefouled and not self:IsLFR() then
 --			self:SetIcon(args.destName, 0)
 --		end

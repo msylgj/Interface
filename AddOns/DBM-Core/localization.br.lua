@@ -236,7 +236,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s recarrega"
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s recarrega (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s recarrega: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Próx. %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Próx. %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Próx. %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Próx %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
@@ -336,8 +336,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Vitória em tempo recorde"
-DBM_SPEED_KILL_TIMER_OPTION	= "Exibir cronógrafo para bater sua vitória mais rápida"
-
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s solicitou suas IDs de instância e progresso atuais.\nVocê deseja enviar essa informação para %s? Ele(a) poderá requisitar essa informação durante a sessão atual (i. e. até que você reconecte)."
 DBM_ERROR_NO_RAID					= "Você precisa estar em um grupo de raide para utilizar essa funcionalidade."

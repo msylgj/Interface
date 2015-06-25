@@ -250,7 +250,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 				d.valuetext = Skada:FormatValueText(
 					Skada:FormatNumber(player.damage), self.metadata.columns.Damage,
 					Skada:FormatNumber(dps), self.metadata.columns.DPS,
-					string.format("%02.2f%%", player.damage / set.damage * 100), self.metadata.columns.Percent
+					string.format("%02.1f%%", player.damage / set.damage * 100), self.metadata.columns.Percent
 				)
 
 				d.value = player.damage
@@ -279,7 +279,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 			tooltip:AddDoubleLine(L["Segment time"], totaltime.."s", 255,255,255,255,255,255)
 			tooltip:AddDoubleLine(L["Active time"], activetime.."s", 255,255,255,255,255,255)
 			tooltip:AddDoubleLine(L["Damage done"], Skada:FormatNumber(player.damage), 255,255,255,255,255,255)
-			tooltip:AddDoubleLine(Skada:FormatNumber(player.damage) .. " / " .. activetime .. ":", ("%02.2f"):format(player.damage / math.max(1,activetime)), 255,255,255,255,255,255)
+			tooltip:AddDoubleLine(Skada:FormatNumber(player.damage) .. " / " .. activetime .. ":", ("%02.1f"):format(player.damage / math.max(1,activetime)), 255,255,255,255,255,255)
 
 		end
 	end
@@ -309,7 +309,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 		if player then
 			local activetime = Skada:PlayerActiveTime(set, player)
 			local totaltime = Skada:GetSetTime(set)
-			tooltip:AddDoubleLine(L["Activity"], ("%02.2f%%"):format(activetime/math.max(1,totaltime)*100), 255,255,255,255,255,255)
+			tooltip:AddDoubleLine(L["Activity"], ("%02.1f%%"):format(activetime/math.max(1,totaltime)*100), 255,255,255,255,255,255)
 		end
 	end
 
@@ -345,7 +345,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 					d.value = spell.damage
 					d.valuetext = Skada:FormatValueText(
 						Skada:FormatNumber(spell.damage), self.metadata.columns.Damage,
-						string.format("%02.2f%%", spell.damage / player.damage * 100), self.metadata.columns.Percent
+						string.format("%02.1f%%", spell.damage / player.damage * 100), self.metadata.columns.Percent
 					)
 					if spell.damage > max then
 						max = spell.damage
@@ -383,7 +383,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 					d.value = amount
 					d.valuetext = Skada:FormatValueText(
 						Skada:FormatNumber(amount), self.metadata.columns.Damage,
-						string.format("%02.2f%%", amount / player.damage * 100), self.metadata.columns.Percent
+						string.format("%02.1f%%", amount / player.damage * 100), self.metadata.columns.Percent
 					)
 					if amount > max then
 						max = amount
@@ -407,7 +407,7 @@ Skada:AddLoadableModule("Damage", function(Skada, L)
 		d.id = title
 		d.valuetext = Skada:FormatValueText(
 			value, mod.metadata.columns.Damage,
-			string.format("%02.2f%%", value / spellmod.totalhits * 100), mod.metadata.columns.Percent
+			string.format("%02.1f%%", value / spellmod.totalhits * 100), mod.metadata.columns.Percent
 		)
 
 		win.metadata.maxvalue = math.max(win.metadata.maxvalue, value)

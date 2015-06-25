@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1425, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13804 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13870 $"):sub(12, -3))
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetZone()
@@ -26,7 +26,7 @@ local warnUnstableOrb				= mod:NewTargetCountAnnounce(182001, 3, nil, false)--Of
 local warnFuelStreak				= mod:NewCountAnnounce(182668, 3)
 
 local specWarnArtillery				= mod:NewSpecialWarningMoveAway(182280, nil, nil, nil, 3, 2)
-local yellArtillery					= mod:NewYell(182108)
+local yellArtillery					= mod:NewFadesYell(182108)
 local specWarnImmolation			= mod:NewSpecialWarningMove(182074, nil, nil, nil, 1, 2)
 local specWarnBarrage				= mod:NewSpecialWarningCount(185282, nil, nil, nil, 2, 5)--Count probably better than dodge
 local specWarnPounding				= mod:NewSpecialWarningCount(182020, nil, nil, nil, 2, 2)
@@ -53,7 +53,7 @@ local timerQuickFuseBomb			= mod:NewCastTimer(22, 186652, nil, false)--Timer spa
 local timerBurningBomb				= mod:NewCastTimer(42, 186667, nil, false)--Timer spam, optional, maybe make meleedps only by default?
 local timerReactiveBomb				= mod:NewCastTimer(32, 186676, nil, "Tank")--Since tanks only have 1 bomb to worry about. not too spammy to have on by default.
 
-local berserkTimer					= mod:NewBerserkTimer(600)
+--local berserkTimer					= mod:NewBerserkTimer(600)
 
 local countdownFuelStreak			= mod:NewCountdown(15, 182668)
 local countdownBarrage				= mod:NewCountdown(15, 185282)
@@ -105,7 +105,7 @@ end
 
 local function updateRangeFrame(self)
 	if not self.Options.RangeFrame then return end
-	if self.vb.artilleryActive > 0 then--Artillery
+	if (self:IsTank() or not self.vb.groundPhase) and self.vb.artilleryActive > 0 then--Artillery
 		if UnitDebuff("player", debuffName) then
 			DBM.RangeCheck:Show(30, nil)
 		else
@@ -130,7 +130,7 @@ function mod:OnCombatStart(delay)
 	self.vb.firebombCount = 0
 	self.vb.fuelCount = 0
 	updateRangeFrame(self)
-	berserkTimer:Start(-delay)
+--	berserkTimer:Start(-delay)
 	--Boss uses "Ground Phase" trigger after pull. Do not start timers here
 end
 
@@ -223,7 +223,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnArtillery:CombinedShow(0.3, self.vb.artilleryCount, args.destName)
 		if args:IsPlayer() then
 			specWarnArtillery:Show()
-			yellArtillery:Yell()
+			yellArtillery:Schedule(11.5, 1)
+			yellArtillery:Schedule(10.5, 2)
+			yellArtillery:Schedule(9.5, 3)
+			yellArtillery:Schedule(8.5, 4)
+			yellArtillery:Schedule(7.5, 5)
 			voiceArtillery:Play("runout")
 			countdownArtilleryFade:Start()
 		end
@@ -266,6 +270,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.artilleryActive = self.vb.artilleryActive - 1
 		if args:IsPlayer() then
 			countdownArtilleryFade:Cancel()
+			yellArtillery:Cancel()
 		end
 		if self.Options.SetIconOnArtillery then
 			self:SetIcon(args.destName, 0)

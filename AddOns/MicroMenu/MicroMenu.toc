@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Author: msylgj0 Modify from siweia's NDui
 ## Title: |cff70C0F5M|ricroMenu
 ## Notes: Custom MicroMenu

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank1", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetModelID(46327)--Last Boss of Rank 1
 mod:SetZone()
 
@@ -33,7 +33,6 @@ local timerShadowStrikes		= mod:NewBuffActiveTimer(15, 126209)--Akama
 local timerChainLightningCD		= mod:NewCDTimer(17, 39945)--Akama
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

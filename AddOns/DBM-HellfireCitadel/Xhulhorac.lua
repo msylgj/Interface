@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1447, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13811 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13897 $"):sub(12, -3))
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetZone()
@@ -14,8 +14,8 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 190223 186453 190224 186783 186546 186490 189775 189779",
 	"SPELL_CAST_SUCCESS 186407 186333 186490 189775",
-	"SPELL_AURA_APPLIED 186073 186063 186134 186135 188092 186407 186333 186500 189777 186448 187204 186785",
-	"SPELL_AURA_APPLIED_DOSE 186073 186063 186448 186785",
+	"SPELL_AURA_APPLIED 186073 186063 186134 186135 186407 186333 186500 189777 186448 187204 186785",
+	"SPELL_AURA_APPLIED_DOSE 186073 186063 186448 186785 187204",
 	"SPELL_AURA_REMOVED 189777",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
 	"UNIT_DIED",
@@ -27,16 +27,18 @@ mod:RegisterEventsInCombat(
 ----Boss
 local warnFelPortal					= mod:NewSpellAnnounce(187003, 2)
 local warnFelSurge					= mod:NewTargetAnnounce(186407, 3)
+local warnFelStrike					= mod:NewSpellAnnounce(186271, 3, nil, "Tank")
 ----Adds
 local warnFelChains					= mod:NewTargetAnnounce(186490, 3)
-local warnFelBlazeFlurry			= mod:NewStackAnnounce(186448, 2, nil, "Tank")
+--local warnFelBlazeFlurry			= mod:NewStackAnnounce(186448, 2, nil, "Tank")
 local warnEmpoweredFelChains		= mod:NewTargetAnnounce(189775, 3)--Mythic
 --Void Phase
 ----Boss
 local warnVoidPortal				= mod:NewSpellAnnounce(187006, 2)
 local warnVoidSurge					= mod:NewTargetAnnounce(186333, 3)
+local warnVoidStrike				= mod:NewSpellAnnounce(186292, 3, nil, "Tank")
 ----
-local warnWitheringGaze				= mod:NewStackAnnounce(186785, 2, nil, "Tank")
+--local warnWitheringGaze			= mod:NewStackAnnounce(186785, 2, nil, "Tank")
 --End Phase
 local warnOverwhelmingChaos			= mod:NewCountAnnounce(187204, 4)
 
@@ -51,9 +53,10 @@ local specWarnFelStrike				= mod:NewSpecialWarningSpell(186271, "Tank")
 local specWarnEmpoweredFelStrike	= mod:NewSpecialWarningTaunt(188092, false)--Maybe redundant
 local specWarnFelSurge				= mod:NewSpecialWarningYou(186407, nil, nil, nil, 1, 2)
 local yellFelSurge					= mod:NewYell(186407)
+local specWarnImps					= mod:NewSpecialWarningSwitchCount("ej11694", "Dps")
 ----Adds
 local specWarnFelBlazeFlurry		= mod:NewSpecialWarningSpell(186453, "Tank")
-local specWarnFelBlazeFlurryOther	= mod:NewSpecialWarningTaunt(186448)--Debuff must swap for
+--local specWarnFelBlazeFlurryOther	= mod:NewSpecialWarningTaunt(186453)
 local specWarnFelChains				= mod:NewSpecialWarningYou(186490)
 local specWarnEmpoweredFelChains	= mod:NewSpecialWarningYou(189775)
 local yellFelChains					= mod:NewYell(186490)
@@ -64,32 +67,35 @@ local specWarnVoidSurge				= mod:NewSpecialWarningYou(186333, nil, nil, nil, 1, 
 local yellVoidSurge					= mod:NewYell(186333)
 ----Adds
 local specWarnWitheringGaze			= mod:NewSpecialWarningSpell(186783, "Tank")
-local specWarnWitheringGazeOther	= mod:NewSpecialWarningTaunt(186785)--Debuff must swap for
+--local specWarnWitheringGazeOther	= mod:NewSpecialWarningTaunt(186785)--Debuff must swap for
 local specWarnBlackHole				= mod:NewSpecialWarningSpell(186546, nil, nil, nil, 2)
 local specWarnEmpBlackHole			= mod:NewSpecialWarningSpell(189779, nil, nil, nil, 2)--Mythic
 
 --Fire Phase
 ----Boss
-local timerFelStrikeCD				= mod:NewCDTimer(24.5, 186271, nil, "Tank")
+local timerFelStrikeCD				= mod:NewCDTimer(15.8, 186271, nil, "Tank")--15.8-17
 local timerFelSurgeCD				= mod:NewCDTimer(30, 186407)
+local timerImpCD					= mod:NewNextTimer(25, "ej11694", nil, nil, nil, 112866)
 ----Big Add
 local timerFelBlazeFlurryCD			= mod:NewCDTimer(15.9, 186453, nil, "Tank")
 local timerFelChainsCD				= mod:NewCDTimer(15.9, 186490, nil, "-Tank" )
 local timerEmpFelChainsCD			= mod:NewAITimer(15.9, 189775, nil, "-Tank" )--Temp, so can use AI timer for it. Will combine with above when data known
 --Void Phase
 ----Boss
-local timerVoidStrikeCD				= mod:NewCDTimer(14.6, 186292, nil, "Tank")--14.6-17
-local timerVoidSurgeCD				= mod:NewCDTimer(30.5, 186333)
+local timerVoidStrikeCD				= mod:NewCDTimer(17, 186292, nil, "Tank")
+local timerVoidSurgeCD				= mod:NewCDTimer(30, 186333)
 ----Big Add
 local timerWitheringGazeCD			= mod:NewCDTimer(14.5, 186783)
 local timerBlackHoleCD				= mod:NewCDTimer(29.5, 186546)
 local timerEmpBlackHoleCD			= mod:NewAITimer(29.5, 189779)
 --End Phase
-local timerOverwhelmingChaosCD		= mod:NewNextTimer(10, 187204)
+local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
---local countdownInfernoSlice			= mod:NewCountdown(12, 155080, "Tank")
+local countdownFelSurge				= mod:NewCountdown(30, 186407, "-Tank")
+local countdownVoidSurge			= mod:NewCountdown("Alt30", 186333, "-Tank")
+local countdownImps					= mod:NewCountdown("AltTwo25", "ej11694", "Dps")
 
 local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 local voiceFelsinged				= mod:NewVoice(186073)	--run away
@@ -104,8 +110,9 @@ local voiceVoidSurge				= mod:NewVoice(186333)	--new voice
 mod:AddRangeFrameOption(5, 189775)--Mythic
 mod:AddDropdownOption("ChainsBehavior", {"Cast", "Applied", "Both"}, "Both", "misc")
 
-mod.vb.ChaosCount = 0
 mod.vb.EmpFelChainCount = 0
+mod.vb.phase = 1
+mod.vb.impCount = 0
 local UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitExists, UnitGUID, UnitDetailedThreatSituation
 local AddsSeen = {}
 
@@ -133,10 +140,20 @@ local function updateRangeFrame(self)
 	end
 end
 
+local function ImpRepeater(self)
+	self.vb.impCount = self.vb.impCount + 1
+	specWarnImps:Show(self.vb.impCount)
+	timerImpCD:Start(nil, self.vb.impCount+1)
+	countdownImps:Start()
+	self:Schedule(25, ImpRepeater, self)
+end
+
 function mod:FelChains(targetname, uId)
 	if targetname == UnitName("player") then
-		specWarnFelChains:Show()
-		yellFelChains:Yell()
+		if self:AntiSpam(5, 3) then
+			specWarnFelChains:Show()
+			yellFelChains:Yell()
+		end
 	else
 		warnFelChains:Show(targetname)
 	end
@@ -152,11 +169,13 @@ function mod:EmpoweredFelChains(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	self.vb.ChaosCount = 0
 	self.vb.EmpFelChainCount = 0
+	self.vb.phase = 1
+	self.vb.impCount = 0
 	table.wipe(AddsSeen)
 	timerFelStrikeCD:Start(8-delay)
-	timerFelSurgeCD:Start(21.8-delay)
+	timerFelSurgeCD:Start(21-delay)
+	countdownFelSurge:Start(21-delay)
 end
 
 function mod:OnCombatEnd()
@@ -168,23 +187,33 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 190223 then
-		timerFelStrikeCD:Start()
+		if self.vb.phase >= 3 then
+			timerFelStrikeCD:Start(15)
+		else
+			timerFelStrikeCD:Start()
+		end
 		for i = 1, 5 do
 			local bossUnitID = "boss"..i
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
 				specWarnFelStrike:Show()--So show tank warning
-				break
+				return
 			end
 		end
+		warnFelStrike:Show()--Should not show if specWarnFelStrike did
 	elseif spellId == 190224 then
-		timerVoidStrikeCD:Start()
+		if self.vb.phase >= 3 then
+			timerVoidStrikeCD:Start(15)
+		else
+			timerVoidStrikeCD:Start()
+		end
 		for i = 1, 5 do
 			local bossUnitID = "boss"..i
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
 				specWarnVoidStrike:Show()--So show tank warning
-				break
+				return
 			end
 		end
+		warnVoidStrike:Show()--Should not show if specWarnVoidStrike did
 	elseif spellId == 186453 then
 		timerFelBlazeFlurryCD:Start()
 		for i = 1, 5 do
@@ -195,6 +224,11 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 186783 then
+		if self:IsNormal() then
+			timerWitheringGazeCD:Start(24)
+		else
+			timerWitheringGazeCD:Start()
+		end
 		for i = 1, 5 do
 			local bossUnitID = "boss"..i
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
@@ -210,7 +244,11 @@ function mod:SPELL_CAST_START(args)
 		timerEmpBlackHoleCD:Start()
 	elseif spellId == 186490 then
 		if self.Options.ChainsBehavior ~= "Applied" then--Start timer and scanner if method is Both or Cast. Both prefers cast over applied, for the timer.
-			timerFelChainsCD:Start()
+			if self:IsNormal() then
+				timerFelChainsCD:Start(30)
+			else
+				timerFelChainsCD:Start()
+			end
 			self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FelChains", 0.1, 16)
 		end
 	elseif spellId == 189775 then
@@ -225,11 +263,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 186407 then
 		timerFelSurgeCD:Start()
+		countdownFelSurge:Start()
 	elseif spellId == 186333 then
 		timerVoidSurgeCD:Start()
+		countdownVoidSurge:Start()
 	elseif spellId == 186490 then
 		if self.Options.ChainsBehavior == "Applied" then--Start timer here if method is set to only applied
-			timerFelChainsCD:Start()
+			if self:IsNormal() then
+				timerFelChainsCD:Start(30)
+			else
+				timerFelChainsCD:Start()
+			end
 		end
 	elseif spellId == 189775 then
 		if self.Options.ChainsBehavior == "Applied" then--Start timer here if method is set to only applied
@@ -250,8 +294,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnVoidTouched:Show()
 	elseif spellId == 186134 and args:IsPlayer() then
 		specWarnFelTouched:Show()
-	elseif spellId == 188092 and not args:IsPlayer() then
-		specWarnEmpoweredFelStrike:Show(args.destName)
 	elseif spellId == 186407 then
 		warnFelSurge:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
@@ -268,7 +310,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 186500 and self.Options.ChainsBehavior ~= "Cast" then--Chains! (show warning if type is applied or both)
 		warnFelChains:CombinedShow(0.3, args.destName)
-		if args:IsPlayer() then
+		if args:IsPlayer() and self:AntiSpam(5, 3) then
 			specWarnFelChains:Show()
 			yellFelChains:Yell()
 		end
@@ -282,7 +324,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end	
 		end
 		updateRangeFrame(self)
-	elseif spellId == 186448 then
+--[[	elseif spellId == 186448 then
 		local amount = args.amount or 1
 		if amount >= 3 then
 			if not args:IsPlayer() then
@@ -307,11 +349,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		else
 			warnWitheringGaze:Show(args.destName, amount)
-		end
+		end--]]
 	elseif spellId == 187204 then
-		self.vb.ChaosCount = self.vb.ChaosCount + 1
-		warnOverwhelmingChaos:Show(self.vb.ChaosCount)
-		timerOverwhelmingChaosCD:Start()
+		local amount = args.amount or 1
+		warnOverwhelmingChaos:Show(amount)
+		timerOverwhelmingChaosCD:Start(nil, amount+1)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -370,20 +412,36 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		warnVoidPortal:Show()
 	elseif spellId == 187003 then--Activate Fel Portal
 		warnFelPortal:Show()
-	--Phase events trigger slightly after portal events.
-	--Included because until the PHASE events happen, timers do not change
+		if not self:IsLFR() then
+			timerImpCD:Start(12)
+			countdownImps:Start(12)
+			self:Schedule(12, ImpRepeater, self)
+		end
 	elseif spellId == 187225 then--Phase 2 (Purple Mode)
+		self.vb.phase = 2
 		voicePhaseChange:Play("phasechange")
 		timerFelStrikeCD:Cancel()
 		timerFelSurgeCD:Cancel()
+		countdownFelSurge:Cancel()
 		timerVoidStrikeCD:Start(8.5)
 		timerVoidSurgeCD:Start(19)
+		countdownVoidSurge:Start(19)
 	elseif spellId == 189047 then--Phase 3 (Shadowfel Phasing)
+		self.vb.phase = 3
 		voicePhaseChange:Play("phasechange")
 		timerVoidStrikeCD:Cancel()--Regardless of what was left on timer, he will use it immediately after shadowfel phasing
 		timerVoidSurgeCD:Cancel()
+		countdownVoidSurge:Cancel()
 		timerFelSurgeCD:Start(7)
+		countdownFelSurge:Start(7)
 		timerFelStrikeCD:Start(8)
 		timerVoidSurgeCD:Start(17)--Regardless of what was left on timer, this resets to 17
+		countdownVoidSurge:Start(17)
+	elseif spellId == 187209 then--Overwhelming Chaos (Activation)
+		self.vb.phase = 4
+		timerImpCD:Cancel()
+		countdownImps:Cancel()
+		self:Unschedule(ImpRepeater)
+		timerOverwhelmingChaosCD:Start(nil, 1)
 	end
 end

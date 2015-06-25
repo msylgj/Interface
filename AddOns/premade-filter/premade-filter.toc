@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+## Interface: 60200
 ## Title: Premade Filter
 ## Title-ruRU: Premade Filter
 ## Version: 1.9.5

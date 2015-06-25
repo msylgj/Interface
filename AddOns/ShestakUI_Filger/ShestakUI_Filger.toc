@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: ShestakUI Filger
 ## Notes: Class timers
 ## Notes-zhCN: |cffC495DD法术计时器|r

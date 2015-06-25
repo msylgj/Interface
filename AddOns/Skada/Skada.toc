@@ -1,6 +1,6 @@
-## Interface: 60100
+## Interface: 60200
 ## Title: |cffff00ffSkada 增强版|r
-## Title-zhCN: |cffff00ffSkada 增强版|r by |cff54ff9f司马清源|r
+## Title-zhCN: |cffff00ffSkada 增强版|r by |cff00ff96司马清源|r
 ## Notes: Modular damage meter.
 ## Notes-koKR: 데미지 미터 모듈입니다.
 ## Notes-zhTW: 模組化的傷害統計。
@@ -8,10 +8,10 @@
 ## Notes-frFR: Un damage meter.
 ## Notes-zhCN: 伤害统计
 ## Author: Zarnivoop/司马清源
-## Version: 1.4-30
+## Version: 1.4-31
 ## SavedVariables: SkadaDB
 ## SavedVariablesPerCharacter: SkadaPerCharDB
-## X-Curse-Packaged-Version: 1.4-30
+## X-Curse-Packaged-Version: 1.4-31
 ## X-Curse-Project-Name: Skada Damage Meter
 ## X-Curse-Project-ID: skada
 ## X-Curse-Repository-ID: wow/skada/mainline

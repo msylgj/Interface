@@ -61,14 +61,6 @@ L.UseMasterChannel			= "主聲道"
 L.UseDialogChannel			= "對話聲道"
 L.UseSFXChannel				= "音效聲道"
 L.Latency_Text				= "設定最高延遲同步門檻:%d"
--- Tab: General Timer Options
-L.TimerGeneral 				= "綜合DBM計時器選項"
-L.SKT_Enabled				= "永遠顯示快速戰勝計時器 (覆蓋特定首領選項)"
-L.CRT_Enabled				= "為下一次戰復充能顯示計時器"
-L.ChallengeTimerOptions		= "為挑戰模式設定最佳紀錄計時器"
-L.ChallengeTimerPersonal	= "個人"
-L.ChallengeTimerGuild		= GUILD
-L.ChallengeTimerRealm		= "伺服器"
 
 L.ModelOptions				= "3D模型預覽選項"
 L.EnableModels				= "在首領選項中啟用3D模型預覽"
@@ -231,6 +223,7 @@ L.Area_SpamFilter_Outgoing	= "DBM全局禁用及過濾選項"
 L.SpamBlockNoShowAnnounce	= "不顯示提示或播放警告音效"
 L.SpamBlockNoSpecWarn		= "不顯示特別警告或播放特別警告音效"
 L.SpamBlockNoShowTimers		= "不顯示計時器"
+L.SpamBlockNoShowUTimers	= "不顯示玩家送出的計時器(自訂/拉怪/休息)"
 L.SpamBlockNoSetIcon		= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame		= "不顯示距離框架"
 L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
@@ -238,6 +231,9 @@ L.SpamBlockNoHudMap			= "不要顯示HudMap"
 L.SpamBlockNoHealthFrame	= "不顯示血量框架"
 L.SpamBlockNoCountdowns		= "不播放倒數音效"
 L.SpamBlockNoYells			= "不送出大喊至頻道"
+L.SpamBlockNoNoteSync		= "不接受註記分享"
+
+L.Area_Restore				= "DBM還原選項(DBM是否還原至使用者過去狀態)"
 L.SpamBlockNoIconRestore	= "不在戰鬥結束後記住和還原團隊圖示狀態"
 L.SpamBlockNoRangeRestore	= "不因模組預設值還原距離框架的狀態"
 
@@ -251,11 +247,11 @@ L.BlockVersionUpdateNotice	= "在聊天頻道顯示較高頻率的過期通知�
 L.Area_SpecFilter			= "專精過濾選項"
 L.FilterTankSpec			= "非坦克專精時過濾掉坦克專精的特定警告 (註:不建議玩家關閉此選項因大多數的坦克嘲諷警告都是預設開啟。)"
 L.FilterInterrupts			= "過濾可中斷技能的警告如果施法者不是你的目標或專注目標。(註：此選項不套用於可能會導致滅團的必須中斷技能)"
+L.FilterInterruptNoteName	= "過濾可中斷技能的警告(與次數)，如果自訂註記警告沒有包含你的名字"
 L.FilterDispels				= "過濾可驅散技能如果你的驅散技正在冷卻中"
 L.FilterSelfHud				= "從HudMap過濾你自己(排除Hud的距離功能)"
 
 L.Area_PullTimer			= "開怪計時器過濾選項"
-L.DontShowRespawn			= "不要顯示首領重生計時器"
 L.DontShowPTNoID			= "阻擋與你不同區域ID送出的開怪倒數計時條"
 L.DontShowPT				= "不要顯示開怪倒數計時條"
 L.DontShowPTText			= "不要顯示開怪提示文字"
@@ -280,19 +276,33 @@ L.AfterFirst				= "在每次動畫播放一次之後"
 L.Always					= ALWAYS
 
 L.Panel_ExtraFeatures		= "額外功能"
+--
 L.Area_ChatAlerts			= "文字警告選項"
 L.RoleSpecAlert				= "當你加入團隊時捨取專精不符合你目前專精顯示警告訊息"
 L.CheckGear					= "開怪時顯示裝備警告訊息 (當你裝備的裝備等級低於包包裡40等以上或主手武器沒有裝備時顯示警告訊息)"
 L.WorldBossAlert			= "當你的工會成員或是朋友可能在你的伺服器上開戰世界首領時顯示警告訊息(如果發送者是被戰復的會不準確)"
+--
 L.Area_SoundAlerts			= "聲音警告選項"
 L.LFDEnhance				= "使用主要或對話聲音頻道播放準備確認音效給角色確認和戰場/隨機團隊進場(I.E. 即使因為被關閉了也會發出音效而且很大聲!)"
 L.WorldBossNearAlert		= "當你需要的世界首領在你附近開戰播放準備確認音效(蓋過特定首領選項)"
 L.RLReadyCheckSound			= "從主要或對話音效頻道播放準備確認音效"
 L.AFKHealthWarning			= "播放警告聲音假如你在暫離時被攻擊"
+--
+L.TimerGeneral 				= "計時器選項"
+L.SKT_Enabled				= "顯示目前戰鬥的最佳紀錄勝利計時器"
+L.CRT_Enabled				= "為下一次戰復充能顯示計時器"
+L.ShowRespawn				= "在一個滅團之後顯示首領重生計時器"
+L.ShowQueuePop				= "為佇列(隨機,戰場,其他)接受時間顯示計時器"
+L.ChallengeTimerOptions		= "為挑戰模式設定最佳紀錄計時器"
+L.ChallengeTimerPersonal	= "個人"
+L.ChallengeTimerGuild		= GUILD
+L.ChallengeTimerRealm		= "伺服器"
+--
 L.Area_AutoLogging			= "自動記錄選項"
 L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄首領戰鬥(為了紀錄藥水事件等其他事件請於開打前使用/dbm pull)"
 L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄首領戰鬥"
 L.LogOnlyRaidBosses			= "只記錄團隊首領的戰鬥(除了隨機團隊/隨機隊伍/隨機事件)"
+--
 L.Area_3rdParty				= "協力插件選項"
 L.ShowBBOnCombatStart		= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"
 L.BigBrotherAnnounceToRaid	= "通告BigBrother的結果給團隊"
@@ -330,10 +340,8 @@ L.ModAllReset				= "重置所有模組設定"
 L.ModAllStatReset			= "重置所有模組狀態"
 L.SelectModProfileCopy		= "複製所有設定"
 L.SelectModProfileCopySound	= "只複製音效設定"
+L.SelectModProfileCopyNote	= "只複製註記設定"
 L.SelectModProfileDelete	= "刪除模組設定"
-
-L.NoteHeader				= "在這輸入你的註記。使用>角色名<會套用職業顏色。需要多個註記使用'/'分開。"
-L.NoteFooter				= "一旦註記更新完成則點擊'確定'就會儲存"
 
 -- Misc
 L.FontHeight	= 18

@@ -1,23 +1,26 @@
-## Interface: 60100
-## X-Curse-Packaged-Version: v26
+## Interface: 60200
+## X-Curse-Packaged-Version: v32
 ## X-Curse-Project-Name: Garrison Mission Manager
 ## X-Curse-Project-ID: garrison-mission-manager
 ## X-Curse-Repository-ID: wow/garrison-mission-manager/mainline
 
 ## Title: Garrison Mission Manager
-## Version: v26
+## Version: v32
 ## Notes: Assists you with selecting best team for garrison missions and other followers management tasks
 ## Author: Oleg "Rowaa[SR13]" Volkov
 
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_GarrisonUI
 ## Dependencies: Blizzard_GarrisonUI
-## OptionalDeps: LibStub, LibDataBroker-1.1, SR13-TimeRecord
+## OptionalDeps: LibStub, LibDataBroker-1.1, Bagnon, Titan, SR13-TimeRecord
 
 ## SavedVariables: SV_GarrisonMissionManager
 ## SavedVariablesPerCharacter: SVPC_GarrisonMissionManager
 
 C_Garrison_cache.lua
+FindBestFollowersForMission.lua
 GarrisonMissionManager.lua
+MissionUI.lua
+ShipyardUI.lua
 GarrisonBuilding.lua
 Broker.lua

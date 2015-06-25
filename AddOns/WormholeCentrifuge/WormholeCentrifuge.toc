@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+## Interface: 60200
 ## Title: Wormhole Centrifuge
 ## Version: 1.4
 ## Author: Resike

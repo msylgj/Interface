@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13785 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13866 $"):sub(12, -3))
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetZone()
@@ -23,13 +23,13 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"CHAT_MSG_MONSTER_YELL",
 	"CHAT_MSG_ADDON",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
 mod:SetBossHealthInfo(77557, 77231, 77477)
 
---TODO, does heroic still have blade dash and blood ritual during boat phases?
 local Ship	= EJ_GetSectionInfo(10019)
 local Marak = EJ_GetSectionInfo(10033)
 local Sorka = EJ_GetSectionInfo(10030)
@@ -258,7 +258,7 @@ function mod:ConvulsiveTarget(targetname, uId)
 end
 
 function mod:BladeDashTarget(targetname, uId)
-	if self:IsMythic() then
+	if self:IsMythic() and self:AntiSpam(5, 3) then
 		if targetname == UnitName("player") then
 			if UnitDebuff("player", GetSpellInfo(170395)) and self.Options.filterBladeDash3 then return end
 			specWarnBladeDash:Show()
@@ -366,7 +366,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		noFilter = true
 	end
 	if spellId == 157854 then
-		self:Schedule(14, boatReturnWarning)
+		self:Schedule(12.5, boatReturnWarning)
 		if noFilter or not isPlayerOnBoat() then
 			warnBombardmentAlpha:Show(self.vb.alphaOmega)
 			timerBombardmentAlphaCD:Start()
@@ -588,6 +588,23 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc)
 				timerDeployTurretCD:Cancel()
 			end)
 			voiceShip:Play("1695uktar")
+		end
+	end
+end
+
+--"<9.87 23:50:29> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#Too slow!#Enforcer Sorka###Etsi
+--"<10.92 23:50:30> [DBM_Announce] DBM_Announce#Blade Dash on |r|cff9382c9Etsi|r|cffffb200 near you", -- [691]
+function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, targetname)
+	if msg:find(L.EarlyBladeDash) then
+		if self:IsMythic() and self:AntiSpam(5, 3) then
+			if targetname == UnitName("player") then
+				if UnitDebuff("player", GetSpellInfo(170395)) and self.Options.filterBladeDash3 then return end
+				specWarnBladeDash:Show()
+			elseif self:CheckNearby(8, targetname) then
+				specWarnBladeDashOther:Show(targetname)
+			else
+				warnBladeDash:Show(self.vb.bladeDash, targetname)
+			end
 		end
 	end
 end

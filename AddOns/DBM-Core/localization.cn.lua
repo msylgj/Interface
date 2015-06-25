@@ -2,7 +2,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: May 18, 2015@13760
+-- Last update: Jun 10, 2015@13867
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -14,13 +14,15 @@ DBM_FORUMS_MESSAGE					= "发现BUG或错误的计时条?你希望要让某些�
 DBM_FORUMS_COPY_URL_DIALOG			= "拜访我们的讨论与支持论坛\r\n(hosted by Elitist Jerks!)"
 
 DBM_CORE_LOAD_MOD_ERROR				= "读取%s模块时发生错误：%s"
-DBM_CORE_LOAD_MOD_SUCCESS			= "成功读取%s模块。在聊天框输入 /dbm 或 /dbm help 可进行更多设置。"
+DBM_CORE_LOAD_MOD_SUCCESS			= "'%s' 模块已加载。在聊天框输入 /dbm 可设置自定义语音或注记等选项。"
 DBM_CORE_LOAD_MOD_COMBAT			= "延迟读取模块 '%s' 直到你脱离战斗。"
 DBM_CORE_LOAD_GUI_ERROR				= "无法读取图形界面：%s"
 DBM_CORE_LOAD_GUI_COMBAT			= "DBM无法在战斗中初始化图形界面。请先在非战斗状态打开图形设置界面，之后的战斗中就可以自由打开和关闭该界面了。"
 DBM_CORE_LOAD_SKIN_COMBAT			= "DBM无法在战斗中更换皮肤。请先在非战斗状态更换好皮肤，并重载界面。"
 DBM_CORE_BAD_LOAD					= "DBM检测到由于你在战斗过程中载入模块，有些计时器可能会错误。请在离开战斗后马上重载界面。"
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s 模块无法被载入。 DBM核心版本过旧。请升级DBM。"
+
+DBM_CORE_WHATS_NEW					= "最新更新：DBM的自定义注记功能变得更强大，现在可以分享给别人了。更多信息请访问我们的论坛。"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "由于玩家数量不足，DBM 无法开启动态距离检测。"
 DBM_CORE_DYNAMIC_ADD_COUNT			= "由于玩家数量不足，DBM 无法开启倒计时。"
@@ -71,14 +73,27 @@ DBM_CORE_PROFILE_COPY_ERROR_SELF	= "无法自己复制自己的配置文件."
 DBM_CORE_PROFILE_DELETE_ERROR		= "配置文件删除失败. '%s' 并不存在."
 DBM_CORE_PROFILE_CANNOT_DELETE		= "'Default' 默认配置文件无法被删除"
 DBM_CORE_MPROFILE_COPY_SUCCESS		= "%s(%d专精)的模块设置已经被复制."
-DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "无法自己复制自己的配置文件"
-DBM_CORE_MPROFILE_COPY_S_ERROR		= "复制的源出错. 源配置文件可能版本过旧或被篡改."
-DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s(%d专精)的模块声音设置已经被复制."
-DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "无法自己复制自己的声音配置文件"
-DBM_CORE_MPROFILE_COPYS_S_ERROR		= "复制的源出错. 源配置文件可能版本过旧或被篡改."
+DBM_CORE_MPROFILE_COPY_SELF_ERROR	= "无法自己复制自己的配置"
+DBM_CORE_MPROFILE_COPY_S_ERROR		= "复制的源出错. 源配置可能被篡改."
+DBM_CORE_MPROFILE_COPYS_SUCCESS		= "%s(%d专精)的模块声音及自定义文本设置已经被复制."
+DBM_CORE_MPROFILE_COPYS_SELF_ERROR	= "无法自己复制自己的声音及自定义文本配置"
+DBM_CORE_MPROFILE_COPYS_S_ERROR		= "复制的源出错. 源声音及自定义文本配置文件可能被篡改."
 DBM_CORE_MPROFILE_DELETE_SUCCESS	= "%s(%d专精)的模块设置已经被删除."
 DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "无法删除一个正在使用的模块配置文件."
-DBM_CORE_MPROFILE_DELETE_S_ERROR	= "删除的源出错. 源配置文件可能版本过旧或被篡改."
+DBM_CORE_MPROFILE_DELETE_S_ERROR	= "删除的源出错. 配置文件可能被篡改."
+
+DBM_CORE_NOTE_SHARE_SUCCESS			= "%s向你分享了他的%s的自定义注记"
+DBM_CORE_NOTE_SHARE_LINK			= "点击这里打开注记"
+DBM_CORE_NOTE_SHARE_FAIL			= "%s想向你分享他的%s的自定义注记，但是相关的副本模块并没有被安装或被加载。如果你需要这个注记，请确保相关模块被正确加载，然后请小伙伴再向你分享一次。"
+
+DBM_CORE_NOTEHEADER					= "在此输入你针对%s的注记。在 >< 中插入玩家名字会被按职业着色。例子:'我种>下一棵<种子'。这个牧师会被染色成白色。多字符串请用 / 隔开。"
+DBM_CORE_NOTEFOOTER					= "点击确定接受改变，点击取消放弃改变"
+DBM_CORE_NOTESHAREDHEADER			= "%s想向你分享他的%s的自定义注记。如果你接受这个注记，你原来的注记会被覆盖。"
+DBM_CORE_NOTESHARED					= "你的注记已经成功地分享给小伙伴了。"
+DBM_CORE_NOTESHAREERRORSOLO			= "寂寞了？起码要找个小伙伴分享吧。"
+DBM_CORE_NOTESHAREERRORBLANK		= "无法分享空白注记。"
+DBM_CORE_NOTESHAREERRORGROUPFINDER	= "无法在战场，随机小队，随机团里分享注记。"
+DBM_CORE_NOTESHAREERRORALREADYOPEN	= "为防止未保存的改变，当注记编辑器打开的时候无法分享注记。"
 
 DBM_CORE_ALLMOD_DEFAULT_LOADED		= "本副本里的所有Boss配置已经被初始化"
 DBM_CORE_ALLMOD_STATS_RESETED		= "所有模组的状态已被重置"
@@ -153,7 +168,7 @@ DBM_CORE_UPDATEREMINDER_TESTVERSION		= "警告：你使用了不正确版本的D
 DBM_CORE_VEM							= "你好像在使用VEM。DBM在这种情况下无法被载入。"
 DBM_CORE_3RDPROFILES					= "警告: DBM-Profiles已经无法和本版本DBM兼容。DBM核心已经自带配置文件管理系统，请移除DBM-Profiles避免冲突。"
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "警告: 如果你不完全重启游戏，DBM可能会工作不正常。此次更新包含了新的文件，或者toc文件的改变，这是重载界面无法加载的。不重启游戏可能导致作战模块功能错误。"
-DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM已经过期并且你决定不弹出升级提示窗口。这可能导致你或其他团队成员出错。"
+DBM_CORE_OUT_OF_DATE_NAG				= "你的DBM已经过期并且你决定不弹出升级提示窗口。这可能导致你或其他团队成员出错。千万不要成为害群之马！"
 
 DBM_CORE_MOVABLE_BAR				= "拖动我！"
 
@@ -252,7 +267,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack				= "%s -> >%%s< (%%d)"
 
 local prewarnOption			= "预警：$spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target			= "警报：$spell:%s的目标"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount		= "警报：$spell:%s的目标"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount		= "警报：$spell:%s的目标(带计数)"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell			= "警报：$spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.ends				= "警报：$spell:%s结束"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.endtarget		= "警报：$spell:%s结束"
@@ -264,7 +279,7 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn			= prewarnOption
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.phase			= "警报：第%s阶段"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.phasechange		= "警报：阶段转换"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prephase			= "预警：第%s阶段"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count			= "警报：$spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count			= "警报：$spell:%s(带计数)"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack			= "警报：$spell:%s叠加层数"
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell				= "%s!"
@@ -299,10 +314,12 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.fades			= "特殊警报：$spell:%s消失"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon			= "特殊警报：$spell:%s即将到来"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn 		= "特殊警报：%s秒前预警$spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel			= "特殊警报：需要驱散或偷取$spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 		= "特殊警报：$spell:%s需要停止攻击"--Spell Reflect
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 		= "特殊警报：$spell:%s的施放(玩家需要停止攻击时)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt		= "特殊警报：需要打断$spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= "特殊警报：需要打断$spell:%s(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you				= "特殊警报：当你受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target			= "特殊警报：当他人受到$spell:%s影响时"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetcount		= "特殊警报：当他人受到$spell:%s影响时(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 			= "特殊警报：当另外一个T中了$spell:%s并需要你嘲讽时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close			= "特殊警报：当你附近有人受到$spell:%s影响时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move			= "特殊警报：当你受到$spell:%s影响时"
@@ -310,12 +327,11 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge			= "特殊警报：当你受到$spell:%s�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway		= "特殊警报：当你受到$spell:%s影响并需要跑开人群时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto			= "特殊警报：当他人中了$spell:%s并需要你去靠近时"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run				= "特殊警报：$spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast			= "特殊警报：$spell:%s的施放（用于打断）"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast			= "特殊警报：$spell:%s的施放（用于打断玩家的技能）"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 			= "特殊警报：$spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack			= "特殊警报：当叠加了>=%d层$spell:%s时"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stackcount		= "特殊警报：当叠加了>=%d层$spell:%s时(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 			= "特殊警报：针对$spell:%s需要转换目标"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target				= "%s: >%%s<"
@@ -328,7 +344,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cdcount				= "%s冷却（%%d）"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource				= "%s冷却: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cdspecial				= "特殊技能冷却"
 DBM_CORE_AUTO_TIMER_TEXTS.next 					= "下一次%s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount				= "下一次%s（%%d）"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount				= "下一次%s（%%s）"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource			= "下一次%s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.nextspecial			= "下一次特殊技能"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement 			= "%s"
@@ -406,7 +422,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "击杀记录"
-DBM_SPEED_KILL_TIMER_OPTION	= "计时条：最快击杀记录"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "最速清除"
 DBM_COMBAT_RES_TIMER_TEXT	= "下一次可用战复"
 DBM_CORE_TIMER_RESPAWN		= "Boss刷新"

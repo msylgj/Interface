@@ -318,7 +318,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s CD (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource	= "%s CD: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.cdspecial	= "Spezialfähigkeit CD"
 DBM_CORE_AUTO_TIMER_TEXTS.next		= "Nächster %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount	= "Nächster %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount	= "Nächster %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Nächster %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.nextspecial	= "Nächste Spezialfähigkeit"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
@@ -398,7 +398,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Rekordzeit"
-DBM_SPEED_KILL_TIMER_OPTION	= "Zeige einen Timer zur Verbesserung deiner Rekordzeit"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Abschlussbestzeit"
 DBM_COMBAT_RES_TIMER_TEXT	= "Kampfbelebung +"
 DBM_CORE_TIMER_RESPAWN		= "Wiedererscheinen"

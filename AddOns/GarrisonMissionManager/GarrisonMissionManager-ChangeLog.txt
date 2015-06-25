@@ -1,9 +1,36 @@
-Garrison Mission Manager, v26
+Garrison Mission Manager, v31
 
 * http://www.curse.com/addons/wow/garrison-mission-manager
 * http://www.wowinterface.com/downloads/info23375-GarrisonMissionManager.html
 
 == Change log ==
+2015-06-24 v32
+ * Fix v6.2 compatibility problem that could affect users with some other addon pre-filling party before GMM's analysis.
+
+2015-06-23 v31
+ * v6.2 compatibility. Runs on both 6.2 and pre-6.2, so you can safely upgrade before maintenance.
+
+2015-05-15 v30
+ * Don't show "level 100" indicator in mission list on missions that require ilevel. Instead just show mission ilevel in same big font and with slightly brighter color to make the easier to see at a glance.
+ * Always show ilevel under follower portrait regardless if mission requires it or not to make it easier to see training of followers you're about to send on mission.
+ * Color maxed follower ilevel (675) in green to make it easier to see who you still need to upgrade.
+
+2015-03-26 v29
+ * Mission list now shows expiration time on all non-XP missions in lower left corner of each button.
+ * Warning for follower that have matching building slot under party portrait on mission page now warns in yellow for buildings without active work orders too.
+ * Clicking red button in mission list now automatically sets best party on mission page.
+ * Some optimizations to try to use less important followers (i.e. leveled/traited) that could be used on other missions.
+ * Copy Wowhead mission link to chat button to the left of mission name on mission page.
+ * Silently skip LDB loading if no LDB is avaialble.
+
+2015-03-06 v28
+ * Gold yield mode: same as already available GR yield mode - it will prefer bigger gold bonus to any other optimizations and will risk lower chance if "Treasure Hunter" trait compensates lower success chance in the long run. Gold yield teams are shown on same set of buttons where GR yield appears on GR missions.
+
+2015-02-28 v27
+ * "Unavailable" team buttons will show non-GR boosted teams on GR reward missions too.
+ * Updated follower work orders warning to 6.1 changes: it now shows when order is currently in progress and show time to next order and amount of remaining orders.
+ * Some runtime/memory optimizations.
+
 2015-02-28 v26
  * Fix team tooltips causing errors on some configurations.
 
@@ -28,7 +55,7 @@ Garrison Mission Manager, v26
  * Fix some more auto-assign errors with incorrect detection of free or busy best follower candidates.
 
 2015-01-22 v20
- * Fix auto-assign incorrectly prefering busy follower if it had lower ilevel and was further down in list.
+ * Fix auto-assign incorrectly preferring busy follower if it had lower ilevel and was further down in list.
 
 2015-01-18 v19
  * Fix auto-assign button didn't noticing changes in follower status in realtime like tooltip does - it would refuse to auto-assign back followers that were working when you opened architect table.

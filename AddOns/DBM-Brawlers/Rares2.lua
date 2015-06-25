@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRare2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13746 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 mod:SetModelID(48465)
 mod:SetZone()
@@ -46,7 +46,6 @@ local timerSmolderingHeatCD			= mod:NewCDTimer(20, 142400)--Anthracite
 local timerCooled					= mod:NewTargetTimer(20, 141371)--Anthracite
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 mod:AddBoolOption("SpeakOutStrikes", true)--Blind Hero
 mod:AddBoolOption("ArrowOnBoxing")--Ro-Shambo
 

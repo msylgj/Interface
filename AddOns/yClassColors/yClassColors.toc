@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## X-Curse-Packaged-Version: 40300.2
 ## X-Curse-Project-Name: yClassColors
 ## X-Curse-Project-ID: yclasscolors

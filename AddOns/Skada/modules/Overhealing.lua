@@ -50,7 +50,7 @@ Skada:AddLoadableModule("Overhealing", function(Skada, L)
 
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(player.overhealing), self.metadata.columns.Overheal,
-												string.format("%02.2f%%", player.overhealing / math.max(1, player.healing) * 100), self.metadata.columns.Percent
+												string.format("%02.1f%%", player.overhealing / math.max(1, player.healing) * 100), self.metadata.columns.Percent
 											)
 				d.class = player.class
 				d.role = player.role
@@ -88,7 +88,7 @@ Skada:AddLoadableModule("Overhealing", function(Skada, L)
 				d.value = spell.overhealing
 				d.valuetext = Skada:FormatValueText(
 												Skada:FormatNumber(spell.overhealing), self.metadata.columns.Healing,
-												string.format("%02.2f%%", spell.overhealing / player.overhealing * 100), self.metadata.columns.Percent
+												string.format("%02.1f%%", spell.overhealing / player.overhealing * 100), self.metadata.columns.Percent
 											)
 				local _, _, icon = GetSpellInfo(spell.id)
 				d.icon = icon

@@ -1,0 +1,19 @@
+subversion:
+	- Omega via svn r13923: Notes, nothing more
+	- Omega via svn r13922: Add kormrok Respawn time Add tank swap warnings for the spirit on gorefiend Change Reap GTFO to ?\226?\128?\156void zone?\226?\128?\157 since many users complained reap GTFO and Reap run out had the same name.
+	- Omega via svn r13921: Fix some bad timers for Explosive Energy phase Fix normal/heroic timers for enrage, if enrage is triggered (makes fight use mythic timers, ie 30% faster)
+	- Omega via svn r13920: Fix countdown bug on iskar Small timer adjusts Fix option bugs on Kilrogg
+	- nbluewiz via svn r13919: # koKR update.
+	- nbluewiz via svn r13918: # CallbackHandler update. # koKR update.
+	- Omega via svn r13917: Fix bug
+	- Omega via svn r13916: Bump BW version
+	- Omega via svn r13915: Enable bugfix notices
+	- Omega via svn r13914: Fix bug CN update
+	- Omega via svn r13913: Don?\226?\128?\153t show interrupt warnings when in construct
+	- Omega via svn r13912: Fix another iskar bug where you?\226?\128?\153d see double fel bomb yells/warnings Add respawn time for kilrog Add text phase warnings too mannoroth. More for easier transcriptor logs than anything. Tweak infernal timers for phase 2 to be more accurate. Sometimes boss skips that 7 second one, if he does now only the first one will be wrong, instead of all of them after the first. Will improve upon it even further with further transcripts Fix a bug where imp or infernal timer was inappropriately canceled after it was started on phase 2 transition. Improved shattered defenses warning on socrethar somewhat.
+	- Omega via svn r13911: Attempt to fix tank/dps/healer timers for shadows of death so they actually work correctly and show correct times. Split options as well so desired roles can be selected as well. Fixed icon removal on Iskar Fixed Heroic chakram timer on iskar (it was nerfed)
+	- Omega via svn r13910: Heroic Kormrok confirmed to also use the slower timers that were applied to later normal tests. Update heroic to use those times. Faster mythic timers still unchanged until confirmed Fixed some spam on kilrogg by using better option defaults for tanks/dps Disabled shadowforce warning for tanks in phase 3 mannoroth.
+	- Omega via svn r13909: Update vehicle timers for hellfire assault normal. Fixed Yell Bug
+	- Omega via svn r13908: Fix loading of trash mod, fix lua error on arcimond. many more fixes in coming
+	- Omega via svn r13907: Bw version
+	- tandanu via svn r13906: increment alpha version

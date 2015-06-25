@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank3", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetModelID(28649)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -23,7 +23,6 @@ local timerFireLineCD			= mod:NewCDTimer(15, 133607)--Vian the Volatile
 local timerDevastatingThrustCD	= mod:NewCDTimer(12, 134777)--Ixx
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 mod:AddBoolOption("SetIconOnBlat", true)--Blat
 
 local brawlersMod = DBM:GetModByName("Brawlers")

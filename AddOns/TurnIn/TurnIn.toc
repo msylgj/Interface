@@ -1,4 +1,4 @@
-## Interface: 60100
+## Interface: 60200
 ## Title:[任务]自动交接任务
 ## Notes: 自动交接任务插件；2.1汉化版；/ti window-设置面板，/ti toggle-开关切换。（建议绑定到宏）
 ## SavedVariables: TI_status, TI_NPCDB, TI_NPCIndex

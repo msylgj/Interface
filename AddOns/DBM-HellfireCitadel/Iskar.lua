@@ -1,11 +1,14 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13804 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13920 $"):sub(12, -3))
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
+mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
+mod:SetMinSyncRevision(13887)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Unknown full spectrum of icons yet. Don't know how many debuffs go out.
+mod:SetHotfixNoticeRev(13912)
 mod:SetRespawnTime(15)
 mod:DisableRegenDetection()--Boss returns true on UnitAffectingCombat when fighting his trash, making boss pre mature pull by REGEN method
 
@@ -25,6 +28,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+--(ability.id = 181912 or ability.id = 181827 or ability.id = 187998 or ability.id = 181873) and type = "begincast" or (ability.id = 182178 or ability.id = 181956 or ability.id = 181912 or ability.id = 185510) and type = "cast" or (ability.id = 181824 or ability.id = 187990 or ability.id = 181753) and type = "applydebuff"
 local warnEyeofAnzu						= mod:NewTargetAnnounce(179202, 1, nil, false)--Important, but spammy, Will do something fancy with infoframe to show target instead of spamming screen with warnings
 local warnPhantasmalWinds				= mod:NewTargetAnnounce(181957, 4)--Announce to all, for things like life grips, body and soul, etc to keep them on platform while anzu person helps clear them.
 local warnPhantasmalWounds				= mod:NewTargetAnnounce(182325, 2, nil, "Healer")
@@ -56,9 +60,9 @@ local specWarnFelChakram				= mod:NewSpecialWarningMoveAway(182178, nil, nil, ni
 local specWarnFelChakramTank			= mod:NewSpecialWarningTaunt(182178, nil, nil, nil, 1, 2)
 local specWarnFelConduit				= mod:NewSpecialWarningInterrupt(181827, nil, nil, nil, 1, 2)--On for everyone, filtered by eye of anzu, if this person can't interrupt, then they better pass it to someone who can
 
-local timerFelLaserCD					= mod:NewCDTimer(19.5, 182582)--19.5-22. Never pauses, used all phases
-local timerChakramCD					= mod:NewCDTimer(24.5, 182178)
-local timerPhantasmalWindsCD			= mod:NewCDTimer(37, 181957)
+local timerFelLaserCD					= mod:NewCDTimer(16, 182582)--16-22. Never pauses, used all phases
+local timerChakramCD					= mod:NewCDTimer(33, 182178)
+local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957)
 local timerPhantasmalWoundsCD			= mod:NewCDTimer(30.5, 182325, nil, "Healer")--30.5-32
 local timerFocusedBlast					= mod:NewCastTimer(11, 181912)--Doesn't realy need a cd timer. he casts it twice back to back, then lands
 local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456)
@@ -66,6 +70,10 @@ local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456)
 local timerFelBombCD					= mod:NewCDTimer(18.5, 181753)
 local timerFelConduitCD					= mod:NewCDTimer(15, 181827)
 local timerPhantasmalCorruptionCD		= mod:NewCDTimer(14, 181824, nil, "Tank")--14-18
+
+local countdownPhantasmalWinds			= mod:NewCountdown(35, 181957)
+local countdownFelBomb					= mod:NewCountdown("Alt18", 181753)
+local countdownCorruption				= mod:NewCountdown("AltTwo14", 181824, "Tank")
 
 local berserkTimer						= mod:NewBerserkTimer(480)
 
@@ -78,7 +86,7 @@ local voiceThrowAnzu					= mod:NewVoice(179202)	--New, 179202,"throw eye to some
 
 mod:AddRangeFrameOption(15)--Both aoes are 15 yards, ref 187991 and 181748
 mod:AddSetIconOption("SetIconOnAnzu", 179202, false)
-mod:AddSetIconOption("SetIconOnWinds", 181957, false)
+mod:AddSetIconOption("SetIconOnWinds", 181957, true)
 mod:AddSetIconOption("SetIconOnFelBomb", 181753, true)
 
 mod.vb.focusedBlast = 0
@@ -120,10 +128,18 @@ function mod:OnCombatStart(delay)
 	playerHasAnzu = false
 	table.wipe(AddsSeen)
 	updateRangeFrame(self)
-	timerChakramCD:Start(5-delay)
-	timerPhantasmalWindsCD:Start(16.5-delay)
-	timerFelLaserCD:Start(18.5)--Verify it can still be this low, every pull on mythic was 20-22
-	timerPhantasmalWoundsCD:Start(28-delay)
+	timerChakramCD:Start(5-delay)--Seems still 5 in all modes
+	if self:IsNormal() then--Normal timers are about 40% slower on pull, 20% slower rest of fight
+		timerFelLaserCD:Start(25)
+		timerPhantasmalWindsCD:Start(30-delay)
+		countdownPhantasmalWinds:Start(30-delay)
+		timerPhantasmalWoundsCD:Start(44-delay)
+	else
+		timerPhantasmalWindsCD:Start(16.5-delay)
+		countdownPhantasmalWinds:Start(16.5-delay)
+		timerFelLaserCD:Start(18.5)--Verify it can still be this low, every pull on mythic was 20-22
+		timerPhantasmalWoundsCD:Start(28-delay)
+	end
 	berserkTimer:Start(-delay)
 end
 
@@ -164,6 +180,7 @@ function mod:SPELL_CAST_START(args)
 		--Clear. Sure I could just do GetTime+39 and call it a day, but this is prettier
 		timerChakramCD:Cancel()
 		timerPhantasmalWindsCD:Cancel()
+		countdownPhantasmalWinds:Cancel()
 		timerPhantasmalWoundsCD:Cancel()
 		timerDarkBindingsCD:Cancel()
 	end
@@ -174,11 +191,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 182178 then
 		timerChakramCD:Start()
 	elseif spellId == 181956 then
-		timerPhantasmalWindsCD:Start()
+		if self:IsNormal() then
+			timerPhantasmalWindsCD:Start(46)
+			countdownPhantasmalWinds:Start(46)
+		else
+			timerPhantasmalWindsCD:Start()
+			countdownPhantasmalWinds:Start()
+		end
 	elseif spellId == 181912 and self.vb.focusedBlast == 2 then--Air phase over immediately after he finishes casting 2nd blast.
 		--Timers resume with +3-7, sometimes more. Extreme cases I suspect just got delayed by laser or some other channeled spell
 		timerChakramCD:Start(self.vb.savedChakram+3)
 		timerPhantasmalWindsCD:Start(self.vb.savedWinds+5)
+		--countdownPhantasmalWinds:Start(self.vb.savedWinds+5)--no countdown for this one unless made accurate enough
 		timerPhantasmalWoundsCD:Start(self.vb.savedWounds+5)
 		self.vb.savedChakram = nil
 		self.vb.savedWinds = nil
@@ -204,7 +228,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPhantasmalWinds:Show()
 			yellPhantasmalWinds:Yell()
 		end
-		if self.Options.SetIconOnWinds then
+		if self.Options.SetIconOnWinds and not self:IsLFR() then
 			self:SetSortedIcon(0.5, args.destName, 3)--Start at 3 and count up
 		end
 		if playerHasAnzu and self:AntiSpam(3, 1) then
@@ -214,7 +238,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 182325 then
 		warnPhantasmalWounds:CombinedShow(1, args.destName)--It goes out kind of slow
 		if self:AntiSpam(5, 2) then
-			timerPhantasmalWoundsCD:Start()
+			if self:IsNormal() then
+				timerPhantasmalWoundsCD:Start(40)
+			else
+				timerPhantasmalWoundsCD:Start()
+			end
 		end
 		if args:IsPlayer() then
 			specWarnPhantasmalWounds:Show()
@@ -222,7 +250,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 181824 or spellId == 187990 then
 		warnPhantasmalCorruption:Show(args.destName)
-		timerPhantasmalCorruptionCD:Start(args.sourceGUID)
+		if self:IsNormal() then
+			timerPhantasmalCorruptionCD:Start(21, args.sourceGUID)
+			countdownCorruption:Start(21)
+		else
+			timerPhantasmalCorruptionCD:Start(args.sourceGUID)
+			countdownCorruption:Start()
+		end
 		if args:IsPlayer() then
 			updateRangeFrame(self)
 			specWarnPhantasmalCorruption:Show()
@@ -237,17 +271,25 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnPhantasmalFelBomb:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			updateRangeFrame(self)
-			specWarnPhantasmalFelBomb:Show()
-			yellPhantasmalFelBomb:Yell()
+			specWarnPhantasmalFelBomb:Schedule(0.3)
+			yellPhantasmalFelBomb:Schedule(0.3)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(15)
 			end
 		end
 	elseif spellId == 181753 then
 		warnFelBomb:Show(args.destName)
-		timerFelBombCD:Start(args.sourceGUID)
+		if self:IsNormal() then
+			timerFelBombCD:Start(23, args.sourceGUID)
+			countdownFelBomb:Start(23)
+		else
+			timerFelBombCD:Start(args.sourceGUID)
+			countdownFelBomb:Start()
+		end
 		if args:IsPlayer() then
 			updateRangeFrame(self)
+			specWarnPhantasmalFelBomb:Cancel()
+			yellPhantasmalFelBomb:Cancel()
 			specWarnFelBomb:Show()
 			yellFelBomb:Yell()
 			if self.Options.RangeFrame then
@@ -302,7 +344,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			playerHasAnzu = false
 		end
-	elseif spellId == 181957 and self.Options.SetIconOnWind then
+	elseif spellId == 181957 and self.Options.SetIconOnWinds then
 		self:SetIcon(args.destName, 0)
 	elseif (spellId == 181824 or spellId == 187990) then
 		if args:IsPlayer() then
@@ -349,10 +391,12 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			local cid = self:GetCIDFromGUID(unitGUID)
 			if cid == 91543 then--Corrupted Talonpriest
 				timerFelBombCD:Start(14, unitGUID)
+				countdownFelBomb:Start(14)
 			elseif cid == 91541 then--Shadowfel Warden
 				timerFelConduitCD:Start(4, unitGUID)
 			elseif cid == 91539 then--Fel Raven
 				timerPhantasmalCorruptionCD:Start(16, unitGUID)
+				countdownCorruption:Start(16)
 			elseif cid == 93625 then--Phantasmal Resonance
 				timerDarkBindingsCD:Start(23.6, unitGUID)
 			end
@@ -364,10 +408,12 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 91543 then--Corrupted Talonpriest
 		timerFelBombCD:Cancel(args.destGUID)
+		countdownFelBomb:Cancel()
 	elseif cid == 91541 then--Shadowfel Warden
 		timerFelConduitCD:Cancel(args.destGUID)
 	elseif cid == 91539 then--Fel Raven
 		timerPhantasmalCorruptionCD:Cancel(args.destGUID)
+		countdownCorruption:Cancel()
 	elseif cid == 93625 then--Phantasmal Resonance
 		timerDarkBindingsCD:Cancel(args.destGUID)
 	end
@@ -375,7 +421,11 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 182582 or spellId == 184630 then--Fel Incineration
-		timerFelLaserCD:Start()
+		if self:IsNormal() then
+			timerFelLaserCD:Start(23)
+		else
+			timerFelLaserCD:Start()
+		end
 	end
 end
 

@@ -15,7 +15,7 @@ DBM_CORE_LOAD_SKIN_COMBAT			= "DBM timers failed to skin during combat. Your tim
 DBM_CORE_BAD_LOAD					= "DBM has detected your mod for this instance failed to fully load correctly because of combat. As soon as you are out of combat, please do /console reloadui as soon as possible."
 DBM_CORE_LOAD_MOD_VER_MISMATCH		= "%s could not be loaded because your DBM-Core does not meet requirements. An updated version is required"
 
-DBM_CORE_WHATS_NEW					= "New in this version: DBM now supports personalized notes in every special warning. As well as a custom warning sound/flash if a warning contains a note with your name in it."
+DBM_CORE_WHATS_NEW					= "New in this version: DBM notes feature has been expanded to now include sharing and other quality of life improvements. For more information on notes updates and how to use them, visit our forums"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "DBM has disabled add count warnings on this fight do to insufficient information about number of adds that spawn for a group of your size."
@@ -75,6 +75,19 @@ DBM_CORE_MPROFILE_COPYS_S_ERROR		= "Source is corrupted. Sound or note settings 
 DBM_CORE_MPROFILE_DELETE_SUCCESS	= "%s's (%d spec) mod settings deleted."
 DBM_CORE_MPROFILE_DELETE_SELF_ERROR	= "Cannot delete mod settings currently in use."
 DBM_CORE_MPROFILE_DELETE_S_ERROR	= "Source is corrupted. Settings not deleted or partly deleted. Delete failed."
+
+DBM_CORE_NOTE_SHARE_SUCCESS			= "%s has shared their note for %s"
+DBM_CORE_NOTE_SHARE_LINK			= "Click Here to Open Note"
+DBM_CORE_NOTE_SHARE_FAIL			= "%s attempted to share note text with you for %s. However, mod associated with this ability is not uninstalled or is not loaded. If you need this note, make sure you load the mod they are sharing notes for and ask them to share again"
+
+DBM_CORE_NOTEHEADER					= "Enter your note text here for %s. Enclosing a players name with >< class colors it. For alerts with multiple notes, separate notes with '/'"
+DBM_CORE_NOTEFOOTER					= "Press 'Okay' to accept changes or 'Cancel' to decline changes"
+DBM_CORE_NOTESHAREDHEADER			= "%s has shared below note text for %s. If you accept it, it will overwrite your existing note"
+DBM_CORE_NOTESHARED					= "You're note has been sent to the group"
+DBM_CORE_NOTESHAREERRORSOLO			= "Lonely? Shouldn't be passing notes to yourself"
+DBM_CORE_NOTESHAREERRORBLANK		= "Cannot share blank notes"
+DBM_CORE_NOTESHAREERRORGROUPFINDER	= "Notes cannot be shared in BGs, LFR, or LFG"
+DBM_CORE_NOTESHAREERRORALREADYOPEN	= "Cannot open a shared note link while note editor is already open, to prevent you from losing the note you are currently editing"
 
 DBM_CORE_ALLMOD_DEFAULT_LOADED		= "Default options for all mods in this instance have been loaded."
 DBM_CORE_ALLMOD_STATS_RESETED		= "All mod stats have been reset."
@@ -137,10 +150,10 @@ DBM_BIG_WIGS						= "BigWigs"
 DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
 DBM_CORE_UPDATEREMINDER_HEADER			= "Your version of Deadly Boss Mods is out-of-date.\n Version %s (r%d) is available for download through Curse, WoWI, or from here:"
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users use the latest alpha or latest stable version. Out of date alphas can lead to poor or incomplete functionality."
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods is out-of-date.\n You are at least %d test versions behind. It is recommended that DBM users that choose alpha versions run the latest alpha. Otherwise, they should run latest stable version. Out of date alphas can lead to poor or incomplete functionality."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
-DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being drastically out of date, it has been disabled until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
+DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being too out of date, it has been force disabled and cannot be enabled until updated. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow raid members."
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "DBM version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "DBM version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible."
@@ -149,6 +162,7 @@ DBM_CORE_VEM							= "WARNING: You are running both Deadly Boss Mods and Voice E
 DBM_CORE_3RDPROFILES					= "WARNING: DBM-Profiles not compatible with this version of DBM. It must be removed before DBM can proceed to avoid conflict."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "WARNING: This DBM update will not work correctly if you don't fully restart your game client. This update contains new files or .toc file changes that cannot be loaded via ReloadUI. You may encounter broken functionality or errors if you continue without a client restart."
 DBM_CORE_OUT_OF_DATE_NAG				= "Your version of Deadly Boss Mods is out-of-date. It is recommended you update for this fight so you are not missing an important alert or timer or a yell rest of raid is expecting to see from you."
+DBM_CORE_DISABLED_REMINDER				= "REMINDER: Deadly Boss Mods is loaded but it is currently disabled in options. To enable, do /dbm in your chat and check the 'Enable' box in 'Options/General Options'"
 
 DBM_CORE_MOVABLE_BAR				= "Drag me!"
 
@@ -328,7 +342,7 @@ DBM_CORE_AUTO_TIMER_TEXTS = {
 	cdsource	= "%s CD: >%%s<",
 	cdspecial	= "Special Ability CD",
 	next		= "Next %s",
-	nextcount	= "Next %s (%%d)",
+	nextcount	= "Next %s (%%s)",
 	nextsource	= "Next %s: >%%s<",
 	nextspecial	= "Next Special Ability",
 	achievement	= "%s",
@@ -412,7 +426,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Record Victory"
-DBM_SPEED_KILL_TIMER_OPTION	= "Show a timer to beat your fastest victory"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "Best Clear"
 DBM_COMBAT_RES_TIMER_TEXT	= "Next CR Charge"
 DBM_CORE_TIMER_RESPAWN		= "Respawn"
@@ -438,3 +451,8 @@ DBM_CORE_LAG_CHECKING				= "Checking raid Latency..."
 DBM_CORE_LAG_HEADER					= "Deadly Boss Mods - Latency Results"
 DBM_CORE_LAG_ENTRY					= "%s: World delay [%d ms] / Home delay [%d ms]"
 DBM_CORE_LAG_FOOTER					= "No Response: %s"
+
+--Globals are fixed to 16 pixel, we use same path but 22 pixel size. This is why not using blizzard globals
+DBM_CORE_TANK_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:0:19:22:41|t"
+DBM_CORE_HEALER_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:20:39:1:20|t"
+DBM_CORE_DAMAGE_ICON = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:22:22:0:0:64:64:20:39:22:41|t"

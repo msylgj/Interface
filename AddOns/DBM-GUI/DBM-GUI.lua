@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 13817 $"):sub(12, -3)
+local revision =("$Revision: 13858 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -76,97 +76,6 @@ function DBM_GUI:ShowHide(forceshow)
 		else
 			self:UpdateModList()
 			DBM_GUI_OptionsFrame:Show()
-		end
-	end
-end
-
---------------------
---  Notes Editor  --
---------------------
-do
-	local frame, fontstring, fontstringFooter, editBox
-
-	local function createFrame()
-		frame = CreateFrame("Frame", "DBMNotesEditor", UIParent)
-		frame:SetFrameStrata("FULLSCREEN_DIALOG") -- yes, this isn't a fullscreen dialog, but I want it to be in front of other DIALOG frames (like DBM GUI which might open this frame...)
-		frame:SetWidth(430)
-		frame:SetHeight(140)
-		frame:SetPoint("TOP", 0, -230)
-		frame:SetBackdrop({
-			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-			edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = true, tileSize = 32, edgeSize = 32,
-			insets = {left = 11, right = 12, top = 12, bottom = 11},
-		})
-		fontstring = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		fontstring:SetWidth(410)
-		fontstring:SetHeight(0)
-		fontstring:SetPoint("TOP", 0, -16)
-		editBox = CreateFrame("EditBox", nil, frame)
-		do
-			local editBoxLeft = editBox:CreateTexture(nil, "BACKGROUND")
-			local editBoxRight = editBox:CreateTexture(nil, "BACKGROUND")
-			local editBoxMiddle = editBox:CreateTexture(nil, "BACKGROUND")
-			editBoxLeft:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Left")
-			editBoxLeft:SetHeight(32)
-			editBoxLeft:SetWidth(32)
-			editBoxLeft:SetPoint("LEFT", -14, 0)
-			editBoxLeft:SetTexCoord(0, 0.125, 0, 1)
-			editBoxRight:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Right")
-			editBoxRight:SetHeight(32)
-			editBoxRight:SetWidth(32)
-			editBoxRight:SetPoint("RIGHT", 6, 0)
-			editBoxRight:SetTexCoord(0.875, 1, 0, 1)
-			editBoxMiddle:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Right")
-			editBoxMiddle:SetHeight(32)
-			editBoxMiddle:SetWidth(1)
-			editBoxMiddle:SetPoint("LEFT", editBoxLeft, "RIGHT")
-			editBoxMiddle:SetPoint("RIGHT", editBoxRight, "LEFT")
-			editBoxMiddle:SetTexCoord(0, 0.9375, 0, 1)
-		end
-		editBox:SetHeight(32)
-		editBox:SetWidth(250)
-		editBox:SetPoint("TOP", fontstring, "BOTTOM", 0, -4)
-		editBox:SetFontObject("GameFontHighlight")
-		editBox:SetTextInsets(0, 0, 0, 1)
-		editBox:SetFocus()
-		editBox:SetText("")
-		fontstringFooter = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		fontstringFooter:SetWidth(410)
-		fontstringFooter:SetHeight(0)
-		fontstringFooter:SetPoint("TOP", editBox, "BOTTOM", 0, 0)
-		local button = CreateFrame("Button", nil, frame)
-		button:SetHeight(24)
-		button:SetWidth(75)
-		button:SetPoint("BOTTOM", 0, 13)
-		button:SetNormalFontObject("GameFontNormal")
-		button:SetHighlightFontObject("GameFontHighlight")
-		button:SetNormalTexture(button:CreateTexture(nil, nil, "UIPanelButtonUpTexture"))
-		button:SetPushedTexture(button:CreateTexture(nil, nil, "UIPanelButtonDownTexture"))
-		button:SetHighlightTexture(button:CreateTexture(nil, nil, "UIPanelButtonHighlightTexture"))
-		button:SetText(OKAY)
-		button:SetScript("OnClick", function(self)
-			local mod = DBM_GUI.Noteframe.mod 
-			local modvar = DBM_GUI.Noteframe.modvar
-			mod.Options[modvar .. "SWNote"] = editBox:GetText() or ""
-			frame:Hide()
-		end)
-
-	end
-
-	function DBM_GUI:ShowNoteEditor(mod, modvar)
-		if not frame then
-			createFrame()
-			DBM_GUI.Noteframe = frame
-		end
-		frame:Show()
-		fontstring:SetText(L.NoteHeader)
-		fontstringFooter:SetText(L.NoteFooter)
-		DBM_GUI.Noteframe.mod = mod
-		DBM_GUI.Noteframe.modvar = modvar
-		if type(mod.Options[modvar .. "SWNote"]) == "string" then
-			editBox:SetText(mod.Options[modvar .. "SWNote"])
-		else
-			editBox:SetText("")
 		end
 	end
 end
@@ -521,13 +430,22 @@ do
 		button.myheight = 25
 		button.mytype = "checkbutton"
 		-- font strings do not support hyperlinks, so check if we need one...
+		local noteSpellName = name
 		if name:find("%$spell:ej") then -- it is in fact a journal link :-)
 			name = name:gsub("%$spell:ej(%d+)", "$journal:%1")
 		end
 		if name:find("%$spell:") then
+			if modvar then
+				local spellId = string.match(name, "spell:(%d+)")
+				noteSpellName = GetSpellInfo(spellId)
+			end
 			name = name:gsub("%$spell:(%d+)", replaceSpellLinks)
 		end
 		if name:find("%$journal:") then
+			if modvar then
+				local spellId = string.match(name, "journal:(%d+)")
+				noteSpellName = EJ_GetSectionInfo(spellId)
+			end
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
 		local dropdown
@@ -552,7 +470,7 @@ do
 					if noteText then
 						DBM:Debug(tostring(noteText), 2)--Debug only
 					end
-					DBM_GUI:ShowNoteEditor(mod, modvar)
+					DBM:ShowNoteEditor(mod, modvar, noteSpellName)
 				end)
 			end
 		end
@@ -1576,27 +1494,9 @@ local function CreateOptionsMenu()
 		latencySlider:SetPoint('BOTTOMLEFT', bmrange, "BOTTOMLEFT", 10, -40)
 		latencySlider:HookScript("OnShow", function(self) self:SetValue(DBM.Options.LatencyThreshold) end)
 		latencySlider:HookScript("OnValueChanged", function(self) DBM.Options.LatencyThreshold = self:GetValue() end)
-		----
-		local generaltimeroptions = DBM_GUI_Frame:CreateArea(L.TimerGeneral, nil, 125)
-		generaltimeroptions.frame:SetPoint('TOPLEFT', generaloptions.frame, "BOTTOMLEFT", 0, -20)
-
-		local SKT_Enabled	= generaltimeroptions:CreateCheckButton(L.SKT_Enabled, true, nil, "AlwaysShowSpeedKillTimer")
-		local CRT_Enabled	= generaltimeroptions:CreateCheckButton(L.CRT_Enabled, true, nil, "CRT_Enabled")
-
-		local challengeTimers = {
-			{	text	= L.Disable,				value	= "None" },
-			{	text	= L.ChallengeTimerPersonal,	value 	= "Personal"},
-			{	text	= L.ChallengeTimerGuild,	value 	= "Guild"},
-			{	text	= L.ChallengeTimerRealm,	value 	= "Realm"},
-		}
-		local ChallengeTimerDropDown = generaltimeroptions:CreateDropdown(L.ChallengeTimerOptions, challengeTimers, "DBM", "ChallengeBest", function(value)
-			DBM.Options.ChallengeBest = value
-		end)
-		ChallengeTimerDropDown:SetPoint("TOPLEFT", generaltimeroptions.frame, "TOPLEFT", 0, -85)
 
 		--Model viewer options
-		local modelarea = DBM_GUI_Frame:CreateArea(L.ModelOptions, nil, 90)
-		modelarea.frame:SetPoint('TOPLEFT', generaltimeroptions.frame, "BOTTOMLEFT", 0, -20)
+		local modelarea = DBM_GUI_Frame:CreateArea(L.ModelOptions, nil, 90, true)
 
 		local enablemodels	= modelarea:CreateCheckButton(L.EnableModels,  true, nil, "EnableModels")--Needs someone smarter then me to hide/disable this option if not 4.0.6+
 
@@ -3052,15 +2952,19 @@ local function CreateOptionsMenu()
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarn, true, nil, "DontShowSpecialWarnings")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTimers, true, nil, "DontShowBossTimers")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
-		spamOutArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
-		spamOutArea:CreateCheckButton(L.SpamBlockNoRangeRestore, true, nil, "DontRestoreRange")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoInfoFrame, true, nil, "DontShowInfoFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoHudMap, true, nil, "DontShowHudMap2")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoHealthFrame, true, nil, "DontShowHealthFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoYells, true, nil, "DontSendYells")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoNoteSync, true, nil, "BlockNoteShare")
+
+		local spamRestoreArea = spamPanel:CreateArea(L.Area_Restore, nil, 170, true)
+		spamRestoreArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
+		spamRestoreArea:CreateCheckButton(L.SpamBlockNoRangeRestore, true, nil, "DontRestoreRange")
 
 		local spamArea = spamPanel:CreateArea(L.Area_SpamFilter, nil, 170, true)
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
@@ -3070,11 +2974,11 @@ local function CreateOptionsMenu()
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
 		spamSpecArea:CreateCheckButton(L.FilterInterrupts, true, nil, "FilterInterrupt")
+		spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
 		spamSpecArea:CreateCheckButton(L.FilterDispels, true, nil, "FilterDispel")
 		spamSpecArea:CreateCheckButton(L.FilterSelfHud, true, nil, "FilterSelfHud")
 
 		local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer, nil, 180, true)
-		spamPTArea:CreateCheckButton(L.DontShowRespawn, true, nil, "DontShowRespawn")
 		spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")
 		spamPTArea:CreateCheckButton(L.DontShowPT, true, nil, "DontShowPT2")
 		spamPTArea:CreateCheckButton(L.DontShowPTText, true, nil, "DontShowPTText")
@@ -3087,6 +2991,7 @@ local function CreateOptionsMenu()
 		PTSlider:HookScript("OnValueChanged", function(self) DBM.Options.PTCountThreshold = mfloor(self:GetValue()) end)
 
 		spamPTArea:AutoSetDimension()
+		spamRestoreArea:AutoSetDimension()
 		spamArea:AutoSetDimension()
 		spamSpecArea:AutoSetDimension()
 		spamOutArea:AutoSetDimension()
@@ -3140,6 +3045,24 @@ local function CreateOptionsMenu()
 		local WorldBossNearAlert	= soundAlertsArea:CreateCheckButton(L.WorldBossNearAlert, true, nil, "WorldBossNearAlert")
 		local RLReadyCheckSound		= soundAlertsArea:CreateCheckButton(L.RLReadyCheckSound, true, nil, "RLReadyCheckSound")
 		local AFKHealthWarning		= soundAlertsArea:CreateCheckButton(L.AFKHealthWarning, true, nil, "AFKHealthWarning")
+
+		local generaltimeroptions	= extraFeaturesPanel:CreateArea(L.TimerGeneral, nil, 125, true)
+
+		local SKT_Enabled	= generaltimeroptions:CreateCheckButton(L.SKT_Enabled, true, nil, "AlwaysShowSpeedKillTimer")
+		local CRT_Enabled	= generaltimeroptions:CreateCheckButton(L.CRT_Enabled, true, nil, "CRT_Enabled")
+		local RespawnTimer	= generaltimeroptions:CreateCheckButton(L.ShowRespawn, true, nil, "ShowRespawn")
+		local QueueTimer	= generaltimeroptions:CreateCheckButton(L.ShowQueuePop, true, nil, "ShowQueuePop")
+
+		local challengeTimers = {
+			{	text	= L.Disable,				value	= "None" },
+			{	text	= L.ChallengeTimerPersonal,	value 	= "Personal"},
+			{	text	= L.ChallengeTimerGuild,	value 	= "Guild"},
+			{	text	= L.ChallengeTimerRealm,	value 	= "Realm"},
+		}
+		local ChallengeTimerDropDown = generaltimeroptions:CreateDropdown(L.ChallengeTimerOptions, challengeTimers, "DBM", "ChallengeBest", function(value)
+			DBM.Options.ChallengeBest = value
+		end)
+		ChallengeTimerDropDown:SetPoint("TOPLEFT", generaltimeroptions.frame, "TOPLEFT", 0, -125)
 
 		local bossLoggingArea		= extraFeaturesPanel:CreateArea(L.Area_AutoLogging, nil, 100, true)
 		local AutologBosses			= bossLoggingArea:CreateCheckButton(L.AutologBosses, true, nil, "AutologBosses")
@@ -3207,6 +3130,7 @@ local function CreateOptionsMenu()
 		-- END Pizza Timer
 		chatAlertsArea:AutoSetDimension()
 		soundAlertsArea:AutoSetDimension()
+		generaltimeroptions:AutoSetDimension()
 		bossLoggingArea:AutoSetDimension()
 		if thirdPartyArea then
 			thirdPartyArea:AutoSetDimension()

@@ -107,7 +107,7 @@ Skada:AddLoadableModule("Power", function(Skada, L)
 				d.id = spellid
 				d.label = name
 				d.value = amount
-				d.valuetext = Skada:FormatNumber(amount)..(" (%02.2f%%)"):format(amount / player.power[MANA].amount * 100)
+				d.valuetext = Skada:FormatNumber(amount)..(" (%02.1f%%)"):format(amount / player.power[MANA].amount * 100)
 				d.icon = icon
 				d.spellid = spellid
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank2", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
 mod:SetModelID(46712)
 mod:SetZone()
 
@@ -24,7 +24,6 @@ local timerThrowNetCD			= mod:NewCDTimer(20, 133308)--Fran and Riddoh
 local timerGoblinDeviceCD		= mod:NewCDTimer(22, 133227)--Fran and Riddoh
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local brawlersMod = DBM:GetModByName("Brawlers")
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1432, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13813 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13922 $"):sub(12, -3))
 mod:SetCreatureID(92142, 92144, 92146)--Blademaster Jubei'thos (92142). Dia Darkwhisper (92144). Gurthogg Bloodboil (92146) 
 mod:SetEncounterID(1778)
 mod:SetZone()
@@ -45,7 +45,7 @@ local specWarnFelstorm				= mod:NewSpecialWarningSpell(183701, nil, nil, nil, 2,
 --Dia Darkwhisper
 local specWarnNightmareVisage		= mod:NewSpecialWarningSpell(184657)--Doesn't option default, only warns highest threat
 local specWarnReap					= mod:NewSpecialWarningMoveAway(184476, nil, nil, nil, 3, 2)--Everyone with Mark of Necromancer is going to drop void zones that last forever, they MUST get the hell out
-local specWarnReapGTFO				= mod:NewSpecialWarningMove(184652, nil, nil, nil, 1, 2)--On the ground version (GTFO)
+local specWarnReapGTFO				= mod:NewSpecialWarningMove(30533, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move:format(184652), nil, 1, 2)--On the ground version (GTFO)
 local yellReap						= mod:NewYell(184476)
 local specWarnDarkness				= mod:NewSpecialWarningSpell(184681, nil, nil, nil, 2)
 --Gurtogg Bloodboil
@@ -104,9 +104,9 @@ function mod:OnCombatStart(delay)
 	timerMarkofNecroCD:Start(7-delay)--7-13
 	timerNightmareVisageCD:Start(15-delay)
 --	timerFelstormCD:Start(20.5-delay)--Review
-	timerRelRageCD:Start(30.5-delay)
+	timerRelRageCD:Start(30.5-delay, 1)
 	timerReapCD:Start(50-delay)--50-73 variation on pull, likely blizzard was tinkering/hotfixing it between pulls. verify on later testing
-	timerDarknessCD:Start(76.5-delay)
+	timerDarknessCD:Start(75-delay)
 	timerMirrorImageCD:Start(-delay)--First one is 150-160 into fight, unless he hits 30% first, then he uses it earlier and spams rest of fight.
 	timerDemoLeapCD:Start(230-delay)--First one 230 into fight. if you kill him first you NEVER see it.
 	berserkTimer:Start(-delay)
@@ -165,9 +165,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnFelstorm:Show()
 		voiceFelstorm:Play("aesoon")
 --		timerFelstormCD:Start()
-	elseif spellId == 184847 and self:AntiSpam(3.5, 2) then--Probably stacks very rapidly, so using antispam for now until better method constructed
+	elseif spellId == 184847 and self:AntiSpam(4, 2) then--Probably stacks very rapidly, so using antispam for now until better method constructed
 		local amount = args.amount or 1
-		warnAcidicWound:Show(args.destName, amount)
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) then
+			warnAcidicWound:Show(args.destName, amount)
+		end
 	elseif spellId == 184360 then
 		self.vb.felRageCount = self.vb.felRageCount + 1
 		timerRelRageCD:Start(nil, self.vb.felRageCount+1)
