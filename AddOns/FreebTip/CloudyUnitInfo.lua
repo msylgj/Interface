@@ -10,71 +10,13 @@ local currentID, currentGUID
 local GearDB, SpecDB = {}, {}
 
 local nextInspectRequest = 0
-lastInspectRequest = 0
+local lastInspectRequest = 0
 
 local prefixColor = '|cffF9D700'
 local detailColor = '|cffffffff'
 
---local gearPrefix = STAT_AVERAGE_ITEM_LEVEL .. ': '
-local gearPrefix = '装备等级: '
+local gearPrefix = STAT_AVERAGE_ITEM_LEVEL .. ': '
 local specPrefix = SPECIALIZATION .. ': '
-
-local upgradeTable = { 
-   [0]   =  0, 
-   [1]   =  8, -- 1/1 
-   [15]   =  10, -- 2/2
-   [171]   =  5, -- 2/2
-   [373]   =  4, -- 1/2 
-   [374]   =  8, -- 2/2 
-   [375]   =  4, -- 1/3 
-   [376]   =  4, -- 2/3 
-   [377]   =  4, -- 3/3 
-   [379]   =  4, -- 1/2 
-   [380]   =  4, -- 2/2 
-   [445]   =  0, -- 0/2 
-   [446]   =  4, -- 1/2 
-   [447]   =  8, -- 2/2
-   [451]   =  0, -- 1/1 
-   [452]   =  8, -- 1/1 
-   [453]   =  0, -- 0/2 
-   [454]   =  4, -- 1/2 
-   [455]   =  8, -- 2/2 
-   [456]   =  0, -- 0/1 
-   [457]   =  8, -- 1/1 
-   [458]   =  0, -- 0/4 
-   [459]   =  4, -- 1/4 
-   [460]   =  8, -- 2/4 
-   [461]   = 12, -- 3/4 
-   [462]   = 16, -- 4/4 
-   [465]   =  0, -- 0/2
-   [466]   =  4,
-   [467]   =  8, 
-   [468]   =  0, -- 0/2 
-   [469]   =  4,
-   [470]   =  8, -- 2/4 
-   [471]   = 12, 
-   [472]   = 16, 
-   [476]   =  0, 
-   [477]   =  4, 
-   [478]   =  8, 
-   [479]   =  0, 
-   [480]   =  8, 
-   [491]   =  0,
-   [492]   =  4,
-   [493]   =  8,
-   [494]   =  0,
-   [495]   =  4,
-   [496]   =  8,
-   [497]   = 12,
-   [498]   = 16,
-   [501]   = 0,
-   [502]   = 4,
-   [503]   = 8,
-   [504]   = 12,
-   [505]   = 16,
-   [506]   = 20,
-   [507]   = 24,
-}
 
 --- Create Frame ---
 local f = CreateFrame('Frame', 'CloudyUnitInfo')
@@ -162,6 +104,25 @@ local function IsPVPItem(link)
 	return false
 end
 
+-- iLevel retrieval
+local S_ITEM_LEVEL = "^" .. gsub(ITEM_LEVEL, "%%d", "(%%d+)")
+local scantip = CreateFrame("GameTooltip", "ItemLevelScanTooltip", nil, "GameTooltipTemplate")
+scantip:SetOwner(UIParent, "ANCHOR_NONE")
+
+local function GetItemLevel(itemLink)
+	scantip:SetOwner(UIParent, "ANCHOR_NONE")
+	scantip:SetHyperlink(itemLink)
+	for i = 2, scantip:NumLines() do -- Line 1 = name so skip
+		local text = _G["ItemLevelScanTooltipTextLeft"..i]:GetText()
+		if text and text ~= "" then
+			local currentLevel = strmatch(text, S_ITEM_LEVEL)
+			if currentLevel then
+				return currentLevel
+			end
+		end
+	end
+	scantip:Hide()
+end
 
 --- Unit Gear Info ---
 local function UnitGear(id)
@@ -185,26 +146,19 @@ local function UnitGear(id)
 					delay = true
 				else
 					local _, _, quality, level, _, _, _, _, slot = GetItemInfo(itemLink)
-
+					local currentLevel = GetItemLevel(itemLink)
+					
 					if (not quality) or (not level) then
 						delay = true
 					else
---			 tonumber(select(1,strsplit(":", select(11,strsplit(":", string.match(GetInventoryItemLink("player", 1), "item[%-?%d:]+"))))))		
-						--if (quality == 7) then
-							--total = total + BOALevel(ulvl, slot)
-							--boa = boa + 1
-						--else
---						local upgradeId = tonumber(strmatch(itemLink, "item:%d+:%d+:%d+:%d+:%d+:%d+:%-?%d+:%-?%d+:%d+:%d+:(%d+)"))
-							if (level >= 458) then 
-								local upgradeId = tonumber(select(1,strsplit(":", select(11,strsplit(":", string.match(itemLink, "item[%-?%d:]+"))))))
-								level = level + (upgradeId and upgradeTable[upgradeId] or 0) 
-
-							end
+						if currentLevel then
+							total = total + currentLevel
+						else
 							total = total + level
-							if IsPVPItem(itemLink) then
-								pvp = pvp + 1
-							end
-						--end
+						end
+						if IsPVPItem(itemLink) then
+							pvp = pvp + 1
+						end
 
 						if (i >= 16) then
 							if (slot == 'INVTYPE_2HWEAPON') or (slot == 'INVTYPE_RANGED') or ((slot == 'INVTYPE_RANGEDRIGHT') and (class == 'HUNTER')) then
@@ -286,22 +240,29 @@ local function ScanUnit(id, forced)
 		if (not id) or (UnitGUID(id) ~= currentGUID) then return end
 
 		cachedGear = GearDB[currentGUID]
-		cachedSpec = SpecDB[currentGUID]
+		--cachedSpec = SpecDB[currentGUID]
+		--always to get spec
+		cachedSpec = UnitSpec('player')
 
-		if cachedGear or forced then
-			SetUnitInfo(cachedGear or CONTINUED, cachedSpec)
+		--cachedGear? ok...skip get gear
+		if cachedGear and not forced then
+			SetUnitInfo(cachedGear, cachedSpec or CONTINUED)
 		end
 
 		if not (IsShiftKeyDown() or forced) then
-			if cachedGear and cachedSpec then return end
 			if UnitAffectingCombat('player') then return end
 		end
 
 		if (not UnitIsVisible(id)) then return end
 		if UnitIsDeadOrGhost('player') or UnitOnTaxi('player') then return end
 		if InspectFrame and InspectFrame:IsShown() then return end
-
-		SetUnitInfo(CONTINUED, cachedSpec or CONTINUED)
+		
+		--press shift To refresh
+		if IsShiftKeyDown() then
+			SetUnitInfo(CONTINUED, CONTINUED)
+		else
+			SetUnitInfo(cachedGear or CONTINUED, cachedSpec or CONTINUED)
+		end
 
 		local timeSinceLastInspect = GetTime() - lastInspectRequest
 		if (timeSinceLastInspect >= 1.5) then
