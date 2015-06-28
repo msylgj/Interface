@@ -151,9 +151,9 @@ ChatTypeInfo['RAID'].sticky = 1					--團隊
 
 
 ChatTypeInfo['RAID_WARNING'].sticky = 0			--團隊警報
-ChatTypeInfo['INSTANCE_CHAT'].sticky = 1			--戰場
+ChatTypeInfo['INSTANCE_CHAT'].sticky = 1			--副本
 ChatTypeInfo['WHISPER'].sticky = 0				--悄悄話
-ChatTypeInfo.BN_WHISPER.sticky = 0				--实名密语
+ChatTypeInfo['BN_WHISPER'].sticky = 0				--实名密语
 ChatTypeInfo['CHANNEL'].sticky = 0				--普通频道
 
 --[[-----------------------------------------------------------------------------
@@ -693,8 +693,8 @@ if csounds then
 		["CHAT_MSG_WHISPER"] = "Heart",
 		["CHAT_MSG_GMWHISPER"] = "gasp",
 		["CHAT_MSG_RAID_LEADER"] = "Choo",
-		["CHAT_MSG_BATTLEGROUND"] = "switchy",
-		["CHAT_MSG_BATTLEGROUND_LEADER"] = "doublehit",
+		["CHAT_MSG_INSTANCE_CHAT"] = "switchy",
+		["CHAT_MSG_INSTANCE_CHAT_LEADER"] = "doublehit",
 		["CHAT_MSG_CHANNEL"] = true, --dummy,
 		["CHAT_MSG_REALID"] = "Heart"
 	}

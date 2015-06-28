@@ -12,7 +12,13 @@ if cfg.Mail == true then
     Text:SetPoint(unpack(cfg.MailPoint))
 	Stat:SetAllPoints(Text)
 
-	Stat:SetScript("OnUpdate", function()
-		Text:SetText(cfg.ColorClass and (HasNewMail() and "|cff00FF00"..infoL["New"].."|r"..init.Colored..infoL["Mail"] or init.Colored..infoL["No Mail"].."|r") or HasNewMail() and "|cff00FF00"..infoL["New"].."|r"..infoL["Mail"] or infoL["No Mail"])
-	end)
+	local function Update(self, event, ...)
+		Text:SetText((cfg.ColorClass and (HasNewMail() and "|cff00FF00"..infoL["New"].."|r"..init.Colored..infoL["Mail"] or init.Colored..infoL["No Mail"].."|r")) or (HasNewMail() and "|cff00FF00"..infoL["New"].."|r"..infoL["Mail"] or infoL["No Mail"]))
+	end
+	
+	Stat:RegisterEvent("MAIL_SHOW")
+	Stat:RegisterEvent("MAIL_INBOX_UPDATE")
+	Stat:RegisterEvent("MAIL_CLOSED")
+	Stat:SetScript("OnUpdate", Update)
+	Stat:SetScript("OnEvent", Update)
 end

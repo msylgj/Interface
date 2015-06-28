@@ -19,12 +19,12 @@ local Media = "Interface\\AddOns\\ShestakUI_Filger\\Media\\"
 
 	-- ShestakUI_Filger.lua
 	-- 可选颜色: "DK", "DLY"-小德, "LR", "FS", "WS"-武僧, "QS", "MS"-牧师(既白色), "DZ", "SM", "SS", "ZS", "Black"-黑色, "Gray"-灰色, "OWN"-自动选择你当前角色的职业颜色.
-	Misc.font = "Fonts\\ARKai_T.ttf"	-- 所有数字的字体
-	Misc.barfg = Media.."White"		-- 计时条材质
+	Misc.font = Media.."Pixel.ttf"	-- 所有数字的字体
+	Misc.barfg = Media.."barfg"		-- 计时条材质
 	Misc.modefg = "OWN"				-- 计时条颜色
---	Misc.modeback = "OWN"			-- 图标背景或蒙板颜色（一像素和毛绒绒样式无效）
+	Misc.modeback = "Black"			-- 图标背景或蒙板颜色（一像素和毛绒绒样式无效）
 	Misc.modeborder = "Black"		-- 边框颜色
-	Misc.numsize = 11				-- 层数, 计时条的计时数字大小
+	Misc.numsize = 14				-- 层数, 计时条的计时数字大小
 	Misc.namesize = 14				-- 法术名称字体大小
 
 	-- Cooldowns.lua
@@ -37,9 +37,9 @@ local Media = "Interface\\AddOns\\ShestakUI_Filger\\Media\\"
 	Misc.barw = 160					-- 计时条长度 - (主图标注号 7,9)
 	Misc.CDnum = 6					-- COOLDOWN 冷却图标每行显示几个 - (主图标注号 8)
 	Misc.IconSize = 38				-- 图标大小 - (主图标注号 1,2,3,4,5,6)
-	Misc.CDIconSize = 31			-- COOLDOWN 冷却图标大小 - (主图标注号 8)
+	Misc.CDIconSize = 30			-- COOLDOWN 冷却图标大小 - (主图标注号 8)
 	Misc.barIconSize = 25			-- 计时条上的图标大小 - (主图标注号 7,9)
-	
+
 -------------------------------------------------------- 
 getscreenheight = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)")) 
 getscreenwidth = tonumber(string.match(({GetScreenResolutions()})[GetCurrentResolution()], "(%d+)x+%d")) 
@@ -56,7 +56,7 @@ local Scale = function(x)
 end 
 Misc.mult = mult 
 
------------------------ ShestakUI_Filger_1px -----------------------
+----------------------- ShestakUI_Filger_Fluffy -----------------------
 
 -- 命名空间
 local _, sakaras = ...

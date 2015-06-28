@@ -10,7 +10,6 @@ function GetMinimapShape() return "SQUARE" end
 Minimap:ClearAllPoints()
 Minimap:SetPoint(MapPosition[1], MapPosition[2], MapPosition[3], MapPosition[4] / Scale, MapPosition[5] / Scale)
 MinimapCluster:SetScale(Scale)
---Minimap:SetFrameStrata("BACKGROUND")
 Minimap:SetFrameLevel(10)
 
 -- Mask texture hint => addon will work with Carbonite
@@ -70,7 +69,6 @@ local frames = {
     "MiniMapWorldMapButton",
     "MiniMapMailBorder",
 	"GarrisonLandingPageMinimapButton",
-    --"MiniMapBattlefieldBorder",
 }
 
 for i in pairs(frames) do
@@ -85,15 +83,10 @@ MiniMapTrackingButton:SetAlpha(0)
 MiniMapTracking:ClearAllPoints()
 MiniMapTracking:SetPoint("BOTTOMLEFT", Minimap, -5, -7)
 
--- BG icon
---MiniMapBattlefieldFrame:ClearAllPoints()
---MiniMapBattlefieldFrame:SetPoint("TOP", Minimap, "TOP", 2, 5)
-
 -- LFG icon
 QueueStatusMinimapButton:ClearAllPoints()
 QueueStatusMinimapButton:SetPoint("TOP", Minimap, "TOP", 1, 8)
 QueueStatusMinimapButtonBorder:Hide()
--- QueueStatusMinimapButtonBorder:SetFrameStrata("MEDIUM")
 
 -- Instance Difficulty flag
 MiniMapInstanceDifficulty:ClearAllPoints()
@@ -153,22 +146,17 @@ local menuList = {
     func = function() ToggleCollectionsJournal(1) end},
     {text = BLIZZARD_STORE,
     func = function() ToggleStoreUI() end},
-    {text = "好友",
+    {text = FRIENDS,
     func = function() ToggleFriendsFrame(1) end},
-    {text = "要塞",
+    {text = GARRISON_LOCATION_TOOLTIP,
     func = function() GarrisonLandingPage_Toggle() end},
     {text = HELP_BUTTON,
     func = function() ToggleHelpFrame() end},
-    {text = "日历",
-    func = function()
-    if(not CalendarFrame) then LoadAddOn("Blizzard_Calendar") end
-        Calendar_Toggle()
-    end},
-    {text = "角色检查",
+    {text = READY_CHECK,
     func = function() InitiateRolePoll() end},
-    {text = "转化为团队",
+    {text = CONVERT_TO_RAID,
     func = function() ConvertToRaid() end},
-    {text = "转化为小队",
+    {text = CONVERT_TO_PARTY,
     func = function() ConvertToParty() end},
 }
 
@@ -221,7 +209,7 @@ ping:SetHeight(10)
 ping:SetWidth(100)
 ping:SetPoint('BOTTOM', Minimap, 0, 20)
 
-ping:SetFont(STANDARD_TEXT_FONT, 12, 'OUTLINE')
+ping:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE')
 ping:SetJustifyH'CENTER'
 ping:SetJustifyV'CENTER'
 ping:SetMaxLines(1)

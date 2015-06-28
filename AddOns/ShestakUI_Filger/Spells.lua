@@ -1,8 +1,8 @@
-local _, sakaras = ...
+ï»¿local _, sakaras = ...
 local Misc = sakaras.FilgerSettings
 
 Filger_Spells = {
-	["DEATHKNIGHT"] = {			--[ËÀÆï]
+	["DEATHKNIGHT"] = {		--[æ­»éª‘]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -63,144 +63,67 @@ Filger_Spells = {
 			{spellID = 114851, unitID = "player", caster = "player", filter = "BUFF", count = 10},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			{spellID = 170397, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Tank
-			-- ÆïÊ¿»ÕÕÂ
-			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÒÖÖÆµñÏñ
-
-			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Æë²¼µÄÓŞÖÒ
-			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÆÕ¶ûµÄÃ¤Ä¿Ö®ÑÛ
-
-			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ê¯»¯Ê³Èâæß×Ó
-			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ²»Ãß°ÂÊõ¾«»ê
-
-			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÎŞĞ¸ºÏ»÷Ê¯°å
-			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ±¬ÁÑÈÛÂ¯Ö®ÃÅ
-
-			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÖØ»÷»¤·û
-			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Armor
-
-			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Mastery
-
-			{spellID = 177057, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Proc Haste
-
-			{spellID = 177104, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Rook's Unlucky Talisman (Reduces damage, Use)
-			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Resolve of Niuzao (Dodge, Use)
-			{spellID = 146344, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Steadfast Talisman of the Shado-Pan Assault (Dodge, Use)
-			{spellID = 138728, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Delicate Vial of the Sanguinaire (Mastery, Proc)
-			{spellID = 138864, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Stuff of Nightmares (Dodge, Proc)
-			{spellID = 126646, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vial of Dragon's Blood (Dodge, Proc)
-			{spellID = 126533, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Warlord Figurine (Mastery, Use)
-			{spellID = 126597, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Strength DPS
-			-- Evil Eye of Galakras (Strength, Proc)
-			{spellID = 146245, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Tail Tip (Strength, Proc)
-			{spellID = 146250, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Skeer's Bloodsoaked Talisman (Strength, Proc)
-			{spellID = 146285, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fusion-Fire Core (Strength, Proc)
-			{spellID = 148899, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Celestial Celerity (Haste, Proc) [Alacrity of Xuen]
-			{spellID = 146296, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Brutal Talisman of the Shado-Pan Assault (Strength, Proc)
-			{spellID = 138702, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fabled Feather of Ji-Kun (Strength, Proc)
-			{spellID = 138759, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Spark of Zandalar (Strength, Proc)
-			{spellID = 138958, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Primordius' Talisman of Rage (Strength, Proc)
-			{spellID = 138870, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Gaze of the Twins (Crit, Proc)
-			{spellID = 139170, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Helmbreaker Medallion (Crit, Use)
-			{spellID = 136084, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Darkmist Vortex (Haste, Proc)
-			{spellID = 126657, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lei Shin's Final Orders (Strength, Proc)
-			{spellID = 126582, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Charioteer Figurine (Strength, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Iron Belly Wok (Haste, Use)
-			{spellID = 129812, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Use)
-			{spellID = 126679, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Proc)
-			{spellID = 126700, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Õ½ÕùÖ®Â­
+			-- 1.0: Darkmoon Cards
+			-- Melee DPS (Crit, Proc)
 			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
-			-- »îÌåÖ®É½Î¢Á£
-			{spellID = 176974, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÆæÑÇÅµË¹µÄ½£ÇÊ
-			{spellID = 177189, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ì©¿ËÍ¼Ë¹µÄÂö¶¯Ö®ĞÄ
-			{spellID = 177040, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ¼âĞ¥Ö®»êºÅ½Ç
-			{spellID = 177042, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÈÛÂ¯Ö÷¹ÜµÄ»Õ¼Ç
+			-- Tanking (Crit, Proc)
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Strength
+			{spellID = 60229, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Proc)
+			{spellID = 182063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Tanking
+			-- Battering Talisman (Haste, Proc)
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blast Furnace Door (Mastery, Proc)
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evergaze Arcane Eidolon (Bonus Armor, Proc)
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Relic of Blood (Haste, Proc)
+			{spellID = 176937, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Kyb's Foolish Perseverance (Health, Use)
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Petrified Flesh-Eating Spore (Mastery, Proc)
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Pol's Blinded Eye (Mastery, Use)
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Stoneheart Idol (Crit, Proc)
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tablet of Turnbuckle Teamwork (Bonus Armor, Use)
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Melee DPS [Strength]
+			-- Forgemaster's Insignia (Multistrike, Proc)
 			{spellID = 177096, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Multi-strike
+			-- Formidable Fang (Multistrike, Proc)
+			{spellID = 176935, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Horn of the Screaming Spirits (Mastery, Proc)
+			{spellID = 177042, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Mote of the Mountain (Versatility, Proc)
+			{spellID = 176974, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scabbard of Kyanos (Strength, Use)
+			{spellID = 177189, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tectus' Beating Heart (Crit, Proc)
+			{spellID = 177040, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Vial of Convulsive Shadows (Multistrike, Use)
 			{spellID = 176874, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Mastery
-			{spellID = 177044, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Multi-strike
-			{spellID = 177098, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- Enchants
-			-- General
-			-- Tank
-			-- River's Song (Dodge)
-			{spellID = 116660, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Strength)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-			-- WOD
-			-- ËªÀÇÓ¡¼Ç£¨Ë«»÷
-			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
-			-- À×ÍõÓ¡¼Ç£¨±¬»÷
-			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Ñª»·Ó¡¼Ç£¨¾«Í¨
-			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Õ½¸èÓ¡¼Ç£¨¼ÓËÙ
-			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
-			-- ºÚÊ¯Ó¡¼Ç£¨»¤¼×
+			-- Mark of Blackrock (Bonus Armor)
 			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Legendary Meta Gems
-			-- Indomitable Primal Diamond (Tank)
-
-
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- 690éÙ½ä £¨Á¦Á¿£©
-			{spellID = 177160, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- 710éÙ½ä £¨Á¦Á¿£©
-			{spellID = 177175, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- ³ÈÉ«¶à²Ê
-			-- ²»ÇüÖ®Ô´×ê (ÄÍÁ¦, ¼õÉË)
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DE/BUFF_BAR",
@@ -311,6 +234,8 @@ Filger_Spells = {
 			{spellID = 69070, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -322,11 +247,9 @@ Filger_Spells = {
 			{slotID = 14, filter = "CD"},
 
 			-- Internal
-			-- Shroud of Purgatory
-			--{spellID = 116888, filter = "ICD", trigger = "BUFF", duration = 180},
 		},
 	},
-	["DRUID"] = {			--[Ğ¡µÂ]
+	["DRUID"] = {			--[å°å¾·]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -336,6 +259,8 @@ Filger_Spells = {
 			IconSize = Misc.IconSize,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 
+			-- Cenarion Ward
+			{spellID = 158792, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Cenarion Ward
 			{spellID = 102351, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Incarnation: Tree of Life
@@ -370,18 +295,10 @@ Filger_Spells = {
 			{spellID = 170856, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Dash
 			{spellID = 1850, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Harmony
-			{spellID = 100977, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Solar Empowerment
+			-- Solar Empower
 			{spellID = 164545, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lunar Empowerment
+			-- Lunar Empower
 			{spellID = 164547, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lunar Empowerment
-			{spellID = 80313, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÈÕšŒĞg
-			{spellID = 155592, unitID = "player", caster = "player", filter = "BUFF"}, 
-			-- ×ÔÈ»ÖÇ»Û
-			{spellID = 177794, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -410,135 +327,114 @@ Filger_Spells = {
 			-- Predator's Swiftness
 			{spellID = 69369, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- Item sets Ì××°
-			-- Sage Mender (ÖÎÁÆT16)
+			-- Item sets å¥—è£…
+			-- Sage Mender (æ²»ç–—T16)
 			{spellID = 144871, unitID = "player", caster = "player", filter = "BUFF"},
+			-- è‡ªç„¶æ™ºæ…§ (æ²»ç–—T17)
+			{spellID = 177794, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Tank
-			-- Rook's Unlucky Talisman (Reduces damage, Use)
-			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Resolve of Niuzao (Dodge, Use)
-			{spellID = 146344, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Steadfast Talisman of the Shado-Pan Assault (Dodge, Use)
-			{spellID = 138728, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Delicate Vial of the Sanguinaire (Mastery, Proc)
-			{spellID = 138864, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Stuff of Nightmares (Dodge, Proc)
-			{spellID = 126646, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vial of Dragon's Blood (Dodge, Proc)
-			{spellID = 126533, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Warlord Figurine (Mastery, Use)
-			{spellID = 126597, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Assurance of Consequence (Agility, Proc)
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Haromm's Talisman (Agility, Proc)
-			{spellID = 148903, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sigil of Rampage (Agility, Proc)
-			{spellID = 148896, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ticking Ebon Detonator (Agility, Proc)
-			{spellID = 146310, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Discipline of Xuen (Crit, Proc)
-			{spellID = 146312, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vicious Talisman of the Shado-Pan Assault (Agility, Proc)
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bad Juju (Agility, Proc)
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Talisman of Bloodlust (Haste, Proc)
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Rune of Re-Origination (Convert, Proc)
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Renataki's Soul Charm (Agility, Proc)
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Arrowflight Medallion (Crit, Use)
-			{spellID = 136086, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- À×ÉñµÄ¾«×¼Ö®ÊÓ
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-			-- Prismatic Prison of Pride (Intellect, Proc)
-			{spellID = 146314, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Nazgrim's Burnished Insignia (Intellect, Proc)
-			{spellID = 148908, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Acid-Grooved Tooth (Intellect, Proc)
-			{spellID = 148911, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Qin-xi's Polarizing Seal (Intellect, Proc)
-			{spellID = 126588, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- Enchants
-			-- General
-			-- Tank
-			-- River's Song (Dodge)
-			{spellID = 116660, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Agility)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
+			-- 1.0: Darkmoon Cards
+			-- Caster DPS (Crit, Proc)
+			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Healing (Spirit, Proc)
+			{spellID = 162913, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tanking (Crit, Proc)
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Agility
+			{spellID = 60233, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Proc)
+			{spellID = 182058, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Proc)
+			{spellID = 182060, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Tanking
+			-- Battering Talisman (Haste, Proc)
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blast Furnace Door (Mastery, Proc)
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evergaze Arcane Eidolon (Bonus Armor, Proc)
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Relic of Blood (Haste, Proc)
+			{spellID = 176937, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Kyb's Foolish Perseverance (Health, Use)
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Petrified Flesh-Eating Spore (Mastery, Proc)
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Pol's Blinded Eye (Mastery, Use)
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Stoneheart Idol (Crit, Proc)
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tablet of Turnbuckle Teamwork (Bonus Armor, Use)
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Melee DPS [Agility]
+			-- Beating Heart of the Mountain (Multistrike, Use)
+			{spellID = 176878, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blackheart Enforcer's Medallion (Multistrike, Proc)
+			{spellID = 176984, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Jar of Doom (Mastery, Proc)
+			{spellID = 176939, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Humming Blackiron Trigger (Crit, Proc)
+			{spellID = 177067, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lucky Double-Sided Coin (Agility, Use)
+			{spellID = 177597, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Meaty Dragonspine Trophy (Haste, Proc)
+			{spellID = 177035, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scales of Doom (Multistrike, Proc)
+			{spellID = 177038, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 5.0: Caster DPS
+			-- Blackiron Micro Crucible (Multistrike, Proc)
+			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Copeland's Clarity (Spellpower, Use)
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Darmac's Unstoppable Talisman (Haste, Proc)
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Orb of Putrescence (Mastery, Proc)
+			{spellID = 176941, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Furyheart Talisman (Haste, Proc)
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Goren Soul Repository (Crit, Proc)
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shards of Nothing (Haste, Use)
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 6.0: Healing
+			-- Auto-Repairing Autoclave (Haste, Proc)
+			{spellID = 177086, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Elementalist's Shielding Talisman (Multistrike, Proc)
+			{spellID = 177063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Emblem of Caustic Healing (Haste, Use)
+			{spellID = 176879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Censer of Faith (Haste, Proc)
+			{spellID = 176943, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Immaculate Living Mushroom (Crit, Proc)
+			{spellID = 176978, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ironspike Chew Toy (Spirit, Proc)
+			{spellID = 177060, unitID = "player", caster = "player", filter = "BUFF"},
 			
-			-- ³ÈÉ«¶à²Ê
-			-- ²»ÇüÖ®Ô´×ê (ÄÍÁ¦, ¼õÉË)
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- ÒõÏÕÖ®Ô´×ê (±©»÷, ¼±ËÙ)
-			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Ó¢ÓÂÖ®Ô´×ê (ÖÇÁ¦, ½ÚÄÜ)
-			{spellID = 137288, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Ê·Ê«Åû·ç
-			-- Spirit of Chi-Ji
-			{spellID = 146200, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Enchants
+			-- Mark of Blackrock (Bonus Armor)
+			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Shadowmoon (Spirit)
+			{spellID = 159678, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -559,7 +455,7 @@ Filger_Spells = {
 			{spellID = 1079, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Lacerate
 			{spellID = 33745, unitID = "target", caster = "player", filter = "DEBUFF"},
-			-- Í´»÷
+			-- ç—›å‡»
 			{spellID = 77758, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Immobilized
 			{spellID = 45334, unitID = "target", caster = "player", filter = "DEBUFF"},
@@ -684,6 +580,8 @@ Filger_Spells = {
 			{spellID = 26297, filter = "CD", absID = true},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -695,13 +593,9 @@ Filger_Spells = {
 			{slotID = 14, filter = "CD"},
 
 			-- Internal
-			-- Lightweave
-			--{spellID = 125487, filter = "ICD", trigger = "BUFF", duration = 60},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 	},
-	["HUNTER"] = {			--[ÁÔÈË]
+	["HUNTER"] = {			--[çŒäºº]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -723,6 +617,8 @@ Filger_Spells = {
 			{spellID = 90361, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Posthaste
 			{spellID = 118922, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Sniper Training
+			{spellID = 168811, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -746,53 +642,42 @@ Filger_Spells = {
 			{spellID = 136, unitID = "pet", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Assurance of Consequence (Agility, Proc)
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Haromm's Talisman (Agility, Proc)
-			{spellID = 148903, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sigil of Rampage (Agility, Proc)
-			{spellID = 148896, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ticking Ebon Detonator (Agility, Proc)
-			{spellID = 146310, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Discipline of Xuen (Crit, Proc)
-			{spellID = 146312, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vicious Talisman of the Shado-Pan Assault (Agility, Proc)
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bad Juju (Agility, Proc)
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Talisman of Bloodlust (Haste, Proc)
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Rune of Re-Origination (Convert, Proc)
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Renataki's Soul Charm (Agility, Proc)
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Arrowflight Medallion (Crit, Use)
-			{spellID = 136086, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.0: Darkmoon Cards
+			-- Ranged DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Agility
+			{spellID = 60233, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ranged DPS [Agility] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ranged DPS [Agility] (Versatility, Proc)
+			{spellID = 182060, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Ranged DPS [Agility]
+			-- Beating Heart of the Mountain (Multistrike, Use)
+			{spellID = 176878, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blackheart Enforcer's Medallion (Multistrike, Proc)
+			{spellID = 176984, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Jar of Doom (Mastery, Proc)
+			{spellID = 176939, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Humming Blackiron Trigger (Crit, Proc)
+			{spellID = 177067, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lucky Double-Sided Coin (Agility, Use)
+			{spellID = 177597, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Meaty Dragonspine Trophy (Haste, Proc)
+			{spellID = 177035, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scales of Doom (Multistrike, Proc)
+			{spellID = 177038, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Physical General
-			-- Physical Ranged
-			-- Mirror Scope (Crit)
-			{spellID = 109092, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lord Blastington's Scope of Doom (Agility)
-			{spellID = 109085, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Hemet's Heartseeker (Mastery)
+			{spellID = 173288, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Megawatt Filament (Crit)
+			{spellID = 156060, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Oglethorpe's Missile Splitter (Multistrike)
+			{spellID = 156055, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -805,6 +690,8 @@ Filger_Spells = {
 
 			-- Black Arrow
 			{spellID = 3674, unitID = "target", caster = "player", filter = "DEBUFF"},
+			-- Serpent Sting
+			{spellID = 87935, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Explosive Shot
 			{spellID = 53301, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Narrow Escape
@@ -942,6 +829,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -955,7 +844,7 @@ Filger_Spells = {
 			-- Internal
 		},
 	},
-	["MAGE"] = {			--[·¨Ê¦]
+	["MAGE"] = {			--[æ³•å¸ˆ]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -1010,119 +899,52 @@ Filger_Spells = {
 			{spellID = 79683, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Pyroblast!
 			{spellID = 48108, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 2T17 °Â
+			-- 2T17 å¥¥
 			{spellID = 166871, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 4T17 »ğ
+			-- 4T17 ç«
 			{spellID = 166868, unitID = "player", caster = "player", filter = "BUFF"},
-			-- 4T17 °Â
+			-- 4T17 å¥¥
 			{spellID = 166872, unitID = "player", caster = "player", filter = "BUFF"},
-
+			
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Ë¯Ä§Ö®´ü
+			-- 1.0: Darkmoon Cards
+			-- Caster DPS (Crit, Proc)
 			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ¿ñÅ­Ö®ĞÄ»¤·û
-
-			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ĞéÎŞËéÆ¬
-
-			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ¿ÆÆÕÀ¼µÄÇåĞÑ
-
-			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÷àòáÈËÁé»êÈİÆ÷
-
-			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ´ïÂê¿ËµÄÎŞ³£»¤·û
-
-			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ºÚÌúÎ¢ĞÍÛáÛö
-
+			-- 1.1: Alchemy Stones
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Proc)
+			{spellID = 182058, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Caster DPS
+			-- Blackiron Micro Crucible (Multistrike, Proc)
 			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Critical Strike
-
-			{spellID = 177047, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Haste
-
-			{spellID = 177052, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Proc Multi-strike
-
-			{spellID = 177085, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Spirit
-
-			{spellID = 177062, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Attacks Proc Multi-strike
-
-			{spellID = 177064, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Proc Haste
-
-			{spellID = 177090, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- À×ÉñµÄ¾«×¼Ö®ÊÓ
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Copeland's Clarity (Spellpower, Use)
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Darmac's Unstoppable Talisman (Haste, Proc)
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Orb of Putrescence (Mastery, Proc)
+			{spellID = 176941, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Furyheart Talisman (Haste, Proc)
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Goren Soul Repository (Crit, Proc)
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shards of Nothing (Haste, Use)
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- WOD
-			-- ËªÀÇÓ¡¼Ç£¨Ë«»÷
-			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
-			-- À×ÍõÓ¡¼Ç£¨±¬»÷
-			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Ñª»·Ó¡¼Ç£¨¾«Í¨
-
+			-- Mark of Bleeding Hollow (Mastery)
 			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Õ½¸èÓ¡¼Ç£¨¼ÓËÙ
-
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
 			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Legendary Meta Gems
-			-- Sinister Primal Diamond (Caster DPS)
-
-			-- 690éÙ½ä £¨·¨Ïµ£©
-			{spellID = 177159, unitID = "player", caster = "all", filter = "BUFF"},
-			-- 715éÙ½ä £¨·¨Ïµ£©
-			{spellID = 177176, unitID = "player", caster = "all", filter = "BUFF"},
-			-- ³ÈÉ«¶à²Ê
-			-- ÒõÏÕÖ®Ô´×ê (±©»÷, ¼±ËÙ)
-			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -1151,6 +973,8 @@ Filger_Spells = {
 			{spellID = 83853, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Freeze (Pet)
 			{spellID = 33395, unitID = "target", caster = "all", filter = "DEBUFF"},
+			-- Water Jet (Pet)
+			{spellID = 135029, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Frost Nova
 			{spellID = 122, unitID = "target", caster = "all", filter = "DEBUFF"},
 			-- Ice Ward
@@ -1221,6 +1045,8 @@ Filger_Spells = {
 			{spellID = 120, filter = "CD"},
 			-- Freeze (Pet)
 			{spellID = 33395, filter = "CD"},
+			-- Water Jet (Pet)
+			{spellID = 135029, filter = "CD"},
 			-- Ice Floes
 			{spellID = 108839, filter = "CD"},
 			-- Combustion
@@ -1245,6 +1071,8 @@ Filger_Spells = {
 			{spellID = 45438, filter = "CD"},
 			-- Invisibility
 			{spellID = 66, filter = "CD"},
+			-- Comet Storm
+			{spellID = 153595, filter = "CD"},
 
 			-- Racial
 			-- Every Man for Himself (Human)
@@ -1275,6 +1103,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -1286,13 +1116,9 @@ Filger_Spells = {
 			{slotID = 14, filter = "CD"},
 
 			-- Internal
-			-- Lightweave
-			--{spellID = 125487, filter = "ICD", trigger = "BUFF", duration = 60},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 	},
-	["MONK"] = {			--[ÎäÉ®]
+	["MONK"] = {			--[æ­¦åƒ§]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -1302,29 +1128,31 @@ Filger_Spells = {
 			IconSize = Misc.IconSize,
 			Position = {unpack(Filger_Settings.player_buff_icon)},
 
-			-- Guard½ğÖÓÕÖ
+			-- Guardé‡‘é’Ÿç½©
 			{spellID = 115295, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fortifying Brew×³µ¨¾Æ
+			-- Fortifying Brewå£®èƒ†é…’
 			{spellID = 120954, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Elusive BrewÆ®Ãì¾Æ
+			-- Elusive Brewé£˜æ¸ºé…’
 			{spellID = 115308, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Tigereye Brew»¢ÑÛ¾Æ
+			-- Tigereye Brewè™çœ¼é…’
 			{spellID = 116740, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Touch of KarmaÒµ±¨Ö®´¥
+			-- Touch of Karmaä¸šæŠ¥ä¹‹è§¦
 			{spellID = 125174, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Diffuse MagicÉ¢Ä§¹¦
+			-- Diffuse Magicæ•£é­”åŠŸ
 			{spellID = 122783, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Energizing BrewºÀÄÜ¾Æ
+			-- Energizing Brewè±ªèƒ½é…’
 			{spellID = 115288, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Thunder Focus Tea
 			{spellID = 116680, unitID = "player", caster = "player", filter = "BUFF"},
-			-- MomentumÊÆÈçÆÆÖñ
+			-- MomentumåŠ¿å¦‚ç ´ç«¹
 			{spellID = 119085, unitID = "player", caster = "player", filter = "BUFF"},
-			--Çá¶È×íÈ­
+			-- Dampen Harm
+			{spellID = 122278, unitID = "player", caster = "player", filter = "BUFF"},
+			--è½»åº¦é†‰æ‹³
 			{spellID = 124275, unitID = "player", caster = "all", filter = "DEBUFF"},
-			--ÖĞ¶È×íÈ­
+			--ä¸­åº¦é†‰æ‹³
 			{spellID = 124274, unitID = "player", caster = "all", filter = "DEBUFF"},
-			--ÖØ¶È×íÈ­
+			--é‡åº¦é†‰æ‹³
 			{spellID = 124273, unitID = "player", caster = "all", filter = "DEBUFF"},
 		},
 		{
@@ -1337,7 +1165,7 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
 			-- Buffs
-			-- ÃÍ»¢Á¬»÷
+			-- çŒ›è™è¿å‡»
 			{spellID = 120273, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Elusive Brew
 			{spellID = 128939, unitID = "player", caster = "player", filter = "BUFF", absID = true, count = 12},
@@ -1353,109 +1181,92 @@ Filger_Spells = {
 			{spellID = 118864, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Shuffle
 			{spellID = 115307, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vital Mists»îÁ¦Ö®Îí
+			-- Vital Mistsæ´»åŠ›ä¹‹é›¾
 			{spellID = 118674, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Serpent's ZealÇàÁúÖ®³À
+			-- Serpent's Zealé’é¾™ä¹‹å¿±
 			{spellID = 127722, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Tank
-			-- Rook's Unlucky Talisman (Reduces damage, Use)
-			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Resolve of Niuzao (Dodge, Use)
-			{spellID = 146344, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Steadfast Talisman of the Shado-Pan Assault (Dodge, Use)
-			{spellID = 138728, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Delicate Vial of the Sanguinaire (Mastery, Proc)
-			{spellID = 138864, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Stuff of Nightmares (Dodge, Proc)
-			{spellID = 126646, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vial of Dragon's Blood (Dodge, Proc)
-			{spellID = 126533, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Warlord Figurine (Mastery, Use)
-			{spellID = 126597, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Assurance of Consequence (Agility, Proc)
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Haromm's Talisman (Agility, Proc)
-			{spellID = 148903, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sigil of Rampage (Agility, Proc)
-			{spellID = 148896, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ticking Ebon Detonator (Agility, Proc)
-			{spellID = 146310, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Discipline of Xuen (Crit, Proc)
-			{spellID = 146312, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vicious Talisman of the Shado-Pan Assault (Agility, Proc)
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bad Juju (Agility, Proc)
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Talisman of Bloodlust (Haste, Proc)
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Rune of Re-Origination (Convert, Proc)
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Renataki's Soul Charm (Agility, Proc)
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Arrowflight Medallion (Crit, Use)
-			{spellID = 136086, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-			-- Prismatic Prison of Pride (Intellect, Proc)
-			{spellID = 146314, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Nazgrim's Burnished Insignia (Intellect, Proc)
-			{spellID = 148908, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Acid-Grooved Tooth (Intellect, Proc)
-			{spellID = 148911, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Qin-xi's Polarizing Seal (Intellect, Proc)
-			{spellID = 126588, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.0: Darkmoon Cards
+			-- Healing (Spirit, Proc)
+			{spellID = 162913, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tanking (Crit, Proc)
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Agility
+			{spellID = 60233, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Proc)
+			{spellID = 182060, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Tanking
+			-- Battering Talisman (Haste, Proc)
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blast Furnace Door (Mastery, Proc)
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evergaze Arcane Eidolon (Bonus Armor, Proc)
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Relic of Blood (Haste, Proc)
+			{spellID = 176937, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Kyb's Foolish Perseverance (Health, Use)
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Petrified Flesh-Eating Spore (Mastery, Proc)
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Pol's Blinded Eye (Mastery, Use)
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Stoneheart Idol (Crit, Proc)
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tablet of Turnbuckle Teamwork (Bonus Armor, Use)
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Melee DPS [Agility]
+			-- Beating Heart of the Mountain (Multistrike, Use)
+			{spellID = 176878, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blackheart Enforcer's Medallion (Multistrike, Proc)
+			{spellID = 176984, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Jar of Doom (Mastery, Proc)
+			{spellID = 176939, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Humming Blackiron Trigger (Crit, Proc)
+			{spellID = 177067, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lucky Double-Sided Coin (Agility, Use)
+			{spellID = 177597, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Meaty Dragonspine Trophy (Haste, Proc)
+			{spellID = 177035, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scales of Doom (Multistrike, Proc)
+			{spellID = 177038, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 5.0: Healing
+			-- Auto-Repairing Autoclave (Haste, Proc)
+			{spellID = 177086, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Elementalist's Shielding Talisman (Multistrike, Proc)
+			{spellID = 177063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Emblem of Caustic Healing (Haste, Use)
+			{spellID = 176879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Censer of Faith (Haste, Proc)
+			{spellID = 176943, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Immaculate Living Mushroom (Crit, Proc)
+			{spellID = 176978, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ironspike Chew Toy (Spirit, Proc)
+			{spellID = 177060, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Tank
-			-- River's Song (Dodge)
-			{spellID = 116660, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Agility)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-
-			-- ³ÈÉ«¶à²Ê
-			-- ²»ÇüÖ®Ô´×ê (ÄÍÁ¦, ¼õÉË)
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- Ó¢ÓÂÖ®Ô´×ê (ÖÇÁ¦, ½ÚÄÜ)
-			{spellID = 137288, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Ê·Ê«Åû·ç
-			-- Spirit of Chi-Ji
-			{spellID = 146200, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Blackrock (Bonus Armor)
+			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Shadowmoon (Spirit)
+			{spellID = 159678, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -1570,6 +1381,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -1581,9 +1394,11 @@ Filger_Spells = {
 			{slotID = 14, filter = "CD"},
 
 			-- Internal
+			-- Tiger Power
+			{spellID = 125359, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 	},
-	["PALADIN"] = {			--[Ê¥Æï]
+	["PALADIN"] = {			--[åœ£éª‘]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -1595,13 +1410,13 @@ Filger_Spells = {
 
 			-- Divine Shield
 			{spellID = 642, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Í¼À­ÑïµÄ²Ã¾ö (20%ÒÆ¶¯ËÙ¶È)
+			-- å›¾æ‹‰æ‰¬çš„è£å†³ (20%ç§»åŠ¨é€Ÿåº¦)
 			{spellID = 156987, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÎÚÉª¶ûÖ®ĞÄ (2Ãë»Ø1%Ñª)
+			-- ä¹Œç‘Ÿå°”ä¹‹å¿ƒ (2ç§’å›1%è¡€)
 			{spellID = 156988, unitID = "player", caster = "player", filter = "BUFF"},
-			-- ÀòÑÇµÂÁÕµÄ¹«Õı (15%¼±ËÙ,20Ãë)
+			-- è‰äºšå¾·ç³çš„å…¬æ­£ (15%æ€¥é€Ÿ,20ç§’)
 			{spellID = 156989, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Âê¶ûÀ­µÂµÄÕæÀí (15%¹¥Ç¿,20Ãë)
+			-- ç›å°”æ‹‰å¾·çš„çœŸç† (15%æ”»å¼º,20ç§’)
 			{spellID = 156990, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Guardian of Ancient Kings
 			{spellID = 86659, unitID = "player", caster = "player", filter = "BUFF"},
@@ -1619,8 +1434,6 @@ Filger_Spells = {
 			{spellID = 114163, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Sacred Shield
 			{spellID = 20925, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Shield of the righteous ÕıÒå¶Ü»÷
-			--{spellID = 53600, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -1652,105 +1465,86 @@ Filger_Spells = {
 			{spellID = 144595, unitID = "player", caster = "player", filter = "BUFF"},
 			
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Tank
-			-- Rook's Unlucky Talisman (Reduces damage, Use)
-			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Resolve of Niuzao (Dodge, Use)
-			{spellID = 146344, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Steadfast Talisman of the Shado-Pan Assault (Dodge, Use)
-			{spellID = 138728, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Delicate Vial of the Sanguinaire (Mastery, Proc)
-			{spellID = 138864, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Stuff of Nightmares (Dodge, Proc)
-			{spellID = 126646, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vial of Dragon's Blood (Dodge, Proc)
-			{spellID = 126533, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Warlord Figurine (Mastery, Use)
-			{spellID = 126597, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Strength DPS
-			-- Evil Eye of Galakras (Strength, Proc)
-			{spellID = 146245, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Tail Tip (Strength, Proc)
-			{spellID = 146250, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Skeer's Bloodsoaked Talisman (Strength, Proc)
-			{spellID = 146285, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fusion-Fire Core (Strength, Proc)
-			{spellID = 148899, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Alacrity of Xuen (Haste, Proc)
-			{spellID = 146296, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Brutal Talisman of the Shado-Pan Assault (Strength, Proc)
-			{spellID = 138702, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fabled Feather of Ji-Kun (Strength, Proc)
-			{spellID = 138759, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Spark of Zandalar (Strength, Proc)
-			{spellID = 138958, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Primordius' Talisman of Rage (Strength, Proc)
-			{spellID = 138870, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Gaze of the Twins (Crit, Proc)
-			{spellID = 139170, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Helmbreaker Medallion (Crit, Use)
-			{spellID = 136084, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Darkmist Vortex (Haste, Proc)
-			{spellID = 126657, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lei Shin's Final Orders (Strength, Proc)
-			{spellID = 126582, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Charioteer Figurine (Strength, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Iron Belly Wok (Haste, Use)
-			{spellID = 129812, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Use)
-			{spellID = 126679, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Proc)
-			{spellID = 126700, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-			-- Prismatic Prison of Pride (Intellect, Proc)
-			{spellID = 146314, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Nazgrim's Burnished Insignia (Intellect, Proc)
-			{spellID = 148908, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Acid-Grooved Tooth (Intellect, Proc)
-			{spellID = 148911, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Qin-xi's Polarizing Seal (Intellect, Proc)
-			{spellID = 126588, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.0: Darkmoon Cards
+			-- Healing (Spirit, Proc)
+			{spellID = 162913, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tanking (Crit, Proc)
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1 Alchemy Stones
+			-- Strength
+			{spellID = 60229, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Proc)
+			{spellID = 182063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Tanking
+			-- Battering Talisman (Haste, Proc)
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blast Furnace Door (Mastery, Proc)
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evergaze Arcane Eidolon (Bonus Armor, Proc)
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Relic of Blood (Haste, Proc)
+			{spellID = 176937, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Kyb's Foolish Perseverance (Health, Use)
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Petrified Flesh-Eating Spore (Mastery, Proc)
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Pol's Blinded Eye (Mastery, Use)
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Stoneheart Idol (Crit, Proc)
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tablet of Turnbuckle Teamwork (Bonus Armor, Use)
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Melee DPS [Strength]
+			-- Forgemaster's Insignia (Multistrike, Proc)
+			{spellID = 177096, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Fang (Multistrike, Proc)
+			{spellID = 176935, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Horn of the Screaming Spirits (Mastery, Proc)
+			{spellID = 177042, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Mote of the Mountain (Versatility, Proc)
+			{spellID = 176974, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scabbard of Kyanos (Strength, Use)
+			{spellID = 177189, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tectus' Beating Heart (Crit, Proc)
+			{spellID = 177040, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Vial of Convulsive Shadows (Multistrike, Use)
+			{spellID = 176874, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 5.0: Healing
+			-- Auto-Repairing Autoclave (Haste, Proc)
+			{spellID = 177086, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Elementalist's Shielding Talisman (Multistrike, Proc)
+			{spellID = 177063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Emblem of Caustic Healing (Haste, Use)
+			{spellID = 176879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Censer of Faith (Haste, Proc)
+			{spellID = 176943, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Immaculate Living Mushroom (Crit, Proc)
+			{spellID = 176978, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ironspike Chew Toy (Spirit, Proc)
+			{spellID = 177060, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Tank
-			-- River's Song (Dodge)
-			{spellID = 116660, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Strength)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-
-			-- ³ÈÉ«¶à²Ê
-			-- ²»ÇüÖ®Ô´×ê (ÄÍÁ¦, ¼õÉË)
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-			-- Ó¢ÓÂÖ®Ô´×ê (ÖÇÁ¦, ½ÚÄÜ)
-			{spellID = 137288, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Ê·Ê«Åû·ç
-			-- Spirit of Chi-Ji
-			{spellID = 146200, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Blackrock (Bonus Armor)
+			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Shadowmoon (Spirit)
+			{spellID = 159678, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -1846,6 +1640,8 @@ Filger_Spells = {
 			{spellID = 69179, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -1859,7 +1655,7 @@ Filger_Spells = {
 			-- Internal
 		},
 	},
-	["PRIEST"] = {			--[ÄÁÊ¦]
+	["PRIEST"] = {			--[ç‰§å¸ˆ]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -1875,8 +1671,10 @@ Filger_Spells = {
 			{spellID = 10060, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Spirit Shell
 			{spellID = 109964, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Archangel ´óÌìÊ¹
+			-- Archangel å¤§å¤©ä½¿
 			{spellID = 81700, unitID = "player", caster = "player", filter = "BUFF"},
+			-- å¼·åŒ–å¤§å¤©ä½¿
+			{spellID = 172359, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Vampiric Embrace
 			{spellID = 15286, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Power Word: Shield
@@ -1898,7 +1696,7 @@ Filger_Spells = {
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
 			-- Buffs
-			--°µÓ°ŒšÖé
+			--æš—å½±å¯¶ç 
 			{spellID = 77487, unitID = "player", caster = "player", filter = "BUFF"},
  			-- Divine Insight
 			{spellID = 123267, unitID = "player", caster = "player", filter = "BUFF"},
@@ -1920,75 +1718,67 @@ Filger_Spells = {
 			{spellID = 81661, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Shadow Word: Insanity
 			{spellID = 132573, unitID = "player", caster = "player", filter = "BUFF"},
+
+			-- Item sets å¥—è£…
+			-- å°ˆå¿ƒè‡´å¿— (æˆ’å¾‹T17)
+			{spellID = 167695, unitID = "player", caster = "player", filter = "BUFF"},
+
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- À×ÉñµÄ¾«×¼Ö®ÊÓ
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-			-- Prismatic Prison of Pride (Intellect, Proc)
-			{spellID = 146314, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Nazgrim's Burnished Insignia (Intellect, Proc)
-			{spellID = 148908, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Acid-Grooved Tooth (Intellect, Proc)
-			{spellID = 148911, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Qin-xi's Polarizing Seal (Intellect, Proc)
-			{spellID = 126588, unitID = "player", caster = "player", filter = "BUFF"},
-
+			-- 1.0: Darkmoon Cards
+			-- Caster DPS (Crit, Proc)
+			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Healing (Spirit, Proc)
+			{spellID = 162913, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Proc)
+			{spellID = 182058, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Caster DPS
+			-- Blackiron Micro Crucible (Multistrike, Proc)
+			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Copeland's Clarity (Spellpower, Use)
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Darmac's Unstoppable Talisman (Haste, Proc)
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Orb of Putrescence (Mastery, Proc)
+			{spellID = 176941, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Furyheart Talisman (Haste, Proc)
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Goren Soul Repository (Crit, Proc)
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shards of Nothing (Haste, Use)
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Healing
+			-- Auto-Repairing Autoclave (Haste, Proc)
+			{spellID = 177086, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Elementalist's Shielding Talisman (Multistrike, Proc)
+			{spellID = 177063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Emblem of Caustic Healing (Haste, Use)
+			{spellID = 176879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Censer of Faith (Haste, Proc)
+			{spellID = 176943, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Immaculate Living Mushroom (Crit, Proc)
+			{spellID = 176978, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ironspike Chew Toy (Spirit, Proc)
+			{spellID = 177060, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- Enchants
-			-- General
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-
-			-- ³ÈÉ«¶à²Ê
-			--{spellID = 137596, unitID = "player", caster = "all", filter = "BUFF"},
-			-- ÒõÏÕÖ®Ô´×ê (±©»÷, ¼±ËÙ)
-			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Ó¢ÓÂÖ®Ô´×ê (ÖÇÁ¦, ½ÚÄÜ)
-			{spellID = 137288, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Ê·Ê«Åû·ç
-			-- Spirit of Chi-Ji
-			{spellID = 146200, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Shadowmoon (Spirit)
+			{spellID = 159678, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -2138,6 +1928,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -2148,14 +1940,9 @@ Filger_Spells = {
 			{slotID = 13, filter = "CD"},
 			{slotID = 14, filter = "CD"},
 
-			-- Internal
-			-- Lightweave
-			--{spellID = 125487, filter = "ICD", trigger = "BUFF", duration = 60},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 	},
-	["ROGUE"] = {			--[µÁÔô]
+	["ROGUE"] = {			--[ç›—è´¼]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -2197,6 +1984,8 @@ Filger_Spells = {
 			{spellID = 1966, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Subterfuge
 			{spellID = 115192, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shadow Reflection
+			{spellID = 152151, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
 			Name = "P_PROC_ICON",
@@ -2220,51 +2009,44 @@ Filger_Spells = {
 			{spellID = 121153, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Assurance of Consequence (Agility, Proc)
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Haromm's Talisman (Agility, Proc)
-			{spellID = 148903, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sigil of Rampage (Agility, Proc)
-			{spellID = 148896, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ticking Ebon Detonator (Agility, Proc)
-			{spellID = 146310, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Discipline of Xuen (Crit, Proc)
-			{spellID = 146312, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vicious Talisman of the Shado-Pan Assault (Agility, Proc)
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bad Juju (Agility, Proc)
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Talisman of Bloodlust (Haste, Proc)
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Rune of Re-Origination (Convert, Proc)
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Renataki's Soul Charm (Agility, Proc)
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Arrowflight Medallion (Crit, Use)
-			{spellID = 136086, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-
+			-- 1.0: Darkmoon Cards
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Agility
+			{spellID = 60233, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Proc)
+			{spellID = 182060, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Melee DPS [Agility]
+			-- Beating Heart of the Mountain (Multistrike, Use)
+			{spellID = 176878, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blackheart Enforcer's Medallion (Multistrike, Proc)
+			{spellID = 176984, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Jar of Doom (Mastery, Proc)
+			{spellID = 176939, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Humming Blackiron Trigger (Crit, Proc)
+			{spellID = 177067, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lucky Double-Sided Coin (Agility, Use)
+			{spellID = 177597, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Meaty Dragonspine Trophy (Haste, Proc)
+			{spellID = 177035, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scales of Doom (Multistrike, Proc)
+			{spellID = 177038, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- Enchants
-			-- General
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Agility)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -2349,6 +2131,8 @@ Filger_Spells = {
 			{spellID = 74001, filter = "CD"},
 			-- Vanish
 			{spellID = 1856, filter = "CD"},
+			-- Shadow Reflection
+			{spellID = 152151, filter = "CD"},
 
 			-- Racial
 			-- Every Man for Himself (Human)
@@ -2377,6 +2161,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -2390,7 +2176,7 @@ Filger_Spells = {
 			-- Internal
 		},
 	},
-	["SHAMAN"] = {			--[ÈøÂú]
+	["SHAMAN"] = {			--[è¨æ»¡]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -2443,110 +2229,84 @@ Filger_Spells = {
 			{spellID = 53390, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Agility DPS
-			-- Assurance of Consequence (Agility, Proc)
-			{spellID = 146308, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Haromm's Talisman (Agility, Proc)
-			{spellID = 148903, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sigil of Rampage (Agility, Proc)
-			{spellID = 148896, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ticking Ebon Detonator (Agility, Proc)
-			{spellID = 146310, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Discipline of Xuen (Crit, Proc)
-			{spellID = 146312, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vicious Talisman of the Shado-Pan Assault (Agility, Proc)
-			{spellID = 138699, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bad Juju (Agility, Proc)
-			{spellID = 138938, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Talisman of Bloodlust (Haste, Proc)
-			{spellID = 138895, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Rune of Re-Origination (Convert, Proc)
-			{spellID = 139120, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Renataki's Soul Charm (Agility, Proc)
-			{spellID = 138756, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Arrowflight Medallion (Crit, Use)
-			{spellID = 136086, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Terror in the Mists (Crit, Proc)
-			{spellID = 126649, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Bandit Figurine (Haste, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Bottle of Infinite Stars (Agility, Proc)
-			{spellID = 126554, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Use)
-			{spellID = 126690, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Agility, Proc)
-			{spellID = 126707, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- À×ÉñµÄ¾«×¼Ö®ÊÓ
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-			-- Prismatic Prison of Pride (Intellect, Proc)
-			{spellID = 146314, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Nazgrim's Burnished Insignia (Intellect, Proc)
-			{spellID = 148908, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Acid-Grooved Tooth (Intellect, Proc)
-			{spellID = 148911, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Qin-xi's Polarizing Seal (Intellect, Proc)
-			{spellID = 126588, unitID = "player", caster = "player", filter = "BUFF"},
-
+			-- 1.0: Darkmoon Cards
+			-- Caster DPS (Crit, Proc)
+			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Healing (Spirit, Proc)
+			{spellID = 162913, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Agility
+			{spellID = 60233, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Proc)
+			{spellID = 182058, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Agility] (Versatility, Proc)
+			{spellID = 182060, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Melee DPS [Agility]
+			-- Beating Heart of the Mountain (Multistrike, Use)
+			{spellID = 176878, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blackheart Enforcer's Medallion (Multistrike, Proc)
+			{spellID = 176984, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Jar of Doom (Mastery, Proc)
+			{spellID = 176939, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Humming Blackiron Trigger (Crit, Proc)
+			{spellID = 177067, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Lucky Double-Sided Coin (Agility, Use)
+			{spellID = 177597, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Meaty Dragonspine Trophy (Haste, Proc)
+			{spellID = 177035, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scales of Doom (Multistrike, Proc)
+			{spellID = 177038, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Caster DPS
+			-- Blackiron Micro Crucible (Multistrike, Proc)
+			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Copeland's Clarity (Spellpower, Use)
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Darmac's Unstoppable Talisman (Haste, Proc)
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Orb of Putrescence (Mastery, Proc)
+			{spellID = 176941, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Furyheart Talisman (Haste, Proc)
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Goren Soul Repository (Crit, Proc)
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shards of Nothing (Haste, Use)
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 5.0: Healing
+			-- Auto-Repairing Autoclave (Haste, Proc)
+			{spellID = 177086, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Elementalist's Shielding Talisman (Multistrike, Proc)
+			{spellID = 177063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Emblem of Caustic Healing (Haste, Use)
+			{spellID = 176879, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Censer of Faith (Haste, Proc)
+			{spellID = 176943, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Immaculate Living Mushroom (Crit, Proc)
+			{spellID = 176978, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Ironspike Chew Toy (Spirit, Proc)
+			{spellID = 177060, unitID = "player", caster = "player", filter = "BUFF"},
+			
 			-- Enchants
-			-- General
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Agility)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster Heal
-
-			-- ³ÈÉ«¶à²Ê
-			-- ÒõÏÕÖ®Ô´×ê (±©»÷, ¼±ËÙ)
-			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Ó¢ÓÂÖ®Ô´×ê (ÖÇÁ¦, ½ÚÄÜ)
-			{spellID = 137288, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- Ê·Ê«Åû·ç
-			-- Spirit of Chi-Ji
-			{spellID = 146200, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Shadowmoon (Spirit)
+			{spellID = 159678, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -2672,6 +2432,8 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -2682,14 +2444,9 @@ Filger_Spells = {
 			{slotID = 13, filter = "CD"},
 			{slotID = 14, filter = "CD"},
 
-			-- Internal
-			-- Lightweave
-			--{spellID = 125487, filter = "ICD", trigger = "BUFF", duration = 60},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 	},
-	["WARLOCK"] = {			--[ÊõÊ¿]
+	["WARLOCK"] = {			--[æœ¯å£«]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -2715,7 +2472,7 @@ Filger_Spells = {
 			{spellID = 86211, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Burning Rush
 			{spellID = 111400, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fire and Brimstone Áò»ÇÁÒ»ğ
+			-- Fire and Brimstone ç¡«ç£ºçƒˆç«
 			{spellID = 108683, unitID = "player", caster = "player", filter = "BUFF"},
 		},
 		{
@@ -2740,57 +2497,44 @@ Filger_Spells = {
 			{spellID = 145164, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster General
-			-- Shock-Charger Medallion Figurine (Intellect, Use)
-			{spellID = 136082, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Magistrate Figurine (Crit, Use)
-			{spellID = 126605, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Use)
-			{spellID = 126683, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Spell Power, Proc)
-			{spellID = 126705, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Caster DPS
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kardris' Toxic Totem (Intellect, Proc)
-			{spellID = 148906, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Frenzied Crystal of Rage (Intellect, Proc)
-			{spellID = 148897, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Black Blood of Y'Shaarj (Intellect, Proc)
-			{spellID = 146184, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Yu'lon's Bite (Crit, Proc)
-			{spellID = 146218, unitID = "player", caster = "player", filter = "BUFF"},
-			-- À×ÉñµÄ¾«×¼Ö®ÊÓ
-			{spellID = 138963, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Volatile Talisman of the Shado-Pan Assault (Haste, Proc)
-			{spellID = 138703, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Cha-Ye's Essence of Brilliance (Intellect, Proc)
-			{spellID = 139133, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Breath of the Hydra (Intellect, Proc)
-			{spellID = 138898, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Wushoolay's Final Choice (Intellect, Proc)
-			{spellID = 138786, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Essence of Terror (Haste, Proc)
-			{spellID = 126659, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Light of the Cosmos (Intellect, Proc)
-			{spellID = 126577, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.0: Darkmoon Cards
+			-- Caster DPS (Crit, Proc)
+			{spellID = 162919, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Intellect
+			{spellID = 60234, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Caster DPS (Versatility, Proc)
+			{spellID = 182058, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Caster DPS
+			-- Blackiron Micro Crucible (Multistrike, Proc)
+			{spellID = 177081, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Copeland's Clarity (Spellpower, Use)
+			{spellID = 177594, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Darmac's Unstoppable Talisman (Haste, Proc)
+			{spellID = 177051, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Orb of Putrescence (Mastery, Proc)
+			{spellID = 176941, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Furyheart Talisman (Haste, Proc)
+			{spellID = 176980, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Goren Soul Repository (Crit, Proc)
+			{spellID = 177046, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Shards of Nothing (Haste, Use)
+			{spellID = 176875, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Caster General
-			-- Jade Spirit (Intellect + Spirit)
-			{spellID = 104993, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Lightweave (Intellect)
-			--{spellID = 125487, unitID = "player", caster = "player", filter = "BUFF"},
-
-			-- ³ÈÉ«¶à²Ê
-			-- ÒõÏÕÖ®Ô´×ê (±©»÷, ¼±ËÙ)
-			{spellID = 137590, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -2804,14 +2548,6 @@ Filger_Spells = {
 			-- Self
 			-- Enslave Demon
 			{spellID = 1098, unitID = "target", caster = "player", filter = "DEBUFF"},
-            ----------++++++++++++
-            {spellID = 34889, unitID = "target", caster = "all", filter = "DEBUFF"},
-			{spellID = 980, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 146739, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 30108, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 48181, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 348, unitID = "target", caster = "player", filter = "DEBUFF"},
-			{spellID = 80240, unitID = "target", caster = "player", filter = "DEBUFF"},
 		},
 		{
 			Name = "T_DE/BUFF_BAR",
@@ -2915,6 +2651,8 @@ Filger_Spells = {
 			{spellID = 69070, filter = "CD"},
 
 			-- Items
+			-- Neck
+			{slotID = 2, filter = "CD"},
 			-- Gloves
 			{slotID = 10, filter = "CD"},
 			-- Belt
@@ -2924,15 +2662,9 @@ Filger_Spells = {
 			-- Trinkets
 			{slotID = 13, filter = "CD"},
 			{slotID = 14, filter = "CD"},
-
-			-- Internal
-			-- Lightweave
-			--{spellID = 125487, filter = "ICD", trigger = "BUFF", duration = 60},
-			-- Purified Bindings of Immerseus (Intellect, Proc)
-			{spellID = 146046, filter = "ICD", trigger = "BUFF", duration = 115},
 		},
 	},
-	["WARRIOR"] = {			--[Õ½Ê¿]
+	["WARRIOR"] = {			--[æˆ˜å£«]
 		{
 			Name = "P_BUFF_ICON",
 			Direction = "LEFT",
@@ -2980,9 +2712,9 @@ Filger_Spells = {
 			IconSize = Misc.IconSize,
 			Position = {unpack(Filger_Settings.player_proc_icon)},
 
-			-- Raging Blow Å­»÷
+			-- Raging Blow æ€’å‡»
 			{spellID = 131116, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Sudden Death â§ËÀ
+			-- Sudden Death çŒæ­»
 			{spellID = 52437, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Bloodsurge
 			{spellID = 46916, unitID = "player", caster = "player", filter = "BUFF"},
@@ -3000,77 +2732,67 @@ Filger_Spells = {
 			{spellID = 86663, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Trinkets
-			-- General
-			-- Darkmoon Cards (Proc)
-			{spellID = 128985, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Health, Use)
-			{spellID = 126697, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Tank
-			-- Rook's Unlucky Talisman (Reduces damage, Use)
-			{spellID = 146343, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Resolve of Niuzao (Dodge, Use)
-			{spellID = 146344, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Steadfast Talisman of the Shado-Pan Assault (Dodge, Use)
-			{spellID = 138728, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Delicate Vial of the Sanguinaire (Mastery, Proc)
-			{spellID = 138864, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Stuff of Nightmares (Dodge, Proc)
-			{spellID = 126646, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Vial of Dragon's Blood (Dodge, Proc)
-			{spellID = 126533, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Warlord Figurine (Mastery, Use)
-			{spellID = 126597, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Physical Strength DPS
-			-- Evil Eye of Galakras (Strength, Proc)
-			{spellID = 146245, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Thok's Tail Tip (Strength, Proc)
-			{spellID = 146250, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Skeer's Bloodsoaked Talisman (Strength, Proc)
-			{spellID = 146285, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fusion-Fire Core (Strength, Proc)
-			{spellID = 148899, unitID = "player", caster = "player", filter = "BUFF", absID = true},
-			-- Alacrity of Xuen (Haste, Proc)
-			{spellID = 146296, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Brutal Talisman of the Shado-Pan Assault (Strength, Proc)
-			{spellID = 138702, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Fabled Feather of Ji-Kun (Strength, Proc)
-			{spellID = 138759, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Spark of Zandalar (Strength, Proc)
-			{spellID = 138958, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Primordius' Talisman of Rage (Strength, Proc)
-			{spellID = 138870, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Gaze of the Twins (Crit, Proc)
-			{spellID = 139170, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Helmbreaker Medallion (Crit, Use)
-			{spellID = 136084, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Darkmist Vortex (Haste, Proc)
-			{spellID = 126657, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Lei Shin's Final Orders (Strength, Proc)
-			{spellID = 126582, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Jade Charioteer Figurine (Strength, Use)
-			{spellID = 126599, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Iron Belly Wok (Haste, Use)
-			{spellID = 129812, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Use)
-			{spellID = 126679, unitID = "player", caster = "player", filter = "BUFF"},
-			-- PvP Trinkets (Strength, Proc)
-			{spellID = 126700, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Ì¼Ëáºì±¦Ê¯
-			{spellID = 126513, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.0: Darkmoon Cards
+			-- Melee DPS (Crit, Proc)
+			{spellID = 162915, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tanking (Crit, Proc)
+			{spellID = 162917, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 1.1: Alchemy Stones
+			-- Strength
+			{spellID = 60229, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 2.0: PvP Trinkets
+			-- Battlemaster (Health, Use)
+			{spellID = 181706, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Use)
+			{spellID = 182073, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Melee DPS [Strength] (Versatility, Proc)
+			{spellID = 182063, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 3.0: Tanking
+			-- Battering Talisman (Haste, Proc)
+			{spellID = 177102, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Blast Furnace Door (Mastery, Proc)
+			{spellID = 177056, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Evergaze Arcane Eidolon (Bonus Armor, Proc)
+			{spellID = 177053, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Relic of Blood (Haste, Proc)
+			{spellID = 176937, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Kyb's Foolish Perseverance (Health, Use)
+			{spellID = 176460, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Petrified Flesh-Eating Spore (Mastery, Proc)
+			{spellID = 165824, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Pol's Blinded Eye (Mastery, Use)
+			{spellID = 176876, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Stoneheart Idol (Crit, Proc)
+			{spellID = 176982, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tablet of Turnbuckle Teamwork (Bonus Armor, Use)
+			{spellID = 176873, unitID = "player", caster = "player", filter = "BUFF"},
+			-- 4.0: Melee DPS [Strength]
+			-- Forgemaster's Insignia (Multistrike, Proc)
+			{spellID = 177096, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Formidable Fang (Multistrike, Proc)
+			{spellID = 176935, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Horn of the Screaming Spirits (Mastery, Proc)
+			{spellID = 177042, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Mote of the Mountain (Versatility, Proc)
+			{spellID = 176974, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Scabbard of Kyanos (Strength, Use)
+			{spellID = 177189, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Tectus' Beating Heart (Crit, Proc)
+			{spellID = 177040, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Vial of Convulsive Shadows (Multistrike, Use)
+			{spellID = 176874, unitID = "player", caster = "player", filter = "BUFF"},
 
 			-- Enchants
-			-- General
-			-- Tank
-			-- River's Song (Dodge)
-			{spellID = 116660, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Physical General
-			-- Physical Melee
-			-- Dancing Steel (Strength)
-			{spellID = 120032, unitID = "player", caster = "all", filter = "BUFF"},
-
-			-- ³ÈÉ«¶à²Ê
-			-- ²»ÇüÖ®Ô´×ê (ÄÍÁ¦, ¼õÉË)
-			{spellID = 137593, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- Mark of Blackrock (Bonus Armor)
+			{spellID = 159679, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Bleeding Hollow (Mastery)
+			{spellID = 173322, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Frostwolf (Multistrike)
+			{spellID = 159676, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of the Thunderlord (Crit)
+			{spellID = 159234, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Mark of Warsong (Haste)
+			{spellID = 159675, unitID = "player", caster = "all", filter = "BUFF"},
 		},
 		{
 			Name = "T_DEBUFF_ICON",
@@ -3081,7 +2803,7 @@ Filger_Spells = {
 			IconSize = Misc.IconSize,
 			Position = {unpack(Filger_Settings.target_debuff_icon)},
 
-			-- ËºÁÑ
+			-- æ’•è£‚
 			{spellID = 772, unitID = "target", caster = "player", filter = "DEBUFF"},
 			-- Colossus Smash
 			{spellID = 86346, unitID = "target", caster = "player", filter = "DEBUFF"},
@@ -3130,8 +2852,6 @@ Filger_Spells = {
 			{spellID = 1160, filter = "CD"},
 			-- Enraged Regeneration
 			{spellID = 55694, filter = "CD"},
-			-- Commanding Shout
-			--{spellID = 469, filter = "CD"},
 			-- Shield Wall
 			{spellID = 871, filter = "CD"},
 			-- Last Stand
@@ -3170,20 +2890,22 @@ Filger_Spells = {
 			{spellID = 107079, filter = "CD"},
 
 			-- Items
-			-- GlovesÊÖÌ×
+			-- Neck
+			{slotID = 2, filter = "CD"},
+			-- Glovesæ‰‹å¥—
 			{slotID = 10, filter = "CD"},
-			-- BeltÑü´ø
+			-- Beltè…°å¸¦
 			{slotID = 6, filter = "CD"},
-			-- BackÅû·ç
+			-- BackæŠ«é£
 			{slotID = 15, filter = "CD"},
-			-- TrinketsÊÎÆ·
+			-- Trinketsé¥°å“
 			{slotID = 13, filter = "CD"},
 			{slotID = 14, filter = "CD"},
 
 			-- Internal
 		},
 	},
-	["ALL"] = {			--[¼¯Ìå]
+	["ALL"] = {			--[é€šç”¨]
 		{
 			Name = "SPECIAL_P_BUFF_ICON",
 			Direction = "LEFT",
@@ -3193,6 +2915,89 @@ Filger_Spells = {
 			IconSize = Misc.IconSize,
 			Position = {unpack(Filger_Settings.special_proc_icon)},
 
+			-- Ashran
+			-- Ancient Artifact
+			{spellID = 168506, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Boulder Shield
+			{spellID = 169373, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Scroll of Speed
+			{spellID = 171250, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Scroll of Protection
+			{spellID = 171249, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Star Root Tuber
+			{spellID = 161495, unitID = "player", caster = "all", filter = "BUFF"},
+			-- Wand of Lightning Shield
+			{spellID = 171725, unitID = "player", caster = "all", filter = "BUFF"},
+			
+			-- Brawler's Guild
+			-- Strange Feeling
+			{spellID = 134851, unitID = "player", caster = "all", filter = "DEBUFF"},
+			
+			-- Experience & Reputation
+			-- Ancient Knowledge
+			{spellID = 127250, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Accelerated Learning
+			{spellID = 178119, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Darkmoon Faire: Carousel
+			{spellID = 46668, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Darkmoon Faire: Top Hat
+			{spellID = 136583, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Elixir of Shadows (Outlands)
+			{spellID = 37678, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Guild Battle Standard: Alliance
+			{spellID = 90216, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Guild Battle Standard: Horde
+			{spellID = 90708, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			
+			-- Fishing: Draenor
+			-- Abyssal Gulper Eel Bait
+			{spellID = 158038, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Black Lake Sturgeon Bait
+			{spellID = 158035, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Blackwater Whiptail Bait
+			{spellID = 158039, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Fat Sleeper Bait
+			{spellID = 158034, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Fire Ammonite Bait
+			{spellID = 158036, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Jawless Skulker Bait
+			{spellID = 158031, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Sea Scorpion Bait
+			{spellID = 158037, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Fishing: Pandaria
+			-- Ancient Pandaren Fishing Charm
+			{spellID = 125164, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Angler's Fishing Raft
+			{spellID = 124036, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Bipsi's Bobbing Berg
+			{spellID = 152421, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Sharpened Tuskarr Spear
+			{spellID = 128357, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Fishing: Northrend
+			-- Dalaran Fountain (Gold Coin)
+			{spellID = 59125, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			
+			-- Miscellaneous: Draenor
+			-- Aviana's Feather
+			{spellID = 176286, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Goblin Glider Kit
+			{spellID = 126389, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- Shieldtronic Shield
+			{spellID = 173260, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- Spirit of Shinri
+			{spellID = 174004, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Stealthman 54
+			{spellID = 156136, unitID = "player", caster = "all", filter = "BUFF", absID = true},
+			-- "Skyterror" Personal Delivery System
+			{spellID = 168342, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Whispers of Rai'Vosh
+			{spellID = 167273, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- XD-57 "Bullseye" Guided Rocket Kit
+			{spellID = 168225, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			-- Miscellaneous: Pandaria
+			-- Ash Covered Horn
+			{spellID = 148626, unitID = "player", caster = "player", filter = "BUFF", absID = true},
+			
 			-- Potions
 			-- Draenic Agility Potion
 			{spellID = 156423, unitID = "player", caster = "player", filter = "BUFF"},
@@ -3208,13 +3013,19 @@ Filger_Spells = {
 			{spellID = 105706, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Potion of the Jade Serpent
 			{spellID = 105702, unitID = "player", caster = "player", filter = "BUFF"},
-			-- Kafa Press ßÇ·ÈÌáÉñ(¼±ËÙ+4000£¬25Ãë)
+			-- Kafa Press å’”å•¡æç¥(æ€¥é€Ÿ+4000ï¼Œ25ç§’)
 			{spellID = 125282, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Speed (Potion)
 			{spellID = 2379, unitID = "player", caster = "player", filter = "BUFF", absID = true},
 			-- Speed (BG)
 			{spellID = 23451, unitID = "player", caster = "all", filter = "BUFF", absID = true},
-
+			-- Potions: Brawler's Guild
+			-- Brawler's Draenic Agility Potion
+			{spellID = 176107, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Brawler's Draenic Intellect Potion
+			{spellID = 176108, unitID = "player", caster = "player", filter = "BUFF"},
+			-- Brawler's Draenic Strength Potion
+			{spellID = 176109, unitID = "player", caster = "player", filter = "BUFF"},
 			-- Leeroy Jenkins
 			-- Bloodlust
 			{spellID = 2825, unitID = "player", caster = "all", filter = "BUFF"},
@@ -3396,9 +3207,9 @@ Filger_Spells = {
 			-- Cone of Cold
 			{spellID = 120, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- Slow
-			{spellID = 31589, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 31589, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- Frostbolt
-			{spellID = 116, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 116, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			-- Frostfire Bolt
 			{spellID = 44614, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- Chilled
@@ -3543,989 +3354,748 @@ Filger_Spells = {
 			{spellID = 28730, unitID = "player", caster = "all", filter = "DEBUFF"},
 
 			-- Other
-			-- Rocket Fuel Leak »ğ¼ıĞ¬Â©ÓÍ
+			-- Rocket Fuel Leak ç«ç®­é‹æ¼æ²¹
 			{spellID = 94794, unitID = "player", caster = "player", filter = "DEBUFF"},
 		
 			--  -- <<  PVE  >> -- --
-			-- Throne of Thunder	-- À×µçÍõ×ù 930
-			-- Jin'rokh the Breaker [»÷ËéÕß½ğÂŞ¿Ë] --
-			-- Focused Lightning ×¨×¢ÉÁµç
+			-- Throne of Thunder	-- é›·ç”µç‹åº§ 930
+			-- Jin'rokh the Breaker [å‡»ç¢è€…é‡‘ç½—å…‹] --
+			-- Focused Lightning ä¸“æ³¨é—ªç”µ
 			{spellID = 137422, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- µçÀë·´Ó¦
+			-- ç”µç¦»ååº”
 			{spellID = 138732, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾²µç´´ÉË
+			-- é™ç”µåˆ›ä¼¤
 			{spellID = 138349, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- À×öªÍ¶ÖÀ
+			-- é›·éœ†æŠ•æ·
 			{spellID = 137371, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- ºÂÀû¶« --
-			-- ÈıÖØ´©´Ì
-			{spellID = 136767, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ³å·æ
+			-- éƒåˆ©ä¸œ --
+			-- å†²é”‹
 			{spellID = 136769, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Á÷É³ÏİÚå
-			{spellID = 136723, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »î»¯¶¾ËØ
-			{spellID = 136646, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- º®±ù±¦Öé
-			{spellID = 136573, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÉÁµçĞÂĞÇ
-			{spellID = 136490, unitID = "player", caster = "all", filter = "DEBUFF"},
-         
-			-- Council of Elders [³¤ÕßÒé»á] --
-			-- Áé»ê²ĞÆ¬
-			{spellID = 137641, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Marked Soul ±ê¼ÇÁé»ê
-			{spellID = 137359, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Å¤ÇúÃüÔË
-			{spellID = 137972, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±ùº®Í»»÷
-			{spellID = 136903, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Frostbite Ëªº®´Ì¹Ç
-			{spellID = 136922, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Biting Cold ´Ì¹ÇÖ®º®
-			{spellID = 136992, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- ÍĞ¶àË¹ --
-			-- °ÙÁÑ×¦
-			{spellID = 136753, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾§»¯¼×¿Ç
+			-- Council of Elders [é•¿è€…è®®ä¼š] --
+			-- Marked Soul æ ‡è®°çµé­‚
+			{spellID = 137359, unitID = "player", caster = "all", filter = "DEBUFF"},
+			
+			-- æ‰˜å¤šæ–¯ --
+			-- æ™¶åŒ–ç”²å£³
 			{spellID = 137633, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾§»¯¼×¿Ç£ºÁÙ½çÖµ£¡
+			-- æ™¶åŒ–ç”²å£³ï¼šä¸´ç•Œå€¼ï¼
 			{spellID = 140701, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Megaera [Ä«¸ñÈğÀ­] --
-			-- È¼ÉÕÑªÈâ
-			{spellID = 137731, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Torrent of Ice º®±ùºéÁ÷
-			{spellID = 139857, unitID = "player", caster = "all", filter = "DEBUFF"},
-			{spellID = 139889, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Cinder È¼½ı
-			{spellID = 134391, unitID = "player", caster = "all", filter = "DEBUFF"},
-			{spellID = 139822, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- Megaera [å¢¨æ ¼ç‘æ‹‰] --
 			
-			-- ¼¾ûd --
-			-- ×¦ÂÓ
+			-- å­£é¹ --
+			-- çˆªæ 
 			{spellID = 134366, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁéÇÉÖ®Òí
+			-- çµå·§ä¹‹ç¿¼
 			{spellID = 134339, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- ÒÅÍüÕß¶ÅÂ³Ä· --
-			-- ÑÏÖØÖÂÉË
+			-- é—å¿˜è€…æœé²å§† --
+			-- ä¸¥é‡è‡´ä¼¤
 			{spellID = 133767, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- À¶¹â×·×Ù
+			-- è“å…‰è¿½è¸ª
 			{spellID = 139202, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ºì¹â×·×Ù
+			-- çº¢å…‰è¿½è¸ª
 			{spellID = 139204, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ç¿¹â
+			-- å¼ºå…‰
 			{spellID = 133738, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾À²øÄıÊÓ
-			{spellID = 134044, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÎüÑª
-			{spellID = 133795, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- ÆÕÀûÄªĞŞË¹ --
-			{spellID = 136050, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ™®åˆ©è«ä¿®æ–¯ --
 			
-			-- ºÚ°µÒâÖ¾ --
-			-- ±¬Õ¨ÃÍ»÷
+			-- é»‘æš—æ„å¿— --
+			-- çˆ†ç‚¸çŒ›å‡»
 			{spellID = 138569, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ĞÉºì×·»÷
+			-- çŒ©çº¢è¿½å‡»
 			{spellID = 138480, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ĞÄÄÜÖ®»·
+			-- å¿ƒèƒ½ä¹‹ç¯
 			{spellID = 136954, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÎïÖÊ½»»»
+			-- ç‰©è´¨äº¤æ¢
 			{spellID = 138618, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Ìúñ· --
-			-- ´©´Ì
-			{spellID = 134691, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÉÕ×Æ
-			{spellID = 134647, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é“ç©¹ --
 			
-			-- Ä§¹ÅË«ºó --
-			-- º®ÀäÒõÓ°
-			{spellID = 137440, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁÒÑæÈĞÎè
-			{spellID = 137408, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶éÂäÖÎÁÆ
+			-- é­”å¤åŒå --
+			-- å •è½æ²»ç–—
 			{spellID = 137360, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÃÎ÷ÊÊŞ
+			-- æ¢¦é­‡å…½
 			{spellID = 137375, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Lei Shen [À×Éñ] --
-			-- Õ¶Ê×
-			{spellID = 135000, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Static Shock ¾²µç³å»÷
+			-- Lei Shen [é›·ç¥] --
+			-- Static Shock é™ç”µå†²å‡»
 			{spellID = 135695, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ³¬ÔØ
-			{spellID = 136295, unitID = "player", caster = "all", filter = "DEBUFF"},
-		 
 			
-			-- Mogu'shan Vaults -- Ä§¹ÅÉ½±¦¿â 896
-			-- The Stone Guard [Ê¯Í·ÊØÎÀ]
-			-- Amethyst Pool ×Ï¾§Ö®³Ø
+			
+			-- Mogu'shan Vaults -- é­”å¤å±±å®åº“ 896
+			-- The Stone Guard [çŸ³å¤´å®ˆå«]
+			-- Amethyst Pool ç´«æ™¶ä¹‹æ± 
 			{spellID = 116235, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Jasper Chains ºìÓñËøÁ´
+			-- Jasper Chains çº¢ç‰é”é“¾
 			{spellID = 130395, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Feng the Accursed [ÊÜ×çÕßÄ§·â]
-			-- Wildfire Spark Ò°ĞÔ»ğ»¨
+			-- Feng the Accursed [å—è¯…è€…é­”å°]
+			-- Wildfire Spark é‡æ€§ç«èŠ±
 			{spellID = 116784, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Arcane Resonance °ÂÊõ»ØÏì
+			-- Arcane Resonance å¥¥æœ¯å›å“
 			{spellID = 116417, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Nullification Barrier ·ÏÁé±ÚÀİ
+			-- Nullification Barrier åºŸçµå£å’
 			{spellID = 115856, unitID = "player", caster = "all", filter = "BUFF"},
-			-- Shroud of Reversal ·´ÉäÕÖ
+			-- Shroud of Reversal åå°„ç½©
 			{spellID = 115911, unitID = "player", caster = "all", filter = "BUFF"},
 			
-			-- Gara'jal the Spiritbinder [¸¿ÁéÕß¸êÀ­ÑÇ]
-			-- Voodoo Doll Î×¶¾ÍŞÍŞ
-			{spellID = 122151, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Cross Over Áé»êÔ½½ç
+			-- Gara'jal the Spiritbinder [ç¼šçµè€…æˆˆæ‹‰äºš]
+			-- Cross Over çµé­‚è¶Šç•Œ
 			{spellID = 116166, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Elegon [ÒÁÀ­¹±]
-			-- Overcharged ÄÜÁ¿³¬ÔØ
+			-- Elegon [ä¼Šæ‹‰è´¡]
+			-- Overcharged èƒ½é‡è¶…è½½
 			{spellID = 117878, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Closed Circuit ·â±Õ»ØÂ·
+			-- Closed Circuit å°é—­å›è·¯
 			{spellID = 117949, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Will of the Emperor [»ÊµÛµÄÒâÖ¾]
-			-- Focused Assault ×¨×¢´ò»÷
+			-- Will of the Emperor [çš‡å¸çš„æ„å¿—]
+			-- Focused Assault ä¸“æ³¨æ‰“å‡»
 			{spellID = 116525, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Focused Energy ×¨×¢ÄÜÁ¿
+			-- Focused Energy ä¸“æ³¨èƒ½é‡
 			{spellID = 116829, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
 			
-			-- Heart of Fear -- ¿Ö¾åÖ®ĞÄ 897
-			-- Imperial Vizier Zor'lok [»Ê¼ÒÔ×Ïà×ô¶ûÂå¿Ë]
-			-- Exhale ÍÂÆø
-			{spellID = 122761, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- Blade Lord Ta'yak [µ¶·æÁìÖ÷ËşÑÇ¿Ë]
-			-- Overwhelming Assault Ñ¹ÖÆÍ»Ï®
-			{spellID = 123474, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Windstep ¼²·ç²½
-			{spellID = 123175, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Unseen Strike ÎŞÓ°»÷
-			{spellID = 123017, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- Garalon [¼ÓÀ­Â¡]
-			-- Pheromones ĞÅÏ¢ËØ
+			-- Heart of Fear -- ææƒ§ä¹‹å¿ƒ 897
+			-- Imperial Vizier Zor'lok [çš‡å®¶å®°ç›¸ä½å°”æ´›å…‹]
+			-- Blade Lord Ta'yak [åˆ€é”‹é¢†ä¸»å¡”äºšå…‹]
+			-- Garalon [åŠ æ‹‰éš†]
+			-- Pheromones ä¿¡æ¯ç´ 
 			{spellID = 123092, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Wind Lord Mel'Jarak [·çÁìÖ÷Ã·¶û¼ÓÀ­¿Ë]
-			-- Wind Bomb ·ç±¬µ¯
-			{spellID = 131813, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Amber Prison çúçê¼àÀÎ
-			{spellID = 121885, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Corrosive Resin ¸¯Ê´Ê÷Ö¬
-			{spellID = 122064, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- Amber-Shaper Un'sok [çúçêËÜĞÎÕß°ºÊæ¿Ë]
+			-- Wind Lord Mel'Jarak [é£é¢†ä¸»æ¢…å°”åŠ æ‹‰å…‹]
+			-- Amber-Shaper Un'sok [ç¥ç€å¡‘å½¢è€…æ˜‚èˆ’å…‹]
 			-- Burning Amber
 			{spellID = 122504, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Parasitic Growth ¼ÄÉúÔö³¤
+			-- Parasitic Growth å¯„ç”Ÿå¢é•¿
 			{spellID = 121949, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- Grand Empress Shek'zeer [´óÅ®»ÊÏÄ¿ÂÏ£¶û]
-			-- Eyes of the Empress Å®»ÊĞ°ÑÛ
-			{spellID = 123707, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Fixate
-			-- Sticky Resin Õ³³íÊ÷Ö¬
-			{spellID = 124097, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Poison-Drenched Armor ½ş¶¾»¤¼×
-			{spellID = 124821, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Consuming Terror ¿Ö¾åÍÌÊÉ
-			{spellID = 124849, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Visions of Demise ËÀÍö»ÃÏñ
-			{spellID = 124862, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Heart of Fear ¿Ö¾åÖ®ĞÄ
-			{spellID = 123845, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- Grand Empress Shek'zeer [å¤§å¥³çš‡å¤æŸ¯å¸Œå°”]
 			
 			
-			-- terrace of endless spring -- ÓÀ´ºÌ¨ 886
-			-- Protector of the Endless [ÎŞ¾¡ÊØ»¤Õß]
-			-- Lightning Prison ÉÁµçÀÎÁı
-			{spellID = 111850, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Defiled Ground ´óµØÎÛÈ¾
-			{spellID = 117986, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Corrupted Essence ´óĞÍ¶éÂä¾«»ª
-			{spellID = 117905, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- terrace of endless spring -- æ°¸æ˜¥å° 886
+			-- Protector of the Endless [æ— å°½å®ˆæŠ¤è€…]
+			-- Tsulong [çƒ›é¾™]
+			-- Lei Shi [é›·æ–½]
+			-- Sha of Fear [æƒ§ä¹‹ç…]
+			-- æ°¸æ˜¥å° [ç»“æŸ]
 			
-			-- Tsulong [ÖòÁú]
-			-- Dread Shadows ¿Ö¾åÖ®Ó°
-			{spellID = 122768, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Shadow Breath °µÓ°ÍÂÏ¢
-			{spellID = 122752, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Terrorize °µÓ°¿Ö²À
-			{spellID = 123011, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- Lei Shi [À×Ê©]
-			-- Spray ÅçÉä
-			{spellID = 123121, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Scary Fog ¿Ö²ÀÃÔÎí
-			{spellID = 123705, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- Sha of Fear [¾åÖ®É·]
-			-- Fearless ÎŞÎ·
-			{spellID = 118977, unitID = "player", caster = "all", filter = "BUFF"},
-			
-			
-			-- ¾öÕ½°Â¸ñÈğÂê Siege Of Orgrimmar 953
-			-- 1	ÒÁÄ«ËÕË¹ [Immerseus]
-			-- Ğ°É·³Ø
-			{spellID = 143297, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¸¯Ê´³å»÷
-			{spellID = 143436, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- É·ÄÜ¸¯Ê´ H
-			{spellID = 143579, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 2	¶éÂäµÄÊØ»¤Õß [FallenProtectors]
-			-- Ëøºí
-			{spellID = 143198, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¿àÍ´Ó¡¼Ç
-			{spellID = 143840, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °µÓ°ĞéÈõ
-			{spellID = 144176, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- É·ÄÜ×ÆÉÕ
-			{spellID = 143423, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 3	ÅµÂ³Ê² [Norushen]
-			-- ¾»»¯
-			{spellID = 144452, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ×Ô»ó
-			{spellID = 146124, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾À²ø¸¯Ê´
-			{spellID = 144514, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 4	°ÁÖ®É· [ShaofPride]
-			-- ÊÜËğ×Ô×ğ
+			-- å†³æˆ˜å¥¥æ ¼ç‘ç› Siege Of Orgrimmar 953
+			-- 1	ä¼Šå¢¨è‹æ–¯ [Immerseus]
+			-- 2	å •è½çš„å®ˆæŠ¤è€… [FallenProtectors]
+			-- 3	è¯ºé²ä»€ [Norushen]
+			-- 4	å‚²ä¹‹ç… [ShaofPride]
+			-- å—æŸè‡ªå°Š
 			{spellID = 144358, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÁÆø¹â»·
+			-- å‚²æ°”å…‰ç¯
 			{spellID = 146817, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Í¶Ó°
+			-- æŠ•å½±
 			{spellID = 146822, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ì©Ì¹Ö®´Í
-			{spellID = 146594, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ì©Ì¹Ö®Á¦
-			{spellID = 144364, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶¯Ò¡µÄ¾öĞÄ H
+			-- åŠ¨æ‘‡çš„å†³å¿ƒ H
 			{spellID = 147207, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 5	åÈÀ­¿¨Ë¹ [Galakras]
-			-- ¶¾ĞÔÔÆÎí
-			{spellID = 147705, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁÒÑæ¼ı
-			{spellID = 146765, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- åÈÀ­¿ËÂ¡Ö®Ñæ (µãÃû)
-			--{spellID = 147068, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- åÈÀ­¿ËÂ¡Ö®Ñæ (debuff)
-			{spellID = 147029, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 6	¸ÖÌúÕ½Ğ« [IronJuggernaut]
-			-- È¼ÉÕ»¤¼×
+			-- 5	è¿¦æ‹‰å¡æ–¯ [Galakras]
+			-- 6	é’¢é“æˆ˜è [IronJuggernaut]
+			-- ç‡ƒçƒ§æŠ¤ç”²
 			{spellID = 144467, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±¬ÁÑ½¹ÓÍ
-			{spellID = 144498, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÇĞ¸î¼¤¹â
-			{spellID = 146325, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 7	¿â¿¨Â¡ºÚ°µÈøÂú [KorkronDarkShaman]
-			-- ±ùËª·ç±©´ò»÷
-			{spellID = 144215, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËºÁÑ
-			{spellID = 144304, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾ç¶¾Ö®Îí
-			{spellID = 144089, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¸ÖÌúÇôÁı H
-			{spellID = 144330, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 8	ÄÉ×È¸êÁÖ½«¾ü [GeneralNazgrim]
-			-- Ëé¼×ÖØ»÷
+			-- 7	åº“å¡éš†é»‘æš—è¨æ»¡ [KorkronDarkShaman]
+			-- 8	çº³å…¹æˆˆæ—å°†å†› [GeneralNazgrim]
+			-- ç¢ç”²é‡å‡»
 			{spellID = 143494, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëé¹ÇÖØ´¸
-			{spellID = 143638, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ´Ì¿ÍÓ¡¼Ç
-			{spellID = 143480, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁÔÈËÓ¡¼Ç
-			{spellID = 143882, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 9	Âí¶û¿¼ÂŞ¿Ë [Malkorok]
-			-- ÖÂÃü´ò»÷
+			-- 9	é©¬å°”è€ƒç½—å…‹ [Malkorok]
+			-- è‡´å‘½æ‰“å‡»
 			{spellID = 142990, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- É¢ÒİÄÜÁ¿
+			-- æ•£é€¸èƒ½é‡
 			{spellID = 142913, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÊÜÄÑ H
+			-- å—éš¾ H
 			{spellID = 143919, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 10	ÅË´ïÀûÑÇÕ½ÀûÆ· [SpoilsOfPandria]
-			-- ÉèÖÃÕ¨Ò©
+			-- 10	æ½˜è¾¾åˆ©äºšæˆ˜åˆ©å“ [SpoilsOfPandria]
+			-- è®¾ç½®ç‚¸è¯
 			{spellID = 145987, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Å¨ËõĞÅÏ¢ËØ
-			{spellID = 145747, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 11	ÊÈÑªµÄË÷¿Ë [ThokTheBloodthirsty]
-			-- ¿Ö»Å
-			{spellID = 143766, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ×ÆÈÈÍÂÏ¢
-			{spellID = 143767, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËáĞÔÍÂÏ¢
-			{spellID = 143780, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±ù¶³ÍÂÏ¢
-			{spellID = 143773, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨
-			{spellID = 143445, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±ù¶³Ö®Ñª
-			{spellID = 143800, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 11	å—œè¡€çš„ç´¢å…‹ [ThokTheBloodthirsty]
+			-- é”å®š
+			{spellID = 143445, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
-			-- 12	¹¥³Ç½³Ê¦ºÚË÷ [SiegecrafterBlackfuse]
-			-- µçºÉ³å»÷
+			-- 12	æ”»åŸåŒ å¸ˆé»‘ç´¢ [SiegecrafterBlackfuse]
+			-- ç”µè·å†²å‡»
 			{spellID = 143385, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¹ıÈÈ
+			-- è¿‡çƒ­
 			{spellID = 143856, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Í¼ÏñÊ¶±ğ
+			-- å›¾åƒè¯†åˆ«
 			{spellID = 144236, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 13	¿¨À­¿ËÎ÷Ó¢½Ü [ParagonsOfTheKlaxxi]
-			-- ×¢Éä
-			{spellID = 143339, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ºìÉ«¶¾ËØ
-			{spellID = 142533, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- À¶É«¶¾ËØ
-			{spellID = 142532, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »ÆÉ«¶¾ËØ
-			{spellID = 142534, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ³ÈÉ«¶¾ËØ
-			{spellID = 142547, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ³ÈÉ«´ß»¯±¬Õ¨Ö®»·
-			{spellID = 142803, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÂÌÉ«¶¾ËØ
-			{spellID = 142549, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÂÌÉ«´ß»¯¹îÒìÖ®Îí
-			{spellID = 142945, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ×ÏÉ«´ß»¯ÈÈ¹ŞÈ¼ÁÏ
-			{spellID = 143572, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °×É«¶¾ËØ
-			{spellID = 142550, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÑªÂö±©Â¶
-			{spellID = 142931, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »Ó¿³
-			{spellID = 143275, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »ùÒò±äÒì
-			{spellID = 143279, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ôä»÷
-			{spellID = 143939, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶Ü»÷
-			{spellID = 143974, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËáĞÔÑªÒº
-			{spellID = 142315, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ´ßÃßÊõ
-			{spellID = 142671, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ãé×¼
-			{spellID = 142948, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ñ×½çµÄ»ğÏß
-			{spellID = 142808, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±äÒìÈ±Ïİ
-			{spellID = 148589, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 14	¼Ó¶ûÂ³Ê²¡¤µØÓüÅØÏø [GarroshHellscream]
-			-- ¾øÍûÖ®ÎÕ
-			{spellID = 145183, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ç¿»¯¾øÍûÖ®ÎÕ
-			{spellID = 145195, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾øÍûÖ®ÆÆ
-			{spellID = 145213, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ĞÅÄî
-			{spellID = 148994, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÓÂÆø
-			{spellID = 148983, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ï£Íû
-			{spellID = 149004, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÙôäÂ(P2)
-			--{spellID = 144762, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÙôäÂ(P3)
-			{spellID = 144817, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÑÇÉ·¼«Ö®´¥
-			{spellID = 145065, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Š»¯ÑÇÉ·¼«Ö®´¥
-			{spellID = 145171, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÄıÊÓ H
-			{spellID = 147665, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÒºÌ¬»ğÑæ H
-			{spellID = 147136, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶ñÒâ H
-			{spellID = 147209, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶ñÒâ³å»÷ H
-			{spellID = 147235, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾öÕ½°Â¸ñÈğÂê [½áÊø]
+			-- 13	å¡æ‹‰å…‹è¥¿è‹±æ° [ParagonsOfTheKlaxxi]
+			-- 14	åŠ å°”é²ä»€Â·åœ°ç‹±å’†å“® [GarroshHellscream]
+			-- å†³æˆ˜å¥¥æ ¼ç‘ç› [ç»“æŸ]
 			
 			
-			-- Ğüé³±¤ 994
-			-- 1	¿¨¼ÓË¹¡¤ÈĞÈ­ [Kargath Bladefist]
-			-- ´©´Ì (T)
+			-- æ‚¬æ§Œå ¡ 994
+			-- 1	å¡åŠ æ–¯Â·åˆƒæ‹³ [Kargath Bladefist]
+			-- ç©¿åˆº (T)
 			{spellID = 159113, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ±ÅÁÑ´´ÉË (T) 1~2²ã
+			-- è¿¸è£‚åˆ›ä¼¤ (T) 1~2å±‚
 			{spellID = 159178, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁÒÑæÅçÉä
+			-- çƒˆç„°å–·å°„
 			{spellID = 159311, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¸ÖÌúÕ¨µ¯
+			-- é’¢é“ç‚¸å¼¹
 			{spellID = 159386, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±©Å°¾Æ
+			-- æš´è™é…’
 			{spellID = 159413, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËÑÑ°ÁÔÎï
+			-- æœå¯»çŒç‰©
 			{spellID = 162497, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 2	ÍÀ·ò [The Butcher]
-			-- ´·Èâé³ (T) 2~3²ã
+			-- 2	å± å¤« [The Butcher]
+			-- æ¶è‚‰æ§Œ (T) 2~3å±‚
 			{spellID = 156151, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÇĞÈâµ¶
+			-- åˆ‡è‚‰åˆ€
 			{spellID = 156147, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¹êÁÑ´´ÉË
+			-- é¾Ÿè£‚åˆ›ä¼¤
 			{spellID = 156152, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °×¹íÁòËá
+			-- ç™½é¬¼ç¡«é…¸
 			{spellID = 163046, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 3	Ì©¿ËÍ¼Ë¹ [Tectus]
-			-- Ê¯»¯
-			{spellID = 162892, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾§»¯µ¯Ä» - µãÃû
+			-- 3	æ³°å…‹å›¾æ–¯ [Tectus]
+			-- çŸ³åŒ–
+			--{spellID = 162892, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ™¶åŒ–å¼¹å¹• - ç‚¹å
 			{spellID = 162346, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ¾§»¯µ¯Ä» - ²Èµ½»ğ
+			-- æ™¶åŒ–å¼¹å¹• - è¸©åˆ°ç«
 			{spellID = 162370, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
-			-- 4	²¼À¼¿ÏË¹²¨ [Brackenspore]
-			-- À£ÀÃ (T) 4~6²ã
+			-- 4	å¸ƒå…°è‚¯æ–¯æ³¢ [Brackenspore]
+			-- æºƒçƒ‚ (T) 4~6å±‚
 			{spellID = 163241, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËÀ¾ÒÍÂÏ¢
+			-- æ­»ç–½åæ¯
 			{spellID = 159220, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ê´ÄÔÕæ¾ú
+			-- èš€è„‘çœŸèŒ
 			{spellID = 163140, unitID = "player", caster = "all", filter = "DEBUFF"},
-			{spellID = 160179, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »¬ÁïÁïµÄÌ¦Şº
+			-- æ»‘æºœæºœçš„è‹”è—“
 			{spellID = 163590, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±¬ÁÑ¹à×¢
+			-- çˆ†è£‚çŒæ³¨
 			{spellID = 165223, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »Ø´ºæß×Ó
+			-- å›æ˜¥å­¢å­
 			{spellID = 159426, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 5	¶ÀÑÛÄ§Ë«×Ó [Twin Ogron]
-			-- ·ÀÓùÏ÷Èõ
+			-- 5	ç‹¬çœ¼é­”åŒå­ [Twin Ogron]
+			-- é˜²å¾¡å‰Šå¼±
 			{spellID = 159709, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÖÂË¥ÅØÏø
+			-- è‡´è¡°å’†å“®
 			{spellID = 158026, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÁÒÑæ
+			-- çƒˆç„°
 			{spellID = 158241, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÊõÖ®ÉË (T)
+			-- å¥¥æœ¯ä¹‹ä¼¤ (T)
 			{spellID = 167200, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÄÜ¶¯µ´
+			-- å¥¥èƒ½åŠ¨è¡
 			{spellID = 163372, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 6	¿ËÀ­¸ê [Ko'ragh]
-			-- Ä§ÄÜÉ¢Éä£º°ÂÊõ (T)
+			-- 6	å…‹æ‹‰æˆˆ [Ko'ragh]
+			-- é­”èƒ½æ•£å°„ï¼šå¥¥æœ¯ (T)
 			{spellID = 162186, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ä§ÄÜÉ¢Éä£º»ğÑæ
+			-- é­”èƒ½æ•£å°„ï¼šç«ç„°
 			{spellID = 162185, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ä§ÄÜÉ¢Éä£º±ùËª
+			-- é­”èƒ½æ•£å°„ï¼šå†°éœœ
 			{spellID = 172813, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ä§ÄÜÉ¢Éä£º°µÓ°
+			-- é­”èƒ½æ•£å°„ï¼šæš—å½±
 			{spellID = 162184, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ·ÏÁéèµÀİ
+			-- åºŸçµç’§å’
 			{spellID = 156803, unitID = "player", caster = "all", filter = "DEBUFF"},
 			{spellID = 172886, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ñ¹ÖÆÁ¦³¡
+			-- å‹åˆ¶åŠ›åœº
 			{spellID = 161345, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¸¯Ê´ÄÜÁ¿
+			-- è…èš€èƒ½é‡
 			{spellID = 161242, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ä§ÄÜÉ¢Éä£ºĞ°ÄÜ - µãÃû
+			-- é­”èƒ½æ•£å°„ï¼šé‚ªèƒ½ - ç‚¹å
 			{spellID = 172895, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- Ä§ÄÜÉ¢Éä£ºĞ°ÄÜ - ²Èµ½»ğ
+			-- é­”èƒ½æ•£å°„ï¼šé‚ªèƒ½ - è¸©åˆ°ç«
 			{spellID = 172917, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
-			-- 7	ÔªÊ×Âí¶û¸ß¿Ë [Imperator Mar'gok]
-			-- »ìãç±ê¼Ç (T) P1»»T
+			-- 7	å…ƒé¦–é©¬å°”é«˜å…‹ [Imperator Mar'gok]
+			-- æ··æ²Œæ ‡è®° (T) P1æ¢T
 			{spellID = 158605, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »ìãç±ê¼Ç£ºÆ«ÒÆ (T) P2»»T
+			-- æ··æ²Œæ ‡è®°ï¼šåç§» (T) P2æ¢T
 			{spellID = 164176, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »ìãç±ê¼Ç£ºÇ¿¹Ì (T) P3»»T
+			-- æ··æ²Œæ ‡è®°ï¼šå¼ºå›º (T) P3æ¢T
 			{spellID = 164178, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- »ìãç±ê¼Ç£º¸´ÖÆ (T) P4»»T
+			-- æ··æ²Œæ ‡è®°ï¼šå¤åˆ¶ (T) P4æ¢T
 			{spellID = 164191, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÊõ·ßÅ­ P1
+			-- å¥¥æœ¯æ„¤æ€’ P1
 			{spellID = 156225, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÊõ·ßÅ­ P2
+			-- å¥¥æœ¯æ„¤æ€’ P2
 			{spellID = 164004, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÊõ·ßÅ­ P3
+			-- å¥¥æœ¯æ„¤æ€’ P3
 			{spellID = 164005, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °ÂÊõ·ßÅ­ P4
+			-- å¥¥æœ¯æ„¤æ€’ P4
 			{spellID = 164006, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¼õËÙ
+			-- å‡é€Ÿ
 			{spellID = 157801, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨
+			-- é”å®š
 			{spellID = 157763, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- »ÙÃğ¹²Ãù
+			-- æ¯ç­å…±é¸£
 			{spellID = 159200, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÄëËé»¤¼×
+			-- ç¢¾ç¢æŠ¤ç”²
 			{spellID = 158553, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ğüé³±¤ [½áÊø]
+			-- æ‚¬æ§Œå ¡ [ç»“æŸ]
 			
 			
-			
+			-- é»‘çŸ³é“¸é€ å‚ 988 [Blackrock Foundry]
+			-- 1	å¥¥å°”é«˜æ ¼ [Oregorger]
+			-- é…¸æ¶²å·¨å£ (T)
+			{spellID = 173471, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é…¸æ¶²æ´ªæµ
+			{spellID = 156297, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‘•åé»‘çŸ³
+			{spellID = 156203, unitID = "player", caster = "all", filter = "DEBUFF"},
 
-			-- ºÚÊ¯ÖıÔì³§ 988
-			-- 1	¸ñÂ³¶û [Gruul]
-			-- Á¶Óü´ò»÷ (T)
+			-- 2	æ ¼é²å°” [Gruul]
+			-- ç‚¼ç‹±æ‰“å‡» (T)
 			{spellID = 162322, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ñ¹ÆÈ´ò»÷ (T)
+			-- å‹è¿«æ‰“å‡» (T)
 			{spellID = 155078, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Á¶ÓüÇĞ¸î
+			-- ç‚¼ç‹±åˆ‡å‰²
 			{spellID = 155080, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÂäÊ¯
+			-- è½çŸ³
 			{spellID = 173192, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ê¯»¯
+			-- çŸ³åŒ–
 			{spellID = 155330, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
-			-- 2	°Â¶û¸ß¸ñ [Oregorger]
-			-- ËáÒº¾Ş¿Ú (T)
-			{spellID = 173471, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ËáÒººéÁ÷
-			{spellID = 156297, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Å»ÍÂºÚÊ¯
-			{spellID = 156203, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- 3	çˆ†è£‚ç†”ç‚‰ [The Blast Furnace]
+			-- é«˜çƒ­ (T) å±‚
+			{spellID = 155242, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ·¬ç« (T)
+			{spellID = 155240, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å´©è£‚
+			{spellID = 156932, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‚¸å¼¹
+			{spellID = 155192, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é˜²å¾¡
+			{spellID = 160379, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ä¸ç¨³å®šçš„ç«ç„°
+			{spellID = 176121, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é”å®š
+			{spellID = 155196, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç†”æ¸£æ± 
+			{spellID = 155743, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç†”åŒ–
+			{spellID = 155225, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç†”åŒ–
+			{spellID = 155223, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
 			
-			-- 3	ÊŞÍõ´ïÂê¿Ë [Beastlord Darmac]
-			-- ¿ñÂÒËº³¶-ÀÇ (T) ²ã
-			{spellID = 155061, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ¿ñÂÒËº³¶-BOSS (T) ²ã
-			{spellID = 162283, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ×ÆÉÕÇûÌå (T) ²ã
-			{spellID = 155030, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÄëËé»¤¼× (T) ²ã
-			{spellID = 155236, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- µØ¶¯É½Ò¡
-			{spellID = 162276, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ±¬È¼
-			{spellID = 155399, unitID = "player", caster = "all", filter = "DEBUFF"},
-
-
-			
-			-- 4	¸¿»ğÕß¿¨¸ñÀ­×È [Flamebender Ka'graz]
-			-- ½¹×ÆÍÂÏ¢ (T) 1~5 ²ã
-			{spellID = 155074, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÉıÌÚÁÒÑæ (T) 
-			{spellID = 163284, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÉÕ×Æ
-			{spellID = 155049, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÈÛÑÒ¼¤Á÷
-			{spellID = 154932, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨
-			{spellID = 154952, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ³ãÈÈ¹â»Ô
-			{spellID = 155277, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 5	ººË¹¼Ó¶ûÓë¸¥À¼×ô¿Ë [Hans'gar and Franzok]
-			-- ÕÛ¼¹Ëé×µ
+			-- 4	æ±‰æ–¯åŠ å°”ä¸å¼—å…°ä½å…‹ [Hans'gar and Franzok]
+			-- æŠ˜è„Šç¢æ¤
 			{spellID = 157139, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ×ÆÈÈÈ¼ÉÕ
+			-- ç¼çƒ­ç‡ƒçƒ§
 			{spellID = 155818, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 6	Ö÷¹ÜË÷¸ñ¶û [Operator Thogar]
-			-- µãÈ¼ (T) ²ã
-			{spellID = 155921, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÊµÑéĞÍÂö³åÊÖÀ×
-			{spellID = 165195, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- È¼ÉÕ
-			{spellID = 164380, unitID = "player", caster = "all", filter = "DEBUFF"},
-			
-			-- 7	±¬ÁÑÈÛÂ¯ [The Blast Furnace]
-			-- ¸ßÈÈ (T) ²ã
-			{spellID = 155242, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ´ã»ğ (T)
-			{spellID = 155240, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ±ÀÁÑ
-			{spellID = 156932, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Õ¨µ¯
-			{spellID = 155192, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ·ÀÓù
-			{spellID = 160379, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ²»ÎÈ¶¨µÄ»ğÑæ
-			{spellID = 176121, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨
-			{spellID = 155196, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ÈÛÔü³Ø
-			{spellID = 155743, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÈÛ»¯
-			{spellID = 155225, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ÈÛ»¯
-			{spellID = 155223, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- 5	ç¼šç«è€…å¡æ ¼æ‹‰å…¹ [Flamebender Ka'graz]
+			-- ç„¦ç¼åæ¯ (T) 1~5 å±‚
+			{spellID = 155074, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‡è…¾çƒˆç„° (T) 
+			{spellID = 163284, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çƒ§ç¼
+			{spellID = 155049, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç†”å²©æ¿€æµ
+			{spellID = 154932, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å²©æµ†çŒ›å‡»
+			{spellID = 155314, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é”å®š
+			{spellID = 154952, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç‚½çƒ­å…‰è¾‰
+			{spellID = 155277, unitID = "player", caster = "all", filter = "DEBUFF"},
 
-			
-			-- 8	¿ËÂŞÄª¸ñ [Kromog]
-			-- Å¤Çú»¤¼× (T) 4~5 ²ã
+			-- 6	å…‹ç½—è«æ ¼ [Kromog]
+			-- æ‰­æ›²æŠ¤ç”² (T) 4~5 å±‚
 			{spellID = 156766, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¾À²øÖ®µØ·ûÎÄ
+			-- çº ç¼ ä¹‹åœ°ç¬¦æ–‡
 			{spellID = 157059, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÆÆËé´óµØ·ûÎÄ
+			-- ç ´ç¢å¤§åœ°ç¬¦æ–‡
 			{spellID = 161923, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 9	¸ÖÌúÅ®ÎäÉñ [The Iron Maidens]
-			-- ¼±ËÙÉä»÷
+			-- 7	å…½ç‹è¾¾ç›å…‹ [Beastlord Darmac]
+			-- ç‹‚ä¹±æ’•æ‰¯-ç‹¼ (T) å±‚
+			{spellID = 155061, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç‹‚ä¹±æ’•æ‰¯-BOSS (T) å±‚
+			{spellID = 162283, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- ç¼çƒ§èº¯ä½“ (T) å±‚
+			{spellID = 155030, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç¢¾ç¢æŠ¤ç”² (T) å±‚
+			{spellID = 155236, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- åœ°åŠ¨å±±æ‘‡
+			{spellID = 162276, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
+			-- çˆ†ç‡ƒ
+			{spellID = 155399, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 8	ä¸»ç®¡ç´¢æ ¼å°” [Operator Thogar]
+			-- ç‚¹ç‡ƒ (T) å±‚
+			{spellID = 155921, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å®éªŒå‹è„‰å†²æ‰‹é›·
+			{spellID = 165195, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‡ƒçƒ§
+			--{spellID = 164380, unitID = "player", caster = "all", filter = "DEBUFF"},
+			
+			-- 9	é’¢é“å¥³æ­¦ç¥ [The Iron Maidens]
+			-- æ€¥é€Ÿå°„å‡»
 			{spellID = 156631, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ´©Í¸Éä»÷
+			-- ç©¿é€å°„å‡»
 			{spellID = 164271, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- °µÓ°ÁÔÉ±
+			-- æš—å½±çŒæ€
 			{spellID = 158315, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ½şÑªÃÙĞÄÕß
+			-- æµ¸è¡€è§…å¿ƒè€…
 			{spellID = 158010, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÖÂÃüÍ¶ÖÀ
+			-- è‡´å‘½æŠ•æ·
 			{spellID = 158692, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨
+			-- é”å®š
 			{spellID = 158702, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ÆÆ¼×
+			-- ç ´ç”²
 			{spellID = 158686, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ¶éÂäÖ®Ñª
+			-- å •è½ä¹‹è¡€
 			{spellID = 158683, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			-- 10	ºÚÊÖ [Blackhand]
-			-- ËÀÍö±ê¼Ç
+			-- 10	é»‘æ‰‹ [Blackhand]
+			-- æ­»äº¡æ ‡è®°
 			{spellID = 156096, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Ëø¶¨-±»Ì¹¿Ë×·
+			-- é”å®š-è¢«å¦å…‹è¿½
 			{spellID = 156653, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- Â¯Ôü³å»÷ 156047/157018/157322
+			-- ç‚‰æ¸£å†²å‡» 156047/157018/157322
 			{spellID = 156047, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ´©´Ì 156743/175020
+			-- ç©¿åˆº 156743/175020
 			{spellID = 156743, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- ¾ŞÁ¦·ÛËéÃÍ»÷
+			-- å·¨åŠ›ç²‰ç¢çŒ›å‡»
 			{spellID = 158054, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- È¼ÉÕ
-			{spellID = 162490, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÈÛ»ğÂ¯Ôü
+			-- ç‡ƒçƒ§
+			--{spellID = 162490, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç†”ç«ç‚‰æ¸£
 			{spellID = 156401, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- ÉÕÉË
+			-- çƒ§ä¼¤
 			{spellID = 156404, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- È¼ÉÕÉä»÷
+			-- ç‡ƒçƒ§å°„å‡»
 			{spellID = 156772, unitID = "player", caster = "all", filter = "DEBUFF"},
-			-- Í¶ÖÀÂ¯ÔüÕ¨µ¯
+			-- æŠ•æ·ç‚‰æ¸£ç‚¸å¼¹
 			{spellID = 157000, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			-- Í¶ÖÀÂ¯ÔüÕ¨µ¯ (T)
+			-- æŠ•æ·ç‚‰æ¸£ç‚¸å¼¹ (T)
 			{spellID = 159179, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-			 
-			-- ºÚÊ¯ÖıÔì³§ [½áÊø]
+			-- é»‘çŸ³é“¸é€ å‚ [ç»“æŸ]
+
+
+
+			-- åœ°ç‹±ç«å ¡å’ 1026 [Hellfire Citadel]
+			-- 1	åœ°ç‹±ç«çªå‡»é˜Ÿ [Hellfire Assault]
+			-- é‚ªç«å¼¹è¯
+			{spellID = 186016, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç¬‘é£æˆ˜æ–§
+			{spellID = 184379, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é¢¤æŠ–
+			{spellID = 184238, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çŒ›å‡»
+			{spellID = 184243, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¯¼ç”µå†²å‡»è„‰å†²
+			{spellID = 185806, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é’»å­”
+			{spellID = 180022, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç¼çƒ§
+			{spellID = 185157, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è…åŒ–è™¹å¸
+			{spellID = 187655, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 2	é’¢é“æ å¤ºè€… [Iron Reaver]
+			-- çŒ®ç¥­
+			{spellID = 182074, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ä¸ç¨³å®šçš„å®ç 
+			{spellID = 182001, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‚®å‡»
+			{spellID = 182280, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‡ƒæ–™å°¾ç—•
+			{spellID = 182003, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è¿…çŒ›çªè¢­
+			{spellID = 179897, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 185242, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ˜“çˆ†ç«ç„°ç‚¸å¼¹
+			{spellID = 185978, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 3	è€ƒè«å…‹ [Kormrok]
+			-- æ”«å–ä¹‹æ‰‹
+			{spellID = 181345, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ä¹‹è§¦
+			{spellID = 181321, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çˆ†ç‚¸å†²å‡»
+			{spellID = 181306, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªæ±¡ç¢¾å‹
+			{spellID = 187819, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±è¡€çƒ
+			{spellID = 180270, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‚½çƒ­è¡€çƒ
+			{spellID = 185519, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªæ±¡è¡€çƒ
+			{spellID = 185521, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±ä¹‹æ± 
+			{spellID = 181082, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç«ç„°ä¹‹æ± 
+			{spellID = 186559, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªæ±¡ä¹‹æ± 
+			{spellID = 186560, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±æ®‹æ¸£
+			{spellID = 181208, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çˆ†ç‚¸æ®‹æ¸£
+			{spellID = 185686, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªæ¶æ®‹æ¸£
+			{spellID = 185687, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 4	åœ°ç‹±ç«é«˜é˜¶è®®ä¼š [Hellfire High Council]
+			-- æ­»çµå°è®°
+			{spellID = 184449, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 184450, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 184676, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 185065, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 185066, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ„¤æ€’
+			{spellID = 184359, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é…¸æ€§åˆ›ä¼¤
+			{spellID = 184847, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±æ”¶å‰²
+			{spellID = 184652, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ±¡è¡€
+			{spellID = 184357, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è¡€æ¶²æ²¸è…¾
+			{spellID = 184355, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 5	åŸºå°”ç½—æ ¼Â·æ­»çœ¼ [Kilrogg Deadeye]
+			-- å‰–å¿ƒä¹‹åˆ€
+			{spellID = 188929, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 180389, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½è…èš€
+			{spellID = 182159, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 184396, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¶é­”é™„èº«
+			{spellID = 180313, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ°¸æ’çš„å†³å¿ƒ
+			{spellID = 180718, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ­»äº¡å¹»è±¡
+			{spellID = 181488, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ°¸æ’çš„æ•‘èµ
+			{spellID = 185563, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç¢ç”²
+			{spellID = 180200, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½çƒˆç„°
+			{spellID = 180575, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ’•è£‚åšå«
+			{spellID = 183917, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æº…è¡€
+			{spellID = 188852, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½è…æ¶²
+			{spellID = 184067, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 6	è¡€é­” [Gorefiend]
+			-- çµé­‚ç®­é›¨
+			{spellID = 180093, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è¡€é­”çš„è…åŒ–
+			{spellID = 179867, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¶ˆåŒ–
+			{spellID = 181295, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç”Ÿå‘½æ¸´æœ›
+			{spellID = 180148, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¯ç­ä¹‹è§¦
+			{spellID = 179977, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æœ«æ—¥äº•
+			{spellID = 179995, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ä¹‹æ€’
+			{spellID = 185189, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½çƒˆç„°
+			{spellID = 185190, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‘½è¿ç›¸è¿
+			{spellID = 179908, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 179909, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çµé­‚ä¹‹æ± 
+			{spellID = 186770, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 7	æš—å½±é¢†ä¸»è‰¾æ–¯å¡ [Shadow-Lord Iskar]
+			-- å®‰è‹ä¹‹å…‰
+			{spellID = 185239, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¹»å½±ä¹‹ä¼¤
+			{spellID = 182325, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ç„šåŒ–
+			{spellID = 182600, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¹»å½±ä¹‹é£
+			{spellID = 181957, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½é£è½®
+			{spellID = 182200, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 182178, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¹»å½±é‚ªèƒ½ç‚¸å¼¹
+			{spellID = 179219, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ç‚¸å¼¹
+			{spellID = 181753, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¹»å½±è…èš€
+			{spellID = 181824, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¹»å½±ç„šåŒ–
+			{spellID = 187344, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç»æœ›ä¹‹é“¾
+			{spellID = 185456, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±ä¹‹ç¼š
+			{spellID = 185510, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 8	æ°¸æ’è€…ç´¢å…‹é›·è¨ [Socrethar the Eternal]
+			-- ç²‰ç¢é˜²å¾¡
+			{spellID = 182038, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ˜“çˆ†çš„é‚ªèƒ½å®ç 
+			{spellID = 189627, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ®‹æ¸£
+			{spellID = 182218, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ç‰¢ç¬¼
+			{spellID = 180415, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 183017, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‹å€’èƒ½é‡
+			{spellID = 189540, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å •è½è€…ä¹‹èµ
+			{spellID = 184124, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é­…å½±é‡é‡
+			{spellID = 182769, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¶æ¯’é¬¼é­…
+			{spellID = 182900, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ— å°½é¥¥æ¸´
+			{spellID = 188666, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç´¢å…‹é›·è¨ä¹‹å’’
+			{spellID = 190776, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 9	æš´å›ç»´å“ˆé‡Œ [Tyrant Velhari]
+			-- å‡‹é›¶å¥‘å°
+			{spellID = 180000, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è”‘è§†å…‰ç¯
+			{spellID = 179987, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æŠ‘åˆ¶å…‰ç¯
+			{spellID = 181683, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ€¨æ¨å…‰ç¯
+			{spellID = 179993, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è…èš€åºåˆ—
+			{spellID = 180526, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å“€ä¼¤ä¹‹è§¦
+			{spellID = 180166, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 180164, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è°´è´£æ³•ä»¤
+			{spellID = 182459, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- äºµæ¸ä¹‹åœ°
+			{spellID = 180604, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 10	é‚ªèƒ½é¢†ä¸»æ‰æ˜† [Fel Lord Zakuun]
+			-- ç ´ç¢ä¹‹é­‚
+			{spellID = 189260, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é­‚ä¸é™„ä½“
+			{spellID = 179407, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ½œä¼èƒ½é‡
+			{spellID = 182008, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç·æ±¡
+			{spellID = 189032, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 189031, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 189030, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è½°é¸£çš„è£‚éš™
+			{spellID = 179428, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¯ç­ä¹‹ç§
+			{spellID = 181508, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 181515, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½æ°´æ™¶
+			{spellID = 181653, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ¯ç«­çµé­‚
+			{spellID = 188998, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 11	ç¥–éœæ‹‰å…‹ [Xhul'horac]
+			-- é‚ªèš€
+			{spellID = 186134, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çµåª’
+			{spellID = 186135, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªå½±å± æˆ®
+			{spellID = 185656, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½ç‚™çƒ¤
+			{spellID = 186073, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è™šç©ºæ¶ˆè€—
+			{spellID = 186063, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é­”èƒ½å–·æ¶Œ
+			{spellID = 186407, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çµèƒ½æ¶ŒåŠ¨
+			{spellID = 186333, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªç„°ä¹±èˆ
+			{spellID = 186448, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 186453, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‡‹é›¶å‡è§†
+			{spellID = 186785, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 186783, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç‚¹ç‡ƒ
+			{spellID = 188208, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é»‘æ´
+			{spellID = 186547, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½é”é“¾
+			{spellID = 186500, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¼ºåŒ–é­”åŒ–é”é“¾
+			{spellID = 189775, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 12	ç›è¯ºæ´›æ–¯ [Mannoroth]
+			-- å†›å›¢è¯…å’’
+			{spellID = 181275, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æœ«æ—¥å°è®°
+			{spellID = 181099, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æœ«æ—¥ä¹‹åˆº
+			{spellID = 181119, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 189717, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç›è¯ºæ´›æ–¯ä¹‹è¡€
+			{spellID = 182171, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç©¿åˆºä¹‹ä¼¤
+			{spellID = 184252, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 191231, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å·¨åŠ›å†²å‡»
+			{spellID = 181359, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç›è¯ºæ´›æ–¯çš„å‡è§†
+			{spellID = 181597, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±ä¹‹åŠ›
+			{spellID = 181841, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¼ºåŒ–ç›è¯ºæ´›æ–¯å‡è§†
+			{spellID = 182006, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å¼ºåŒ–æš—å½±ä¹‹åŠ›
+			{spellID = 182088, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- å‡è§†æš—å½±
+			{spellID = 182031, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æŸç¼šæš—å½±
+			{spellID = 190482, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- 13	é˜¿å…‹è’™å¾· [Archimonde]
+			-- å½±é­”å†²å‡»
+			{spellID = 183634, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æš—å½±çˆ†ç ´
+			{spellID = 187742, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 183864, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ­»äº¡çƒ™å°
+			{spellID = 183828, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é­”ç«
+			{spellID = 183586, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- çº³é²ä¹‹å…‰
+			{spellID = 183963, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é­”ç«é”å®š
+			{spellID = 182879, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- èšç„¦æ··ä¹±
+			{spellID = 185014, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- ç²¾ç‚¼æ··ä¹±
+			{spellID = 186123, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- æ·é”é…·åˆ‘
+			{spellID = 184964, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è™šç©ºæ”¾é€
+			{spellID = 186952, unitID = "player", caster = "all", filter = "DEBUFF"},
+			{spellID = 186961, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- åå™¬ç”Ÿå‘½
+			{spellID = 187047, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è™šç©ºæ’•è£‚
+			{spellID = 189891, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- è™šç©ºè…åŒ–
+			{spellID = 190049, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- é‚ªèƒ½è…èš€
+			{spellID = 188796, unitID = "player", caster = "all", filter = "DEBUFF"},
+			-- åœ°ç‹±ç«å ¡å’ [ç»“æŸ]
 			
-			-- 60200µØÓü»ğ±¤Àİ
-            -- 1 ÆæÏ®µØÓü»ğ
-            -- Ğ°»ğµ¯Ò© Felfire-Munitions
-            {spellID = 186016, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ¥·çÕ½¸« howling-axe
-            {spellID = 184379, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ²ü¶¶ cower
-            {spellID = 184238, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÃÍ»÷ slam
-            {spellID = 184243, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- µ¼µç³å»÷Âö³å conducted-shock-pulse
-            {spellID = 185806, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ×ê¿× bore
-            {spellID = 180022, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ×ÆÉÕ burn
-            {spellID = 185157, unitID = "player", caster = "all", filter = "DEBUFF"},
-            --M ¸¯»¯ºçÎü corruption-siphon
-            {spellID = 187655, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 2 ¸ÖÌúÂÓ¶áÕß
-            -- Ï×¼À immolation
-            {spellID = 182074, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ²»ÎÈ¶¨µÄ±¦Öé unstable-orb
-            {spellID = 182001, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÅÚ»÷ artillery
-            {spellID = 182280, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- È¼ÁÏÎ²ºÛ fuel-streak
-            {spellID = 182003, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ñ¸ÃÍÍ»Ï® blitz
-            {spellID = 179897, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 185242, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            --M Ò×±¬»ğÑæÕ¨µ¯ firebomb-vulnerability
-            {spellID = 185978, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 3 ¿¼Äª¿Ë
-            -- ¾ğÈ¡Ö®ÊÖ foul-crush
-            {spellID = 181345, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜÖ®´¥ fel-touch
-            {spellID = 181321, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ±¬ÁÑ³å»÷ explosive-burst
-            {spellID = 181306, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÎÛÄëÑ¹ crush
-            {spellID = 187819, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÓ°ÑªÇò shadow-globule
-            {spellID = 180270, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ³ãÈÈÑªÇò fiery-globule
-            {spellID = 185519, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÎÛÑªÇò foul-globule
-            {spellID = 185521, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÓ°Ö®³Ø shadowy-pool
-            {spellID = 181082, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ğÑæÖ®³Ø fiery-pool
-            {spellID = 186559, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÎÛÖ®³Ø foul-pool
-            {spellID = 186560, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M °µÓ°²ĞÔü shadow-residue
-            {spellID = 181208, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M ±¬Õ¨²ĞÔü fiery-residue
-            {spellID = 185686, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M Ğ°¶ñ²ĞÔü foul-residue
-            {spellID = 185687, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 4 µØÓü»ğ¸ß½×Òé»á
-            -- ËÀÁéÓ¡¼Ç mark-of-the-necromancer
-            {spellID = 184449, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 184450, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 184676, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 185065, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 185066, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ÃÎ÷Ê»ÃÓ° nightmare-visage
-            {spellID = 184673, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ¶éÂä¿ñÅ­ fel-rage
-            {spellID = 184360, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ËáĞÔ´´ÉË acidic-wound
-            {spellID = 184847, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÓ°ÊÕ¸î reap
-            {spellID = 184652, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÎÛÑª tainted-blood
-            {spellID = 184357, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M ÑªÒº·ĞÌÚ bloodboil
-            {spellID = 184355, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 5 »ù –Á_¸ñ&#8231;ÍöÑÛ
-            -- ÆÊĞÄ·Éµ¶ heart-seeker
-            {spellID = 188929, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 180389, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- Ğ°ÄÜ¸¯Ê´ fel-corruption
-            {spellID = 182159, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 184396, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ¶ñÄ§¸½Éí demonic-possession
-            {spellID = 180313, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÓÀºÛµÄ¾öĞÄ undying-resolve
-            {spellID = 180718, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ËÀÍö»ÃÏó vision-of-death
-            {spellID = 181488, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÓÀºãµÄ¾ÈÊê undying-salvation
-            {spellID = 185563, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ëé¼× shredded-armor
-            {spellID = 180200, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜÁÒÑæ fel-flames
-            {spellID = 180575, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ËºÁÑº¿½Ğ rending-howl
-            {spellID = 183917, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ½¦Ñª blood-splatter
-            {spellID = 188852, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜ¸¯Òº fel-puddle
-            {spellID = 184067, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 6 ÑªÄ§
-            -- Áé»ê¼ıÓê spirit-volley
-            {spellID = 180093, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ËÀÍöÖ®Ó° shadow-of-death
-            {spellID = 179864, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÑªÄ§µÄ¸¯»¯ gorefiends-corruption
-            {spellID = 179867, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ïû»¯ digest
-            {spellID = 181295, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÉúÃü¿ÊÍû hunger-for-life
-            {spellID = 180148, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- »ÙÃğÖ®´¥ touch-of-doom
-            {spellID = 179977, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä©ÈÕ¾® doom-well
-            {spellID = 179995, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÃüÔËÏàÁ¬ shared-fate
-            {spellID = 179908, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 179909, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- Áé»êÖ®³Ø pool-of-souls
-            {spellID = 186770, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 7 °µÓ°îIÖ÷ÒÁË¹¿¨
-            -- °²ËÕÖ®¹â radiance-of-anzu
-            {spellID = 185239, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ÃÓ°Ö®ÉË phantasmal-wounds
-            {spellID = 182325, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜ·Ù»¯ fel-fire
-            {spellID = 182600, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ÃÓ°Ö®·ç phantasmal-winds
-            {spellID = 181957, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜ·ÉÂÖ fel-chakram
-            {spellID = 182200, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 182178, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- »ÃÓ°Ğ°ÄÜÕ¨µ¯ phantasmal-fel-bomb
-            {spellID = 179219, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜÕ¨µ¯ fel-bomb
-            {spellID = 181753, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ÃÓ°¸¯Ê´ phantasmal-corruption
-            {spellID = 181824, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ÃÓ°·Ù»¯ phantasmal-cremation
-            {spellID = 187344, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M ¾øÍûÖ®Á´ chains-of-despair
-            {spellID = 185456, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M °µÓ°Ö®¸¿ dark-bindings
-            {spellID = 185510, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 8 ÓÀaÕßË÷¿üË_ –
-            -- ·ÛËé·ÀÓù shattered-defenses
-            {spellID = 182038, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ò×±¬µÄĞ°ÄÜ±¦Öé volatile-fel-orb
-            {spellID = 189627, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä§Ñ×šˆÔü felblaze-residue
-            {spellID = 182218, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜÀÎÁı fel-prison
-            {spellID = 180415, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ñ¹µ¹ÄÜÁ¿ overwhelming-power
-            {spellID = 189540, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¶éÂäÕßÖ®´Í gift-of-the-manari
-            {spellID = 184124, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÷ÈÓ°ÖØÖØ ghastly-fixation
-            {spellID = 182769, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÑÔÊõ:¶ñ shadow-word-agony
-            {spellID = 184239, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¶ñ¶¾¹í÷È virulent-haunt
-            {spellID = 182900, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- M ÎŞ¾¡¼¢¿Ê eternal-hunger
-            {spellID = 188666, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- M Ë÷¿ËÀ×ÈøÖ®Öä socrethars-contingency
-            {spellID = 190776, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M ²½ÂÄõçõÇ blooded-tracker
-            {spellID = 188767, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 9 Å®±©¾ı¾S¹şÀï
-            -- µòÁãÆõÓ¡ seal-of-decay
-            {spellID = 180000, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÃïÊÓ¹â»· aura-of-contempt
-            {spellID = 179987, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÒÖÖÆ¹â»· aura-of-oppression
-            {spellID = 181683, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ô¹ºŞ¹â»· aura-of-malice
-            {spellID = 179993, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¸¯Ê´ĞòÁĞ font-of-corruption
-            {spellID = 180526, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÁÑÉËÖ®´¥ touch-of-harm
-            {spellID = 180166, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 180164, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- Ç´Ôğ·¨Áî edict-of-condemnation
-            {spellID = 182459, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÙôäÂÖ®µØ despoiled-ground
-            {spellID = 180604, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 10 ºÄ§îIÖ÷ÔıÀ¥
-            -- ÆÆËéÖ®»ê cloven-soul
-            {spellID = 189260, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ê²»¸½Ìå disembodied
-            {spellID = 179407, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ç±·üÄÜÁ¿ latent-energy
-            {spellID = 182008, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- çèÎÛ befouled
-            {spellID = 189032, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 189031, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 189031, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ºäÃùµÄÁÑÏ¶ rumbling-fissure
-            {spellID = 179428, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- »ÙÃğÖ®ÖÖ seed-of-destruction
-            {spellID = 181508, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 181515, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- Ğ°ÄÜË®¾§ fel-crystals
-            {spellID = 181653, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M ¿İ½ßÁé»ê exhausted-soul
-            {spellID = 188998, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 11 ×æ»ôÀ­¿Ë
-            -- Ğ°Ê´ feltouched
-            {spellID = 186134, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÁéÃ½ voidtouched
-            {spellID = 186135, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°Ó°ÍÀÂ¾ shadowfel-annihilation
-            {spellID = 185656, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜÖË¿¾ felsinged
-            {spellID = 186073, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğé¿ÕÏûºÄ wasting-void
-            {spellID = 186063, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä§ÄÜÅçÓ¿ fel-surge
-            {spellID = 186407, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÁéÄÜÓ¿¶¯ void-surge
-            {spellID = 186333, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÑæÂÒÎè felblaze-flurry
-            {spellID = 186448, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 186453, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- µòÁãÄıÊÓ withering-gaze
-            {spellID = 186785, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 186783, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- µãÈ¼ ablaze
-            {spellID = 188208, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ºÚ¶´ black-hole
-            {spellID = 186547, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜËøÁ´ chains-of-fel
-            {spellID = 186500, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Š»¯Ä§»¯æiå€ empowered-chains-of-fel
-            {spellID = 189775, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 12 ¬”ÖZÂåË¹/mannoroth
-            -- ¾üÍÅ×çÖä curse-of-the-legion
-            {spellID = 181275, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä©ÈÕÓ¡¼Ç mark-of-doom
-            {spellID = 181099, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä©ÈÕÖ®´Ì doom-spike
-            {spellID = 181119, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 189717, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ÂêÂåÅµË¹Ö®Ñª blood-of-mannoroth
-            {spellID = 182171, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ´©´ÌÖ®ÉË puncture-wound
-            {spellID = 184252, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 191231, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ¾ŞÁ¦³å»÷ massive-blast
-            {spellID = 181359, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÂêÅµÂåË¹ÄıÊÓ mannoroths-gaze
-            {spellID = 181597, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÓ°Ö®Á¦ shadowforce
-            {spellID = 181841, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ç¿»¯ÂêÅµÂåË¹ÄıÊÓ empowered-mannoroths-gaze
-            {spellID = 182006, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ç¿»¯°µÓ°Ö®Á¦ empowered-shadowforce
-            {spellID = 182088, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÄıÊÓ°µÓ° gazing-shadows
-            {spellID = 182031, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- M Êø¸¿°µÓ° gripping-shadows
-            {spellID = 190482, unitID = "player", caster = "all", filter = "DEBUFF"},
-            
-            -- 13 °¢¿ËÃÉµÂ
-            -- °µÓ°³å»÷ shadowfel-burst
-            {spellID = 183634, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- °µÓ°³å»÷ shadow-blast
-            {spellID = 187742, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 183864, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ËÀÍöÀÓÓ¡ death-brand
-            {spellID = 183828, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä§»ğ doomfire
-            {spellID = 183586, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ä§»ğËø¶¨ doomfire-fixate
-            {spellID = 182879, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ÄÉÂ³Ö®¹â light-of-the-naaru
-            {spellID = 183963, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¾Û½¹»ìÂÒ focused-chaos
-            {spellID = 185014, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¾«Á¶»ìÂÒ wrought-chaos
-            {spellID = 186123, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- ¼ÏËø¿áĞÌ shackled-torment
-            {spellID = 184964, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğé¿Õ·ÅÖğ nether-banish
-            {spellID = 186952, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            {spellID = 186961, unitID = "player", caster = "all", filter = "DEBUFF", absID = true},
-            -- ÍÌÊÉÉùÃ÷ devour-life
-            {spellID = 187047, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğé¿ÕËºÁÑ nether-tear
-            {spellID = 189891, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğé¿Õ¸¯»¯ nether-corruption
-            {spellID = 190049, unitID = "player", caster = "all", filter = "DEBUFF"},
-            -- Ğ°ÄÜ¸¯Ê´ fel-corruption
-            {spellID = 188796, unitID = "player", caster = "all", filter = "DEBUFF"}, 
-			--µØÓü»ğ±¤Àİ½áÊø
 			
-			-- outdoor bosses -- »§ÍâÊ×Áì
-			-- Sha of Anger [Å­Ö®É·]
+			-- outdoor bosses -- æˆ·å¤–é¦–é¢†
+			-- Sha of Anger [æ€’ä¹‹ç…]
 			--Seethe
 			{spellID = 119487, unitID = "player", caster = "all", filter = "DEBUFF"},
 			-- Aggressive Behavior
@@ -4533,15 +4103,17 @@ Filger_Spells = {
 			-- Unleashed Wrath
 			{spellID = 119488, unitID = "player", caster = "all", filter = "DEBUFF"},
 			
-			--Salys's Warband [ÈøÀ³Ë¹±øÍÅ]
-			--Yu'lon	Óñçç(ÇàÁú)
-			--Xuen		Ñ©Å­(°×»¢)
-			--Chi-ji	³à¾«(Öìº×)
-			--Niuzao	³eÔí(ĞşÅ£)
-			--Ordos		ÎÓ¶ú¶äË¹(Ò°Å£ÈË»ğÉñ)
+			--Salys's Warband [è¨è±æ–¯å…µå›¢]
+			--Yu'lon	ç‰ç‘(é’é¾™)
+			--Xuen		é›ªæ€’(ç™½è™)
+			--Chi-ji	èµ¤ç²¾(æœ±é¹¤)
+			--Niuzao	ç ®çš‚(ç„ç‰›)
+			--Ordos		æ–¡è€³æœµæ–¯(é‡ç‰›äººç«ç¥)
 			
-			-- ĞÄÖÇ [ÓÈ¸ñÈøÂ¡]
+			-- å¿ƒæ™º [å°¤æ ¼è¨éš†]
 			{spellID = 63050, unitID = "player", caster = "all", filter = "DEBUFF"},
+
+			-- è¦å¡ 824
 		},
 		{
 			Name = "T_BUFF",
@@ -4818,7 +4390,7 @@ Filger_Spells = {
 			{spellID = 5246, unitID = "target", caster = "all", filter = "DEBUFF"},
 			-- Silenced (Gag Order)
 			{spellID = 18498, unitID = "target", caster = "all", filter = "DEBUFF"},
-			-- ´Ì¶úÅ­ºğ
+			-- åˆºè€³æ€’å¼
 			{spellID = 12323, unitID = "target", caster = "all", filter = "DEBUFF"},
 
 			-- Racial
@@ -4832,108 +4404,29 @@ Filger_Spells = {
 			-- Heart of Fear
 			-- Impaling Spear (Wind Lord Mel'jarak)
 			{spellID = 122224, unitID = "target", caster = "all", filter = "DEBUFF"},
-		
-			-- All
-			-- Warsong Flag
-			{spellID = 23333, unitID = "target", caster = "all", filter = "BUFF"},
-			{spellID = 23335, unitID = "target", caster = "all", filter = "BUFF"},
+
+			-- Ashran
+			-- Ancient Artifact
+			{spellID = 168506, unitID = "target", caster = "all", filter = "BUFF"},
+			-- Boulder Shield
+			{spellID = 169373, unitID = "target", caster = "all", filter = "BUFF"},
+			-- Scroll of Protection
+			{spellID = 171249, unitID = "target", caster = "all", filter = "BUFF"},
+			-- Star Root Tuber
+			{spellID = 161495, unitID = "target", caster = "all", filter = "BUFF"},
+			-- Battlegrounds
 			-- Netherstorm Flag
 			{spellID = 34976, unitID = "target", caster = "all", filter = "BUFF"},
 			-- Orb of Power
 			{spellID = 121175, unitID = "target", caster = "all", filter = "DEBUFF"},
-			-- Seaforium
+			-- Warsong Flag
+			{spellID = 23333, unitID = "target", caster = "all", filter = "BUFF"},
+			{spellID = 23335, unitID = "target", caster = "all", filter = "BUFF"},
+			-- Seaforium Bombs
 			{spellID = 66271, unitID = "target", caster = "all", filter = "DEBUFF"},
-			-- Drink
-			{spellID = 80167, unitID = "target", caster = "all", filter = "BUFF"},
 
-			-- 60200µØÓü»ğ±¤Àİ
-            -- 1 ÆæÏ®µØÓü»ğ
-            -- Ó¢×Ë²ª·¢ inspiring-presence
-            {spellID = 185090, unitID = "target", caster = "all", filter = "BUFF"},
-            -- Õñ·Ü¿ñÏø rallying-roar
-            {spellID = 180319, unitID = "target", caster = "all", filter = "BUFF"},
-            -- ¶ñÄ§±äĞÎ metamorphosis
-            {spellID = 181968, unitID = "target", caster = "all", filter = "BUFF"},
-            -- ĞŞ¸´ repair
-            {spellID = 185816, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            -- 2 ¸ÖÌúÂÓ¶áÕß
-            -- ÖØ»÷ pounding
-            {spellID = 182020, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            -- 3 ¿¼Äª¿Ë
-            -- °µÓ°ÄÜÁ¿ shadow-energy
-            {spellID = 180115, unitID = "target", caster = "all", filter = "BUFF"},
-            -- ±¬Õ¨ÄÜÁ¿ explosive-energy
-            {spellID = 180116, unitID = "target", caster = "all", filter = "BUFF"},
-            -- Ğ°¶ñÄÜÁ¿ foul-energy
-            {spellID = 180117, unitID = "target", caster = "all", filter = "BUFF"},
-            -- ÖØ»÷ pound
-            {spellID = 180244, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            -- 4 µØÓü»ğ¸ß½×Òé»á
-            -- ÃÎ÷Ê»ÃÓ° nightmare-visage
-            {spellID = 184657, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --Ğ°ÄÜïL±© felstorm
-            {spellID = 183701, unitID = "target", caster = "all", filter = "BUFF"},
-            --·ßÅ­ fury
-            {spellID = 184359, unitID = "target", caster = "all", filter = "BUFF"},
-            --¶éÂä¿ñÅ­ fel-rage
-            {spellID = 184358, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --»ÙÃğ·ÉÔ¾ demolishing-leap
-            {spellID = 184365, unitID = "target", caster = "all", filter = "BUFF"},
-            --¾µÏñ mirror-images
-            {spellID = 183885, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --5 »ù –Á_¸ñ.ÍöÑÛ
-            --ËºÁÑº¿½Ğ rending-howl
-            {spellID = 186919, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --ËÀÍöÕõÔú death-throes
-            {spellID = 180224, unitID = "target", caster = "all", filter = "BUFF"},
-            --ËÀÍöÖ®ÃÅ deaths-door
-            {spellID = 184551, unitID = "target", caster = "all", filter = "BUFF"},
-            --Ò°Âù´ò»÷ savage-strikes
-            {spellID = 180163, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --6 ÑªÄ§
-            --ÉúÃü¿ÊÍû hunger-for-life
-            {spellID = 185038, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --Ğ°ÄÜÁÒÑæ fel-flames
-            {spellID = 185190, unitID = "target", caster = "all", filter = "BUFF"},
-            --Ğ°ÄÜÖ®Å­ fel-flames
-            {spellID = 185189, unitID = "target", caster = "all", filter = "BUFF"},
-            --Áé»êÅ¦´ø nexus-of-souls
-            {spellID = 180491, unitID = "target", caster = "all", filter = "BUFF"},
-            --¿ñÒ°Å­ºğ bellowing-shout
-            {spellID = 181582, unitID = "target", caster = "all", filter = "BUFF"},
-            --Áé»êÊ¢Ñç feast-of-souls
-            {spellID = 181973, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --7 °µÓ°îIÖ÷ÒÁË¹¿¨
-            --8 ÓÀaÕßË÷¿üË_ –
-            --Ğ°ÄÜ±ÚÀİ fel-barrier
-            {spellID = 184053, unitID = "target", caster = "all", filter = "BUFF"},
-            --¶ñ¶¾¹í÷È virulent-haunt
-            {spellID = 182925, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --MÎŞ¾¡¼¢¿Ê eternal-hunger
-            {spellID = 188666, unitID = "target", caster = "all", filter = "BUFF", absID = true},
-            --M ²½ÂÄõçõÇ blooded-tracker
-            {spellID = 188767, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --9 Å®±©¾ı¾S¹şÀï
-            --Í³ÓùÕß±ÚÀİ sovereigns-ward
-            {spellID = 180040, unitID = "target", caster = "all", filter = "BUFF"},
-            --µØ»ğ·ç±© infernal-tempest
-            {spellID = 180300, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --10 ºÄ§îIÖ÷ÔıÀ¥
-            --11 ×æ»ôÀ­¿Ë
-            --»ìÂÒÑ¹ÖÆ overwhelming-chaos
-            {spellID = 187204, unitID = "target", caster = "all", filter = "BUFF"},
-            
-            --12 ¬”ÖZÂåË¹/mannoroth
-            --13 °¢¿ËÃÉµÂ
-            -- 60200µØÓü»ğ±¤Àİ ½áÊø--
+			-- Drinking
+			{spellID = 80167, unitID = "target", caster = "all", filter = "BUFF"},
 		},
 	},
 }

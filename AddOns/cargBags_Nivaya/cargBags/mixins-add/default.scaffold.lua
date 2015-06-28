@@ -145,8 +145,8 @@ local function ItemButton_Update(self, item)
 	local _,_,_,_,_,_,itemLink = GetContainerItemInfo(item.bagID, item.slotID)
 	if itemLink then
 		local _,_,itemRarity,itemLevel,_,itemType = GetItemInfo(itemLink)
-		local currentLevel = GetItemLevel(itemLink)
 		if itemType and itemLevel and ilvlTypes[itemType] and itemLevel > 0 then
+			local currentLevel = GetItemLevel(itemLink)
 			if currentLevel then
 				self.BottomString:SetText(currentLevel)
 			else

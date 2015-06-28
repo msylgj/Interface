@@ -11,13 +11,13 @@
 	<Script file="Closeup.lua"/>
 	<Script file="cooldown.lua"/>
 	<Script file="damagemeters.lua"/>
+	<Script file="FastError.lua"/>
 	<Script file="Focuser.lua"/>
 	<Script file="Foglight.lua"/>
 	<Script file="IgniteDamage.lua"/>
 	<Script file="InspectFix.lua"/>
 	<Script file="JewelTips.lua"/>
 	<Script file="m_Settings.lua"/>
-	<Script file="MissionHush.lua"/>
 	<Script file="ncHoverBind.lua"/>
 	<Script file="QuickTalent.lua"/>
 	<Script file="SpellID.lua"/>

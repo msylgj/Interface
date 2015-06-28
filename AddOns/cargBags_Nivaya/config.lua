@@ -5,8 +5,8 @@ itemSlotSize = 32,	-- Size of item slots
 
 sizes = {
 	bags = {
-		columnsSmall = 10,
-		columnsLarge = 12,
+		columnsSmall = 8,
+		columnsLarge = 10,
 		largeItemCount = 64,	-- Switch to columnsLarge when >= this number of items in your bags
 	},
 	bank = {

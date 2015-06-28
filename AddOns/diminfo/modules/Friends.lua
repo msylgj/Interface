@@ -279,9 +279,9 @@ if cfg.Friends == true then
 					else
 						local clienticon = GetClientTexture(info[7])
 						if info[4] then
-							GameTooltip:AddDoubleLine(format(otherGameInfoString, clienticon, 16, info[5]), format(otherGameInfoString2, info[3], ""), .9, .9, .9, .9, .9, .9)
+							GameTooltip:AddDoubleLine(format(otherGameInfoString, clienticon, 16, info[5]), info[3],238,238,238,238,238,238)
 						else
-							GameTooltip:AddDoubleLine(format(otherGameInfoString, clienticon, 16, info[5]), format(otherGameInfoString2, info[2], ""), .9, .9, .9, .9, .9, .9)
+							GameTooltip:AddDoubleLine(format(otherGameInfoString, clienticon, 16, info[5]), info[2],238,238,238,238,238,238)
 						end
 					end
 				end

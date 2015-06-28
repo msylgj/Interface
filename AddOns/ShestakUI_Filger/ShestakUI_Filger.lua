@@ -1,7 +1,7 @@
 local _, sakaras = ...
 local Misc = sakaras.FilgerSettings
---	Misc.back = Misc.Media.."back"
-	Misc.border = Misc.Media.."White"
+	Misc.back = Misc.Media.."HalBackground"
+	Misc.border = Misc.Media.."GlowTex"
 	Misc.barbg = Misc.Media.."Texture"
 
 local class = select(2, UnitClass("player"))
@@ -26,17 +26,17 @@ local colorTable = {
 
 local function SetTemplate(Parent, Size)
 	local F = CreateFrame("Frame", nil, Parent)
-	F:SetFrameLevel(3)
-	F:SetPoint("TOPLEFT", -Size * Misc.mult, Size * Misc.mult)
-	F:SetPoint("BOTTOMRIGHT", Size * Misc.mult, -Size * Misc.mult)
+	F:SetFrameLevel(2)
+	F:SetPoint("TOPLEFT", -1 * Misc.mult, 1 * Misc.mult)
+	F:SetPoint("BOTTOMRIGHT", 1 * Misc.mult, -1 * Misc.mult)
 	F:SetBackdrop({
-	--	bgFile = Misc.back, 
+		bgFile = Misc.back, 
 		edgeFile = Misc.border, 
-	--	insets = {left = 0 * Misc.mult, right = 0 * Misc.mult, top = 0 * Misc.mult, bottom = 0 * Misc.mult},
-	--	tile = false, tileSize = 0, 
-		edgeSize = 1 * Misc.mult,
+		insets = {left = 2 * Misc.mult, right = 2 * Misc.mult, top = 2 * Misc.mult, bottom = 2 * Misc.mult},
+		tile = false, tileSize = 0, 
+		edgeSize = 3 * Misc.mult,
 	})
-	--F:SetBackdropColor(backcolor.r, backcolor.g, backcolor.b, .5)
+	F:SetBackdropColor(colorTable[Misc.modeback].r, colorTable[Misc.modeback].g, colorTable[Misc.modeback].b, .6)
 	F:SetBackdropBorderColor(colorTable[Misc.modeborder].r, colorTable[Misc.modeborder].g, colorTable[Misc.modeborder].b, 1)
 	return F
 end
@@ -100,6 +100,7 @@ end
 
 
 
+
 function Filger:DisplayActives()
 	if not self.actives then return end
 	if not self.bars then self.bars = {} end
@@ -141,8 +142,8 @@ function Filger:DisplayActives()
 				bar.icon = _G[bar.icon:GetName()]
 			else
 				bar.icon = bar:CreateTexture("$parentIcon", "BORDER")
-				bar.icon:SetPoint("TOPLEFT", 1 * Misc.mult, -1 * Misc.mult)
-				bar.icon:SetPoint("BOTTOMRIGHT", -1 * Misc.mult, 1 * Misc.mult)
+				bar.icon:SetPoint("TOPLEFT", 2 * Misc.mult, -2 * Misc.mult)
+				bar.icon:SetPoint("BOTTOMRIGHT", -2 * Misc.mult, 2 * Misc.mult)
 				bar.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 			end
 
@@ -162,7 +163,7 @@ function Filger:DisplayActives()
 					bar.count = bar:CreateFontString("$parentCount", "OVERLAY")
 					bar.count:SetFont(Misc.font, Misc.numsize, "OUTLINE")
 					bar.count:SetShadowOffset(1 * Misc.mult, -1 * Misc.mult)
-					bar.count:SetPoint("BOTTOMRIGHT", 0, 1)
+					bar.count:SetPoint("BOTTOMRIGHT", 0, 2)
 					bar.count:SetJustifyH("CENTER")
 				end
 			else
@@ -171,13 +172,13 @@ function Filger:DisplayActives()
 				else
 					bar.statusbar = CreateFrame("StatusBar", "$parentStatusBar", bar)
 					bar.statusbar:SetWidth(self.BarWidth * Misc.mult)
-					bar.statusbar:SetHeight(7 * Misc.mult)
+					bar.statusbar:SetHeight(4 * Misc.mult)
 					bar.statusbar:SetStatusBarTexture(Misc.barfg)			-- bar_FG
 					bar.statusbar:SetStatusBarColor(colorTable[Misc.modefg].r, colorTable[Misc.modefg].g, colorTable[Misc.modefg].b, 1)
 					if self.IconSide == "LEFT" then
-						bar.statusbar:SetPoint("BOTTOMLEFT", bar, "BOTTOMRIGHT", 3 * Misc.mult, 2 * Misc.mult)
+						bar.statusbar:SetPoint("BOTTOMLEFT", bar, "BOTTOMRIGHT", 3 * Misc.mult, 3 * Misc.mult)
 					elseif self.IconSide == "RIGHT" then
-						bar.statusbar:SetPoint("BOTTOMRIGHT", bar, "BOTTOMLEFT", -3 * Misc.mult, 2 * Misc.mult)
+						bar.statusbar:SetPoint("BOTTOMRIGHT", bar, "BOTTOMLEFT", -3 * Misc.mult, 3 * Misc.mult)
 					end
 				end
 				bar.statusbar:SetMinMaxValues(0, 1)
@@ -187,8 +188,8 @@ function Filger:DisplayActives()
 					bar.bg = _G[bar.bg:GetName()]
 				else
 					bar.bg = CreateFrame("Frame", "$parentBG", bar.statusbar)
-					bar.bg:SetPoint("TOPLEFT", -1 * Misc.mult, 1 * Misc.mult)
-					bar.bg:SetPoint("BOTTOMRIGHT", 1 * Misc.mult, -1 * Misc.mult)
+					bar.bg:SetPoint("TOPLEFT", -2 * Misc.mult, 2 * Misc.mult)
+					bar.bg:SetPoint("BOTTOMRIGHT", 2 * Misc.mult, -2 * Misc.mult)
 					bar.bg:SetFrameStrata("BACKGROUND")
 					SetTemplate(bar.bg, 0)
 				end
@@ -199,7 +200,7 @@ function Filger:DisplayActives()
 					bar.background = bar.statusbar:CreateTexture(nil, "BACKGROUND")
 					bar.background:SetAllPoints()
 					bar.background:SetTexture(Misc.barbg)		-- bar_BG
-					bar.background:SetVertexColor(0, 0, 0, .25)
+					bar.background:SetVertexColor(0, 0, 0, .4)
 				end
 
 				if bar.time then
