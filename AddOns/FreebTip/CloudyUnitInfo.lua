@@ -146,11 +146,11 @@ local function UnitGear(id)
 					delay = true
 				else
 					local _, _, quality, level, _, _, _, _, slot = GetItemInfo(itemLink)
-					local currentLevel = GetItemLevel(itemLink)
 					
 					if (not quality) or (not level) then
 						delay = true
 					else
+						local currentLevel = GetItemLevel(itemLink)
 						if currentLevel then
 							total = total + currentLevel
 						else

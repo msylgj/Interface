@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="!QuestItemButtonFix.lua"/>
+	<!--<Script file="!QuestItemButtonFix.lua"/>-->
 	<Script file="AchievementLinkFix.lua"/>
 	<Script file="Align.lua"/>
 	<Script file="alRaidCD.lua"/>
@@ -11,7 +11,6 @@
 	<Script file="Closeup.lua"/>
 	<Script file="cooldown.lua"/>
 	<Script file="damagemeters.lua"/>
-	<Script file="FastError.lua"/>
 	<Script file="Focuser.lua"/>
 	<Script file="Foglight.lua"/>
 	<Script file="IgniteDamage.lua"/>
