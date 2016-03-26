@@ -5,6 +5,15 @@ function T.GetMouseFocus()
 	local f = GetMouseFocus()
 	return f and f.IsForbidden and not f:IsForbidden() and f or nil
 end
+function T.IsDescendantOf(self, ancestor)
+	if not (self and ancestor) then
+		return false
+	end
+	repeat
+		self = not self:IsForbidden() and self:GetParent()
+	until (self or ancestor) == ancestor
+	return self == ancestor
+end
 
 hooksecurefunc("UIDropDownMenu_StopCounting", function(self)
 	local mf = self and T.GetMouseFocus()

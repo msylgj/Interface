@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+## Interface: 60200
 ## LoadOnDemand: 1
 ## Title: Lib: BossIDs-1.0
 ## Notes: A library to provide mobIDs for bosses.

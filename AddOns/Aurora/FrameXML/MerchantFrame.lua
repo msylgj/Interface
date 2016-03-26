@@ -90,6 +90,8 @@ tinsert(C.themes["Aurora"], function()
 					else
 						name:SetTextColor(1, 1, 1)
 					end
+				else
+					name:SetTextColor(1, 1, 1)
 				end
 			end
 		end

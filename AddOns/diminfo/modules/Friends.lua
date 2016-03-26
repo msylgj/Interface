@@ -104,16 +104,16 @@ if cfg.Friends == true then
 
 	local function BuildBNTable(total)
 		wipe(BNTable)
-		local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, isAFK, isDND, noteText, realmName, faction, race, class, zoneName, level
+		local presenceID, presenceName, battleTag, isBattleTagPresence, GameAccountName, GameAccountID, client, isOnline, isAFK, isDND, noteText, realmName, faction, race, class, zoneName, level
 		for i = 1, total do
-			presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
+			presenceID, presenceName, battleTag, isBattleTagPresence, GameAccountName, GameAccountID, client, isOnline, _, isAFK, isDND, _, noteText = BNGetFriendInfo(i)
 			if isOnline then 
-				_, _, realClient, realmName, _, faction, race, class, _, zoneName, level = BNGetToonInfo(toonID)
+				_, _, realClient, realmName, _, faction, race, class, _, zoneName, level = BNGetGameAccountInfo(GameAccountID)
 				for k,v in pairs(LOCALIZED_CLASS_NAMES_MALE) do if class == v then class = k end end
-				if string.find(toonName, "T:") then
-					toonName = presenceName
+				if (not GameAccountName) or string.find(GameAccountName, "T:") then
+					GameAccountName = presenceName
 				end
-				BNTable[i] = { presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, isAFK, isDND, noteText, realmName, faction, race, class, zoneName, level }
+				BNTable[i] = { presenceID, presenceName, battleTag, isBattleTagPresence, GameAccountName, GameAccountID, client, isOnline, isAFK, isDND, noteText, realmName, faction, race, class, zoneName, level }
 			end
 		end
 		sort(BNTable, function(a, b)

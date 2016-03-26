@@ -1,13 +1,12 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
-local G = T.Garrison
+local G, L = T.Garrison, T.L
 
 local function Ship_OnEnter(self, ...)
 	if self.buildingID == -1 and self.plotID == -42 then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:AddLine(GARRISON_CACHE)
 		local cv, mv, st, md = G.GetResourceCacheInfo()
-		GameTooltip:AddLine(" ")
 		local tl = st+md-time()
 		if tl > 5400 then
 			tl = SPELL_TIME_REMAINING_HOURS:format((tl+3599)/3600)
@@ -21,9 +20,14 @@ local function Ship_OnEnter(self, ...)
 		if tl then
 			GameTooltip:AddLine(tl, 0.25,1,0.15)
 		end
+		GameTooltip:AddLine(" ")
 		if cv > 0 then
 			local cc = cv == mv and 0.1 or 1
 			GameTooltip:AddLine(GARRISON_LANDING_COMPLETED:format(cv, mv), cc,1,cc)
+			local _, cur, _, _, _, tmax = GetCurrencyInfo(824)
+			if cur and tmax and tmax > 0 then
+				GameTooltip:AddLine("|n" .. CURRENCY_TOTAL_CAP:format(cur == tmax and "|cffff0000" or (cur + cc > tmax) and "|cffffe000" or "|cffffffff", cur, tmax))
+			end
 		end
 		self.UpdateTooltip = Ship_OnEnter
 		GameTooltip:Show()
@@ -79,5 +83,18 @@ hooksecurefunc(GameTooltip, "SetCurrencyTokenByID", addCacheResources)
 hooksecurefunc(GameTooltip, "SetCurrencyToken", function(self, idx)
 	if addCacheResources(self, tonumber((GetCurrencyListLink(idx) or ""):match("currency:(%d+)") or 0)) then
 		self:Show()
+	end
+end)
+
+hooksecurefunc("GarrisonLandingPageReportList_UpdateAvailable", function()
+	local items, buttons = GarrisonLandingPageReport.List.AvailableItems, GarrisonLandingPageReport.List.listScroll.buttons
+	for i=1,#buttons do
+		local item = buttons[i]:IsShown() and items[buttons[i].id]
+		if item and item.offerTimeRemaining and item.offerEndTime then
+			if item.offerEndTime - 8640000 <= GetTime() then
+				local mt = buttons[i].MissionType
+				mt:SetFormattedText("%s |cffa0a0a0(%s %s)|r", mt:GetText(), L"Expires in:", item.offerTimeRemaining)
+			end
+		end
 	end
 end)

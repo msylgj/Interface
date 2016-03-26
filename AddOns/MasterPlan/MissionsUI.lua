@@ -1183,6 +1183,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 			if C_Garrison.IsAboveFollowerSoftCap(1) then
 				GameTooltip:AddLine(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP, 1, 0, 0, 1)
 			else
+				G.SuppressFollowerEvents()
 				for mid, f1, f2, f3 in G.GetReadyTentativeParties() do
 					local p1,p2,p3 = f1,f2,f3
 					while p1 do
@@ -1195,6 +1196,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 						p1,p2,p3 = p2, p3, C_Garrison.RemoveFollowerFromMission(mid, p1) and nil
 					end
 				end
+				G.ReleaseFollowerEvents()
 			end
 			GameTooltip:AddLine("|n|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. L"Clear all tentative parties.", 0.5, 0.8, 1)
 			GameTooltip:Show()
@@ -1207,9 +1209,11 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 				G.DissolveAllTentativeParties()
 				PlaySound("UChatScrollButton")
 			elseif not C_Garrison.IsAboveFollowerSoftCap(1) then
+				G.SuppressFollowerEvents()
 				for mid, p1, p2, p3 in G.GetReadyTentativeParties() do
 					G.StartMissionQueue(mid, p1, p2, p3)
 				end
+				G.ReleaseFollowerEvents()
 				PlaySound("UI_Garrison_CommandTable_MissionStart")
 			end
 		end)
@@ -1552,7 +1556,7 @@ local GetActiveMissions, StartCompleteAll, CompleteMission, ClearCompletionState
 				HelpPlateTooltip.ArrowDOWN:Show()
 				HelpPlateTooltip.ArrowGlowDOWN:Show()
 				HelpPlateTooltip:SetPoint("TOP", activeUI.CompleteAll, "BOTTOM", 0, -14)
-				HelpPlateTooltip.Text:SetText((L"No missions could be completed without exceeding currency caps, violating the %s setting."):format("|cffffd100" .. L"Require Currency Award" .. "|r") .. "\n\n" .. L"To temporarily ignore wasted currency and complete the skipped missions, right-click this button, or left-click individual missions below.")
+				HelpPlateTooltip.Text:SetText((L"No missions could be completed without exceeding currency caps, violating the %s setting."):format("|cffffd100" .. L"Require Currency Reward" .. "|r") .. "\n\n" .. L"To temporarily ignore wasted currency and complete the skipped missions, right-click this button, or left-click individual missions below.")
 				HelpPlateTooltip:Show()
 			end
 		end
@@ -1720,7 +1724,7 @@ local core = {} do
 			end
 		end
 		local mf = T.GetMouseFocus()
-		local oe = mf and mf:GetScript("OnEnter")
+		local oe = mf and T.IsDescendantOf(mf, sc) and mf:GetScript("OnEnter")
 		if mf and oe and mf.IsEnabled and mf:IsEnabled() then
 			oe(mf)
 		end
@@ -2325,23 +2329,21 @@ do -- availMissionsHandle
 	end
 	local function GroupButton_OnClick(self, button)
 		local mi = core:GetRowData(availMissionsHandle, self:GetParent())
-		local g = mi and mi.groups and mi.groups[self:GetID()]
+		local g = mi.groups and mi.groups[self:GetID()]
 		if not g then
-			local ug, ss = mi and mi.upgroup
-			if ug then
-				for i=1,mi.numFollowers do
-					ss = (ss and ss .. "/" or "") .. C_Garrison.GetFollowerName(ug[i])
-				end
-				local sb = GarrisonMissionFrameFollowers.SearchBox
-				sb:SetText(ss)
-				sb.clearText = ss
-				local ifid = G.GetUnderLevelledFollower(ug, mi) or ug[1]
-				GarrisonMissionFrameTab2:Click()
-				GarrisonMissionFrame.selectedFollower = ifid
-				GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, ifid)
-				EV("MP_FORCE_FOLLOWER_TAB", ifid)
+			local ug, ss = mi.upgroup
+			for i=1,mi.numFollowers do
+				ss = (ss and ss .. "/" or "") .. C_Garrison.GetFollowerName(ug[i])
 			end
-		elseif button == "RightButton" and (select(2,GetCurrencyInfo(824)) or 0) >= (mi.cost or 0) then
+			local sb = GarrisonMissionFrameFollowers.SearchBox
+			sb:SetText(ss)
+			sb.clearText = ss
+			local ifid = G.GetUnderLevelledFollower(ug, mi) or ug[1]
+			GarrisonMissionFrameTab2:Click()
+			GarrisonMissionFrame.selectedFollower = ifid
+			GarrisonFollowerPage_ShowFollower(GarrisonMissionFrame.FollowerTab, ifid)
+			EV("MP_FORCE_FOLLOWER_TAB", ifid)
+		elseif button == "RightButton" then
 			G.SaveMissionParty(mi.missionID, g[5], g[6], g[7])
 			api.roamingParty:DropFollowers(g[5], g[6], g[7])
 		else
@@ -2457,7 +2459,7 @@ do -- availMissionsHandle
 			if not numFollowers then
 				local n, _, r = 0, GetCurrencyInfo(GARRISON_CURRENCY)
 				for k,v in pairs(G.GetFollowerInfo()) do
-					if v.isCombat and (v.status == GARRISON_FOLLOWER_IN_PARTY or v.status == nil) and not T.config.ignore[v.followerID] and not G.GetFollowerTentativeMission(v.followerID) then
+					if v.isCombat and (v.status == GARRISON_FOLLOWER_IN_PARTY or v.status == nil) and not T.config.ignore[v.followerID] and not G.GetFollowerTentativeMission(v.followerID) and v.followerTypeID == 1 then
 						n = n + 1
 					end
 				end

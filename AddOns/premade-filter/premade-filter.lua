@@ -77,6 +77,9 @@ local PremadeFilter_ActivityInfo = {
 	
 	["3-79-331"]	= { tier = 4, instance = 6, raid = true, difficulty = 3 },
 	["3-79-334"]	= { tier = 4, instance = 6, raid = true, difficulty = 4 },
+	["3-110-409"]   = { tier = 6, instance = 4, raid = true, difficulty = 14 },
+	["3-110-410"]   = { tier = 6, instance = 4, raid = true, difficulty = 15 },
+	["3-110-411"]   = { tier = 6, instance = 4, raid = true, difficulty = 16 },
 }
 
 local PremadeFilter_RealmChapters = {
@@ -1367,7 +1370,7 @@ function PremadeFilter_Frame_OnLoad(self)
 	PremadeFilter_Roles:SetPoint("TOPLEFT", LFGListFrame.EntryCreation, "TOPLEFT", -10, -20);
 	
 	self.AdvancedButton:SetParent(LFGListFrame.SearchPanel);
-	self.AdvancedButton:SetPoint("TOPRIGHT", LFGListFrame.SearchPanel, "TOPRIGHT", -10, -55);
+	self.AdvancedButton:SetPoint("TOPRIGHT", LFGListFrame.SearchPanel, "TOPRIGHT", -50, -30);
 	
 	self:SetParent(LFGListFrame.SearchPanel);
 	self:SetPoint("TOPLEFT", LFGListFrame.SearchPanel, "TOPRIGHT", 10, -20);

@@ -1,0 +1,13 @@
+tag v5.2.0
+b7dcb009a33bc34f318c164131c2415bf863e590
+yaroot <yaroot@gmail.com>
+2013-04-08 18:22:43 +0800
+
+v5.2.0
+
+
+--------------------
+
+yaroot:
+	- bump interface
+	- .

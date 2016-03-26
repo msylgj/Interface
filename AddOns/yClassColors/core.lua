@@ -91,19 +91,22 @@ ycc.classColor = setmetatable({}, {
 	end
 })
 
-do
-    local WHITE = {1,1,1}
-    ycc.classColorRaw = setmetatable({}, {
-        __index = function(t, i)
-            local c = i and RAID_CLASS_COLORS[BC[i] or i]
-            if not c then return WHITE end
-            t[i] = c
-            return c
-        end
-    })
-end
+
+local WHITE = {1,1,1}
+ycc.classColorRaw = setmetatable({}, {
+    __index = function(t, i)
+        local c = i and RAID_CLASS_COLORS[BC[i] or i]
+        if not c then return WHITE end
+        t[i] = c
+        return c
+    end
+})
+
 
 if CUSTOM_CLASS_COLORS then
-	CUSTOM_CLASS_COLORS:RegisterCallback(function() wipe(classColor) end)
+	CUSTOM_CLASS_COLORS:RegisterCallback(function()
+        wipe(ycc.classColorRaw)
+        wipe(ycc.classColor)
+    end)
 end
 

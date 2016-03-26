@@ -7,7 +7,7 @@ hooksecurefunc('WorldStateScoreFrame_Update', function()
 
     for i = 1, MAX_WORLDSTATE_SCORE_BUTTONS do
         local index = offset + i
-        local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, classToken, damageDone, healingDone = GetBattlefieldScore(index)
+        local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, classToken, damageDone, healingDone, bgRating, ratingChange, preMatchMMR, mmrChange, talentSpec = GetBattlefieldScore(index)
         -- faction: Battlegrounds: Horde = 0, Alliance = 1 / Arenas: Green Team = 0, Yellow Team = 1
         if name then
             local n, r = strsplit('-', name, 2)

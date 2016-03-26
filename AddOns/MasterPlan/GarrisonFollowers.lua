@@ -336,6 +336,7 @@ function UpgradesFrame:Update(liveUpdate)
 	self.insetTop = oh and max(0, oh-nh, self.insetTop or 0) or 0
 end
 function UpgradesFrame:DisplayFor(owner, itemLevel, isWeapon, followerID)
+	if InCombatLockdown() then return end
 	self:SetParent(owner)
 	self.owner, self.itemLevel, self.isWeapon, self.followerID, self.insetTop = owner, itemLevel, isWeapon, followerID, 0
 	self:SetPoint("BOTTOM", owner, "TOP", 0, 0)
@@ -722,7 +723,7 @@ do -- Weapon/Armor upgrades and rerolls
 				items.averageGearLevel:SetFormattedText(GARRISON_FOLLOWER_ITEM_LEVEL, (wil+ail)/2)
 				if UpgradesFrame.followerID == id then
 					UpgradesFrame:CheckUpdate(id, wil, ail)
-				else
+				elseif UpgradesFrame:IsShown() then
 					UpgradesFrame:Hide()
 				end
 			end
@@ -846,5 +847,98 @@ do -- XP Projections for follower summaries
 		bonusBar:SetVertexColor(0, 0.75, 1)
 		bar.XPBaseReward, bar.XPBonusReward = baseBar, bonusBar
 		hooksecurefunc(bar, "SetValue", updateBar)
+	end
+end
+
+do -- Ship equipment
+	local EQUIPMENT_ARRAY = GarrisonShipyardFrame.FollowerTab.EquipmentFrame.Equipment
+	local function CP_PreClick(self)
+		local ct, cid, clink = GetCursorInfo()
+		if ct == "item" and cid and clink then
+			local owner = self:GetParent()
+			local followerID = owner:GetParent():GetParent().followerID
+			if ItemCanTargetGarrisonFollowerAbility(followerID, owner.abilityID) then
+				ClearCursor()
+				self:SetAttribute("macrotext", SLASH_STOPSPELLTARGET1 .. "\n" .. SLASH_USE1 .. " item:" .. cid)
+			end
+		end
+	end
+	local function CP_PostClick(self)
+		self:SetAttribute("macrotext", nil)
+		self:GetParent():Click()
+	end
+	local function CP_Attach(self)
+		self.proxy:SetParent(self)
+		self.proxy:SetAllPoints()
+		self.proxy:Show()
+	end
+	local function CP_OnEnter(self, ...)
+		local p = self:GetParent()
+		local h = p and p:GetScript("OnEnter")
+		if h and p then h(p, ...) end
+	end
+	local function CP_OnLeave(self, ...)
+		local p = self:GetParent()
+		local h = p and p:GetScript("OnLeave")
+		if h and p then h(p, ...) end
+	end
+	local function CP_Detach(self)
+		if self:IsMouseOver() then
+			securecall(CP_OnLeave, self)
+		end
+		self:SetParent(nil)
+		self:ClearAllPoints()
+		self:Hide()
+	end
+	for i=1,#EQUIPMENT_ARRAY do
+		local pf, ef = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate"), EQUIPMENT_ARRAY[i]
+		pf:Hide()
+		pf:SetScript("PreClick", CP_PreClick)
+		pf:SetScript("PostClick", CP_PostClick)
+		pf:SetScript("OnHide", CP_Detach)
+		pf:SetScript("OnEnter", CP_OnEnter)
+		pf:SetScript("OnLeave", CP_OnLeave)
+		ef:HookScript("OnShow", CP_Attach)
+		ef:SetScript("OnReceiveDrag", nil)
+		pf:SetAttribute("type", "macro")
+		ef.proxy = pf
+	end
+	function EV:PLAYER_REGEN_DISABLED()
+		for i=1,#EQUIPMENT_ARRAY do
+			EQUIPMENT_ARRAY[i].proxy:Hide()
+		end
+	end
+	local reroll = CreateFrame("Frame", "MPShipEquipmentContainer", GarrisonShipyardFrame.FollowerTab) do
+		reroll:SetPoint("TOPRIGHT", -14, -98)
+		reroll:SetHeight(24)
+		local buttons = {}
+		for k,v in pairs(T.EquipmentTraitItems) do
+			local b = T.CreateLazyItemButton(reroll, v)
+			b:SetSize(24, 24)
+			buttons[#buttons+1] = b
+		end
+		table.sort(buttons, function(a,b)
+			return a.itemID < b.itemID
+		end)
+		function reroll:Sync()
+			local x = 0
+			for i=1,#buttons do
+				local b = buttons[i]
+				if GetItemCount(b.itemID) > 0 then
+					b:SetPoint("LEFT", x, 0)
+					b:Show()
+					x = x + 28
+				else
+					b:Hide()
+				end
+			end
+			self:SetWidth(x > 0 and x - 4 or 0)
+		end
+		reroll:SetScript("OnShow", reroll.Sync)
+		hooksecurefunc("GarrisonFollowerPage_ShowFollower", function()
+			if reroll:IsVisible() then
+				reroll:Sync()
+			end
+		end)
 	end
 end

@@ -88,18 +88,6 @@ QueueStatusMinimapButton:ClearAllPoints()
 QueueStatusMinimapButton:SetPoint("TOP", Minimap, "TOP", 1, 8)
 QueueStatusMinimapButtonBorder:Hide()
 
--- Instance Difficulty flag
-MiniMapInstanceDifficulty:ClearAllPoints()
-MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
-MiniMapInstanceDifficulty:SetScale(0.75)
-MiniMapInstanceDifficulty:SetFrameStrata("LOW")
-
--- Guild Instance Difficulty flag
-GuildInstanceDifficulty:ClearAllPoints()
-GuildInstanceDifficulty:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 2, 2)
-GuildInstanceDifficulty:SetScale(0.75)
-GuildInstanceDifficulty:SetFrameStrata("LOW")
-
 -- Mail icon
 MiniMapMailFrame:ClearAllPoints()
 MiniMapMailFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 2, -6)
@@ -224,5 +212,92 @@ ping:SetScript('OnEvent', function(self, event, u)
 	local pname = UnitName("player")
     if(name ~= pname) then
 		ping:AddMessage(name, c.r, c.g, c.b)
+	end
+end)
+
+-----------------------------------------------------------
+-- difficulty
+-----------------------------------------------------------
+MiniMapInstanceDifficulty:Hide()
+MiniMapInstanceDifficulty.Show = function() return end
+
+GuildInstanceDifficulty:Hide()
+GuildInstanceDifficulty.Show = function() return end
+
+local function CreateFS(parent, size, justify)
+   local f = parent:CreateFontString(nil, "OVERLAY")
+   f:SetFont("Interface\\AddOns\\m_Minimap\\ROADWAY.ttf", 16, "OUTLINE")         -- 字体路径.   GameFontNormal:GetFont()可以改为具体的字体路径, 例如:   "Fonts\\ARKai_T.ttf"
+   f:SetShadowColor(0, 0, 0, 0)
+   if(justify) then f:SetJustifyH(justify) end
+   return f
+end
+
+local rd = CreateFrame("Frame", nil, Minimap)
+rd:SetSize(38, 38)      --rd:SetScale(0.86)
+rd:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 10, 10)
+rd.Texture = rd:CreateTexture(nil, 'OVERLAY')
+rd.Texture:SetAllPoints(true)
+rd.Texture:SetTexture("Interface\\AddOns\\m_Minimap\\difficulty.tga")      -- 材质路径
+rd.Texture:SetAlpha(.9)
+rd:RegisterEvent("PLAYER_ENTERING_WORLD")
+rd:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+rd:RegisterEvent("GUILD_PARTY_STATE_UPDATED")
+rd:RegisterEvent("INSTANCE_GROUP_SIZE_CHANGED")
+
+local rdt = CreateFS(rd, 10, "RIGHT")
+rdt:SetPoint("CENTER", 1, 1)
+
+local instanceTexts = {
+   [0] = { text = "", color = {0, 0, 0, 0}, },
+   [1] = { text = "5", color = {153/255, 217/255, 234/255}, },
+   [2] = { text = "5h", color = {0/255, 162/255, 232/255}, },
+   [3] = { text = "10", color = {255/255, 242/255, 0/255}, },
+   [4] = { text = "25", color = {255/255, 201/255, 14/255}, },
+   [5] = { text = "10h", color = {255/255, 127/255, 39/255}, },
+   [6] = { text = "25h", color = {237/255, 28/255, 36/255}, },
+   [7] = { text = "Rf", color = {181/255, 230/255, 29/255}, },     --查找器
+   [8] = { text = "Cm", color = {63/255, 72/255, 204/255}, },     --挑战
+   [9] = { text = "40", color = {237/255, 28/255, 36/255}, },
+   [11] = { text = "3h", color = {52/255, 52/255, 52/255}, },
+   [12] = { text = "3", color = {52/255, 52/255, 52/255}, },
+   [16] = { text = "M", color = {255/255, 125/255, 10/255}, },     --M史诗
+   [23] = { text = "5m", color = {255/255, 125/255, 10/255}, },  --史诗地下城
+   [24] = { text = "5t", color = {0/255, 162/255, 232/255}, },   --时光地下城
+} 
+
+rd:SetScript("OnEvent", function()
+	local inInstance, instanceType = IsInInstance() 
+	local _, _, difficultyID, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
+	local color = {}
+
+	if instanceTexts[difficultyID] ~= nil then
+		rdt:SetText(instanceTexts[difficultyID].text)
+		color = instanceTexts[difficultyID].color
+	else
+		if difficultyID == 14 then
+			rdt:SetText(instanceGroupSize.."n")
+			color = {255/255, 201/255, 14/255}
+		elseif difficultyID == 15 then
+			rdt:SetText(instanceGroupSize.."h")
+			color = {237/255, 28/255, 36/255}
+		elseif difficultyID == 17 then
+			rdt:SetText(instanceGroupSize.."Rf")
+			color = {181/255, 230/255, 29/255}
+		else
+			rdt:SetText("")
+		end
+	end
+   
+	if not (inInstance and (instanceType == 'party' or instanceType == 'raid' or instanceType == 'scenario')) then
+		rd:Hide()
+	else
+		rd.Texture:SetVertexColor(unpack(color))
+		rd:Show()
+	end
+
+	if GuildInstanceDifficulty:IsShown() then
+		rdt:SetTextColor(0, .9, 0)
+	else
+		rdt:SetTextColor(1, 1, 1)
 	end
 end)

@@ -48,6 +48,7 @@ local tentativeState, tentativeParties = {}, {} do
 		dissolve(tentativeState[f1], true)
 		dissolve(tentativeState[f2], true)
 		dissolve(tentativeState[f3], true)
+		if not f2 then f2, f3 = f3 end
 		if not f1 then f1, f2, f3 = f2, f3 end
 		tentativeParties[mid] = (f1 or f2 or f3) and {f1, f2, f3} or nil
 		tentativeState[f1 or 0], tentativeState[f2 or 0], tentativeState[f3 or 0] = mid, mid, mid
@@ -285,9 +286,11 @@ local dropFollowers, missionEndTime = {}, {} do -- Start/Available capture
 		if next(startQueue) then
 			C_Timer.After(0.5, startQueuePing)
 		end
+		api.SuppressFollowerEvents()
 		for k, v in pairs(startQueue) do
 			pushStart(k, v[1], v[2], v[3])
 		end
+		api.ReleaseFollowerEvents()
 	end
 	function api.StartMissionQueue(id, f1, f2, f3)
 		local fi, fc = api.GetFollowerInfo(), C_Garrison.GetMissionMaxFollowers(id) or 0
@@ -454,7 +457,7 @@ function api.GetDoubleCounters(skipInactive)
 		local rt, aai, cai = {}, C_Garrison.GetFollowerAbilityAtIndex, C_Garrison.GetFollowerAbilityCounterMechanicInfo
 		local keepInactive = not skipInactive
 		for fid, fi in pairs(api.GetFollowerInfo()) do
-			if not T.config.ignore[fid] and (keepInactive or fi.status ~= GARRISON_FOLLOWER_INACTIVE) then
+			if not T.config.ignore[fid] and (keepInactive or fi.status ~= GARRISON_FOLLOWER_INACTIVE) and fi.followerTypeID == 1 then
 				if fi.quality >= 4 then
 					local c1, c2 = cai(aai(fid, 1)), cai(aai(fid, 2))
 					local k = c1 <= c2 and (c1*100 + c2) or (c2*100 + c1)
@@ -490,7 +493,7 @@ function api.GetFollowerTraits()
 	if not data.traits then
 		local ci, et = {}, T.EquivTrait
 		for fid, info in pairs(api.GetFollowerInfo()) do
-			local afid = info.affinity and info.affinity > 0 and info.affinity
+			local afid = info.followerTypeID == 1 and info.affinity and info.affinity > 0 and info.affinity
 			if afid then
 				local t = ci[afid] or {}
 				ci[afid], t = t, t.affine or {}
@@ -623,18 +626,21 @@ function api.GetFollowerLevelDescription(fid, mlvl, fi, mentor, mid, gi)
 			away = " |cff00aaff+" .. away
 		end
 	end
+	if fi.followerTypeID == 2 then
+		return ('%s"%s"|r%s'):format(ITEM_QUALITY_COLORS[fi.quality].hex, fi.name, away)
+	end
 	return ("%s[%d]|r %s%s|r%s"):format(lc, fi.level < 100 and fi.level or fi.iLevel, HIGHLIGHT_FONT_COLOR_CODE, fi.name, away)
 end
 function api.GetOtherCounterIcons(fi, mechanic)
 	local fid, reorder, firstID, ret = fi.followerID, mechanic == nil
-	for i=1,4 do
+	for i=1,2 do
 		local aid = C_Garrison.GetFollowerAbilityAtIndex(fid, i)
 		if aid ~= 0 then
 			local mid, _, ico = C_Garrison.GetFollowerAbilityCounterMechanicInfo(aid)
 			if reorder then
 				if i == 1 then
-					firstID = mid
-				elseif i == 2 and mid and mid < firstID then
+					firstID = mid or aid
+				elseif mid and mid < firstID then
 					mechanic = mid
 				end
 			end
@@ -880,7 +886,7 @@ do -- GetMissionSeen
 end
 
 do -- PrepareAllMissionGroups/GetMissionGroups {sc xp gr ti p1 p2 p3 xp pb}
-	local msf, msi, msd, mmi, finfo, msiMentorIndex, mentorLevel = {}, {}, {}
+	local msf, msi, msd, finfo, msiMentorIndex, mentorLevel = {}, {}, {}
 	local suppressFollowerEvents, releaseFollowerEvents do
 		local level, frames, followers = 0
 		local function failsafe()
@@ -925,25 +931,26 @@ do -- PrepareAllMissionGroups/GetMissionGroups {sc xp gr ti p1 p2 p3 xp pb}
 				frames, followers = nil, nil
 			end
 		end
+		api.SuppressFollowerEvents, api.ReleaseFollowerEvents = suppressFollowerEvents, releaseFollowerEvents
 	end
 	local function cmp_level(a, b)
 		local a, b = finfo[a], finfo[b]
 		return (a.level + a.iLevel) > (b.level + b.iLevel)
 	end
+	local function doPrepareMissionGroups(mtype)
+		local mmi = C_Garrison.GetAvailableMissions(mtype or 1)
+		for i=1,#mmi do
+			api.GetMissionGroups(mmi[i].missionID, i > 1)
+		end
+	end
 	function api.PrepareAllMissionGroups(mtype)
-		mmi = C_Garrison.GetAvailableMissions(mmi, mtype or 1)
 		suppressFollowerEvents()
-		securecall(function()
-			for i=1,#mmi do
-				api.GetMissionGroups(mmi[i].missionID, i > 1)
-			end
-		end)
+		securecall(doPrepareMissionGroups, mtype)
 		releaseFollowerEvents()
-		mmi = nil
 	end
 	function api.GetMissionGroups(mid, trustValid)
-		if not trustValid or not msi[1] then
-			local mt = C_Garrison.GetFollowerTypeByMissionID(mid)
+		local mt = C_Garrison.GetFollowerTypeByMissionID(mid)
+		if not trustValid or not msi[1] or not securecall(assert, msi.typeID == mt, "trust/type mismatch") then
 			finfo, msiMentorIndex, mentorLevel = api.GetFollowerInfo()
 			local valid, fn = true, 1
 			for k,v in pairs(finfo) do
@@ -971,18 +978,12 @@ do -- PrepareAllMissionGroups/GetMissionGroups {sc xp gr ti p1 p2 p3 xp pb}
 				end
 			end
 			if not valid then wipe(msd) end
-			finfo = nil
+			msi.typeID, finfo = mt, nil
 		end
 		if not msd[mid] then
-			local mmi, mi = mmi or C_Garrison.GetAvailableMissions()
-			for i=1,#mmi do
-				if mmi[i].missionID == mid then
-					mi = mmi[i]
-					break
-				end
-			end
+			local mi = C_Garrison.GetBasicMissionInfo(mid)
 			if not mi then return false end
-			if mi.numFollowers > #msi then msd[mid] = {} return {} end
+			if mi.numFollowers > #msi then msd[mid] = {} return msd[mid] end
 			local baseCurrency, curID, chestXP, _, baseXP = 0, -1, 0, C_Garrison.GetMissionInfo(mid)
 			for k,r in pairs(mi.rewards) do
 				if r.currencyID then
@@ -1661,8 +1662,8 @@ end
 do -- api.GetUpgradeItems(ilevel, isArmor)
 	local cap = FOLLOWER_ITEM_LEVEL_CAP
 	local upgrades = {
-		WEAPON={114128, cap, 114129, cap-3, 114131, cap-6, 114616, 615, 114081, 630, 114622, 645},
-		ARMOR={114745, cap, 114808, cap-3, 114822, cap-6, 114807, 615, 114806, 630, 114746, 645}
+		WEAPON={114128, cap, 114129, cap-3, 114131, cap-6, 114616, 615, 114081, 630, 114622, 645, 128307, 645},
+		ARMOR={114745, cap, 114808, cap-3, 114822, cap-6, 114807, 615, 114806, 630, 114746, 645, 128308, 645}
 	}
 	local function walk(ilvl, t, pos)
 		for i=pos,#t,2 do
@@ -1754,8 +1755,19 @@ end
 local function EvaluateGroup(mi, counters, traits, fa, fb, fc, scratch)
 	local mlvl, tv, c, mc, umc = mi[1], mi[4] == 123858 and 3 or 6, mi[2] == 3, scratch or {}, false
 	local nc, cap = traits[201]*2 + traits[202]*4, (#mi-5)*tv do
-		local time, env = mi[3]*2^-traits[221], mi[5]
-		nc = nc + (env == 13 and 1 or 2) * (traits[T.EnvironmentCounters[env]] or 0) + traits[(time >= 25200) and 76 or 77]*2 + traits[47]*6
+		local time, env = mi[3]*2^-traits[221], mi[5] do
+			local exo, apx, brt = traits[325], traits[324], traits[244]
+			nc = nc + (env == 13 and 1 or 2) * (traits[T.EnvironmentCounters[env]] or 0) + traits[(time >= 25200) and 76 or 77]*2 + traits[47]*6
+			if exo and exo > 0 then
+				nc = nc + exo*(env == 16 and 5 or 2)
+			end
+			if apx and apx > 0 then
+				nc = nc + apx * (T.EnvironmentBonus[324][env] or 0)
+			end
+			if brt and brt > 0 and mi[2] == 1 then
+				nc = nc + 6
+			end
+		end
 		
 		local lc, cn = mi[6], 1
 		for i=7, #mi+1 do
@@ -2310,7 +2322,12 @@ function api.SetTraitTooltip(tip, id, info, showInactive, skipDescription)
 		tip:AddLine(nl .. L"Followers with this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		addFollowerList(tip, info, finfo, nil, showInactive)
 	else
-		tip:AddLine(nl .. L"You have no followers with this trait.", 1,0.50,0, 1)
+		local eq = T.EquipmentTraitQuests[id]
+		if eq and not IsQuestFlaggedCompleted(eq) then
+			tip:AddLine(nl .. L"Required ship equipment is not yet unlocked.", 1,0.25,0, 1)
+		else
+			tip:AddLine(nl .. L"You have no followers with this trait.", 1,0.50,0, 1)
+		end
 	end
 	info = info and info.affine
 	if not info then
@@ -2336,7 +2353,14 @@ function api.SetThreatTooltip(tip, id, info, missionLevel, showInactive, skipDes
 		tip:AddLine((skipDescription and "" or "|n") .. L"Can be countered by:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		addFollowerList(tip, info, finfo, missionLevel, showInactive, id)
 	else
-		tip:AddLine((skipDescription and "" or "|n") .. L"You have no followers to counter this mechanic.", 1,0.50,0, 1)
+		local eq = T.EquipmentTraitQuests[T.EquipmentCounters[id]]
+		if eq and not IsQuestFlaggedCompleted(eq) then
+			tip:AddLine((skipDescription and "" or "|n") .. L"Required ship equipment is not yet unlocked.", 1,0.25,0, 1)
+		elseif eq then
+			tip:AddLine((skipDescription and "" or "|n") .. L"No ships are equipped to handle this mechanic.", 1,0.50,0, 1)
+		else
+			tip:AddLine((skipDescription and "" or "|n") .. L"You have no followers to counter this mechanic.", 1,0.50,0, 1)
+		end
 	end
 end
 function api.SetFollowerListTooltip(tip, header, list, showInactive, finfo)
@@ -2598,15 +2622,15 @@ function api.SetCounterTraitTip(tip, cid, tid)
 end
 
 do -- api.GetResourceCacheInfo
-	local STEP_INTERVAL, STEP_SIZE, STORE_CEIL, STORE_FLOOR = 600, 1, 500, 10
-	local function getLastCacheTime()
-		return MasterPlanA.data.lastCacheTime
+	local STEP_INTERVAL, STEP_SIZE, STORE_FLOOR, STORE_CEIL = 600, 1, 10, 500
+	local function getCacheData()
+		return MasterPlanA.data.lastCacheTime, MasterPlanA.data.cacheSize or STORE_CEIL
 	end
 	function api.GetResourceCacheInfo()
-		local lt = securecall(getLastCacheTime) or 0
-		if lt > 0 then
-			local cur = min(STORE_CEIL, floor((time()-lt)/STEP_INTERVAL)*STEP_SIZE)
-			return cur < STORE_FLOOR and 0 or cur, STORE_CEIL, lt, STORE_CEIL/STEP_SIZE*STEP_INTERVAL
+		local lt, sz = securecall(getCacheData)
+		if lt and lt > 0 then
+			local cur = min(sz, floor((time()-lt)/STEP_INTERVAL)*STEP_SIZE)
+			return cur < STORE_FLOOR and 0 or cur, sz, lt, sz/STEP_SIZE*STEP_INTERVAL
 		end
 	end
 end

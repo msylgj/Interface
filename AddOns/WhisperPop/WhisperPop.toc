@@ -1,13 +1,23 @@
 ## Interface: 60200
 ## Title: WhisperPop
-## Version: 6.0.3
+## Version: 4.20
 ## Author: Abin
 ## X-Category: Chat/Communication
 ## SavedVariables: WhisperPopDB
 
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Includes\LibAddonManager.lua
+Includes\InterfaceOptionPage-1.0.lua
 Includes\VirtualScrollList-1.0.lua
-Localization.lua
-WhisperPop.lua
-MainFrame.lua
-MessageFrame.lua
-OptionFrame.lua
+
+Core.lua
+Frames\Templates.lua
+Frames\MainFrame.lua
+Frames\MessageFrame.lua
+Frames\NotifyButton.lua
+Frames\OptionFrame.lua
+
+Broker\Embeds.xml

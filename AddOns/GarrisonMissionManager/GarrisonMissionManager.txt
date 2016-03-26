@@ -1,19 +1,21 @@
-Garrison Mission Manager, v32
+Garrison Mission Manager, v35
 
 * http://www.curse.com/addons/wow/garrison-mission-manager
 * http://www.wowinterface.com/downloads/info23375-GarrisonMissionManager.html
 
 == Best team selection ==
-GMM adds 3 buttons on mission page with top 3 suggestions. Clicking any of those button will set suggested team. Each button will show you success rate along with icons for XP bonus, GR/gold bonus, and reduced time. Suggestions will try to maximize success rate first, reward multiplier (garrison resources / gold) second, then XP bonus and then reduced time. Hovering over those buttons will show tooltip with suggested team.
+GMM adds 3 buttons on mission page to both follower and ship missions with top 3 suggestions. Clicking any of those button will set suggested team. Each button will show you success rate along with icons for XP bonus, GR/gold bonus, and reduced time. Suggestions will try to maximize success rate first, reward multiplier (garrison resources / gold) second, then XP bonus and then reduced time. Hovering over those buttons will show tooltip with suggested team.
 
-GMM doesn't try to "guess" what followers are the best or keep some internal list of calculations that would need updating - it simply checks all combinations of all followers and selects those that give best total success chance reported directly from WoW. This takes care of each and every trait and ability your followers have, present and future, without any need to update.
+GMM doesn't try to "guess" what followers/ships are the best or keep some internal list of calculations that would need updating - it simply checks all combinations of all followers and selects those that give best total success chance reported directly from WoW. This takes care of each and every trait and ability your followers have, present and future, without any need to update.
 
 You can add followers to ignore list if you want. Select "GMM: Ignore" in right-click follower menu. Ignored follower will be dimmed with red overlay in followers list and won't be used in any calculated party.
 
-People who love macros can access mission page buttons with:
+People who love macros can access mission page buttons with commands below. GMM_Click only clicks visible buttons, so you can pack regular and shipyard mission buttons into same macro.
  * /run GMM_Click("MissionPage1")
  * /run GMM_Click("MissionPage2")
  * /run GMM_Click("MissionPage3")
+
+Other modes in same way with "MissionPageYield1" (2, 3), "ShipyardMissionPage1" (2, 3) and "ShipyardMissionPageYield1" (2, 3).
 
 And Blizzard's "Start Mission" button with:
  * /run GMM_Click("StartMission")
@@ -30,10 +32,10 @@ GMM will also check busy followers - those working, on mission, deactivated or o
 == Mission list improvements ==
 
 === Best teams at a glance ===
-GMM adds a top team button to each mission on mission list page so you can see at a glance which missions you could reliably do with your current followers. Clicking this button will take you to mission page and automatically set suggested team.
+GMM adds a top team button to each mission on mission list page in both main garrison building and naval mission table in your shipyard so you can see at a glance which missions you could reliably do with your current followers. Clicking this button will take you to mission page and automatically sets suggested team.
 
 === Expiration time ===
-Mission expiration time will be shown in lower left corner of each mission's button. Since XP-only missions don't present any unique rewards, they won't be tracked to reduce clutter in UI. Time on missions with less than 8 hours remaining will be shown in red.
+Mission expiration time will be shown in lower left corner of each mission's button. Since XP-only missions don't present any unique rewards, they won't be tracked to reduce clutter in UI, except for rare missions that offer huge rewards with low level requirements. Time on missions with less than 8 hours remaining will be shown in red.
 
 === More prominent item level ===
 You don't really want to know that all your item level missions are level 100. Item level on such missions will no longer be tucked in parenthesis below big 100, but will instead just replace level 100 indicator completely. Item levels will also have a slightly brighter color to make those missions stand out, as they usually offer better rewards.

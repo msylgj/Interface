@@ -21,16 +21,17 @@ local function friendsFrame()
                 local name, level, class, area, connected, status, note = GetFriendInfo(button.id)
                 if(connected) then
                     nameText = ycc.classColor[class] .. name.."|r, "..format(FRIENDS_LEVEL_TEMPLATE, ycc.diffColor[level] .. level .. '|r', class)
-                    if(area == playerArea) then
+                    if(areaName == playerArea) then
                         infoText = format('|cff00ff00%s|r', area)
                     end
                 end
             elseif (button.buttonType == FRIENDS_BUTTON_TYPE_BNET) then
-                local presenceID, givenName, surname, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText = BNGetFriendInfo(button.id)
+                local bnetIDAccount, presenceName, battleTag, isBattleTagPresence, GameAccountName, GameAccountID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, messageTime, canSoR = BNGetFriendInfo(button.id)
                 if(isOnline and client==BNET_CLIENT_WOW) then
-                    local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = BNGetToonInfo(toonID)
-                    if(givenName and surname and toonName and class) then
-                        nameText = FRIENDS_WOW_NAME_COLOR_CODE..format(BATTLENET_NAME_FORMAT, givenName, surname)..' '..ycc.classColor[class]..'('..toonName..')'
+                    local hasFocus, GameAccountName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = BNGetGameAccountInfo(GameAccountID)
+                    if(presenceName and GameAccountName and class) then
+                        nameText = presenceName .. ' ' .. FRIENDS_WOW_NAME_COLOR_CODE..'('..
+                                    ycc.classColor[class] .. GameAccountName .. FRIENDS_WOW_NAME_COLOR_CODE .. ')'
                         if(zoneName == playerArea) then
                             infoText = format('|cff00ff00%s|r', zoneName)
                         end

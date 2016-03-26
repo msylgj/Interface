@@ -48,16 +48,16 @@ local CheckCacheWarning do
 	ag:SetScript("OnStop", function()
 		tex:SetAlpha(0)
 	end)
-	local WARN_TIME, CAP_TIME, mute = 256000, 300000, false
+	local UNIT_TIME, WARN_BUFFER, mute = 600, 96, false
 	GarrisonLandingPageMinimapButton:HookScript("OnClick", function()
 		mute = true
 		ag:Stop()
 	end)
 	function CheckCacheWarning()
 		local lct = C_Garrison.IsOnGarrisonMap() and cdata and cdata.lastCacheTime
-		local td = lct and (time()-lct) or 0
-		if td >= WARN_TIME then
-			tex:SetVertexColor(1, td >= CAP_TIME and 0 or 0.35, 0)
+		local td, sz = lct and (time()-lct)/UNIT_TIME or 0, cdata and cdata.cacheSize or 500
+		if td >= (sz-WARN_BUFFER) then
+			tex:SetVertexColor(1, td >= sz and 0 or 0.35, 0)
 			if not (mute or ag:IsPlaying()) then
 				ag:Play()
 			end
@@ -80,9 +80,14 @@ end
 function E:SHOW_LOOT_TOAST(rt, rl, _3, _4, _5, _6, source)
 	if rt == "currency" and source == 10 and rl:match("currency:824") then
 		cdata.lastCacheTime = time()
+		cdata.cacheSize = IsQuestFlaggedCompleted(37485) and 1000 or IsQuestFlaggedCompleted(38445) and 750 or cdata.cacheSize
 		CheckCacheWarning()
 	end
 end
 E.ZONE_CHANGED = CheckCacheWarning
 
 MasterPlanA = api
+
+SLASH_MASTERPLAN1, SlashCmdList.MASTERPLAN = "/masterplan", function()
+	print("|cff0080ffMasterPlan|r v" .. GetAddOnMetadata("MasterPlan", "Version"))
+end

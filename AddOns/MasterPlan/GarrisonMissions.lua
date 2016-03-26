@@ -181,6 +181,31 @@ hooksecurefunc("GarrisonFollowerList_Update", function(self)
 		end
 	end
 end)
+local function FollowerList_UpdateShip(self)
+	local buttons = self.listScroll.buttons
+	for i=1, #buttons do
+		local btn = buttons[i]
+		if btn:IsShown() then
+			local follower, st = btn.info, btn.XPBar.statusText
+			if not st then
+				st = btn:CreateFontString(nil, "ARTWORK", "TextStatusBarText")
+				st:SetTextColor(0.7, 0.6, 0.85)
+				st:SetPoint("BOTTOMLEFT", 25, 5)
+				btn.XPBar.statusText = st
+			end
+			if not follower.isCollected or follower.status == GARRISON_FOLLOWER_INACTIVE or follower.levelXP == 0 then
+				st:SetText("")
+			else
+				st:SetFormattedText(L"%s XP", BreakUpLargeNumbers(follower.levelXP - follower.xp))
+			end
+			if follower.status == GARRISON_FOLLOWER_ON_MISSION then
+				btn.Status:SetText(C_Garrison.GetFollowerMissionTimeLeft(follower.followerID))
+			end
+		end
+	end
+end
+hooksecurefunc(GarrisonShipyardFrame.FollowerList, "UpdateData", FollowerList_UpdateShip)
+hooksecurefunc(GarrisonLandingPage.ShipFollowerList, "UpdateData", FollowerList_UpdateShip)
 do -- Follower counter button tooltips
 	local fake, old = {}
 	local function OnEnter(self, ...)
@@ -528,8 +553,10 @@ end
 do -- Projected XP rewards
 	local function MissionFollower_OnEnter(self)
 		local mf = MISSION_PAGE_FRAME:IsVisible() and MISSION_PAGE_FRAME or SHIP_MISSION_PAGE
-		G.ExtendMissionInfoWithXPRewardData(mf.missionInfo, true)
-		G.ExtendFollowerTooltipProjectedRewardXP(mf.missionInfo, self.info)
+		if self.info and mf.missionInfo then
+			G.ExtendMissionInfoWithXPRewardData(mf.missionInfo, true)
+			G.ExtendFollowerTooltipProjectedRewardXP(mf.missionInfo, self.info)
+		end
 	end
 	for i=1,3 do
 		MISSION_PAGE_FRAME.Followers[i]:HookScript("OnEnter", MissionFollower_OnEnter)
@@ -594,11 +621,14 @@ do -- Counter-follower lists
 		self.CounterIcon:SetMask("")
 		self.CounterIcon:SetTexCoord(4/64,60/64,4/64,60/64)
 		if self.Details:IsShown() then
-			local tid = C_Garrison.GetFollowerAbilityCounterMechanicInfo(aid)
 			itip:ActivateFor(self, "TOPLEFT", self.CounterIcon, "BOTTOMLEFT", -14, 16)
-			G.SetThreatTooltip(itip, tid, nil, nil, nil, true)
 		else
 			itip:ActivateFor(self, "TOPLEFT", self.Description, "BOTTOMLEFT", -10, 12)
+		end
+		local tid = not C_Garrison.GetFollowerAbilityIsTrait(aid) and C_Garrison.GetFollowerAbilityCounterMechanicInfo(aid)
+		if self.Details:IsShown() and tid then
+			G.SetThreatTooltip(itip, tid, nil, nil, nil, true)
+		else
 			G.SetTraitTooltip(itip, aid, nil, nil, true)
 		end
 		itip:Show()
@@ -720,7 +750,7 @@ do -- Follower headcounts
 	local function sync()
 		ni, nw, nx, nm = 0, 0, 0, 0
 		for k, v in pairs(G.GetFollowerInfo()) do
-			if not v.isCollected or T.config.ignore[k] then
+			if not v.isCollected or T.config.ignore[k] or v.followerTypeID ~= 1 then
 			elseif v.status == GARRISON_FOLLOWER_WORKING then
 				nw = nw + 1
 			elseif v.status == GARRISON_FOLLOWER_ON_MISSION then

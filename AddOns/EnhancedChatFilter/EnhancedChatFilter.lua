@@ -269,8 +269,7 @@ hooksecurefunc("AddIgnore", ignoreMore)
 hooksecurefunc("AddOrDelIgnore", ignoreMore)
 
 --禁用暴雪内部语言过滤器
-local GetCVar,SetCVar,BNGetMatureLanguageFilter,BNSetMatureLanguageFilter,BNConnected =
-GetCVar,SetCVar,BNGetMatureLanguageFilter,BNSetMatureLanguageFilter,BNConnected
+local GetCVar,SetCVar = GetCVar,SetCVar
 
 local frame=CreateFrame("Frame")
 frame:Hide()
@@ -279,10 +278,6 @@ local function allowSwearing()
 	if GetCVar("profanityFilter")~="0" then
 		SetCVar("profanityFilter", "0")
 		--print("Turned Mature Language Filter off.")
-	end
-	if BNConnected() and BNGetMatureLanguageFilter() then
-		BNSetMatureLanguageFilter(false)
-		--print("Turned Battle.net Mature Language Filter off.")
 	end
 end
 
@@ -476,9 +471,9 @@ local function filterdWords(self,event,msg,player,_,_,_,flags,_,_,_,_,lineID,...
 			if allowWisper[trimmedPlayer] or UnitIsInMyGuild(trimmedPlayer) or UnitIsUnit(trimmedPlayer,"player") or UnitInRaid(trimmedPlayer) or UnitInParty(trimmedPlayer) then return end
 			--战网好友不做处理
 			for i = 1, select(2, BNGetNumFriends()) do
-				local toon = BNGetNumFriendToons(i)
+				local toon = BNGetNumFriendGameAccounts(i)
 				for j = 1, toon do
-					local rFocus, rName, rGame = BNGetFriendToonInfo(i, j)
+					local rFocus, rName, rGame = BNGetFriendGameAccountInfo(i, j)
 					if (rName == trimmedPlayer and rGame == "WoW") then return end
 				end
 			end

@@ -9,6 +9,7 @@ local FindBestFollowersForMission = addon_env.FindBestFollowersForMission
 local top = addon_env.top
 local top_yield = addon_env.top_yield
 local top_unavailable = addon_env.top_unavailable
+local Widget = addon_env.Widget
 
 -- [AUTOLOCAL START]
 local After = C_Timer.After
@@ -23,6 +24,7 @@ local GARRISON_FOLLOWER_ON_MISSION = GARRISON_FOLLOWER_ON_MISSION
 local GARRISON_FOLLOWER_ON_MISSION_WITH_DURATION = GARRISON_FOLLOWER_ON_MISSION_WITH_DURATION
 local GREEN_FONT_COLOR_CODE = GREEN_FONT_COLOR_CODE
 local LE_FOLLOWER_TYPE_GARRISON_6_0 = LE_FOLLOWER_TYPE_GARRISON_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2 = LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local GarrisonMissionFrame = GarrisonMissionFrame
 local GetCurrencyInfo = GetCurrencyInfo
 local GetFollowerInfoForBuilding = C_Garrison.GetFollowerInfoForBuilding
@@ -85,11 +87,13 @@ end})
 local button_suffixes = { '', 'Yield', 'Unavailable' }
 
 local top_for_mission = {}
-local top_for_mission_dirty = true
+addon_env.top_for_mission = top_for_mission
+addon_env.top_for_mission_dirty = true
 
-local filtered_followers = {}
-local filtered_followers_count
-local filtered_free_followers_count
+local filtered_followers = {
+   [LE_FOLLOWER_TYPE_GARRISON_6_0] = {},
+   [LE_FOLLOWER_TYPE_SHIPYARD_6_2] = {},
+}
 local filtered_followers_dirty = true
 local follower_xp_cap = {}
 
@@ -122,13 +126,13 @@ local events_for_buildings = {
 }
 addon_env.events_for_buildings = events_for_buildings
 event_frame:SetScript("OnEvent", function(self, event, arg1)
-   -- if events_top_for_mission_dirty[event] then top_for_mission_dirty = true end
+   -- if events_top_for_mission_dirty[event] then addon_env.top_for_mission_dirty = true end
    -- if events_for_followers[event] then filtered_followers_dirty = true end
    -- Let's clear both for now, or else we often miss one follower state update when we start mission
 
    local event_for_followers = events_for_followers[event]
    if event_for_followers or events_top_for_mission_dirty[event] then
-      top_for_mission_dirty = true
+      addon_env.top_for_mission_dirty = true
       filtered_followers_dirty = true
    end
 
@@ -180,7 +184,6 @@ event_frame:RegisterEvent("ADDON_LOADED")
 local gmm_buttons = {}
 addon_env.gmm_buttons = gmm_buttons
 local gmm_frames = {}
-local mission_page_pending_click
 
 function GMM_dumpl(pattern, ...)
    local names = { strsplit(",", pattern) }
@@ -215,13 +218,22 @@ local function SortFollowersByLevel(a, b)
    return a.iLevel > b.iLevel
 end
 
-local function GetFilteredFollowers()
+local function GetFilteredFollowers(type_id)
    if filtered_followers_dirty then
       local followers = C_Garrison.GetFollowers()
-      wipe(filtered_followers)
-      filtered_followers_count = 0
-      filtered_free_followers_count = 0
-      local all_followers_maxed = true
+
+      local container = filtered_followers[LE_FOLLOWER_TYPE_GARRISON_6_0]
+      wipe(container)
+      container.count = 0
+      container.free = 0
+      container.all_maxed = true
+
+      local container = filtered_followers[LE_FOLLOWER_TYPE_SHIPYARD_6_2]
+      wipe(container)
+      container.count = 0
+      container.free = 0
+      container.all_maxed = true
+
       for idx = 1, #followers do
          local follower = followers[idx]
          repeat
@@ -230,10 +242,10 @@ local function GetFilteredFollowers()
             if ingored_followers[follower.followerID] then break end
 
             local type_id = follower.followerTypeID
-            if type_id and type_id ~= LE_FOLLOWER_TYPE_GARRISON_6_0 then break end
+            local container = filtered_followers[type_id]
 
-            filtered_followers_count = filtered_followers_count + 1
-            filtered_followers[filtered_followers_count] = follower
+            local count = container.count count = count + 1 container.count = count
+            container[count] = follower
 
             local xp_to_level = follower.levelXP
 
@@ -241,8 +253,8 @@ local function GetFilteredFollowers()
             if status and status ~= GARRISON_FOLLOWER_IN_PARTY then
                follower.is_busy_for_mission = true
             else
-               if xp_to_level ~= 0 then all_followers_maxed = nil end
-               filtered_free_followers_count = filtered_free_followers_count + 1
+               if xp_to_level ~= 0 then container.all_maxed = nil end
+               container.free = container.free + 1
             end
 
             -- How much extra XP follower can gain before becoming maxed out?
@@ -267,18 +279,18 @@ local function GetFilteredFollowers()
 
          until true
       end
-      filtered_followers.all_followers_maxed = all_followers_maxed
-
-      tsort(filtered_followers, SortFollowersByLevel)
+      tsort(filtered_followers[LE_FOLLOWER_TYPE_GARRISON_6_0], SortFollowersByLevel)
+      tsort(filtered_followers[LE_FOLLOWER_TYPE_SHIPYARD_6_2], SortFollowersByLevel)
 
       -- dump(filtered_followers)
 
       filtered_followers_dirty = false
-      top_for_mission_dirty = true
+      addon_env.top_for_mission_dirty = true
    end
 
-   return filtered_followers, filtered_free_followers_count
+   return filtered_followers[type_id]
 end
+addon_env.GetFilteredFollowers = GetFilteredFollowers
 
 local function SetTeamButtonText(button, top_entry)
    if top_entry.successChance then
@@ -375,14 +387,15 @@ local function SetTeamButtonTooltip(button)
 end
 
 local available_missions = {}
-local function BestForCurrentSelectedMission()
+local function BestForCurrentSelectedMission(type_id, mission_page, button_prefix)
    if addon_env.RegisterManualInterraction then addon_env.RegisterManualInterraction() end
-   local missionInfo = MissionPage.missionInfo
+
+   local missionInfo = mission_page.missionInfo
    local mission_id = missionInfo.missionID
 
    -- print("Mission ID:", mission_id)
 
-   local filtered_followers, filtered_free_followers_count = GetFilteredFollowers()
+   local filtered_followers = GetFilteredFollowers(type_id)
 
    local mission = missionInfo
 
@@ -393,7 +406,7 @@ local function BestForCurrentSelectedMission()
    for suffix_idx = 1, #button_suffixes do
       local suffix = button_suffixes[suffix_idx]
       for idx = 1, 3 do
-         local button = gmm_buttons['MissionPage' .. suffix .. idx]
+         local button = gmm_buttons[button_prefix .. suffix .. idx]
          local top_entry
          if suffix == 'Yield' then
             if top.gr_rewards or top.gold_rewards then
@@ -419,11 +432,12 @@ local function BestForCurrentSelectedMission()
       end
    end
 
-   if mission_page_pending_click then
-      MissionPage_PartyButtonOnClick(gmm_buttons['MissionPage' .. mission_page_pending_click])
-      mission_page_pending_click = nil
+   if addon_env.mission_page_pending_click then
+      MissionPage_PartyButtonOnClick(gmm_buttons[addon_env.mission_page_pending_click])
+      addon_env.mission_page_pending_click = nil
    end
 end
+addon_env.BestForCurrentSelectedMission = BestForCurrentSelectedMission
 
 local last_shipment_request = 0
 local shipment_followers = {}
@@ -433,6 +447,17 @@ CheckPartyForProfessionFollowers = function()
    for idx = 1, party_followers_count do
       if MissionPageFollowers[idx].info then present = true end
       gmm_frames["MissionPageFollowerWarning" .. idx]:Hide()
+
+      local follower = MissionPageFollowers[idx].info
+      local xp_bar = gmm_frames["MissionPageFollowerXP" .. idx]
+      if (not follower or follower.xp == 0 or follower.levelXP == 0) then 
+         xp_bar:Hide()
+         gmm_frames["MissionPageFollowerXPGainBase" .. idx]:Hide()
+         gmm_frames["MissionPageFollowerXPGainBonus" .. idx]:Hide()
+      else
+         xp_bar:Hide()
+         xp_bar:SetWidth((follower.xp/follower.levelXP) * 104)
+      end
    end
    if not present then return end
 
@@ -550,30 +575,33 @@ local function GarrisonMissionPage_ShowMission_More(self, missionInfo)
       mission_page.ItemLevelHitboxFrame:Hide()
    end
 
-   BestForCurrentSelectedMission()
+   BestForCurrentSelectedMission(LE_FOLLOWER_TYPE_GARRISON_6_0, MissionPage, "MissionPage")
 end
 
 local class_based_SetClearFollower = GarrisonMissionFrame and GarrisonMissionFrame.AssignFollowerToMission and GarrisonMissionFrame.RemoveFollowerFromMission and true
 --[[ localized above ]] MissionPage_PartyButtonOnClick = function(self)
+   local method_base = self.method_base
+   local follower_frames = self.follower_frames
+
    if self[1] then
       event_frame:UnregisterEvent("GARRISON_FOLLOWER_LIST_UPDATE")
-      for idx = 1, #MissionPageFollowers do
-         if class_based_SetClearFollower then GarrisonMissionFrame:RemoveFollowerFromMission(MissionPageFollowers[idx]) else GarrisonMissionPage_ClearFollower(MissionPageFollowers[idx]) end
+      for idx = 1, #follower_frames do
+         if class_based_SetClearFollower then method_base:RemoveFollowerFromMission(follower_frames[idx]) else GarrisonMissionPage_ClearFollower(follower_frames[idx]) end
       end
 
-      for idx = 1, #MissionPageFollowers do
-         local followerFrame = MissionPageFollowers[idx]
+      for idx = 1, #follower_frames do
+         local followerFrame = follower_frames[idx]
          local follower = self[idx]
          if follower then
             local followerInfo = C_Garrison.GetFollowerInfo(follower)
-            if class_based_SetClearFollower then GarrisonMissionFrame:AssignFollowerToMission(followerFrame, followerInfo) else GarrisonMissionPage_SetFollower(followerFrame, followerInfo) end
+            if class_based_SetClearFollower then method_base:AssignFollowerToMission(followerFrame, followerInfo) else GarrisonMissionPage_SetFollower(followerFrame, followerInfo) end
          end
       end
       event_frame:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE")
    end
 
    if GarrisonFollowerMission_class_UpdateMissionParty then
-      GarrisonFollowerMission:UpdateMissionParty(MissionPageFollowers)
+      method_base:UpdateMissionParty(follower_frames)
    else
       GarrisonMissionPage_UpdateMissionForParty()
    end
@@ -581,9 +609,52 @@ end
 
 local function MissionList_PartyButtonOnClick(self)
    if addon_env.RegisterManualInterraction then addon_env.RegisterManualInterraction() end
-   mission_page_pending_click = 1
+   addon_env.mission_page_pending_click = "MissionPage1"
    return self:GetParent():Click()
 end
+
+local function UpdateMissionListButton(mission, filtered_followers, blizzard_button, gmm_button, more_missions_to_cache, resources, inactive_alpha)
+   if (mission.numFollowers > filtered_followers.free) or (mission.cost > resources) then
+      blizzard_button:SetAlpha(inactive_alpha or 0.3)
+      gmm_button:SetText()
+   else
+      local top_for_this_mission = top_for_mission[mission.missionID]
+      if not top_for_this_mission then
+         if more_missions_to_cache then
+            more_missions_to_cache = more_missions_to_cache + 1
+         else
+            more_missions_to_cache = 0
+            FindBestFollowersForMission(mission, filtered_followers, "mission_list")
+            local top1 = top[1]
+            top_for_this_mission = {}
+            top_for_this_mission.successChance = top1.successChance
+            if top_for_this_mission.successChance then
+               top_for_this_mission.materialMultiplier = top1.materialMultiplier
+               top_for_this_mission.gr_rewards = top1.gr_rewards
+               top_for_this_mission.goldMultiplier = top1.goldMultiplier
+               top_for_this_mission.gold_rewards = top1.gold_rewards
+               top_for_this_mission.xpBonus = top1.xpBonus
+               top_for_this_mission.isMissionTimeImproved = top1.isMissionTimeImproved
+               top_for_this_mission.xp_reward_wasted = top1.xp_reward_wasted
+               top_for_this_mission.all_followers_maxed = top1.all_followers_maxed
+               top_for_this_mission.mission_level = top1.mission_level
+            end
+            top_for_mission[mission.missionID] = top_for_this_mission
+         end
+      end
+
+      if top_for_this_mission then
+         SetTeamButtonText(gmm_button, top_for_this_mission)
+      else
+         gmm_button:SetText("...")
+      end
+      blizzard_button:SetAlpha(1)
+   end
+   gmm_button:Show()
+
+   return more_missions_to_cache
+end
+addon_env.UpdateMissionListButton = UpdateMissionListButton
 
 local mission_expiration_format_days  = "%s" .. DAY_ONELETTER_ABBR:gsub(" ", "") .. " %02d:%02d"
 local mission_expiration_format_hours = "%s" ..                                        "%d:%02d"
@@ -610,15 +681,15 @@ local function GarrisonMissionList_Update_More()
    local numMissions = #missions
    if numMissions == 0 then return end
 
-   if top_for_mission_dirty then
+   if addon_env.top_for_mission_dirty then
       wipe(top_for_mission)
-      top_for_mission_dirty = false
+      addon_env.top_for_mission_dirty = false
    end
 
    local missions = self.availableMissions
    local offset = HybridScrollFrame_GetOffset(scrollFrame)
 
-   local filtered_followers, filtered_free_followers_count = GetFilteredFollowers()
+   local filtered_followers = GetFilteredFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
    local more_missions_to_cache
    local _, garrison_resources = GetCurrencyInfo(GARRISON_CURRENCY)
 
@@ -632,52 +703,21 @@ local function GarrisonMissionList_Update_More()
          local mission = missions[index]
          local gmm_button = gmm_buttons['MissionList' .. i]
 
-         if (mission.numFollowers > filtered_free_followers_count) or (mission.cost > garrison_resources) then
-            button:SetAlpha(0.3)
-            gmm_button:SetText()
-         else
-            local top_for_this_mission = top_for_mission[mission.missionID]
-            if not top_for_this_mission then
-               if more_missions_to_cache then
-                  more_missions_to_cache = more_missions_to_cache + 1
-               else
-                  more_missions_to_cache = 0
-                  FindBestFollowersForMission(mission, filtered_followers, "mission_list")
-                  local top1 = top[1]
-                  top_for_this_mission = {}
-                  top_for_this_mission.successChance = top1.successChance
-                  if top_for_this_mission.successChance then
-                     top_for_this_mission.materialMultiplier = top1.materialMultiplier
-                     top_for_this_mission.gr_rewards = top1.gr_rewards
-                     top_for_this_mission.goldMultiplier = top1.goldMultiplier
-                     top_for_this_mission.gold_rewards = top1.gold_rewards
-                     top_for_this_mission.xpBonus = top1.xpBonus
-                     top_for_this_mission.isMissionTimeImproved = top1.isMissionTimeImproved
-                     top_for_this_mission.xp_reward_wasted = top1.xp_reward_wasted
-                     top_for_this_mission.all_followers_maxed = top1.all_followers_maxed
-                     top_for_this_mission.mission_level = top1.mission_level
-                  end
-                  top_for_mission[mission.missionID] = top_for_this_mission
-               end
-            end
+         more_missions_to_cache = UpdateMissionListButton(mission, filtered_followers, button, gmm_button, more_missions_to_cache, garrison_resources)
 
-            if top_for_this_mission then
-               SetTeamButtonText(gmm_button, top_for_this_mission)
-            else
-               gmm_button:SetText("...")
-            end
-            button:SetAlpha(1)
-         end
-         gmm_button:Show()
+         local is_rare = mission.isRare
 
          local expiration_text_set
          local offerEndTime = mission.offerEndTime
+
          -- offerEndTime seems to be present on all missions, though Blizzard UI shows tooltips only on rare
          if offerEndTime then
             local xp_only_rewards
-            for _, reward in pairs(mission.rewards) do
-               if reward.followerXP and xp_only_rewards == nil then xp_only_rewards = true end
-               if not reward.followerXP then xp_only_rewards = false break end
+            if not is_rare then
+               for _, reward in pairs(mission.rewards) do
+                  if reward.followerXP and xp_only_rewards == nil then xp_only_rewards = true end
+                  if not reward.followerXP then xp_only_rewards = false break end
+               end
             end
 
             if not xp_only_rewards then
@@ -736,7 +776,14 @@ addon_env.MissionPage_ButtonsInit = function(button_prefix, parent_frame)
          if not gmm_buttons[name] then
             local set_followers_button = CreateFrame("Button", nil, parent_frame, "UIPanelButtonTemplate")
             -- Ugly, but I can't just parent to BorderFrame - buttons would be visible even on map screen
-            if button_prefix == "ShipyardMissionPage" then set_followers_button:SetFrameLevel(set_followers_button:GetFrameLevel() + 4) end
+            if button_prefix == "ShipyardMissionPage" then
+               set_followers_button:SetFrameLevel(set_followers_button:GetFrameLevel() + 4)
+               set_followers_button.method_base = GarrisonShipyardFrame
+               set_followers_button.follower_frames = GarrisonShipyardFrame.MissionTab.MissionPage.Followers
+            else
+               set_followers_button.method_base = GarrisonMissionFrame
+               set_followers_button.follower_frames = MissionPage.Followers
+            end
             set_followers_button:SetText(idx)
             set_followers_button:SetWidth(100)
             set_followers_button:SetHeight(50)
@@ -840,6 +887,10 @@ local function MissionPage_WarningInit()
       warning:SetHeight(1)
       warning:SetPoint("BOTTOM", follower_frame, "TOP", 0, -68)
       gmm_frames["MissionPageFollowerWarning" .. idx] = warning
+
+      gmm_frames["MissionPageFollowerXP" .. idx]          = Widget{type = "Texture", parent = follower_frame, SubLayer = 3, Width = 104, Height = 4, BOTTOMLEFT = {55, 2}, Color = { 0.212, 0, 0.337 }, Hide = true }
+      gmm_frames["MissionPageFollowerXPGainBase" .. idx]  = Widget{type = "Texture", parent = follower_frame, SubLayer = 2, Width = 104, Height = 4, BOTTOMLEFT = {55, 2}, Color = { 0.6, 1, 0 }, Hide = true }
+      gmm_frames["MissionPageFollowerXPGainBonus" .. idx] = Widget{type = "Texture", parent = follower_frame, SubLayer = 1, Width = 104, Height = 4, BOTTOMLEFT = {55, 2}, Color = { 0, 0.75, 1 }, Hide = true }
    end
 end
 
@@ -858,7 +909,7 @@ local info_ignore_toggle = {
       else
          ingored_followers[followerID] = true
       end
-      top_for_mission_dirty = true
+      addon_env.top_for_mission_dirty = true
       filtered_followers_dirty = true
       if GarrisonMissionFrame:IsShown() then
          GarrisonFollowerList_UpdateFollowers(GarrisonMissionFrame.FollowerList)
@@ -941,7 +992,6 @@ local function GarrisonFollowerList_Update_More(self)
    end
 end
 GarrisonFollowerList_Update_More_need_parent = PostHookFunctionOrClass("GarrisonFollowerList_Update", GarrisonMissionFrame.FollowerList, "UpdateData", GarrisonFollowerList_Update_More)
--- hooksecurefunc(GarrisonMissionFrame.FollowerList, "OnShow", function(...) print("GarrisonBuildingFollowerList_OnShow") print(...) end)
 
 gmm_buttons.StartMission = MissionPage.StartMissionButton
 
